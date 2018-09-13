@@ -1,5 +1,8 @@
-# TTALK STANDARD MESAGE
-Esse repositório tem o objetivo de unificar as documentações sobre as integrações disponíveis pela Totvs, através de APIs e mensagem padronizada. 
+# T-TALK STANDARD MESAGE
+Esse repositório tem o objetivo de unificar a documentação das integrações disponíveis pela Totvs, através de APIs e Mensagem Padronizada. O padrão utilizado é o OpenAPI
 
 ## Mais sobre APIs e Mensagem Padronizada
 https://api.totvs.com.br/#/
+
+## Mais sobre OpenAPI
+https://github.com/OAI/OpenAPI-Specification
