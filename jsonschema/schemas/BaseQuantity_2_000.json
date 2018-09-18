@@ -1,7 +1,6 @@
 {
-	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/BaseQuantity_2_001.json#",
-
-	"info": {
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/BaseQuantity_2_001.json#",
+    "info": {
         "description": "The <code>TOTVS Agriculture API</code> (aka <code>T-Agri API</code>) is a RESTFul API that provides entities and resources based on the <code>agriculture context for TOTVS' solutions</code>.\n\nBelow is a list of available REST API call for business agriculture resources.",
         "version": "1.000",
         "title": "Base Quantity API",
@@ -17,7 +16,7 @@
                 "segment": "Agribusiness"
             },
             "productInformation": [
-                 {
+                {
                     "product": "agriApi",
                     "adapter": "",
                     "contact": "guilherme.farto@totvs.com.br",
@@ -27,40 +26,46 @@
             ]
         }
     },
-
-	"definitions": {
-		"baseQuantities": {
+    "definitions": {
+        "baseQuantities": {
             "type": "object",
-            "properties": {
-                "hasNext": {
-                    "type": "boolean",
-                    "example": false,
-                    "description": "Next records page identifier"
-                },
-                "items": {
-                    "type": "array",
-                    "description": "Collection of records",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "length",
-                            "mass",
-                            "time",
-                            "electric current",
-                            "thermodynamic temperature",
-                            "amount of substance",
-                            "luminous intensity"
-                        ]
-                    }
-                },                
-                "total": {
-                    "type": "integer",
-                    "format": "int32",
-                    "description": "Total number of records in the collection"
-                }
-            },
-            "title": "Response Collection«string»",
-            "description": "Entity of Response Collection"
+			"allOf": [{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				}, {
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/baseQuantity"
+							},
+                            "page": {
+                                "type": "integer",
+                                "format": "int64",
+                                "description": "Records page selected"
+                            },
+                            "pageSize": {
+                                "type": "integer",
+                                "format": "int64",
+                                "description": "Number of records per page"
+                            }
+						}
+					}
+				}
+			]
+        },
+        
+        "baseQuantity": {
+            "type": "string",
+            "enum": [
+                "length",
+                "mass",
+                "time",
+                "electric current",
+                "thermodynamic temperature",
+                "amount of substance",
+                "luminous intensity"
+            ]
         }
-	}
+    }
 }
