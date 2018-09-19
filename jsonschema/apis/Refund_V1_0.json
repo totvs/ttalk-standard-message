@@ -1,551 +1,501 @@
 {
   "openapi": "3.0.1",
-  "servers": [{
-		"description": "API para a reembolso de serviços de saúde para o aplicativo de beneficiários de plano de saúde",
-		"url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1/",
-		"variables":{			
-        "serverUrl":{
-          "default":"localhost"
-        },
-        "serverHttpPort":{
-          "default":"1315"
-        }
+  "servers": [
+      {
+          "description": "API para a reembolso de serviços de saúde para o aplicativo de beneficiários de plano de saúde",
+          "url": "http://{serverUrl}:{serverHttpPort}/api/prosaude/healthcare/v1/",
+          "variables": {
+              "serverUrl": {
+                  "default": "localhost"
+              },
+              "serverHttpPort": {
+                  "default": "1315"
+              }
+          }
       }
-    }
   ],
   "info": {
-    "description": "",
-    "version": "1.0",
-    "title": "Refunds",
-    "contact": {
-      "name": "T-Talk",
-      "url": "http://api.totvs.com.br",
-      "email": "comiteintegracao@totvs.com.br"
-    },
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "Refunds",
-        "description": "Reembolso de serviços de Saúde",
-        "segment": "HealthCare"
+      "description": "",
+      "version": "1.0",
+      "title": "Refunds",
+      "contact": {
+          "name": "T-Talk",
+          "url": "http://api.totvs.com.br",
+          "email": "comiteintegracao@totvs.com.br"
       },
-      "productInformation": [
-        {
-          "product": "ProSaude",
-          "contact": "healthcare.mobile@totvs.com.br",
-          "description": "Reembolso de serviços de Saúde",
-          "adapter": "prosaude.prw",
-          "helpUrl": ""
-        }
-      ]
-    }
+      "x-totvs": {
+          "messageDocumentation": {
+              "name": "Refunds",
+              "description": "Reembolso de serviços de Saúde",
+              "segment": "HealthCare"
+          },
+          "productInformation": [
+              {
+                  "product": "ProSaude",
+                  "contact": "healthcare.mobile@totvs.com.br",
+                  "description": "Reembolso de serviços de Saúde",
+                  "adapter": "prosaude.prw",
+                  "helpUrl": ""
+              }
+          ]
+      }
   },
   "paths": {
-    "/refunds": {
-      "get": {
-        "tags": [
-          "refunds"
-        ],
-        "summary": "Retorna todas as solicitações de reembolso dos beneficiários de planos de saúde",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "ProSaude",
-              "available": true,
-              "note": "Este verbo esta disponivel com todos os parametros",
-              "minimalVersion": ""
-            }
-          ]
-        },
-        "description": "Retorna uma mensagem do tipo coleção com todas as solicitações de reembolso do beneficiário do plano de saúde. Os resultados podem ser filtrados através dos parâmetros holderRegistration,nameServiceNetwork, cpfCnpj e status.",
-        "parameters": [{
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+      "/refunds": {
+          "get": {
+              "tags": [
+                  "refunds"
+              ],
+              "summary": "Retorna todas as solicitações de reembolso dos beneficiários de planos de saúde",
+              "x-totvs": {
+                  "productInformation": [
+                      {
+                          "product": "ProSaude",
+                          "available": true,
+                          "note": "Este verbo esta disponivel com todos os parametros",
+                          "minimalVersion": ""
+                      }
+                  ]
+              },
+              "description": "Retorna uma mensagem do tipo coleção com todas as solicitações de reembolso do beneficiário do plano de saúde. Os resultados podem ser filtrados através dos parâmetros <b>holderRegistration</b>, <b>nameServiceNetwork</b>, <b>cpfCnpj</b> e <b>status</b>.",
+              "parameters": [
+                  {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                  },
+                  {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                  },
+                  {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Expand"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Fields"
+                  },
+                  {
+                      "$ref": "#/components/parameters/ContentType"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Authorization"
+                  },
+                  {
+                      "$ref": "#/components/parameters/ExpiresAt"
+                  },
+                  {
+                      "$ref": "#/components/parameters/HolderRegistration"
+                  },
+                  {
+                      "$ref": "#/components/parameters/NameServiceNetwork"
+                  },
+                  {
+                      "$ref": "#/components/parameters/CpfCnpj"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Status"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Refund/V1/1_000/jsonschema/schemas/Refund_1_000.json#/definitions/PagedRefunds"
+                              }
+                          }
+                      }
+                  },
+                  "400": {
+                      "description": "Bad Request",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Unauthorized"
+                  },
+                  "404": {
+                      "description": "Not Found"
+                  },
+                  "405": {
+                      "description": "Method Not Allowed"
+                  },
+                  "406": {
+                      "description": "Not Acceptable"
+                  },
+                  "500": {
+                      "description": "Internal Server Error",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                              }
+                          }
+                      }
+                  }
+              }
           },
-          {
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-          },
-          {
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-          },
-          {
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-          },
-          {
-            "$ref": "#/components/parameters/Expand"
-          },
-          {
-            "name": "expand",
-            "in": "query",
-            "description": "Utilizado para expandir atributos de tipo lista ou objetos. Atributos suportados nesse endpoint: itemsRefund",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "description": "Lista com os nomes das propriedades que deveram ser retornadas na mensagem.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "holderRegistration",
-            "in": "query",
-            "description": "Matrícula do beneficiário titular ou responsável financeiro do plano de saúde",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "nameServiceNetwork",
-            "in": "query",
-            "description": "Nome da rede não referenciada",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "cpfCnpj",
-            "in": "query",
-            "description": "CPF ou CNPJ da rede não referenciada",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "description": "Status do protocolo",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "description": "Tipo do conteúdo da requisição",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Token de autorização",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Expires_at",
-            "in": "header",
-            "description": "Datetime da expiração do token em segundos",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+          "post": {
+              "tags": [
+                  "refunds"
+              ],
+              "summary": "Faz a solicitação de reembolso",
+              "description": "Realiza solicitação de reembolso de um serviço médico prestado por uma rede não referenciada",
+              "x-totvs": {
+                  "productInformation": [
+                      {
+                          "product": "ProSaude",
+                          "available": true,
+                          "note": "Este verbo esta disponivel com todos os parametros",
+                          "minimalVersion": ""
+                      }
+                  ]
+              },
+              "parameters": [
+                  {
+                      "$ref": "#/components/parameters/ContentType"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Authorization"
+                  },
+                  {
+                      "$ref": "#/components/parameters/ExpiresAt"
+                  }
+              ],
+              "requestBody": {
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Refund/V1/1_000/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+                          }
+                      }
+                  },
+                  "description": "Solicitação de reembolso a ser incluída"
+              },
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "headers": {
+                          "location": {
+                              "description": "URL onde o recurso está disponível",
+                              "schema": {
+                                  "type": "string"
+                              }
+                          }
+                      },
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Refund/V1/1_000/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+                              }
+                          }
+                      }
+                  },
+                  "400": {
+                      "description": "Bad request"
+                  },
+                  "401": {
+                      "description": "Unauthorized"
+                  },
+                  "405": {
+                      "description": "Method Not Allowed"
+                  },
+                  "406": {
+                      "description": "Not Acceptable"
+                  },
+                  "500": {
+                      "description": "Internal Server Error",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                              }
+                          }
+                      }
+                  }
+              }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/refundResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "erro no momento da Inclusão",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "405": {
-            "description": "Method Not Allowed"
-          },
-          "406": {
-            "description": "Not Acceptable"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorMessage"
-                }
-              }
-            }
-          }
-        }
       },
-      "post": {
-        "tags": [
-          "refund"
-        ],
-        "summary": "Faz a solicitação de reembolso",
-        "description": "Realiza solicitação de reembolso de um serviço médico prestado por uma rede não referenciada",
-        "parameters": [
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "description": "Tipo do conteúdo da requisição",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+      "/refunds/{protocolNumber}": {
+          "get": {
+              "tags": [
+                  "refunds"
+              ],
+              "summary": "Retorna as solicitações de reembolso do protocolo especificado",
+              "parameters": [
+                  {
+                      "$ref": "#/components/parameters/ContentType"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Authorization"
+                  },
+                  {
+                      "$ref": "#/components/parameters/ExpiresAt"
+                  },
+                  {
+                      "name": "protocolNumber",
+                      "in": "path",
+                      "description": "Protocolo da solicitação de reembolso",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Refund/V1/1_000/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+                              }
+                          }
+                      }
+                  },
+                  "400": {
+                      "description": "Bad request"
+                  },
+                  "401": {
+                      "description": "Unauthorized"
+                  },
+                  "404": {
+                      "description": "Not Found"
+                  },
+                  "405": {
+                      "description": "Method Not Allowed"
+                  },
+                  "406": {
+                      "description": "Not Acceptable"
+                  },
+                  "500": {
+                      "description": "Internal Server Error",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                              }
+                          }
+                      }
+                  }
+              }
           },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Token de autorização",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+          "put": {
+              "tags": [
+                  "refunds"
+              ],
+              "summary": "Atualiza a solicitação de reembolso",
+              "description": "Atualiza a solicitação de reembolso que ainda não foi protocolada",
+              "parameters": [
+                  {
+                      "$ref": "#/components/parameters/ContentType"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Authorization"
+                  },
+                  {
+                      "$ref": "#/components/parameters/ExpiresAt"
+                  },
+                  {
+                      "name": "protocolNumber",
+                      "in": "path",
+                      "description": "Protocolo da solicitação de reembolso",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              ],
+              "requestBody": {
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Refund/V1/1_000/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+                          }
+                      }
+                  },
+                  "description": "Solicitação de reembolso a ser atualizada"
+              },
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Refund/V1/1_000/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+                              }
+                          }
+                      }
+                  },
+                  "400": {
+                      "description": "Bad request"
+                  },
+                  "401": {
+                      "description": "Unauthorized"
+                  },
+                  "405": {
+                      "description": "Method Not Allowed"
+                  },
+                  "406": {
+                      "description": "Not Acceptable"
+                  },
+                  "500": {
+                      "description": "Internal Server Error",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                              }
+                          }
+                      }
+                  }
+              }
           },
-          {
-            "name": "Expires_at",
-            "in": "header",
-            "description": "Datetime da expiração do token em segundos",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+          "delete": {
+              "tags": [
+                  "refunds"
+              ],
+              "summary": "Deleta o protocolo de reembolso",
+              "description": "Deleta o protocolo de reembolso especificado desde que não tenha sido protocolado",
+              "parameters": [
+                  {
+                      "$ref": "#/components/parameters/ContentType"
+                  },
+                  {
+                      "$ref": "#/components/parameters/Authorization"
+                  },
+                  {
+                      "$ref": "#/components/parameters/ExpiresAt"
+                  },
+                  {
+                      "name": "protocolNumber",
+                      "in": "path",
+                      "description": "Protocolo da solicitação de reembolso",
+                      "required": true,
+                      "schema": {
+                          "type": "integer"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK"
+                  },
+                  "401": {
+                      "description": "Unauthorized"
+                  },
+                  "404": {
+                      "description": "Not Found"
+                  },
+                  "405": {
+                      "description": "Method Not Allowed"
+                  },
+                  "406": {
+                      "description": "Not Acceptable"
+                  },
+                  "500": {
+                      "description": "Internal Server Error",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                              }
+                          }
+                      }
+                  }
+              }
           }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "headers": {
-              "location": {
-                "description": "URL onde o recurso está disponível",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/refund"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "405": {
-            "description": "Method Not Allowed"
-          },
-          "406": {
-            "description": "Not Acceptable"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorMessage"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/requestBodies/refund"
-        }
-      },
-      "put": {
-        "tags": [
-          "refund"
-        ],
-        "summary": "Atualiza a solicitação de reembolso",
-        "description": "Atualiza a solicitação de reembolso que ainda não foi protocolada",
-        "parameters": [
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "description": "Tipo do conteúdo da requisição",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Token de autorização",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Expires_at",
-            "in": "header",
-            "description": "Datetime da expiração do token em segundos",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/refund"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "405": {
-            "description": "Method Not Allowed"
-          },
-          "406": {
-            "description": "Not Acceptable"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorMessage"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/requestBodies/refund"
-        }
       }
-    },
-    "/refund/{protocolNumber}": {
-      "get": {
-        "tags": [
-          "refund"
-        ],
-        "summary": "Retorna as solicitações de reembolso do protocolo especificado",
-        "parameters": [
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "description": "Tipo do conteúdo da requisição",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Token de autorização",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Expires_at",
-            "in": "header",
-            "description": "Datetime da expiração do token em segundos",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "protocolNumber",
-            "in": "path",
-            "description": "Protocolo da solicitação de reembolso",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/refund"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "405": {
-            "description": "Method Not Allowed"
-          },
-          "406": {
-            "description": "Not Acceptable"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorMessage"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "refund"
-        ],
-        "summary": "Deleta o protocolo de reembolso",
-        "description": "Deleta o protocolo de reembolso especificado desde que não tenha sido protocolado",
-        "parameters": [
-          {
-            "name": "Content-Type",
-            "in": "header",
-            "description": "Tipo do conteúdo da requisição",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Token de autorização",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Expires_at",
-            "in": "header",
-            "description": "Datetime da expiração do token em segundos",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "protocolNumber",
-            "in": "path",
-            "description": "Protocolo da solicitação de reembolso",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "405": {
-            "description": "Method Not Allowed"
-          },
-          "406": {
-            "description": "Not Acceptable"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorMessage"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   },
   "components": {
-    "requestBodies": {
-      "refund": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/refund"
-            }
+      "parameters": {
+          "Expand": {
+              "name": "expand",
+              "in": "query",
+              "description": "Utilizado para expandir atributos de tipo lista ou objetos. Atributos suportados nesse endpoint: itemsRefund ",
+              "required": false,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "Fields": {
+              "name": "fields",
+              "in": "query",
+              "description": "Lista com os nomes das propriedades que deveram ser retornadas na mensagem.",
+              "required": false,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "ContentType": {
+              "name": "Content-Type",
+              "in": "header",
+              "description": "Tipo do conteúdo da requisição",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "Authorization": {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Token de autorização",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "ExpiresAt": {
+              "name": "Expires_at",
+              "in": "header",
+              "description": "Data e hora da expiração do token em segundos",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "HolderRegistration": {
+              "name": "holderRegistration",
+              "in": "query",
+              "description": "Matrícula do beneficiário titular ou responsável financeiro do plano de saúde",
+              "required": false,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "NameServiceNetwork": {
+              "name": "nameServiceNetwork",
+              "in": "query",
+              "description": "Nome da rede não referenciada",
+              "required": false,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "CpfCnpj": {
+              "name": "cpfCnpj",
+              "in": "query",
+              "description": "CPF ou CNPJ da rede não referenciada",
+              "required": false,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          "Status": {
+              "name": "status",
+              "in": "query",
+              "description": "Status do protocolo",
+              "required": false,
+              "schema": {
+                  "type": "string"
+              }
           }
-        },
-        "description": "Informacoes da solicitação de reembolso",
-        "required": true
       }
-    },
-    "securitySchemes": {
-      "oauth": {
-        "type": "oauth2",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "http://10.171.67.173/totvs.rac/account/login",
-            "tokenUrl": "http://10.171.67.173/totvs.rac/connect/token",
-            "scopes": {}
-          }
-        }
-      }
-    },
-    "Expand": {
-      "name": "expand",
-      "in": "query",
-      "description": "Utilizado para expandir atributos de tipo lista ou objetos. Atributos suportados nesse endpoint: itemsRefund ",
-      "required": false,
-      "example": "code,description",
-      "schema": {
-        "type": "string"
-      }
-    },
-    "schemas": {}
   }
 }
