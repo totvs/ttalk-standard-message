@@ -1,0 +1,264 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/events/PaymentCondition_2_001.json#",
+    "info": {
+        "description": "API para a entidade Condição de Pagamento (PaymentCondition) para produtos TOTVS",
+        "version": "2.001",
+        "title": "PaymentCondition",
+        "contact": {
+            "name": "T-Talk",
+            "url": "api.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "transactionDefinition": {
+                "subType": "event",
+                "businessContentType": {
+                    "type": "object",
+                    "$ref": "#/definitions/PaymentConditionInfo"
+                },
+                "returnContentType": {
+                    "type": "object",
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+                }
+            },
+            "messageDocumentation": {
+                "name": "PaymentCondition",
+                "description": "Cadastro de Condição de Pagamento",
+                "segment": "Faturamento"
+            },
+            "productInformation": [
+                {
+                    "product":"protheus",
+                    "contact":"squad.crm@totvs.com.br",
+                    "description":"Cadastro de Condição de Pagamento",
+                    "adapter":"MATS360.prw"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "PagedPaymentCondition":{
+            "type":"object",
+            "allOf":[
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref":"#/definitions/PaymentConditions"
+                }
+            ]
+        },
+        "PaymentConditions":{
+            "type":"object",
+            "properties":{
+                "items":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/PaymentConditionInfo"
+                    }
+                }
+            }
+        },
+        "PaymentConditionInfo":{
+            "description": "Descreve uma Condição de pagamento",
+            "type":"object",
+            "properties": {
+                "CompanyId":{
+                    "type":"string",
+                    "description":"Código da empresa",
+                    "maxLength":3
+                },
+                "BranchId":{
+                   "type":"string",
+                   "description":"Código da Filial",
+                   "example": "D MG 01",
+                   "maxLength":12,
+                   "x-totvs":[
+                        {
+                            "product":"protheus",
+                            "field":"SE4.E4_FILIAL",
+                            "required":true,                               
+                            "length":"8",
+                            "available":true,
+                            "canUpdate":false
+                        }
+                    ]
+                },
+                "CompanyInternalId":{
+                   "type":"string",
+                   "description":"Código da Empresa",
+                   "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "EMPRESA|SE4.E4_FILIAL|SE4.E4_CODIGO",
+                            "required": true,
+                            "type": "varchar",
+                            "length": "13",
+                            "avialable": true,
+                            "canUpdate": false
+                        }
+                    ]                       
+                },
+                "Code":{
+                   "type":"string",
+                   "description":"Código da Condição de Pagamento.",
+                   "example": "001",
+                   "maxLength":3,
+                   "x-totvs":[
+                       {
+                        "product": "protheus",
+                        "field":"SE4.E4_CODIGO",
+                        "type":"varchar",
+                        "length": "3",
+                        "required":true,
+                        "avaliable":true,
+                        "canUpdate": false
+                       }
+                   ]                       
+                },
+                "InternalId":{
+                    "type":"string",
+                    "description":"InternalId da condição de pagamento no ERP",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "SE4.E4_FILIAL|SE4.E4_CODIGO",
+                            "type": "varchar",
+                            "length": "11",
+                            "note":"O internalID da Condição de Pagamento é formado por SE4.E4_FILIAL|E4.E4_CODIGO"
+                        }                         
+                    ]
+                },
+                "Description":{
+                    "type":"string",
+                    "description":"Descrição da Condição de Pagamento",
+                    "example": "A VISTA",
+                    "maxLength":50,
+                    "x-totvs": [
+                        {
+                            "product":"protheus",
+                            "field":"SE4.E4_DESCRI",
+                            "type":"varchar",
+                            "length":"15",
+                            "required":true,
+                            "note":"Descrição"
+                        }
+                    ]
+                },
+                "MeanTime":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Número Médio de Dias",
+                    "minimum":0,
+                    "maximum":99
+                },
+                "DaysFirstDue":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Quantidade de dias para o vencimento da primeira parcela (0 a 99)",
+                    "minimum":0,
+                    "maximum":99
+                },
+                "QuantityPlots":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Quantidade de parcelas (1 a 99).",
+                    "minimum":1,
+                    "maximum":99
+                },
+                "RangePlots":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Intervalo entre cada parcela, em dias (0 a 999).",
+                    "minimum":1,
+                    "maximum":999
+                },
+                "WeekDayFixed":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Define um dia da semana fixo para o vencimento das parcelas. 1 - Domingo 2 - Segunda 3 - Terça 4 - Quarta 5 - Quinta 6 - Sexta 7 - Sábado.",
+                    "minimum":1,
+                    "maximum":7,
+                    "enum":[
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7"
+                    ]
+                },
+                "DayMonthFixed":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Define um dia do mês fixo para o vencimento das parcelas (1 a 31).",
+                    "minimum":1,
+                    "maximum":31
+                },
+                "DaysCondition":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Define como será a contagem dos dias do intervalo de cada parcela. 1 - Data do Dia 2 - Fora o Dia 3 - Fora Semana 4 - Fora Quinzena 5 - Fora Mês 6 - Fora Dezena.",
+                    "minimum":1,
+                    "maximum":6,
+                    "enum":[
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",                            
+                        "6"
+                    ]
+                },
+                "FinancialDiscountDays":{
+                    "type":"integer",
+                    "format":"int32",
+                    "description":"Quantidade de dias para o desconto financeiro (1 a 99).",
+                    "minimum":1,
+                    "maximum":31
+                },
+                "PercentageDiscountDays":{
+                    "type":"number",
+                    "description":"Percentual do desconto financeiro para a condição",
+                    "maxLength":7
+                },
+                "PercentageIncrease":{
+                    "type":"number",
+                    "description":"Percentual do acréscimo financeiro para a condição.",
+                    "maxLength":8
+                },
+                "PlotsType":{
+                    "type":"object",
+                    "description":"Define as parcelas da condição de pagamento quando o intervalo não for regular ou o valor das parcelas não for dividido de forma igual.",
+                    "properties":{
+                        "DueType":{
+                            "type":"array",
+                            "items":{
+                                "$ref":"#/components/schemas/DueType"
+                            }
+                        }
+                    }
+                }             
+            }
+        },
+        "DueType":{
+            "type":"object",
+            "properties":{
+                "DueDay":{
+                    "type":"integer",
+                    "format": "int32",
+                    "description":"Quantidade de dias para o vencimento da parcela (0 a 999).",
+                    "minimum":0,
+                    "maximum":999
+                },
+                "Percentage":{
+                    "type":"number",
+                    "format": "double",
+                    "description":"Indica se o valor da parcela deverá ser um percentual do total.",
+                    "maxLength":8
+                }
+            }
+        }
+    }
+}
