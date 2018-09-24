@@ -1,0 +1,1132 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/GetEmployeeSituations_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "GetEmployeeSituations",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Histório de Situação do(s) funcionário(s)",
+        "description": "Busca/Retorna o histórico de situação de um determinado período por empresa/filial",
+        "segment": "Recursos Humanos"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "NATIÊ SUGAHARA",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "PIMS",
+          "contact": "JOSÉ ALBERTO DA SILVA",
+          "note": "",
+          "adapter": ""
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "request",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContent",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContent",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContent": {
+      "type": "object",
+      "properties": {
+        "RequestEmployeeSituations": {
+          "$ref": "#/definitions/RequestType",
+          "type": "object"
+        }
+      },
+      "required": [
+        "RequestEmployeeSituations"
+      ]
+    },
+    "ReturnContent": {
+      "type": "object",
+      "properties": {
+        "ReturnEmployeeSituations": {
+          "$ref": "#/definitions/ReturnType",
+          "type": "object"
+        }
+      }
+    },
+    "RequestType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Código da Empresa do funcionário",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "Não possui campo físico na tabela",
+              "required": true,
+              "type": "varchar",
+              "length": "02",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PIMS",
+              "field": "EMPRESA.CD_INT_ERP",
+              "required": true,
+              "type": "varchar",
+              "length": "20",
+              "note": "Código da Empresa ( no ERP ) do funcionário para recuperar os históricos",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Código da Filial do funcionário",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SR8XX0.R8_FILIAL",
+              "required": true,
+              "type": "char",
+              "length": "02",
+              "note": "Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PIMS",
+              "field": "FILIAL.CD_FILIAL",
+              "required": true,
+              "type": "varchar",
+              "length": "20",
+              "note": "Código da Filial ( No ERP ) do funcionário para recuperar os históricos",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId das informações da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "o InternalID da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PIMS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StartDate": {
+          "description": "Data Inicial",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "8",
+              "note": "Data Inicial Pesquisa",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PIMS",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "8",
+              "note": "Data inicial para recuperar os históricos - parametro",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinishDate": {
+          "description": "Data final para recuperar os históricos",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "8",
+              "note": "Data Final pesquisa",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PIMS",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "8",
+              "note": "Data Final para recuperar os históricos - data do dia",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StartEmployeeCode": {
+          "description": "Matricula Inicial do Funcionário",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SRA.RA_MAT",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Matricula Inicial do Funcionário - não é obrigatório",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinishEmployeeCode": {
+          "description": "Matricula Inicial do Funcionário",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SRA.RA_MAT",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Matricula Inicial do Funcionário - não é obrigatório",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "CompanyId",
+        "BranchId",
+        "StartDate",
+        "FinishDate"
+      ]
+    },
+    "ReturnType": {
+      "type": "object",
+      "properties": {
+        "ListOfEmployeeSituations": {
+          "type": "array",
+          "multipleOf": 0.00001,
+          "items": {
+            "type": "object",
+            "properties": {
+              "CompanyId": {
+                "description": "Codigo da Empresa",
+                "type": "string",
+                "x-totvs": [
+                  {
+                    "product": "PROTHEUS",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "RM",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "DATASUL",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "PROXIMA",
+                    "field": "Código da Empresa",
+                    "required": true,
+                    "type": "varchar",
+                    "length": "...",
+                    "note": "Codigo da Empresa",
+                    "available": true,
+                    "canUpdate": false
+                  }
+                ]
+              },
+              "BranchId": {
+                "description": "Codigo da Filial",
+                "type": "string",
+                "x-totvs": [
+                  {
+                    "product": "PROTHEUS",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "RM",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "DATASUL",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "PROXIMA",
+                    "field": "Codigo da Filial",
+                    "required": true,
+                    "type": "varchar",
+                    "length": "...",
+                    "note": "Codigo da Filia",
+                    "available": true,
+                    "canUpdate": false
+                  }
+                ]
+              },
+              "InternalId": {
+                "description": "InternalId do Code",
+                "type": "string",
+                "x-totvs": [
+                  {
+                    "product": "PROTHEUS",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "RM",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "DATASUL",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "PROXIMA",
+                    "field": "Código do Funcionário",
+                    "required": false,
+                    "type": "varchar",
+                    "length": "...",
+                    "note": "InternalId do Code",
+                    "available": true,
+                    "canUpdate": false
+                  }
+                ]
+              },
+              "EmployeeCode": {
+                "description": "Código do Funcionário",
+                "type": "string",
+                "x-totvs": [
+                  {
+                    "product": "PROTHEUS",
+                    "field": "SRA.RA_MAT",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "RM",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "DATASUL",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "PROXIMA",
+                    "field": "Código do Funcionário",
+                    "required": true,
+                    "type": "varchar",
+                    "length": "...",
+                    "note": "Código do Funcionário",
+                    "available": true,
+                    "canUpdate": false
+                  }
+                ]
+              },
+              "WorkCenterCode": {
+                "description": "SRA.RA_CC",
+                "type": "string",
+                "x-totvs": [
+                  {
+                    "product": "PROTHEUS",
+                    "field": "SRA.RA_CC",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "RM",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "DATASUL",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "PROXIMA",
+                    "field": "Centro de Trabalho",
+                    "required": false,
+                    "type": "varchar",
+                    "length": "...",
+                    "note": "Centro de Trabalho - Enviado pelo Prothues -                             Representa o Código da Unidade Administrativa no PIMSMC.",
+                    "available": true,
+                    "canUpdate": false
+                  }
+                ]
+              },
+              "SiteCode": {
+                "description": "Código do Estabelecimento do Funcionário",
+                "type": "integer",
+                "minimum": -999,
+                "maximum": 999,
+                "format": "int32",
+                "x-totvs": [
+                  {
+                    "product": "PROTHEUS",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "RM",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "DATASUL",
+                    "field": "",
+                    "required": false,
+                    "type": "",
+                    "length": "",
+                    "note": "",
+                    "available": true,
+                    "canUpdate": false
+                  },
+                  {
+                    "product": "PROXIMA",
+                    "field": "Código do Estabelecimento do Funcionário",
+                    "required": false,
+                    "type": "varchar",
+                    "length": "...",
+                    "note": "Código do Estabelecimento do Funcionário",
+                    "available": true,
+                    "canUpdate": false
+                  }
+                ]
+              },
+              "ListOfSituation": {
+                "description": "Tipo do Afastamento",
+                "type": "array",
+                "minimum": -9999,
+                "maximum": 9999,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "CommencementDate": {
+                      "type": "string",
+                      "format": "date",
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "SR8.R8_DATAINI",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "Data inicial da Situação",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Data de início da situação",
+                          "required": true,
+                          "type": "date",
+                          "length": "...",
+                          "note": "Data de início da situação",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "SituationLastDay": {
+                      "type": "string",
+                      "format": "date",
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "SR8.R8_DATAFIM",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "Esse campo pode estar em branco, pois o data de retorno pode não ser conhecida no ato do lançamento do afastamento",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Data do último dia da situação",
+                          "required": true,
+                          "type": "date",
+                          "length": "...",
+                          "note": "Data do último dia da situação",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "INSSPaymentCommencement": {
+                      "type": "string",
+                      "format": "date",
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Data início pagamento pelo INSS",
+                          "required": true,
+                          "type": "date",
+                          "length": "...",
+                          "note": "Data início pagamento pelo INSS",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "OriginSituation": {
+                      "description": "1 - Informada / 2 - Cálculo / 3 - Ponto / 4 - Divergência / 5 - Agrícola",
+                      "type": "string",
+                      "enum": [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                      ],
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "Protheus sempre retornará 1(Informada) ou 2(Calculo)",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Origem da Situação",
+                          "required": true,
+                          "type": "number",
+                          "length": "...",
+                          "note": "Origem da Situação",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "SituationDay": {
+                      "type": "integer",
+                      "format": "int32",
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "SR8.R8_DURACAO",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Número de dias em que o funcionário se encontra na situação",
+                          "required": true,
+                          "type": "number",
+                          "length": "...",
+                          "note": "Número de dias em que o funcionário se encontra na situação",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "SituationTime": {
+                      "type": "number",
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "Essa informação não é tratada pelo Protheus",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Quantidade de horas na situação",
+                          "required": true,
+                          "type": "decimal",
+                          "length": "...",
+                          "note": "Quantidade de horas na situação",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "SituationScheduleEnd": {
+                      "type": "integer",
+                      "format": "int32",
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "Essa informação não é tratada pelo Protheus",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Número Horario Termino Situacao Afastamento",
+                          "required": false,
+                          "type": "number",
+                          "length": "...",
+                          "note": "Número Horario Termino Situacao Afastamento",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "CIDCode": {
+                      "type": "string",
+                      "minLength": 6,
+                      "maxLength": 6,
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "SR8.R8_CID",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Código do acidente ou doença para as situações de afastamento por doença",
+                          "required": false,
+                          "type": "varchar",
+                          "length": "...",
+                          "note": "Código do acidente ou doença para as situações de afastamento por doença",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "CommencementSchedule": {
+                      "type": "integer",
+                      "format": "int32",
+                      "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "Essa informação não é tratada pelo Protheus",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "RM",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "DATASUL",
+                          "field": "",
+                          "required": false,
+                          "type": "",
+                          "length": "",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        },
+                        {
+                          "product": "PROXIMA",
+                          "field": "Número Horario Inicio Situacao Afastamento",
+                          "required": false,
+                          "type": "varchar",
+                          "length": "...",
+                          "note": "Número Horario Inicio Situacao Afastamento",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                    },
+                    "SituationInformation": {
+                      "type": "object",
+                      "properties": {
+                        "SituationCode": {
+                          "type": "integer",
+                          "format": "int32",
+                          "x-totvs": [
+                            {
+                              "product": "PROTHEUS",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "Protheus trata as situações 1, 2, 3, 5 e 6",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "RM",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "DATASUL",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "PROXIMA",
+                              "field": "Código da Situação",
+                              "required": true,
+                              "type": "number",
+                              "length": "...",
+                              "note": "Código da Situação",
+                              "available": true,
+                              "canUpdate": false
+                            }
+                          ]
+                        },
+                        "SituationMeaning": {
+                          "description": "1 - Trabalhando / 2 - Afastado / 3 - Entrada Transferência / 4 - Saída Transferência / 5 - Férias / 6 - Rescisão Contrato / 7 - Falta Injustificada / 8 - Jornada Incompleta / 9 - Ausência Justificada / 10 - Contrato Desativado",
+                          "type": "string",
+                          "enum": [
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10"
+                          ],
+                          "x-totvs": [
+                            {
+                              "product": "PROTHEUS",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "RM",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "DATASUL",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "PROXIMA",
+                              "field": "Significado da Situação",
+                              "required": false,
+                              "type": "number",
+                              "length": "...",
+                              "note": "Significado da Situação",
+                              "available": true,
+                              "canUpdate": false
+                            }
+                          ]
+                        },
+                        "AbsenteeismType": {
+                          "description": "1 - Ausência / 2 - Doença / 3 - Acidente / 4 - Maternidade / 5 - Paternidade / 6 - Serviço Militar / 7 - Licença Remunerada / 8 - Licença não Remunerada",
+                          "type": "string",
+                          "enum": [
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8"
+                          ],
+                          "x-totvs": [
+                            {
+                              "product": "PROTHEUS",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "RM",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "DATASUL",
+                              "field": "",
+                              "required": false,
+                              "type": "",
+                              "length": "",
+                              "note": "",
+                              "available": true,
+                              "canUpdate": false
+                            },
+                            {
+                              "product": "PROXIMA",
+                              "field": "Tipo do Afastamento",
+                              "required": true,
+                              "type": "number",
+                              "length": "...",
+                              "note": "Tipo do Afastamento",
+                              "available": true,
+                              "canUpdate": false
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "SituationDay"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
