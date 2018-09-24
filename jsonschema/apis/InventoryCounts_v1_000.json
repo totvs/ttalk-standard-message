@@ -1,0 +1,462 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para a entidade objeto de Inventário de Estoque para produtos TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/mat/v1/inventoryCounts"
+    }
+  ],
+  "info": {
+    "description": "API para a entidade objeto de Inventário de Estoque para produtos TOTVS",
+    "version": "2.000",
+    "title": "Inventory Counts",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "InventoryCounts",
+        "description": "Inventário Estoque",
+        "segment": "Manufatura"
+      },
+      "productInformation": [
+        {
+          "product": "datasul",
+          "contact": "SUPPLY.ML.MAN.ESTOQUE@totvs.com.br",
+          "description": "Atualização Fichas Inventário",
+          "adapter": "mat/api/v1/inventoryCounts.p",
+          "helpUrl": ""
+        }
+      ]
+    }
+  },
+  "tags": [
+    {
+      "name": "InventoryCounts",
+      "description": "Inventário Estoque"
+    }
+  ],
+  "externalDocs": {
+    "description": "Descubra mais",
+    "url": "http://api.totvs.com.br"
+  },
+  "paths": {
+    "/inventoryCounts": {
+      "get": {
+        "tags": [
+          "inventory Counts"
+        ],
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "datasul",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "summary": "Retorna lista de fichas de inventário",
+        "description": "Retorna uma ou mais de fichas de inventário conforme parâmetros recebidos",
+        "operationId": "getInventoryCounts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/countingSheetNumber"
+          },
+          {
+            "$ref": "#/components/parameters/inventoryDate"
+          },
+          {
+            "$ref": "#/components/parameters/itemCode"
+          },
+          {
+            "$ref": "#/components/parameters/groupCode"
+          },
+          {
+            "$ref": "#/components/parameters/counterCode"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/pagedInventoryCounts"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "inventory Counts"
+        ],
+        "summary": "Cria ficha(s) de inventário",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "datasul",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "description": "Geração de ficha de inventário. Informar a quantidade apurada na primeira contagem. A atualização da segunda/terceira contagem deve ser enviado via método PUT",
+        "operationId": "postInventoryCounts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/inventoryCountInfo"
+              }
+            }
+          },
+          "description": "Objeto para criação de uma ficha de inventário"
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/inventoryCountType"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao gerar ficha(s) de inventário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "inventory Counts"
+        ],
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "datasul",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "summary": "Atualiza ficha(s) de inventário",
+        "description": "Método responsável pela atualização das quantidades apuradas na ficha de inventário. Caso ainda não exista a ficha no sistema, deve ser previamente criada por meio do método POST",
+        "operationId": "putInventoryCounts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/updateParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/inventoryCountType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ficha inventário não localizada na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao gerar ficha(s) de inventário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inventoryCounts/{id}": {
+      "get": {
+        "tags": [
+          "inventory Counts"
+        ],
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "datasul",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "summary": "Retorna uma única ficha de inventário pelo número",
+        "description": "Retorna uma ficha de inventário correspondente ao número informado",
+        "operationId": "getInventoryId",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/inventoryCountType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ficha inventário não localizada na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro de negócio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "inventory Counts"
+        ],
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "datasul",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "summary": "Elimina ficha de inventário",
+        "description": "Elimina a ficha de inventário pelo número e data de saldo",
+        "operationId": "deleteInventoryId",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/inventoryCountType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ficha inventário não localizada na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro de negócio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inventoryCounts/{id}/deleteCounts": {
+      "put": {
+        "tags": [
+          "inventory Counts"
+        ],
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "datasul",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "summary": "Elimina a(s) contagem(s) ficha inventário",
+        "description": "Método responsável pela eliminação da contagem",
+        "operationId": "deleteCount",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#/definitions/inventoryCountType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ficha inventário não localizada na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro de negócio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "Identificador do Inventário",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Datasul",
+              "note": "Identificador único do inventário.  Composto pela concatenação da data do inventário(inventoryDate) + Número da ficha de inventário (countingSheetNumber). Ex- '2018-05-06_1'"
+            }
+          ]
+        }
+      },
+      "countingSheetNumber": {
+        "name": "countingSheetNumber",
+        "in": "query",
+        "description": "Número da ficha de inventário",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "inventoryDate": {
+        "name": "inventoryDate",
+        "in": "query",
+        "required": false,
+        "description": "Data que o estoque está sendo contado",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "numOfCount": {
+        "name": "numOfCount",
+        "in": "query",
+        "description": "Número da contagem",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "itemCode": {
+        "name": "itemCode",
+        "in": "query",
+        "description": "Código do Item",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "groupCode": {
+        "name": "groupCode",
+        "in": "query",
+        "description": "Código Agrupador Inventário",
+        "schema": {
+          "type": "number"
+        }
+      },
+      "counterCode": {
+        "name": "counterCode",
+        "in": "query",
+        "description": "Código do conferente",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
