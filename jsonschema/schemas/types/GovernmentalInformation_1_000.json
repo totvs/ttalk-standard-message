@@ -1,104 +1,55 @@
 {
-
-    "openapi": "3.0.1",
-
-    "servers": [
-
-        {
-            "description": "API para cadastro informações governamentais nos produtos TOTVS",
-            "url": "api.totvs.com.br"
-        }
-
-    ],
-
-    "info": {
-        "description": "API para cadastro informações governamentais para uso dos produtos TOTVS",
-        "version": "1.000",
-        "title": "GovernmentalInformation",
-        "contact": {
-            "name": "T-Talk",
-            "url": "api.totvs.com.br",
-            "email": "comiteintegracao@totvs.com.br"
-        }
-    },
-    "paths": {},
-    "components": {
-        "parameters": {
-            "Authorization": {
-                "name": "authorization",
-                "in": "header",
-                "required": true,
-                "description": "Cabeçalho usado para autorização das requisições",
-                "schema": {
-                    "type": "string"
-                }
-            },
-            "Order": {
-                "name": "order",
-                "in": "query",
-                "description": "Ordenação da coleção",
-                "required": false,
-                "schema": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "uniqueItems": true
-                }
-            }
-        },
-        "schemas": {
-            "PagedGovernmentalInformation": {
-                "type": "object",
-                "allOf": [{
-                    "$ref": "#/components/schemas/GovernmentalInformation"
-                }]
-            },
-            "GovernmentalInformation": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "$ref": "#/components/schemas/GovernmentalInformationInfo"
-                }
-            },
-            "GovernmentalInformationInfo": {
-                "type": "object",
-                "description": "Documentos Governamentais",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "Identificação Governamental"
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "CPF/CNPJ",
-                        "x-totvs": {
-                            "protheus": {
-                                "field": "SA1.A1_CGC",
-                                "required": false,
-                                "type": "Char",
-                                "length": "14",
-                                "avialable": true,
-                                "canUpdate": true
-                            }
-                        }
-                    },
-                    "scope": {
-                        "type": "string",
-                        "example": "Federal"
-                    },
-                    "expireOn": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2018-06-29T09:34:30Z",
-                        "description": "Validade do Documento"
-                    },
-                    "issueOn": {
-                        "type": "string",
-                        "example": "00.000.000/0000-00"
-                    }
-                }
-            }
-        }
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "GovernmentalInformation",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "GovernmentalInformation",
+        "description": "Informações Governamentais",
+        "segment": ""
+      }
     }
+  },
+  "definitions": {
+    "GovernmentalInformationType": {
+      "description": "Conjunto de identificações de cunho governamental, como CNPJ, CPF, Passaporte, Inscrição Estadual, Municipal, etc.",
+      "type": "object",
+      "properties": {
+        "Id": {
+          "description": "Identificação.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope": {
+          "description": "Federal - Federal / State - Estadual / Municipal - Municipal",
+          "type": "string",
+          "enum": [
+            "Federal",
+            "State",
+            "Municipal"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "issueOn": {
+          "type": "string",
+          "format": "date"
+        },
+        "expiresOn": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "scope",
+        "name"
+      ]
+    }
+  }
 }
