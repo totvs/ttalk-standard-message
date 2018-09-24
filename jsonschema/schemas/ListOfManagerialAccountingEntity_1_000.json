@@ -1,0 +1,396 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfManagerialAccountingEntity_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "ListOfManagerialAccountingEntity",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "ListOfManagerialAccountingEntity",
+        "description": "Conta Gerencial - Contábil",
+        "segment": "ERP base"
+      },
+      "productInformation": [
+        {
+          "product": "DATASUL",
+          "contact": "...",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "lOGIX",
+          "contact": "...",
+          "note": "",
+          "adapter": "..."
+        },
+        {
+          "product": "RM",
+          "contact": "Lucas Sepe",
+          "note": "",
+          "adapter": "..."
+        },
+        {
+          "product": "PROTHEUS",
+          "contact": "Rogerio Nagy",
+          "note": "",
+          "adapter": "CTBI800A.prw"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Empresa da Conta Gerencial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.CODCOLIGADA",
+              "required": true,
+              "type": "int",
+              "length": "02",
+              "note": "Código da Coligada",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "02",
+              "note": "será enviado o valor da variável cEmpAnt( empresa)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Filial da Conta Contábil",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "O cadastro de Conta Gerencial não possui Filial, sendo enviado o dado do contexto",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "02",
+              "note": "Será enviado o valor da variável cFilAnt",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.CODCOLIGADA | CONTEXT.CODFILIAL",
+              "required": true,
+              "type": "char",
+              "length": "10",
+              "note": "Concatenação da coligada do registro e filial do contexto",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "tabela.campo",
+              "required": true,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfManagerialAccountingEntity": {
+          "description": "Lista de Contas Gerenciais",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfManagerialAccountingEntityType",
+            "type": "object"
+          },
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "",
+              "length": "",
+              "note": "Lista de Contas Gerenciais (Tabela CGERENCIA)",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Lista de entidades gerenciais. O Protheus irá utilizar a entidade contábil gerencial configurada no parâmetro MV_CTBCGER",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfManagerialAccountingEntityType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ManagerialAccountingEntityType",
+        "type": "object"
+      }
+    },
+    "ManagerialAccountingEntityType": {
+      "type": "object",
+      "properties": {
+        "Code": {
+          "description": "Código com máscara (exemplos: '1', '1.1', '1.1.001')",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.CODCONTA",
+              "required": true,
+              "type": "char",
+              "length": "40",
+              "note": "Código da Conta Gerencial",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_CODIGO",
+              "required": true,
+              "type": "char",
+              "length": "15",
+              "note": "Código da Entidade Contábil Gerencial",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId do Code",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.CODCOLIGADA | CGERENCIA.CODCONTA",
+              "required": true,
+              "type": "char",
+              "length": "50",
+              "note": "Código que indentificar a conta gerencial no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_PLANO+CV0_CODIGO",
+              "required": false,
+              "type": "char",
+              "length": "17",
+              "note": "Código que irá identificar a entidade contábil no sistema externo",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ShortCode": {
+          "description": "Código Reduzido",
+          "type": "string",
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.REDUZIDO",
+              "required": true,
+              "type": "char",
+              "length": "20",
+              "note": "Número reduzido da conta gerencial",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Campo nao utilizado no Protheus",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Description": {
+          "description": "Descrição",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.DESCRICAO",
+              "required": true,
+              "type": "char",
+              "length": "40",
+              "note": "Descrição da conta gerencial",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_DESC",
+              "required": true,
+              "type": "char",
+              "length": "30",
+              "note": "Descrição da Entidade contábil",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PostingNature": {
+          "description": "Natureza / 1 - Devedora / 2 - Credora",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.NATUREZA",
+              "required": true,
+              "type": "int",
+              "length": "02",
+              "note": "No RM este campo assume 0 = Credora e 1 = Devedora",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_NORMAL",
+              "required": true,
+              "type": "char",
+              "length": "1",
+              "note": "1 - Devedora 2 - Credora",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AnalyticalOrSynthetic": {
+          "description": "Se Analítico ou Sintético / 1 - Sintético / 2 - Analítico",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.ANALITICA",
+              "required": true,
+              "type": "int",
+              "length": "02",
+              "note": "No RM este campo assume 0 = Sintética e 1 = Analítica",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_CLASSE",
+              "required": true,
+              "type": "varchar",
+              "length": "1",
+              "note": "Define se o item contábil é Sintético ou Analitico",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ActiveOrInactive": {
+          "description": "Se 1(Ativa) ou 2(Inativa) / 1 - Ativa / 2 - Inativo, Bloqueado ou Excluido",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.INATIVA",
+              "required": true,
+              "type": "smallint",
+              "length": "2",
+              "note": "Informação de Conta Gerencial ativa/inativa",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_BLOQUE",
+              "required": true,
+              "type": "varchar",
+              "length": "1",
+              "note": "Define se o item esta Ativa ou Inativa (Bloqueada)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "Code",
+        "ShortCode",
+        "PostingNature",
+        "AnalyticalOrSynthetic",
+        "ActiveOrInactive"
+      ]
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#",
+  "info": {
+    "description": "",
+    "version": "2.001",
+    "title": "PaymentCondition",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "PaymentCondition",
+        "description": "Condição de Pagamento",
+        "segment": ""
+      },
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContent",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Código da empresa.",
+          "type": "string",
+          "maxLength": 3
+        },
+        "BranchId": {
+          "description": "Código da filial.",
+          "type": "string",
+          "maxLength": 12
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da chave completa de empresa do produto",
+          "type": "string"
+        },
+        "Code": {
+          "description": "Código da condição de pagamento.",
+          "type": "string",
+          "maxLength": 3
+        },
+        "InternalId": {
+          "description": "InternalId do Code",
+          "type": "string"
+        },
+        "Description": {
+          "description": "Descrição da condição de pagamento.",
+          "type": "string",
+          "maxLength": 50
+        },
+        "MeanTime": {
+          "description": "Número Médio de Dias.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99,
+          "format": "int32"
+        },
+        "DaysFirstDue": {
+          "description": "Quantidade de dias para o vencimento da primeira parcela (0 a 99).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99,
+          "format": "int32"
+        },
+        "QuantityPlots": {
+          "description": "Quantidade de parcelas (1 a 99).",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99,
+          "format": "int32"
+        },
+        "RangePlots": {
+          "description": "Intervalo entre cada parcela, em dias (0 a 999).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999,
+          "format": "int32"
+        },
+        "WeekDayFixed": {
+          "description": "Define um dia da semana fixo para o vencimento das parcelas.             1 - Domingo             2 - Segunda             3 - Terça             4 - Quarta             5 - Quinta             6 - Sexta             7 - Sábado",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"
+          ]
+        },
+        "DayMonthFixed": {
+          "description": "Define um dia do mês fixo para o vencimento das parcelas (1 a 31).",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "format": "int32"
+        },
+        "DaysCondition": {
+          "description": "Define como será a contagem dos dias do intervalo de cada parcela.             1 - Data do Dia             2 - Fora o Dia             3 - Fora Semana             4 - Fora Quinzena             5 - Fora Mês             6 - Fora Dezena",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ]
+        },
+        "FinancialDiscountDays": {
+          "description": "Quantidade de dias para o desconto financeiro (1 a 99).",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99,
+          "format": "int32"
+        },
+        "PercentageDiscountDays": {
+          "description": "Percentual do desconto financeiro para a condição.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -99.99,
+          "maximum": 99.99
+        },
+        "PercentageIncrease": {
+          "description": "Percentual do acréscimo financeiro para a condição.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -999.99,
+          "maximum": 999.99
+        },
+        "Plots": {
+          "$ref": "#/definitions/PlotsType",
+          "description": "Define as parcelas da condição de pagamento quando o intervalo não for regular ou o valor das parcelas não for dividido de forma igual.",
+          "type": "object"
+        }
+      }
+    },
+    "PlotsType": {
+      "type": "object",
+      "properties": {
+        "Due": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DueType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "DueType": {
+      "type": "object",
+      "properties": {
+        "DueDay": {
+          "description": "Quantidade de dias para o vencimento da parcela (0 a 999).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999,
+          "format": "int32"
+        },
+        "Percentage": {
+          "description": "Indica se o valor da parcela deverá ser um percentual do total.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -999.99,
+          "maximum": 999.99
+        }
+      }
+    },
+    "ReturnContent": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

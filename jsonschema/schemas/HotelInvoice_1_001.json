@@ -1,0 +1,338 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/HotelInvoice_1_001.json#",
+  "info": {
+    "description": "",
+    "version": "1.001",
+    "title": "HotelInvoice",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "HotelInvoice",
+        "description": "Faturas de Hotelaria",
+        "segment": "Controladoria"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "Rogerio Nagy",
+          "note": "GDP de Inovação Controladoria",
+          "adapter": "FINI791"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContent",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Código da Empresa",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "varchar",
+              "length": "2",
+              "note": "Será enviado o valor da variável cEmpAnt (Empresa)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Código da Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "varchar",
+              "length": "12",
+              "note": "Será enviado o valor da variável cFilAnt",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId das informações da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "cEmpAnt|FWxFilial(\"FO8\")",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "InternalID da empresa",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "Identificador único da fatura",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "InternalId da Fatura",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Code": {
+          "description": "Código da fatura",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "FO8_NUM",
+              "required": true,
+              "type": "varchar",
+              "length": "9",
+              "note": "Código da fatura, respeitando o tamanho do número do título a receber (E1_NUM), pois o título da fatura será gerado com esse código.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IssueDate": {
+          "description": "Data de Emissão da fatura",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "FO8_DATA",
+              "required": true,
+              "type": "date",
+              "length": "8",
+              "note": "Data de Emissão da fatura",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerVendorInternalId": {
+          "description": "Identificador único do Cliente da fatura",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "XXF_INTVAL",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "InternalId do Cliente",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Value": {
+          "description": "Valor da Fatura",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "FO8_VALOR",
+              "required": true,
+              "type": "decimal",
+              "length": "16,2",
+              "note": "Valor da Fatura",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "HotelInvoiceCancellation": {
+          "description": "Indicação se é um cancelamento de fatura / 1 - Fatura Cancelada / 2 - Fatura não cancelada",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "01",
+              "note": "Indicação se é um cancelamento de fatura por padrão é 2 não cancelado",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SalesChargeInformation": {
+          "$ref": "#/definitions/SalesChargeInformationType",
+          "description": "Informações de comissão descontada.",
+          "type": "object"
+        },
+        "ListOfRetailSales": {
+          "description": "Lista de Notas da Fatura",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfRetailSalesType",
+            "type": "object"
+          }
+        },
+        "ListOfAccountReceivableInformation": {
+          "description": "Lista de Informações do Contas a Receber",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfAccountReceivableInformationType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ListOfRetailSalesType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RetailSalesType",
+        "type": "object"
+      }
+    },
+    "RetailSalesType": {
+      "type": "object",
+      "properties": {
+        "RetailSalesInternalId": {
+          "description": "Identificador Único do RPS integrado com a mensagem RetailSales",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "XXF_INTVAL",
+              "required": true,
+              "type": "Varchar",
+              "length": "50",
+              "note": "Identificador Único do RPS integrado com a mensagem RetailSales",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfAccountReceivableInformationType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccountReceivableInformationType",
+        "type": "object"
+      }
+    },
+    "AccountReceivableInformationType": {
+      "type": "object",
+      "properties": {
+        "Value": {
+          "description": "Valor do Título a Receber",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "E1_VALOR",
+              "required": true,
+              "type": "decimal",
+              "length": "16,2",
+              "note": "Valor do Título a Receber",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DueDate": {
+          "description": "Data de Vencimento do Título a Receber",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "E1_VENCTO",
+              "required": true,
+              "type": "date",
+              "length": "8",
+              "note": "Data de Vencimento do Título a Receber",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "SalesChargeInformationType": {
+      "type": "object",
+      "properties": {
+        "CustomerVendorInternalId": {
+          "description": "Identificador único do fornecedor.",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "XXF_INTVAL",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "InternalId do Fornecedor",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SalesChargeDiscount": {
+          "description": "Valor da Comissão Descontada",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "CHARGE",
+              "required": true,
+              "type": "decimal",
+              "length": "16,2",
+              "note": "Valor da Comissão Descontada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ReturnContent": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
