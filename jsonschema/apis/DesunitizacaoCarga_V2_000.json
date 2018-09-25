@@ -1,0 +1,179 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API para Consulta RFB",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/rfb/consultasEstruturadas/v2",
+            "variables": {
+                "serverUrl": {
+                    "default": "localhost"
+                },
+                "serverHttpPort": {
+                    "default": "8090"
+                }
+            }
+        }
+    ],
+    "info": {
+        "description": "API para Consulta RFB",
+        "version": "2.000",
+        "title": "Consulta RFB",
+        "contact": {
+            "name": "T-Talk",
+            "url": "API.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "Consulta RFB",
+                "description": "Joinville",
+                "segment": "Logística"
+            },
+            "productInformation": [
+                {
+                    "product": "sara",
+                    "contact": "SUPPLY.ML.LOG.SARA-SIP@totvs.com.br",
+                    "description": "Consulta RFB - Desunitização de carga",
+                    "adapter": "proc_rfb_1_6.sql",
+                    "helpUrl": "tdn.totvs.com/pages/viewpage.action?pageId=???"
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/desunitizacaoCarga": {
+            "get": {
+                "tags": [
+                    "Desunitização de Carga"
+                ],
+                "summary": "Consulta RFB - Estruturada - Desunitização de carga",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "sara",
+                            "available": true,
+                            "note": "Este verbo esta disponivel com todos os parametros exceto expandable.",
+                            "minimalVersion": "12.1.37"
+                        }
+                    ]
+                },
+                "description": "Conforme ADE parágrafo 2.2.3 - 1.6 Desunitização de carga",
+                "operationId": "RestDesunitizacaoCarga.get",
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdLoteConhecimento"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdLote"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "desunitizacaoCarga_2_000.json#/definitions/RegistroDesunitizacaoCarga"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição Inválida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/desunitizacaoCarga/xls": {
+            "get": {
+                "tags": [
+                    "Armazenagem de carga desunitizada criação de planilha"
+                ],
+                "summary": "Consulta RFB - Estruturada - Desunitização de carga planilha xls.",
+                "description": "Geração de arquivo .xls - Desunitização de carga",
+                "operationId": "RegistroDesunitizacaoCargaXls.get",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "sara",
+                            "available": true,
+                            "note": "Este verbo esta disponivel com todos os parametros exceto expandable",
+                            "minimalVersion": "12.1.37"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdLoteConhecimento"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdLote"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "desunitizacaoCarga_2_000.json#/definitions/RegistroDesunitizacaoCargaXls"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição Inválida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "IdLoteConhecimento": {
+                "name": "idLoteConhecimento",
+                "in": "query",
+                "description": "Identificador do Número do Conhecimento do Lote",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "IdLote": {
+                "name": "idLote",
+                "in": "query",
+                "description": "Identificador do Lote",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
