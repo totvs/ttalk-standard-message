@@ -19,6 +19,8 @@ fs.readdir(dirname, function (err, filenames) {
     console.log(err);
   }
 
+  console.log('filenames');
+  console.log(filenames);
   ///DE ALGUMA FORMA, ESSE FOREACH VAI TER QUE FICAR DENTRO
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
