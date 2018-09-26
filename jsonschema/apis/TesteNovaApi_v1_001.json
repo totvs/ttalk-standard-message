@@ -1,0 +1,329 @@
+{
+  "openapi": "3.0.1",
+  "servers": [{
+		"description": "API para a entidade filial (Branch) para produtos TOTVS",
+		"url": "http://{serverUrl}:{serverHttpPort}/api/framework/v1",
+		"variables":{			
+        "serverUrl":{
+          "default":"localhost"
+        },
+        "serverHttpPort":{
+          "default":"8051"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para informações de usuário do produtos TOTVS",
+    "version": "1.000",
+    "title": "Users",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Users",
+        "description": "Usuários do Sistema",
+        "segment": "FrameWork"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "Protheus_FW@totvs.com.br",
+          "description": "Cadastro de usuários",
+          "adapter": "",
+          "helpUrl": "link aqui"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Retorna todos usuários do sistema",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "description": "Retorna todos usuários do sistema",
+        "operationId": "getUsers",
+        "parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}, {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					}, {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					}, {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },          
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/UserIds"
+          },
+          {
+            "$ref": "#/components/parameters/Names"
+          }
+				],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/PagedUsers"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Inclui usuário passado na requisição",
+        "description": "Inclui usuário passado na requisição",
+        "operationId": "postUser",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "parameters": [{
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+        }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/PostUser"
+              }
+            }
+          },
+          "description": "Usuário para ser incluido"
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/PostUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "erro no momento da Inclusão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Retorna o usuário do sistema indicado",
+        "description": "Retorna o usuário do sistema indicado",
+        "operationId": "getUserId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/UserInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não localizado na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Altera o usuário passado na requisição",
+        "description": "Altera o usuário passado na requisição",
+        "operationId": "postUserId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/UserInfo"
+              }
+            }
+          },
+          "description": "Usuário para ser incluído"
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/UserInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "erro no momento da Inclusão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não localizado na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Exclusão de usuário da base",
+        "description": "Exclusão de usuário da base",
+        "operationId": "DeleteUserId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "PROTHEUS",
+              "available": true
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Não disponivel"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "UserId": {
+        "name": "userId",
+        "in": "path",
+        "required": true,
+        "description": "Identificador Único representando o usuário",
+        "schema": {
+          "type": "string"
+        }
+      },           
+      "UserIds": {
+        "name": "userIds",
+        "in": "query",
+        "description": "Códigos de usuários retornados pelo get separado por vírgula (,) ",
+        "required": false,
+        "example": "param1,param2",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Names": {
+        "name": "name",
+        "in": "query",
+        "description": "Busca usuário por nome",
+        "required": false,
+        "example": "Usuário de busca",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {}
+		}
+}
