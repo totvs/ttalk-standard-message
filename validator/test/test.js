@@ -11,7 +11,7 @@ describe("Validating files...", function() {
 });
 
 //OPENAPIS //
-var dirname = "../jsonschema/apis/";
+var dirname = "./jsonschema/apis/";
 fs.readdir(dirname, function (err, filenames) {
   if (err) {
     console.log(err);
