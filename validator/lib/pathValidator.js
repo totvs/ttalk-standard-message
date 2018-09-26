@@ -1,4 +1,4 @@
-var request = require('request');
+"use strict";
 
 var results;
 var foundorder;
