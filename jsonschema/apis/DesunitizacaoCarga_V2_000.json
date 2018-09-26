@@ -1,21 +1,22 @@
 {
     "openapi": "3.0.1",
-    "servers": [{
-		"description": "API para Consulta RFB",
-		"url": "http://{serverUrl}:{serverHttpPort}/api/rfb/consultasEstruturadas/v1",
-		"variables":{			
-			"serverUrl":{
-			  "default":"localhost"
-			},
-			"serverHttpPort":{
-			  "default":"8051"
-			}
-		}
-	  }
-	],
+    "servers": [
+        {
+            "description": "API para Consulta RFB",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/rfb/consultasEstruturadas/v2",
+            "variables": {
+                "serverUrl": {
+                    "default": "localhost"
+                },
+                "serverHttpPort": {
+                    "default": "8090"
+                }
+            }
+        }
+    ],
     "info": {
         "description": "API para Consulta RFB",
-        "version": "1.000",
+        "version": "2.000",
         "title": "Consulta RFB",
         "contact": {
             "name": "T-Talk",
@@ -32,20 +33,20 @@
                 {
                     "product": "sara",
                     "contact": "SUPPLY.ML.LOG.SARA-SIP@totvs.com.br",
-                    "description": "Consulta RFB - Conteúdo de Nota Fiscal",
-                    "adapter": "proc_rfb_busca_notas_w.sarasql",
+                    "description": "Consulta RFB - Desunitização de carga",
+                    "adapter": "proc_rfb_1_6.sql",
                     "helpUrl": "tdn.totvs.com/pages/viewpage.action?pageId=???"
                 }
             ]
         }
     },
     "paths": {
-        "/conteudoNotaFiscal": {
+        "/desunitizacaoCarga": {
             "get": {
                 "tags": [
-                    "Conteúdo de Nota Fiscal"
+                    "Desunitização de Carga"
                 ],
-                "summary": "Consulta RFB - Estruturada - Conteúdo de Nota Fiscal",
+                "summary": "Consulta RFB - Estruturada - Desunitização de carga",
                 "x-totvs": {
                     "productInformation": [
                         {
@@ -56,26 +57,23 @@
                         }
                     ]
                 },
-                "description": "ADE COANA/COTEC N°2 DE 26 de setembro de 2003 Anexo Único, seção 2.2 Consulta Estruturada, item 2.2.4 - Conteúdo de Nota Fiscal",
-                "operationId": "RestConteudoNotalFiscal.get",
+                "description": "Conforme ADE parágrafo 2.2.3 - 1.6 Desunitização de carga",
+                "operationId": "RestDesunitizacaoCarga.get",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/Authorization"
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
                     },
                     {
-                        "$ref": "#/components/parameters/Order"
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
                     },
                     {
-                        "$ref": "#/components/parameters/Page"
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
                     },
                     {
-                        "$ref": "#/components/parameters/PageSize"
+                        "$ref": "#/components/parameters/IdLoteConhecimento"
                     },
                     {
-                        "$ref": "#/components/parameters/NumeroNotaFiscal"
-                    },
-                    {
-                        "$ref": "#/components/parameters/IdTipoNotaFiscal"
+                        "$ref": "#/components/parameters/IdLote"
                     }
                 ],
                 "responses": {
@@ -84,7 +82,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegistroNotaFiscal"
+                                    "$ref": "desunitizacaoCarga_2_000.json#/definitions/RegistroDesunitizacaoCarga"
                                 }
                             }
                         }
@@ -94,7 +92,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorModel"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
                         }
@@ -102,14 +100,14 @@
                 }
             }
         },
-        "/conteudoNotaFiscal/xls": {
+        "/desunitizacaoCarga/xls": {
             "get": {
                 "tags": [
-                    "Conteúdo de Nota Fiscal"
+                    "Armazenagem de carga desunitizada criação de planilha"
                 ],
-                "summary": "Consulta RFB - Estruturada - Conteúdo de Nota Fiscal planilha xls.",
-                "description": "Conforme ADE parágrafo 2.2.4 - conteúdo de nota fiscal (referida a qualquer operação registrada nos termos do item 1), identificada pelo seu número e correspondente CNPJ emissor; http://normas.receita.fazenda.gov.br/sijut2consulta/link.action?visao=anotado&idAto=3193",
-                "operationId": "RestConteudoNotalFiscalXls.get",
+                "summary": "Consulta RFB - Estruturada - Desunitização de carga planilha xls.",
+                "description": "Geração de arquivo .xls - Desunitização de carga",
+                "operationId": "RegistroDesunitizacaoCargaXls.get",
                 "x-totvs": {
                     "productInformation": [
                         {
@@ -122,22 +120,13 @@
                 },
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/Authorization"
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
                     },
                     {
-                        "$ref": "#/components/parameters/Order"
+                        "$ref": "#/components/parameters/IdLoteConhecimento"
                     },
                     {
-                        "$ref": "#/components/parameters/Page"
-                    },
-                    {
-                        "$ref": "#/components/parameters/PageSize"
-                    },
-                    {
-                        "$ref": "#/components/parameters/NumeroNotaFiscal"
-                    },
-                    {
-                        "$ref": "#/components/parameters/IdTipoNotaFiscal"
+                        "$ref": "#/components/parameters/IdLote"
                     }
                 ],
                 "responses": {
@@ -146,7 +135,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegistroNotaFiscal"
+                                    "$ref": "desunitizacaoCarga_2_000.json#/definitions/RegistroDesunitizacaoCargaXls"
                                 }
                             }
                         }
@@ -156,7 +145,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorModel"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
                         }
@@ -166,33 +155,25 @@
         }
     },
     "components": {
-        "parameters": {            
-            "NumeroNotaFiscal": {
-                "name": "numeroNotaFiscal",
+        "parameters": {
+            "IdLoteConhecimento": {
+                "name": "idLoteConhecimento",
                 "in": "query",
-                "description": "Numeração da Nota Fiscal",
+                "description": "Identificador do Número do Conhecimento do Lote",
                 "required": false,
                 "schema": {
-                    "type": "string",
-                    "pattern": "^\\d{1,30}$",
-                    "maxLength": 30,
-                    "default": null
+                    "type": "string"
                 }
             },
-            "IdTipoNotaFiscal": {
-                "name": "idTipoNotaFiscal",
+            "IdLote": {
+                "name": "idLote",
                 "in": "query",
-                "description": "Tipo da Nota Fiscal (0 - Entrada; 1 - Fronteira; 2 - Saída)",
+                "description": "Identificador do Lote",
                 "required": false,
                 "schema": {
-                    "type": "integer",
-                    "format": "int32",
-                    "minimum": 0,
-                    "default": 0,
-                    "maximum": 2
+                    "type": "string"
                 }
             }
-        },
-        "schemas": {}
+        }
     }
 }
