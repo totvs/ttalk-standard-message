@@ -82,7 +82,7 @@ fs.readdir(dirname, function (err, filenames) {
 
         describe(" - Endpoints: ", function () {
           it("shouldn't contain 'post', 'put', 'get' or 'delete' in the URL", function () {
-
+            expect(pathValidatorResult.useHttpVerbInEndpointUrl).to.not.equal(true);
           });
         });
 
