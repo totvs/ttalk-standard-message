@@ -43,11 +43,7 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        describe(" - Content Format: ", function () {
-          it("should be a valid JsonSchema'", function () {
-
-          });
-
+        describe(" - Content Format: ", function () {         
           it("should be complient with OpenAPI in version 3.0'", function () {
             expect(parsedOpenAPI).to.have.property("openapi");
             expect(parsedOpenAPI).to.not.have.property("swagger");
@@ -67,7 +63,9 @@ fs.readdir(dirname, function (err, filenames) {
 
         describe(" - Version: ", function () {
           it("should contain the same version on 'info' as in filename", function () {
-
+            var fileNameVersion;
+            var infoVersion;
+            expect(fileNameVersion).to.equal(infoVersion);
           });
         });
 
