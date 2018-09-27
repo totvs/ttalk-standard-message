@@ -1,0 +1,308 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ManagerialAccountingEntity_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "ManagerialAccountingEntity",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "ManagerialAccountingEntity",
+        "description": "Mensagem de integração de entidades contábeis.",
+        "segment": "Geral"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "Felipe Raposo",
+          "note": "Analista SI alocado pela TOAT.",
+          "adapter": "CBTA800A"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "type": "string"
+        },
+        "BranchId": {
+          "type": "string"
+        },
+        "CompanyInternalId": {
+          "type": "string"
+        },
+        "ListOfManagerialAccountingEntity": {
+          "description": "Lista de contas gerenciais",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ListOfManagerialAccountingEntityType",
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "CompanyId",
+        "BranchId",
+        "CompanyInternalId",
+        "ListOfManagerialAccountingEntity"
+      ]
+    },
+    "ListOfManagerialAccountingEntityType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ManagerialAccountingEntityType",
+        "type": "object"
+      }
+    },
+    "ManagerialAccountingEntityType": {
+      "type": "object",
+      "properties": {
+        "Code": {
+          "description": "Código da entidade contábil gerencial sem máscara",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.CODCONTA",
+              "required": true,
+              "type": "char",
+              "length": "40",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_CODIGO",
+              "required": true,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId do Code",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.CODCOLIGADA | CGERENCIA.CODCONTA",
+              "required": true,
+              "type": "char",
+              "length": "50",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cEmpAnt | xFilial(\"CV0\") | CV0_PLANO | CV0_CODIGO",
+              "required": true,
+              "type": "char",
+              "length": "17",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ShortCode": {
+          "description": "Código reduzido",
+          "type": "string",
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.REDUZIDO",
+              "required": true,
+              "type": "char",
+              "length": "20",
+              "note": "Número reduzido da conta gerencial",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Campo nao utilizado no Protheus",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Description": {
+          "description": "Descrição da entidade contábil",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.DESCRICAO",
+              "required": true,
+              "type": "char",
+              "length": "40",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_DESC",
+              "required": true,
+              "type": "char",
+              "length": "30",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PostingNature": {
+          "description": "Natureza / 1 - Devedora / 2 - Credora",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.NATUREZA",
+              "required": true,
+              "type": "int",
+              "length": "02",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_NORMAL",
+              "required": true,
+              "type": "char",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AnalyticalOrSynthetic": {
+          "description": "Se analítico ou sintético / 1 - Sintético / 2 - Analítico",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.ANALITICA",
+              "required": true,
+              "type": "int",
+              "length": "02",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_CLASSE",
+              "required": true,
+              "type": "varchar",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ActiveOrInactive": {
+          "description": "Se ativa ou inativa / 1 - Ativa / 2 - Inativo, Bloqueado ou Excluido",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.INATIVA",
+              "required": true,
+              "type": "smallint",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_BLOQUE",
+              "required": true,
+              "type": "varchar",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TopCode": {
+          "description": "Código da entidade contábil superior sem máscara",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "CV0_ENTSUP",
+              "required": true,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "Code",
+        "InternalId"
+      ]
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

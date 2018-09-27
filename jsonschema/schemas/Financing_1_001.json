@@ -1,0 +1,684 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Financing_1_001.json#",
+  "info": {
+    "description": "",
+    "version": "1.001",
+    "title": "Financing",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Financing",
+        "description": "Geração dos lançamentos do plano de financiamento",
+        "segment": "Incorporação"
+      },
+      "productInformation": [
+        {
+          "product": "RM",
+          "contact": "Guilherme Sana Rezende",
+          "note": "GDP Inovação Const. e Proj.",
+          "adapter": "Financing"
+        },
+        {
+          "product": "PROTHEUS",
+          "contact": "",
+          "note": "",
+          "adapter": ""
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "ContractHeader": {
+          "type": "object",
+          "properties": {
+            "CompanyId": {
+              "description": "Empresa",
+              "type": "string"
+            },
+            "BranchId": {
+              "description": "Filial",
+              "type": "string"
+            },
+            "ContractNumber": {
+              "description": "Numero do Contrato",
+              "type": "string"
+            },
+            "DocumentTypeCode": {
+              "description": "O tipo de documento. Conforme a mensagem DocumentType",
+              "type": "string",
+              "maxLength": 3
+            }
+          }
+        },
+        "ListOfContractParcel": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ListOfContractParcelType",
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "ContractHeader",
+        "ListOfContractParcel"
+      ]
+    },
+    "ApportDistributionType": {
+      "type": "object",
+      "properties": {
+        "Apport": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApportType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ApportType": {
+      "type": "object",
+      "properties": {
+        "CostCenterCode": {
+          "description": "Centro de Custo",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "FLANRATCCU.CODCOLIGADA|FLANRATCCU.CODCCUSTO",
+              "required": true,
+              "type": "string",
+              "length": "30",
+              "note": "Centro de Custo (linha de produto + linha de receita + segmento de mercado + classe de uso)",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Value": {
+          "description": "Valor do Rateio para o Centro de Custo ou outro",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "FLANRATCCU.VALOR",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "Valor do Rateio para o Centro de Custo ou outro",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinancialCode": {
+          "description": "Natureza (Protheus) Tipo de Fluxo (DataSul)",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "FLANRATCCU.CODCOLIGADA|FLANRATCCU.CODNATFINANCEIRA",
+              "required": false,
+              "type": "string",
+              "length": "45",
+              "note": "Natureza Financeira",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfComponentType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ComponentType",
+        "type": "object"
+      }
+    },
+    "ComponentType": {
+      "type": "object",
+      "properties": {
+        "Code": {
+          "description": "Código do Componente da parcela",
+          "type": "integer",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "int",
+              "length": "",
+              "note": "não utilizado atualmente na integraçao TIN x Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Name": {
+          "description": "Nome do Componente da parcela",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "",
+              "note": "não utilizado atualmente na integraçao TIN x Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Value": {
+          "description": "Valor do Componente",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "decimal",
+              "length": "",
+              "note": "não utilizado atualmente na integraçao TIN x Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfContractParcelType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContractParcelType",
+        "type": "object"
+      }
+    },
+    "ContractParcelType": {
+      "type": "object",
+      "properties": {
+        "InternalId": {
+          "description": "Identificador Interno de cada parcela (título)",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA|IDLAN",
+              "required": true,
+              "type": "string",
+              "length": "15",
+              "note": "Identificador Interno de cada parcela (título)",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FlagAccount": {
+          "description": "Gerar título para esta parcela? 0 = Não / 1 = Sim",
+          "type": "integer",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "Campo calculado - Define o tipo de lançamento que deverá ser criado (NF ou PR) no Protheus",
+              "required": true,
+              "type": "int",
+              "length": "",
+              "note": "Gerar título para esta parcela? 0 = Não / 1 = Sim",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Type": {
+          "description": "Tipo da Parcela (Título) / Receivable - A receber / Payable - A pagar",
+          "type": "string",
+          "enum": [
+            "Receivable",
+            "Payable"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "FLAN.PAGREC",
+              "required": true,
+              "type": "int",
+              "length": "",
+              "note": "Tipo da Parcela (Título), onde é \"A RECEBER\" se PAGREC = 1 e \"A PAGAR\" se PAGREC = 2",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerVendorId": {
+          "description": "Código do Cliente/Fornecedor",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "FCFO.CODCOLIGADA|FCFO.CODCFO",
+              "required": true,
+              "type": "string",
+              "length": "30",
+              "note": "Código do Cliente/Fornecedor",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DocumentPrefix": {
+          "description": "Prefixo do Título/Provisão (Série)",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "SERIEDOCUMENTO",
+              "required": false,
+              "type": "string",
+              "length": "8",
+              "note": "Prefixo do Título/Provisão (Série)",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DocNumber": {
+          "description": "Número do Título/Provisão",
+          "type": "string",
+          "maxLength": 9,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "NUMERODOCUMENTO",
+              "required": false,
+              "type": "string",
+              "length": "40",
+              "note": "Número do Título/Provisão",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DocParcel": {
+          "description": "Número da Parcela",
+          "type": "string",
+          "maxLength": 1,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "PARCELA",
+              "required": false,
+              "type": "int",
+              "length": "",
+              "note": "Número da Parcela",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Event": {
+          "description": "1-Upsert; 2-Delete",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utilizado na integração TIN x Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IssueDate": {
+          "description": "Data de Emissão",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "DATAEMISSAO",
+              "required": true,
+              "type": "date",
+              "length": "",
+              "note": "Data de Emissão",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DueDate": {
+          "description": "Data de Vencimento",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "DATAVENCIMENTO",
+              "required": true,
+              "type": "date",
+              "length": "",
+              "note": "Data de Vencimento",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "NetValue": {
+          "description": "Valor Líquido",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CVALORLIQUIDO",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "Valor Líquido",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrencyCode": {
+          "description": "Código da Moeda",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODMOEVALORORIGINAL",
+              "required": true,
+              "type": "string",
+              "length": "10",
+              "note": "Código da Moeda",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ApportDistribution": {
+          "$ref": "#/definitions/ApportDistributionType",
+          "description": "Distribuição de rateio",
+          "type": "object"
+        },
+        "ListOfComponent": {
+          "description": "Lista de componentes da parcela",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfComponentType",
+            "type": "object"
+          }
+        },
+        "FinancialCode": {
+          "description": "Natureza (Protheus) Tipo de Despesa (LOGIX) Tipo de Fluxo (DataSul)",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "FLANRATCCU.CODCOLIGADA|FLANRATCCU.CODNATFINANCEIRA",
+              "required": false,
+              "type": "string",
+              "length": "45",
+              "note": "Natureza Financeira",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MCMVContract": {
+          "description": "Código do contrato \"Minha Casa, Minha Vida\" com a caixa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "XREGRACOMPONENTEVENDA.CODCONTRATOCEF",
+              "required": false,
+              "type": "string",
+              "length": "50",
+              "note": "Código do contrato \"Minha Casa, Minha Vida\" com a caixa",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "InternalId"
+      ]
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

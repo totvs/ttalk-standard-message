@@ -1,0 +1,4439 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Invoice_3_014.json#",
+  "info": {
+    "description": "",
+    "version": "3.014",
+    "title": "Invoice",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Invoice",
+        "description": "Baixa de estoque",
+        "segment": "Construção e Projetos"
+      },
+      "productInformation": [
+        {
+          "product": "RM",
+          "contact": "Bruno Barbosa de Souza",
+          "note": "GDP Inovação Const. e Proj.",
+          "adapter": "MovMovimentoData"
+        },
+        {
+          "product": "PROTHEUS",
+          "contact": "Eduardo de Souza",
+          "note": "GDP de Materiais",
+          "adapter": "MATI103b"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tmov.CODCOLIGADA",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "Não possui campo físico na tabela",
+              "required": true,
+              "type": "varchar",
+              "length": "02",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_FILIAL",
+              "required": true,
+              "type": "varchar",
+              "length": "2",
+              "note": "Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tmov.codfilial",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da chave completa da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "o InternalID da empresa é formado por EMPRESA|F1_FILIAL. Tamanho entre 05 e 15",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tmov.codcoligada|tmov.codfilial",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId da Invoice",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_DOC",
+              "required": true,
+              "type": "varchar",
+              "length": "9",
+              "note": "O InternalId da Invoice é formado por EMPRESA|F1_FILIAL|F1_DOC|F1_SERIE|F1_FORNECE|F1_LOJA|F1_TIPO",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tmov.codcoligada|tmov.idmov",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceNumber": {
+          "description": "Número da Nota Fiscal (LOGIX: 10, DataSul: 16, Protheus: 20)",
+          "type": "string",
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_DOC",
+              "required": true,
+              "type": "varchar",
+              "length": "9",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tmov.NUMEROMOV",
+              "required": false,
+              "type": "char",
+              "length": "35",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSerie": {
+          "description": "Serie da Nota Fiscal",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_SERIE",
+              "required": false,
+              "type": "varchar",
+              "length": "3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tmov.serie",
+              "required": false,
+              "type": "char",
+              "length": "8",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSubSerie": {
+          "description": "Sub-Serie da Nota Fiscal",
+          "type": "string",
+          "maxLength": 5,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceModel": {
+          "description": "Modelo da Nota Fiscal (Convênio ICMS 31/99)",
+          "type": "string",
+          "maxLength": 2,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSituation": {
+          "description": "Situação da Nota Fiscal (1-Normal 2-Cancelada) / 1 - 1-Normal / 2 - 2-Cancelada",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_STATUS",
+              "required": false,
+              "type": "varchar",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TypeOfDocument": {
+          "description": "Tipo do documento             - Logix é uma lista fixa             - Datasul é uma lista fixa             - Protheus é pré-cadastrado e permite mudar             - RM é cadastro livre              Para entender como este campo irá funciona, consulte o seguinte tópico             da documento              TFS:TOTVSMSGXML \\DEV\\documentação\\Padrão para criação de mensagens únicas.docx              2.13.2 Conflito entre valores fixos e valores cadastráveis",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_TIPO",
+              "required": true,
+              "type": "varchar",
+              "length": "1",
+              "note": "N = NF Normal                            C = Compl. Preço                            D = Devolução                            I = NF Compl. ICMS                            P = NF Compl. IPI                            B = NF Beneficiamento",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tmov.tipo",
+              "required": true,
+              "type": "varchar",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "VendorCode": {
+          "description": "Código do fornecedor",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_FORNECE",
+              "required": true,
+              "type": "varchar",
+              "length": "6",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "VendorInternalId": {
+          "description": "InternalId do VendorCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "Varchar",
+              "length": "50",
+              "note": "O InternalId do Fornecedor é formado por EMPRESA|A2_FILIAL|A2_COD|A2_LOJA",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IssueDate": {
+          "description": "Data de Emissão",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_EMISSAO",
+              "required": true,
+              "type": "date",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tmov.dataemissao",
+              "required": true,
+              "type": "datetime",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InputDate": {
+          "description": "Data de Recebimento/Digitação",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_DTDIGIT",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceAmount": {
+          "description": "Valor da Nota Fiscal",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_VALBRUT",
+              "required": false,
+              "type": "number",
+              "length": "14,2",
+              "note": "Contém máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ValueofGoods": {
+          "description": "Valor da Mercadoria",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_VALMERC",
+              "required": false,
+              "type": "decimal",
+              "length": "14,2",
+              "note": "Contém máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FreightAmount": {
+          "description": "Valor do frete",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_FRETE",
+              "required": false,
+              "type": "decimal",
+              "length": "15,2",
+              "note": "Contém máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InsuranceAmount": {
+          "description": "Valor do Seguro",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_SEGURO",
+              "required": false,
+              "type": "decimal",
+              "length": "15,2",
+              "note": "Contém máscara numérica @E 999,999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DiscountAmount": {
+          "description": "Valor do Desconto",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_DESCONT",
+              "required": false,
+              "type": "decimal",
+              "length": "14,2",
+              "note": "Contém máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrencyRate": {
+          "description": "Taxa da Moeda Utilizada para Calcular o Valor da Nota Fiscal",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_TXMOEDA",
+              "required": false,
+              "type": "decimal",
+              "length": "11,4",
+              "note": "Contém máscara numérica @E 999999.9999",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrencyInternalId": {
+          "description": "InternalId da Taxa da Moeda Utilizada para Calcular o Valor da Nota Fiscal",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "Empresa+SF1XX0.F1_FILIAL+SF1XX0.F1_MOEDA",
+              "required": false,
+              "type": "varchar",
+              "length": "50",
+              "note": "O InternalId da Taxa da Moeda formada por EMPRESA|F1_FILIAL|F1_MOEDA",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PaymentConditionCode": {
+          "description": "Código da condição de pagamento",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_COND",
+              "required": true,
+              "type": "varchar",
+              "length": "3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PaymentConditionInternalId": {
+          "description": "InternalId da PaymentConditionCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "O InternalId da Condição de Pagamento é formado por EMPRESA|E4_FILIAL|E4_CODIGO",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BoardingMode": {
+          "description": "Modo de embarque",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "nf_sup.cod_mod_embar",
+              "required": false,
+              "type": "NUMBER",
+              "length": "3",
+              "note": "Código do Modo de Embarque",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerCode": {
+          "description": "Código do Cliente",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerInternalId": {
+          "description": "InternalId da CustomerCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StoreCode": {
+          "description": "Código da Loja",
+          "type": "string",
+          "maxLength": 2,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_LOJA",
+              "required": true,
+              "type": "Varchar",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StoreInternalId": {
+          "description": "InternalId da StoreCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MasterInvoiceNumber": {
+          "description": "Número da Nota Fiscal Mestre - Informativo",
+          "type": "string",
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_nf_origem.nf_origem",
+              "required": false,
+              "type": "decimal",
+              "length": "7",
+              "note": "Número da Nota Fiscal Mestre (quando especie igual a NFP ou NFC)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MasterInvoiceSerie": {
+          "description": "Série da Nota Fiscal Mestre - Informativo",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_nf_origem.ser_nf_origem",
+              "required": false,
+              "type": "char",
+              "length": "3",
+              "note": "Série da Nota Fiscal Mestre (quando especie igual a NFP ou NFC)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MasterInvoiceSubSerie": {
+          "description": "Sub Série da Nota Fiscal Mestre",
+          "type": "string",
+          "maxLength": 7,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_nf_origem.ssr_nf_origem",
+              "required": false,
+              "type": "decimal",
+              "length": "7",
+              "note": "Subsérie da Nota Fiscal Mestre (quando especie igual a NFP ou NFC)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TaxOpCode": {
+          "description": "Código Fiscal de Operação - CFOP",
+          "type": "string",
+          "maxLength": 7,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "nf_sup.cod_operacao",
+              "required": true,
+              "type": "char",
+              "length": "7",
+              "note": "CFOP da nota",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TaxOperationCodeComplement": {
+          "description": "Código Fiscal de Operação Complementar - CFOP",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec_compl.cod_fiscal_compl / frete_sup_compl.cod_fiscal_compl",
+              "required": false,
+              "type": "number",
+              "length": "10",
+              "note": "CFOP complementar da nota",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CarrierCode": {
+          "description": "Código do Transportador - Informativo",
+          "type": "string",
+          "maxLength": 19,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec_compl.cod_transpor",
+              "required": false,
+              "type": "char",
+              "length": "19",
+              "note": "Código do Transportador.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ImportDeclaration": {
+          "description": "Número da Declaração de Importação",
+          "type": "string",
+          "maxLength": 12,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec_compl.num_di",
+              "required": false,
+              "type": "decimal",
+              "length": "10",
+              "note": "Número da Declaração de Importação.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ImportDeclarationDate": {
+          "description": "Data da Declaração de Importação",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'data_di_nf'",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "Data da Declaração de Importação.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ImportProcess": {
+          "description": "Processo de Importação",
+          "type": "string",
+          "maxLength": 6,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'processo_import'",
+              "required": false,
+              "type": "char",
+              "length": "6",
+              "note": "Número do Processo de Importação.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ClearanceDate": {
+          "description": "Data do Desembaraço Aduaneiro",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'data_desembaraco'",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "Data do Desembaraço Aduaneiro.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ClearanceSite": {
+          "description": "Local do Desembaraço Aduaneiro",
+          "type": "string",
+          "maxLength": 60,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'local_desemb_nf'",
+              "required": false,
+              "type": "char",
+              "length": "60",
+              "note": "Local do Desembaraço Aduaneiro.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ClearanceUF": {
+          "description": "Sigla da UF do Desembaraço Aduaneiro",
+          "type": "string",
+          "maxLength": 2,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'uf_desemb_nf'",
+              "required": false,
+              "type": "char",
+              "length": "2",
+              "note": "Sigla da UF do Desembaraço Aduaneiro.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ExporterCode": {
+          "description": "Código do Exportador",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TransportMode": {
+          "description": "Via de transporte / 1 - 1=Marítima / 2 - 2=Fluvial / 3 - 3=Lacustre / 4 - 4=Aérea / 5 - 5=Postal / 6 - 6=Ferroviária / 7 - 7=Rodoviária / 8 - 8=Conduto / Rede Transmissão / 9 - 9=Meios Próprios / 10 - 10=Entrada / Saída ficta",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ],
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'meio_transp_ar'",
+              "required": false,
+              "type": "char",
+              "length": "1",
+              "note": "Sigla da UF do Desembaraço Aduaneiro.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AFRMMValue": {
+          "description": "Valor da AFRMM - Adicional ao Frete para Renovação da Marinha Mercante. Quando 'TransportMode' igual a 1.",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'val_afrmm'",
+              "required": false,
+              "type": "decimal",
+              "length": "15,2",
+              "note": "Valor da AFRMM - Adicional ao Frete para Renovação da Marinha Mercante. Quando 'TransportMode' igual a 1.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ImportMode": {
+          "description": "Forma de Importação quanto a intermediação / 1 - 1=Importação por conta própria / 2 - 2=Importação por conta e ordem / 3 - 3=Importação por encomenda",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3"
+          ],
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'forma_impn'",
+              "required": false,
+              "type": "char",
+              "length": "1",
+              "note": "Forma de importação.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BuyerCNPJ": {
+          "description": "CNPJ do Adquirente ou Encomendante. Obrigatório quando 'ImportMode' igual 2 ou 3.",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'cnpj_adq_enc'",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "CNPJ do Adquirente ou Encomendante.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BuyerUF": {
+          "description": "Sigla da UF do Adquirente ou Encomendante. Obrigatório quando 'ImportMode' igual 2 ou 3.",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'uf_adq_enc'",
+              "required": false,
+              "type": "char",
+              "length": "2",
+              "note": "Sigla da UF do Adquirente ou Encomendantes.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccountInTransit": {
+          "description": "Conta Contábil de Importação em Andamento.",
+          "type": "string",
+          "maxLength": 23,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'conta_importacao'",
+              "required": false,
+              "type": "char",
+              "length": "23",
+              "note": "Conta Contábil de Importação em andamento.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Packing": {
+          "description": "Embalagem dos produtos",
+          "type": "string",
+          "maxLength": 10,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "nfe_sup_compl.den_embal",
+              "required": false,
+              "type": "char",
+              "length": "10",
+              "note": "Embalagem dos Produtos.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Volumes": {
+          "description": "Quantidade de volumes",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "nfe_sup_comple.qtd_volumes",
+              "required": false,
+              "type": "decimal",
+              "length": "5",
+              "note": "Quantidade de Volumes.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GrossWeight": {
+          "description": "Peso Bruto",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "nfe_sup_compl.peso_bruto",
+              "required": false,
+              "type": "decimal",
+              "length": "9,3",
+              "note": "Peso Bruto.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "NetWeight": {
+          "description": "Peso Líquido",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "nfe_sup_compl.peso_liquido",
+              "required": false,
+              "type": "decimal",
+              "length": "9,3",
+              "note": "Peso Líquido.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Observation": {
+          "description": "Observações da nota fiscal",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "nfe_sup_compl.texto_compl1",
+              "required": false,
+              "type": "char",
+              "length": "120",
+              "note": "Texto complementar",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrencyCode": {
+          "description": "Moeda",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "varchar",
+              "length": "10",
+              "note": "Moeda do Contrato",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InboundRegistrationCode": {
+          "description": "Código do registro de entrada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "2",
+              "note": "Código do registro de entrada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Purpose": {
+          "description": "Finalidade da nota fiscal de entrada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "2",
+              "note": "Código da finalidade da nota fiscal de entrada 1 - normal, 2 - Complemento, 3 - Ajuste, 4 - Devolução",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinalConsumerIndicator": {
+          "description": "Indicador de consumidor final",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Indicador de consumidor final 0-Não, 1-Consumidor Final",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerPresenceIndicator": {
+          "description": "Indicador de presença do consumidor final na operação",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Indicador de presença do consumidor final 0-Não se aplica ou NFC, 1-Operação Presencial, 2-Oper.Via Internet, 3-Oper.Teleatendimento, 4-NFC. Entr. Domicílio, 9-Outros",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IcmsPayTaxIndicator": {
+          "description": "Indicador de contribuinte do ICMS",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Indicador de contribuinte de ICMS  1-Contribuinte ICMS, 2-Contribuinte isento, 9-Não Contribuinte",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ElectronicAccessKey": {
+          "description": "Chave de acesso eletrônica",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "44",
+              "note": "Chave de acesso eletrônica",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ElectronicProtocol": {
+          "description": "Protocolo eletrônico",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "25",
+              "note": "Protocolo eletrônico",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ElectronicKeyJustification": {
+          "description": "Justificativa chave de acesso eletrônico",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "25",
+              "note": "Justificativa da chave acesso eletrônico",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TollValue": {
+          "description": "Valor do pedágio",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "pedagio_frete.val_pedagio",
+              "required": false,
+              "type": "decimal",
+              "length": "17,2",
+              "note": "Valor do pedágio",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "RepresentativeCode": {
+          "description": "Código do representante",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "nota-fiscal.cod-rep",
+              "required": false,
+              "type": "string",
+              "length": "5",
+              "note": "Código do Representante",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "RepresentativeInternalId": {
+          "description": "InternalId do código do representante",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "nota-fiscal.cod-rep",
+              "required": false,
+              "type": "string",
+              "length": "5",
+              "note": "Código do representante",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SalesChannelCode": {
+          "description": "Código do canal de Venda",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "nota-fiscal.cod-canal-venda",
+              "required": false,
+              "type": "string",
+              "length": "3",
+              "note": "Código do canal de venda",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SalesChannelInternalId": {
+          "description": "InternalId do código do canal de Venda",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "nota-fiscal.cod-canal-venda",
+              "required": false,
+              "type": "string",
+              "length": "3",
+              "note": "Código do canal de venda",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UpdateDate": {
+          "description": "Data de Atualização",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "nota-fiscal.dt-atualiza",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "Data de Atualização",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UpdateHour": {
+          "description": "Hora da Atualização",
+          "type": "string",
+          "pattern": "(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "nota-fiscal.hr-atualiza",
+              "required": false,
+              "type": "time",
+              "length": "",
+              "note": "Hora de Atualização",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfRelatedInvoices": {
+          "description": "Lista de notas fiscais relacionadas",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfRelatedInvoicesType",
+            "type": "object"
+          }
+        },
+        "ListOfItens": {
+          "description": "Itens da Nota",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfItensType",
+            "type": "object"
+          }
+        },
+        "PaymentPlan": {
+          "$ref": "#/definitions/PaymentType",
+          "type": "object"
+        },
+        "ShippingAddress": {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_1_000.json#/definitions/AddressType",
+          "description": "Endereço de entrega",
+          "type": "object"
+        },
+        "ShippingAddressGovernmentalInformation": {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
+          "description": "Documentos do cliente/comprador para o qual será feita a entrega",
+          "type": "object"
+        },
+        "ListOfConsignee": {
+          "description": "Lista de consignatários da nota fiscal",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfConsigneeType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ListOfRelatedInvoicesType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelatedInvoicesType",
+        "type": "object"
+      }
+    },
+    "ListOfItensType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ItemType",
+        "type": "object"
+      }
+    },
+    "ListOfTaxes": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Tax_1_005.json#/definitions/TaxesType",
+        "type": "object"
+      }
+    },
+    "RelatedInvoicesType": {
+      "type": "object",
+      "properties": {
+        "InvoiceNumber": {
+          "description": "Número da nota relacionada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "10",
+              "note": "Número da nota fiscal relacionada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSerie": {
+          "description": "Série da nota relacionada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "3",
+              "note": "Série da nota fiscal relacionada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSubSerie": {
+          "description": "Subsérie da nota relacionada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "10",
+              "note": "Série da nota fiscal relacionada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceTransaction": {
+          "description": "Transação da nota relacionada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "10",
+              "note": "Série da nota fiscal relacionada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceDateIssue": {
+          "description": "Date de emissão da nota relacionada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "Date de emissão da nota fiscal relacionada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ItemType": {
+      "type": "object",
+      "properties": {
+        "InternalId": {
+          "description": "InternalId do item da Invoice",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "Varchar",
+              "length": "50",
+              "note": "O InternalId do Item na Nota Fiscal é formado por EMPRESA|FILIAL|D1_DOC",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.codcoligada|titmmov.codfilial",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSequence": {
+          "description": "Sequência da Nota Fiscal",
+          "type": "string",
+          "maxLength": 4,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD2.D2_NUMSEQ",
+              "required": false,
+              "type": "varchar",
+              "length": "4",
+              "note": "Ultimo numero sequencial utilizado para os movimentos",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.numerosequencial",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemInvoice": {
+          "description": "Sequência do Item na Nota Fiscal",
+          "type": "string",
+          "maxLength": 4,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD2.D2_ITEM",
+              "required": false,
+              "type": "varchar",
+              "length": "4",
+              "note": "Item da Nota Fiscal",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "OrderNumber": {
+          "description": "Número do Pedido que Originou o Item da Nota",
+          "type": "string",
+          "maxLength": 6,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_PEDIDO",
+              "required": false,
+              "type": "varchar",
+              "length": "6",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "OrderInternalId": {
+          "description": "InternalId do Pedido",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "OrdemItem": {
+          "description": "Sequência do Item do Pedido que Gerou o Item da Nota",
+          "type": "string",
+          "maxLength": 9,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_ITEMPC",
+              "required": false,
+              "type": "varchar",
+              "length": "4",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "OrderItemInternalId": {
+          "description": "InternalId do Item do Pedido",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfRequests": {
+          "description": "Lista de Solicitações de compra",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfRequestsType",
+            "type": "object"
+          }
+        },
+        "ItemCode": {
+          "description": "Código do Item",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_COD",
+              "required": true,
+              "type": "varchar",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.codtip",
+              "required": true,
+              "type": "varchar",
+              "length": "10",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemInternalId": {
+          "description": "InternalId do Item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "Varchar",
+              "length": "50",
+              "note": "O InternalId do Produto é formado por EMPRESA|B1_FILIAL|B1_COD",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.IDPRD",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemExpenseGroupCode": {
+          "description": "Grupo de Despesa do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec.gru_ctr_desp_item / frete_sup.gru_ctr_desp_frete",
+              "required": false,
+              "type": "number",
+              "length": "4",
+              "note": "Grupo de despesa do item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemExpenseGroupInternalId": {
+          "description": "Internal Id do Grupo de Despesa do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "Varchar",
+              "length": "20",
+              "note": "InternalId é formado pela código da empresa mais o código do grupo de despesa do item XX|YYYY",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Quantity": {
+          "description": "Quantidade do Item",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_QUANT",
+              "required": true,
+              "type": "decimal",
+              "length": "11,2",
+              "note": "Contém máscara numérica @E 99999999.99",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.Quantity",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UnitofMeasureCode": {
+          "description": "Código da Unidade de Medida",
+          "type": "string",
+          "maxLength": 6,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_UM",
+              "required": true,
+              "type": "varchar",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UnitofMeasureInternalId": {
+          "description": "InternalId do UnitofMeasure",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "Varchar",
+              "length": "50",
+              "note": "O InternalId da Unidade de Medida é formado por EMPRESA|AH_FILIAL|AH_UNIMED",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.CODUND",
+              "required": true,
+              "type": "varchar",
+              "length": "5",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UnityPrice": {
+          "description": "Preço Unitário do Item x Taxa da Moeda)",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_VUNIT",
+              "required": true,
+              "type": "decimal",
+              "length": "14,2",
+              "note": "Contém a máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.precounitario",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GrossValue": {
+          "description": "Valor Bruto do Item. (Quantidade x Preço Unitário x Taxa da Moeda)",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FreightValue": {
+          "description": "Valor do Frete Unitário",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_VALFRE",
+              "required": false,
+              "type": "decimal",
+              "length": "14,2",
+              "note": "Contém máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InsuranceValue": {
+          "description": "Valor do Seguro Unitário",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_SEGURO",
+              "required": false,
+              "type": "decimal",
+              "length": "14,2",
+              "note": "Contém máscara numérica @E 99,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DiscountValue": {
+          "description": "Valor do Desconto Unitário",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_VALDESC",
+              "required": false,
+              "type": "decimal",
+              "length": "12,2",
+              "note": "Contém máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "NetValue": {
+          "description": "Valor Líquido (Valor Bruto + Frete + Seguro - Desconto)",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_TOTAL",
+              "required": true,
+              "type": "decimal",
+              "length": "14,2",
+              "note": "Contém máscara numérica @E 999,999,999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AreAndLineOfBusinessCode": {
+          "description": "Código da área e linha.             No Logix será uma string que poderá ter 4 (área/linha de negócio com 2 níveis)             ou 8 caracteres (área/linha de negócio com 4 níveis).             Os campos serão concatenados sem separador, respeitando a sequencia da chave da tabela linha_prod.",
+          "type": "string"
+        },
+        "WarehouseCode": {
+          "description": "Código do Armazem",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_LOCAL",
+              "required": true,
+              "type": "varchar",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "WarehouseInternalId": {
+          "description": "InternalId do WarehouseCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "Varchar",
+              "length": "50",
+              "note": "O InternalId do Local de Estoque é formado por EMPRESA|NNR_FILIAL|NNR_CODIGO",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "titmmov.CODLOC",
+              "required": true,
+              "type": "varchar",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "LotNumber": {
+          "description": "Número do Lote",
+          "type": "string",
+          "maxLength": 50,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_LOTECTL",
+              "required": false,
+              "type": "varchar",
+              "length": "10",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SubLotNumber": {
+          "description": "Número do Lote",
+          "type": "string",
+          "maxLength": 6,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_NUMLOTE",
+              "required": false,
+              "type": "varchar",
+              "length": "6",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "LotExpirationDate": {
+          "description": "Data Vencimento Lote",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SD1XX0.D1_DTVALID",
+              "required": false,
+              "type": "Date",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ContractInternalID": {
+          "description": "Dedução por Faturamento Direto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "titmmov.idcnt",
+              "required": true,
+              "type": "integer",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "AFNXX0.AFN_CONTRA",
+              "required": false,
+              "type": "Varchar",
+              "length": "20",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DeliverySchedule": {
+          "description": "Programação de entrega do item na solicitação",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "ar_ped.num_prog_entrega",
+              "required": false,
+              "type": "decimal",
+              "length": "3",
+              "note": "Número da Programação de Entrega do Item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "NCM": {
+          "description": "Código da Nomenclatura Comum do Mercosul",
+          "type": "string",
+          "maxLength": 10,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec.cod_cla_fisc",
+              "required": false,
+              "type": "char",
+              "length": "10",
+              "note": "NCM",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccessoryExpense": {
+          "description": "Despesa Acessória do Item",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec.val_despesa_aces_i",
+              "required": false,
+              "type": "decimal",
+              "length": "17,2",
+              "note": "Valor da Despesa Acessória",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "OtherExpenses": {
+          "description": "Outras Despesas do Item que não incidem impostos",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec.val_compl_estoque",
+              "required": false,
+              "type": "decimal",
+              "length": "17,2",
+              "note": "Valor de outras despesas",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ExporterExpenses": {
+          "description": "Despesas do Item assumidas pelo exportador, não compondo custo",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'val_exporterexpenses'",
+              "required": false,
+              "type": "decimal",
+              "length": "17,2",
+              "note": "Valor de despesas assumidas pelo exportador que não compõem custo do item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TaxOpCodeItem": {
+          "description": "Código Fiscal de Operação (CFOP) do Item",
+          "type": "string",
+          "maxLength": 7,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec.cod_fiscal_item",
+              "required": false,
+              "type": "char",
+              "length": "7",
+              "note": "CFOP do Item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AddingDiNumber": {
+          "description": "Número da Adição da DI",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'num_adicao_di'",
+              "required": false,
+              "type": "char",
+              "length": "3",
+              "note": "Número da Adição da DI",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AddingDiSeq": {
+          "description": "Sequência da Adição da DI",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'seq_item_adicao'",
+              "required": false,
+              "type": "char",
+              "length": "3",
+              "note": "Sequencia da Adição da DI",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Manufacturer": {
+          "description": "Código do Fabricante do item",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'fabricante_item'",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "Fabricante do Item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DiscountDiValue": {
+          "description": "Valor do Desconto do item da DI - Adição",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomsCosts": {
+          "description": "Despesas Aduaneiras",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IOFValue": {
+          "description": "Valor Imposto sobre Operações Financeiras",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ConcessionActDrawback": {
+          "description": "Número da Ato Concessório de Drawback",
+          "type": "string",
+          "maxLength": 11,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'num_drawback'",
+              "required": false,
+              "type": "char",
+              "length": "11",
+              "note": "Ato Concessório de Drawback",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Sample": {
+          "description": "Indicador do item de Amostra",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar.parametro = 'finalidade_import'",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Finalide da Importação",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfNVE": {
+          "description": "Codificação NVE dos itens - Nomenclatura de Valor Aduaneiro e Estatística",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfNVEType",
+            "type": "object"
+          }
+        },
+        "ListOfTaxes": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Tax_1_005.json#/definitions/TaxesType",
+            "type": "object"
+          }
+        },
+        "Event": {
+          "description": "Operação a ser executada no registro. / delete - Quando este registro for exclusão",
+          "type": "string",
+          "enum": [
+            "delete"
+          ]
+        },
+        "ListOfApportionInvoiceItem": {
+          "description": "Rateio dos Itens do Pedido",
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ApportionType_2_004.json#/definitions/ApportionType",
+            "type": "object"
+          }
+        },
+        "TotalStock": {
+          "description": "Total físico",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B2_QATU - SD1XX0.D1_QUANT",
+              "required": true,
+              "type": "decimal",
+              "length": "11,2",
+              "note": "Contém máscara numérica @E 99999999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "LotStock": {
+          "description": "Total do Lote",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "Sum(B8_SALDO)– D1_QUANT",
+              "required": false,
+              "type": "decimal",
+              "length": "11,2",
+              "note": "Contém máscara numérica @E 99999999.99",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UpdateStock": {
+          "description": "Campo que identifica se movimenta o estoque",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "F4_ESTOQUE",
+              "required": false,
+              "type": "Boolean",
+              "length": "1",
+              "note": ".T. ou .F.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AcessoryExpenseCalculationBasis": {
+          "description": "Indicador se a despesa acessória entra na base de cálculo dos impostos",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec.ies_da_bc_ipi",
+              "required": false,
+              "type": "varchar",
+              "length": "1",
+              "note": "Indicador se a despesa acessória entra na base de cálculo dos impostos",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ExpenseTypeCode": {
+          "description": "Código do tipo de despesa do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "aviso_rec.cod_tip_despesa",
+              "required": false,
+              "type": "varchar",
+              "length": "4",
+              "note": "Código do tipo de despesa do item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ExpenseTypeInternalId": {
+          "description": "Internal Id do tipo de despesa do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "varchar",
+              "length": "10",
+              "note": "Internal Id do tipo de despesa do item empresa+ tipo de despesa XX|YYYY",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemGrossWeight": {
+          "description": "Peso Bruto total do item",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "decimal",
+              "length": "17,6",
+              "note": "Peso total do item mais o peso rateado das embalagens da nota fiscal que estão relacionadas ao item. Peso em Kg",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemNetWeight": {
+          "description": "Peso liquído total do item",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "decimal",
+              "length": "17,6",
+              "note": "Peso total do item em Kg",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemVolume": {
+          "description": "Volume total do item",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "decimal",
+              "length": "17,6",
+              "note": "Volume total do item em metros cúbicos, considerando as embalagens relacionadas ao item na nota fiscal",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemDescription": {
+          "description": "Descrição do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "fat_nf_item.des_item",
+              "required": false,
+              "type": "char",
+              "length": "76",
+              "note": "Descrição do item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "RetailSalesInternalId": {
+          "description": "InternalId da venda varejo",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "Não possui campo fisico na tabela",
+              "required": false,
+              "type": "char",
+              "length": "50",
+              "note": "Venda varejo que originou o Pedido",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfStateRegistration": {
+          "description": "Lista de inscrições estaduais do item",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfStateRegistrationType",
+            "type": "object"
+          }
+        },
+        "ListOfItemGrid": {
+          "description": "Lista de grades e dimensionais do item",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfItemGridType",
+            "type": "object"
+          }
+        },
+        "ListOfRelatedInvoicesItem": {
+          "description": "Lista de notas fiscais relacionadas ao item",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfRelatedInvoicesItemType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ListOfStateRegistrationType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StateRegistrationType",
+        "type": "object"
+      }
+    },
+    "StateRegistrationType": {
+      "type": "object",
+      "properties": {
+        "StateRegistrationCode": {
+          "description": "Código de inscrição estadual",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "16",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfItemGridType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ItemGridType",
+        "type": "object"
+      }
+    },
+    "ItemGridType": {
+      "type": "object",
+      "properties": {
+        "GridCode1": {
+          "description": "Código de grade 1 do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.grade_1",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GridCode2": {
+          "description": "Código de grade 2 do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.grade_2",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GridCode3": {
+          "description": "Código de grade 3 do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.grade_3",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GridCode4": {
+          "description": "Código de grade 4 do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.grade_4",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GridCode5": {
+          "description": "Código de grade 5 do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.grade_5",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Address": {
+          "description": "Endereço do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.endereco",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Volume": {
+          "description": "Volume do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.volume",
+              "required": false,
+              "type": "number",
+              "length": "10",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ProductionDate": {
+          "description": "Data de produção do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.dat_hor_producao",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ExpirationDate": {
+          "description": "Data de validade do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.dat_hor_valid",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Length": {
+          "description": "Comprimento do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.comprimento",
+              "required": false,
+              "type": "decimal",
+              "length": "15,3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Width": {
+          "description": "Largura do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.width",
+              "required": false,
+              "type": "decimal",
+              "length": "15,3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Height": {
+          "description": "Altura do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.height",
+              "required": false,
+              "type": "decimal",
+              "length": "15,3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Diameter": {
+          "description": "Diâmetro do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.diameter",
+              "required": false,
+              "type": "decimal",
+              "length": "15,3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Part": {
+          "description": "Peça do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.peca",
+              "required": false,
+              "type": "string",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SeriesPart": {
+          "description": "Série da Peça do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_ar_grade.serie_peca",
+              "required": false,
+              "type": "string",
+              "length": "25",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Lot": {
+          "description": "Lote do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar_grade.parametro_texto",
+              "required": false,
+              "type": "string",
+              "length": "15",
+              "note": "onde parametro = num_lote",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Warehouse": {
+          "description": "Local do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar_grade.parametro_texto",
+              "required": false,
+              "type": "string",
+              "length": "10",
+              "note": "onde parametro = local_estoque",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ReceivedAmount": {
+          "description": "Quantidade recebida do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "sup_par_ar_grade.parametro_qtd",
+              "required": false,
+              "type": "decimal",
+              "length": "15,3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfRelatedInvoicesItemType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelatedInvoicesItemType",
+        "type": "object"
+      }
+    },
+    "RelatedInvoicesItemType": {
+      "type": "object",
+      "properties": {
+        "InvoiceNumber": {
+          "description": "Número da nota relacionada ao item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "20",
+              "note": "Número da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSerie": {
+          "description": "Série da nota relacionada ao item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "3",
+              "note": "Série da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSubSerie": {
+          "description": "Subsérie da nota relacionada ao item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "5",
+              "note": "Subsérie da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceType": {
+          "description": "Espécie da nota relacionada ao item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "3",
+              "note": "Espécie da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceDate": {
+          "description": "Data de emissão da nota relacionada ao item",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "date",
+              "length": "",
+              "note": "Data de emissão da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerCode": {
+          "description": "Código do cliente/fornecedor da nota relacionada ao item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "Código do cliente/fornecedor da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerInternalId": {
+          "description": "InternalId da CustomerCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "OrderNumber": {
+          "description": "Número do pedido de venda/compra da nota relacionada ao item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "10",
+              "note": "Número do pedido de venda/compra da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ElectronicAccessKey": {
+          "description": "Chave de acesso eletrônica da nota relacionada ao item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "44",
+              "note": "Chave de acesso eletrônica da nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSequence": {
+          "description": "Sequência do item na nota relacionada ao item",
+          "type": "string",
+          "maxLength": 10,
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "number",
+              "length": "10",
+              "note": "Sequência do item na nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemCode": {
+          "description": "Código do item na nota relacionada ao item",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "Código do item na nota fiscal relacionada ao item",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemInternalId": {
+          "description": "InternalId do ItemCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Quantity": {
+          "description": "Quantidade do item na nota relacionada ao item",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "decimal",
+              "length": "12,3",
+              "note": "Contém máscara numérica @E 999999999.999",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfRequestsType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RequestsType",
+        "type": "object"
+      }
+    },
+    "RequestsType": {
+      "type": "object",
+      "properties": {
+        "RequestItemInternalId": {
+          "description": "InternalId do Item da Solicitação de Compra",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "cEmpAnt|C1_FILIAL|C1_NUM|C1_ITEM",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfNVEType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/NVEType",
+        "type": "object"
+      }
+    },
+    "NVEType": {
+      "type": "object",
+      "properties": {
+        "NVECode": {
+          "description": "Código NVE - Nomenclatura de Valor Aduaneiro e Estatistica",
+          "type": "string",
+          "maxLength": 6,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "PaymentType": {
+      "type": "object",
+      "properties": {
+        "Term": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TermType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "TermType": {
+      "type": "object",
+      "properties": {
+        "InternalId": {
+          "description": "InternalId da Parcela",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "vencimento_nff.num_docum",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Internal Id formado pelo cod_empresa|num_docum",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TermDueDate": {
+          "description": "Data de vencimento da Parcela",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "vencimento_nff.dat_vencto",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Data de vencimento da Parcela",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TermAmount": {
+          "description": "Valor da Parcela",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "vencimento_nff.val_docum",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Valor da Parcela",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TermPaymentPercentage": {
+          "description": "Percentual da Parcela",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Percentual da Parcela",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfConsigneeType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConsigneeType",
+        "type": "object"
+      }
+    },
+    "ConsigneeType": {
+      "type": "object",
+      "properties": {
+        "ConsigneeSequence": {
+          "description": "Sequência do consignatário",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "fat_consig_nf.seq_consignatario",
+              "required": false,
+              "type": "decimal",
+              "length": "5,0",
+              "note": "Sequência do consignatário",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ConsigneeCode": {
+          "description": "Código do consignatário",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "fat_consig_nf.consignatario",
+              "required": true,
+              "type": "char",
+              "length": "15",
+              "note": "Código do consignatário",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ConsigneeInternalId": {
+          "description": "InternalId do ConsigneeCode",
+          "type": "string"
+        },
+        "FreightType": {
+          "description": "Tipo de Frete / 1 - CIF / 2 - FOB",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "fat_consig_nf.tip_fret_consig",
+              "required": false,
+              "type": "char",
+              "length": "1",
+              "note": "Tipo de frete",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Empresa",
+          "type": "string",
+          "maxLength": 2,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "Não possui campo físico na tabela",
+              "required": true,
+              "type": "varchar",
+              "length": "02",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Filial",
+          "type": "string",
+          "maxLength": 2,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_FILIAL",
+              "required": true,
+              "type": "varchar",
+              "length": "2",
+              "note": "Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceNumber": {
+          "description": "Número da Nota Fiscal",
+          "type": "string",
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_DOC",
+              "required": true,
+              "type": "varchar",
+              "length": "9",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSerie": {
+          "description": "Série da Nota Fiscal",
+          "type": "string",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SF1XX0.F1_SERIE",
+              "required": false,
+              "type": "varchar",
+              "length": "3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InvoiceSubSerie": {
+          "description": "Sub-Serie da Nota Fiscal",
+          "type": "string",
+          "maxLength": 5,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

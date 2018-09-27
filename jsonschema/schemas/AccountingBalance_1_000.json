@@ -1,0 +1,768 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingBalance_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "AccountingBalance",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "AccountingBalance",
+        "description": "Consulta de Saldos Contabeis",
+        "segment": "ERP base"
+      },
+      "productInformation": [
+        {
+          "product": "DATASUL",
+          "contact": "...",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "lOGIX",
+          "contact": "...",
+          "note": "",
+          "adapter": "..."
+        },
+        {
+          "product": "RM",
+          "contact": "Lucas Sepe",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "PROTHEUS",
+          "contact": "Rogerio Nagy",
+          "note": "Consulta de saldo contábil",
+          "adapter": "CTBISAL"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "request",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA",
+              "required": true,
+              "type": "int",
+              "length": "02",
+              "note": "Código da Coligada",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "02",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "CODFILIAL",
+              "required": true,
+              "type": "int",
+              "length": "02",
+              "note": "Código da Filial",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Será enviado o valor da variável cFilAnt",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA | CODFILIAL",
+              "required": true,
+              "type": "char",
+              "length": "10",
+              "note": "Concatenação da coligada e filial",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cEmpAnt|cFilial",
+              "required": true,
+              "type": "char",
+              "length": "20",
+              "note": "Concatenação do grupo de empresa e filial",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InitialDate": {
+          "description": "Data inicial para filtro",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "",
+              "note": "Data inicial para filtro",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "DDATAINI",
+              "required": true,
+              "type": "Date",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinalDate": {
+          "description": "Data inicial para filtro",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "",
+              "note": "Data inicial para filtro",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "DDATAFIM",
+              "required": true,
+              "type": "Date",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BalanceType": {
+          "description": "Tipo de Saldo de exportação",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "cTpSaldo",
+              "required": false,
+              "type": "String",
+              "length": "1",
+              "note": "Define o tipo de saldo que será retornado.Caso não seja enviado o tipo de saldo será 1 - Saldo Real",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrencyCode": {
+          "description": "Código da Moeda",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "SIMBOLO",
+              "required": true,
+              "type": "char",
+              "length": "10",
+              "note": "Código que indentifica moeda no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CT2_MOEDLC",
+              "required": false,
+              "type": "char",
+              "length": "03",
+              "note": "Código da Moeda",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrencyInternalId": {
+          "description": "InternalId da Moeda",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "GMOEDA.SIMBOLO",
+              "required": true,
+              "type": "char",
+              "length": "10",
+              "note": "Código que indentifica moeda no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cEmpAnt|xFilial(\"CTO\")|CT2_MOEDLC",
+              "required": false,
+              "type": "char",
+              "length": "03",
+              "note": "Código de InternalId da Moeda",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccountantAccountCode": {
+          "description": "Código da Conta Contábil",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCONTA",
+              "required": false,
+              "type": "char",
+              "length": "40",
+              "note": "Código que indentifica Conta Contábil",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cConta",
+              "required": false,
+              "type": "char",
+              "length": "40",
+              "note": "Código que indentifica Conta Contábil",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccountantAccountInternalId": {
+          "description": "InternalId da Conta Contábil",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA | CODCONTA",
+              "required": true,
+              "type": "int|char(40)",
+              "length": "",
+              "note": "Chave primária que indentifica a Conta Contábil no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "FILIAL | CODCONTA",
+              "required": false,
+              "type": "char",
+              "length": "50",
+              "note": "Chave primária que indentifica a Conta Contábil no Protheus",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CostCenterCode": {
+          "description": "Código do Centro de Custo",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCCUSTO",
+              "required": false,
+              "type": "char",
+              "length": "25",
+              "note": "Código que indentifica o Centro de Custo",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "CCUSTO",
+              "required": false,
+              "type": "char",
+              "length": "20",
+              "note": "Código que indentifica o Centro de Custo",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CostCenterInternalId": {
+          "description": "InternalId do Centro de Custo",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA | CODCCUSTO",
+              "required": true,
+              "type": "int|char(25)",
+              "length": "",
+              "note": "Chave primária que indentifica o Centro de Custo no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cFilial|CCUSTO",
+              "required": false,
+              "type": "char",
+              "length": "20",
+              "note": "Chave primária que indentifica o Centro de Custo no Protheus",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccountantItemCode": {
+          "description": "Código do Item Contábil",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "ITEMCONTABIL",
+              "required": false,
+              "type": "char",
+              "length": "20",
+              "note": "Código que indentifica o Item Contábil",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cItemCTB",
+              "required": false,
+              "type": "char",
+              "length": "20",
+              "note": "Código que indentifica o Item Contábil",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccountantItemInternalId": {
+          "description": "InternalId do Centro de Custo",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA | IDITEMCONTABIL",
+              "required": true,
+              "type": "int|int",
+              "length": "",
+              "note": "Chave primária que indentifica o Item Contábil no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cFilial|cItemCTB",
+              "required": false,
+              "type": "char",
+              "length": "30",
+              "note": "Chave primária que indentifica o Item Contábil no RM",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ClassValueCode": {
+          "description": "Código da Classe de Valor",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CLASSEVALOR",
+              "required": false,
+              "type": "char",
+              "length": "20",
+              "note": "Código que indentifica a Classe de Valor",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cClVlr",
+              "required": false,
+              "type": "char",
+              "length": "20",
+              "note": "Código que indentifica a Classe de Valor",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ClassValueInternalId": {
+          "description": "InternalId da Classe de Valor",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA | IDCLASSEVALOR",
+              "required": true,
+              "type": "int|int",
+              "length": "",
+              "note": "Chave primária que indentifica a Classe de Valor no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cFilial | cClVlr",
+              "required": false,
+              "type": "char",
+              "length": "200",
+              "note": "Chave primária que indentifica a Classe de Valor no Protheus",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ManagerialAccountingEntityCode": {
+          "description": "Código da Conta Gerencial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CGERENCIA.CODCONTA",
+              "required": false,
+              "type": "char",
+              "length": "40",
+              "note": "Código que indentifica a Conta Gerencial",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cEntCTB",
+              "required": false,
+              "type": "String",
+              "length": "Variável",
+              "note": "Código que indentifica a Conta Gerencial.O Protheus irá utilizar a entidade contábil gerencial configurada no parâmetro MV_CTBCGER",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ManagerialAccountingEntityInternalId": {
+          "description": "InternalId da Conta Gerencial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA | CODCONTA",
+              "required": true,
+              "type": "int|char(40)",
+              "length": "",
+              "note": "Chave primária que indentifica a Conta Gerencial no RM",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "cEmpAnt|cFilAnt|cPlano|Entidade",
+              "required": false,
+              "type": "char",
+              "length": "",
+              "note": "Internal Id da Entidade Contábil Gerencial",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "CurrentBalance": {
+          "description": "Saldo Atual",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nSaldoAtu",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Saldo Atual. saldo débito - Saldo crédito",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrentDebtBalance": {
+          "description": "Saldo Atual Débito",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nSaldoDeb",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Saldo Débito Atual",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrentCreditBalance": {
+          "description": "Saldo Atual Crédito",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nSaldoCred",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Saldo Crédito Atual",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PreviousBalance": {
+          "description": "Saldo Anterior",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nSaldoAnt",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Saldo Anterior.saldo débito - Saldo crédito",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PreviousDebtBalance": {
+          "description": "Saldo Anterior Débito",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nSaldoDebAnte",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Saldo Débito Anterior",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PreviousCreditBalance": {
+          "description": "Saldo Anterior Crédito",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nSaldoCredAnt",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Saldo Crédito Anterior",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PeriodMovement": {
+          "description": "Movimento do Período",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nMov",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Movimento do Período. Movimento Débito - Movimento Crédito",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PeriodDebtMovement": {
+          "description": "Movimento do Período Crédito",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nMovDeb",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Movimento do Período Débito",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PeriodCreditMovement": {
+          "description": "Movimento do Período Crédito",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "decimal",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "nMovCred",
+              "required": false,
+              "type": "numérico",
+              "length": "",
+              "note": "Movimento do Período Crédito",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}

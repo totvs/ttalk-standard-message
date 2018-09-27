@@ -1,0 +1,178 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingEntry_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "AccountingEntry",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "AccountingEntry",
+        "description": "Lançamento Contábil",
+        "segment": ""
+      },
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Empresa Geradora do Lançamento",
+          "type": "string",
+          "maxLength": 2
+        },
+        "BranchId": {
+          "description": "Filial Geradora do Lançamento",
+          "type": "string",
+          "maxLength": 2
+        },
+        "OriginCode": {
+          "description": "Origem do Lançamento (Sistema Gerador)",
+          "type": "string",
+          "maxLength": 3
+        },
+        "PeriodStartDate": {
+          "description": "Data Inicial do Período Contábil. Informa a menor data de lançamento que será enviada na mensagem.",
+          "type": "string",
+          "format": "date"
+        },
+        "PeriodEndDate": {
+          "description": "Data Final do Período Contábil. Informa a maior data de lançamento que será enviada na mensagem.",
+          "type": "string",
+          "format": "date"
+        },
+        "BatchNumber": {
+          "description": "Número do Lote Contábil.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "Entries": {
+          "$ref": "#/definitions/EntriesType",
+          "description": "Lançamentos Contábeis",
+          "type": "object"
+        }
+      }
+    },
+    "EntriesType": {
+      "description": "Lançamento",
+      "type": "object",
+      "properties": {
+        "Entry": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntryType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "EntryType": {
+      "type": "object",
+      "properties": {
+        "EntryNumber": {
+          "description": "Número do Lançamento",
+          "type": "integer",
+          "format": "int32"
+        },
+        "RelationshipNumber": {
+          "description": "Número do Relacionamento entre os débitos e créditos",
+          "type": "integer",
+          "format": "int32"
+        },
+        "MovementDate": {
+          "description": "Data do Movimento Contábil.",
+          "type": "string",
+          "format": "date"
+        },
+        "DebitAccountCode": {
+          "description": "Conta de Débito com máscara. (RM: 40, LOGIX: 23, DATASUL: 20, Protheus: 20)",
+          "type": "string",
+          "maxLength": 40
+        },
+        "CreditAccountCode": {
+          "description": "Conta de Crédito com máscara. (RM: 40, LOGIX: 23, DATASUL: 20, Protheus: 20)",
+          "type": "string",
+          "maxLength": 40
+        },
+        "EntryValue": {
+          "description": "Valor do Lançamento",
+          "type": "number",
+          "format": "double"
+        },
+        "HistoryCode": {
+          "description": "Código do histórico Padrão",
+          "type": "string",
+          "maxLength": 3
+        },
+        "ComplementaryHistory": {
+          "description": "Histórico Complementar",
+          "type": "string",
+          "maxLength": 200
+        },
+        "CostCenterCode": {
+          "description": "Centro de Custo",
+          "type": "string"
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "BatchNumber": {
+          "description": "Número do Lote Contábil",
+          "type": "integer",
+          "format": "int32"
+        },
+        "Entries": {
+          "$ref": "#/definitions/ReturnEntriesType",
+          "description": "Lançamentos",
+          "type": "object"
+        }
+      }
+    },
+    "ReturnEntriesType": {
+      "type": "object",
+      "properties": {
+        "Entry": {
+          "description": "Lançamento",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ReturnEntryType",
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "Entry"
+      ]
+    },
+    "ReturnEntryType": {
+      "type": "object",
+      "properties": {
+        "EntryNumber": {
+          "description": "Número do Lançamento.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "RelationshipNumber": {
+          "description": "Número do relacionamento entre os débitos e créditos.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}
