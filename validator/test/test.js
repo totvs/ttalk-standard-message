@@ -6,8 +6,8 @@ var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
 
 
-describe("Validating files...", function() {
-  it("test suite started",function() {
+describe("Validating files...", function () {
+  it("test suite started", function () {
 
   })
 });
@@ -23,7 +23,7 @@ fs.readdir(dirname, function (err, filenames) {
   console.log(filenames);
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
-      let openAPIPath =  path.join(dirname, filename);
+      let openAPIPath = path.join(dirname, filename);
 
       let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
         encoding: 'utf-8'
@@ -43,7 +43,7 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        describe(" - Content Format: ", function () {         
+        describe(" - Content Format: ", function () {
           it("should be complient with OpenAPI in version 3.0'", function () {
             expect(parsedOpenAPI).to.have.property("openapi");
             expect(parsedOpenAPI).to.not.have.property("swagger");
@@ -77,10 +77,12 @@ fs.readdir(dirname, function (err, filenames) {
 
         describe(" - Schemas: ", function () {
           it("shouldn't contain schemas", function () {
-            if (parsedOpenAPI.components.schemas) {
-              expect(parsedOpenAPI.components.schemas).to.eql({});
-            } else {
-              expect(parsedOpenAPI.components.schemas).to.be.an('undefined');
+            if (parsedOpenAPI.components) {
+              if (parsedOpenAPI.components.schemas) {
+                expect(parsedOpenAPI.components.schemas).to.eql({});
+              } else {
+                expect(parsedOpenAPI.components.schemas).to.be.an('undefined');
+              }
             }
           });
 
@@ -143,16 +145,16 @@ fs.readdir(dirname, function (err, filenames) {
 //       describe("Schema content", function () {
 //         describe(" - Content Format: ", function () {
 //           it("should be a valid JsonSchema'", function () {
-      
+
 //           });
 //         });
-      
+
 //         describe(" - Parameters: ", function () {
 //           it("shouldn't have common parameters", function () {
-      
+
 //           })
 //         });
-      
+
 //         //TODO: Arrumar
 //         describe(" - xtotvs: ", function () {
 //           it("should be an array ", function () {
@@ -168,21 +170,20 @@ fs.readdir(dirname, function (err, filenames) {
 //             //   }
 //           });
 //         });
-      
+
 //         describe(" - Enum: ", function () {
 //           it("must be a string ", function () {
-      
+
 //           });
 //         })
-      
+
 //         describe(" - Errors: ", function () {
 //           it("shouldn't contain error model", function () {
-      
+
 //           });
 //         });
 //       });
-    
+
 //     };
 //   });
 // });
-
