@@ -21,7 +21,6 @@ fs.readdir(dirname, function (err, filenames) {
 
   console.log('OPENAPI files');
   console.log(filenames);
-  ///DE ALGUMA FORMA, ESSE FOREACH VAI TER QUE FICAR DENTRO
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let openAPIPath =  path.join(dirname, filename);
@@ -35,11 +34,12 @@ fs.readdir(dirname, function (err, filenames) {
         let pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
         describe(" - Filename: ", function () {
           it("should start with uppercase letter", function () {
-
+            expect(filename[0]).to.equal(filename[0].toUpperCase());
           });
 
-          it("should contain version", function () {
-
+          it("should contain version (lowercase 'v')", function () {
+            let containsVersion = filename.includes("_v");
+            expect(containsVersion).to.equal(true);
           });
         });
 
