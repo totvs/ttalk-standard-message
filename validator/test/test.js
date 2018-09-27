@@ -26,9 +26,21 @@ fs.readdir(dirname, function (err, filenames) {
       let openAPIPath = path.join(dirname, filename);
 
       describe("OpenAPI - " + filename, function () {
-        let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
+        // let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
+        //   encoding: 'utf-8'
+        // }));
+
+        var file = fs.readFileSync(openAPIPath, {
           encoding: 'utf-8'
-        }));
+        });
+        var parsedOpenAPI;
+        var pathValidatorResult
+
+        before(function() {
+          parsedOpenAPI = JSON.parse(file);
+          pathValidator.clear();
+          pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
+        })
 
         describe(" - Content Format: ", function () {
           it("should be complient with OpenAPI in version 3.0'", function () {
@@ -37,8 +49,7 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        pathValidator.clear();
-        let pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
+        
         describe(" - Filename: ", function () {
           it("should start with uppercase letter", function () {
             expect(filename[0]).to.equal(filename[0].toUpperCase());
