@@ -63,8 +63,10 @@ fs.readdir(dirname, function (err, filenames) {
 
         describe(" - Version: ", function () {
           it("should contain the same version on 'info' as in filename", function () {
-            var fileNameVersion;
-            var infoVersion;
+            var fileNameVersion = filename.substr(filename.lastIndexOf("_v") + 2, filename.length)
+              .replace("_", ".")
+              .replace(".json", "");
+            var infoVersion = parsedOpenAPI.info.version;
             expect(fileNameVersion).to.equal(infoVersion);
           });
         });
