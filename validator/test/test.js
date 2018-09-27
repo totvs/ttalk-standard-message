@@ -25,11 +25,18 @@ fs.readdir(dirname, function (err, filenames) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let openAPIPath = path.join(dirname, filename);
 
-      let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
-        encoding: 'utf-8'
-      }));
-
       describe("OpenAPI - " + filename, function () {
+        let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
+          encoding: 'utf-8'
+        }));
+
+        describe(" - Content Format: ", function () {
+          it("should be complient with OpenAPI in version 3.0'", function () {
+            expect(parsedOpenAPI).to.have.property("openapi");
+            expect(parsedOpenAPI).to.not.have.property("swagger");
+          });
+        });
+
         pathValidator.clear();
         let pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
         describe(" - Filename: ", function () {
@@ -56,8 +63,10 @@ fs.readdir(dirname, function (err, filenames) {
             expect(parsedOpenAPI.servers[0]).to.have.property("variables");
             expect(parsedOpenAPI.servers[0]).to.have.property("url");
           });
-          it("should have an URL consistent with our model", function () {
-            //Todo: substrings based on '/' Validate "api" and "version"
+          it("should have an URL consistent with our model", function () {   
+            var patt = /(?:.*)\/api\/(?:.*)\/v[0-9]*$/;
+            var result = patt.test(parsedOpenAPI.servers[0].url);
+            expect(result).to.equal(true);
           });
         });
 
