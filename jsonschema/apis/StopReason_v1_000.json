@@ -1,47 +1,68 @@
 {
   "openapi": "3.0.1",
-  "info": {
-    "description": "API para a entidade objeto de Motivo de Parada para produtos TOTVS",
-    "version": "1.000",
-    "title": "Stop Reason"
-  },
-  "x-totvs": {
-    "messageDocumentation": {
-      "name": "Stop Reason",
-      "description": "Motivo de Parada",
-      "segment": "Manufatura"
-    },
-    "productInformation": [
-      {
-        "product": "protheus",
-        "contact": "renan.roeder@totvs.com.br",
-        "description": "Cadastro de Motivo de Parada",
-        "adapter": ""
-      }
-    ]
-  },
-  "tags": [
+  "servers": [
     {
-      "name": "stopReason",
-      "description": "Tudo sobre Motivo de Parada",
-      "externalDocs": {
-        "description": "Descubra mais",
-        "url": "http://api.totvs.com.br"
+      "description": "API para a Cadastro de Fardão para produtos TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/PCP/v1/StopReason",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8040"
+        }
       }
     }
   ],
+  "info": {
+    "description": "API para a entidade objeto de Motivo de Parada para produtos TOTVS",
+    "version": "1.000",
+    "title": "Stop Reasons",
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Stop Reasons",
+        "description": "Motivos de Parada",
+        "segment": "Manufatura"
+      },
+      "productInformation": [
+        {
+          "product": "protheus",
+          "contact": "renan.roeder@totvs.com.br",
+          "description": "Cadastro de Motivos de Parada",
+          "adapter": "sfca004i.prw"
+        }
+      ]
+    }
+  },
   "paths": {
-    "/stopReason": {
+    "/stopReasons": {
       "post": {
         "tags": [
-          "stopReason"
+          "stopReasons"
         ],
         "summary": "Adiciona novo Motivo de Parada",
         "description": "",
-        "operationId": "addStopReason",
+        "operationId": "postStopReason",
         "responses": {
-          "405": {
-            "description": "Entrada inválida"
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stopReason/v1/1_000/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da Inclusão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           }
         },
         "x-totvs": {
@@ -58,7 +79,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "https://github.com/totvs/ttalk-standard-message/blob/master/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stopReason/v1/1_000/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
               }
             }
           },
@@ -66,53 +87,13 @@
           "required": true
         }
       },
-      "put": {
-        "tags": [
-          "stopReason"
-        ],
-        "summary": "Atualiza um Motivo de Parada",
-        "description": "",
-        "operationId": "updateStopReason",
-        "responses": {
-          "400": {
-            "description": "ID informado não é válido"
-          },
-          "404": {
-            "description": "Motivo de parada não encontrado"
-          },
-          "405": {
-            "description": "Exceção de validação"
-          }
-        },
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "protheus",
-              "available": true,
-              "note": "Este verbo está disponível com todos os parâmetros",
-              "minimalVersion": "12.1.23"
-            }
-          ]
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "https://github.com/totvs/ttalk-standard-message/blob/master/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
-              }
-            }
-          },
-          "description": "Objeto do motivo de parada que deve ser atualizado",
-          "required": true
-        }
-      },
       "get": {
         "tags": [
-          "stopReason"
+          "stopReasons"
         ],
         "summary": "Lista de Motivos de Parada",
         "description": "Retorna lista de motivos de parada",
-        "operationId": "getStopReason",
+        "operationId": "getStopReasons",
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
@@ -122,9 +103,6 @@
           },
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
           }
         ],
         "responses": {
@@ -133,13 +111,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://github.com/totvs/ttalk-standard-message/blob/master/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stopReason/v1/1_000/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
                 }
               }
             }
           },
           "404": {
-            "description": "Motivo de Parada não encontrado"
+            "description": "Motivos de Parada não localizados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           }
         },
         "x-totvs": {
@@ -154,24 +139,17 @@
         }
       }
     },
-    "/stopReason/{id}": {
+    "/stopReasons/{id}": {
       "get": {
         "tags": [
-          "stopReason"
+          "stopReasons"
         ],
         "summary": "Recupera um Motivo de Parada",
         "description": "Retorna um único motivo de parada",
-        "operationId": "getStopReasonById",
+        "operationId": "getStopReasonID",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID do motivo de parada a ser consultado",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "char(10)"
-            }
+            "$ref": "#/components/parameters/id"
           }
         ],
         "responses": {
@@ -180,16 +158,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://github.com/totvs/ttalk-standard-message/blob/master/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stopReason/v1/1_000/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
                 }
               }
             }
           },
-          "400": {
-            "description": "ID informado não é válido"
-          },
           "404": {
-            "description": "Motivo de parada não encontrado"
+            "description": "Motivo de Parada não localizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           }
         },
         "x-totvs": {
@@ -203,31 +185,114 @@
           ]
         }
       },
-      "delete": {
+      "put": {
         "tags": [
-          "stopReason"
+          "stopReasons"
         ],
-        "summary": "Remove um Motivo de Parada",
+        "summary": "Atualiza um Motivo de Parada",
         "description": "",
-        "operationId": "deleteStopReason",
+        "operationId": "putStopReasonID",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID do motivo de parada a ser removido",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "char(10)"
-            }
+            "$ref": "#/components/parameters/id"
           }
         ],
         "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stopReason/v1/1_000/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
+                }
+              }
+            }
+          },
           "400": {
-            "description": "ID informado não é válido"
+            "description": "Erro no momento da Alteração",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Motivo de parada não encontrado"
+            "description": "Motivo de parada não localizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "protheus",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stopReason/v1/1_000/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
+              }
+            }
+          },
+          "description": "Objeto do motivo de parada que deve ser atualizado",
+          "required": true
+        }
+      },
+      "delete": {
+        "tags": [
+          "stopReasons"
+        ],
+        "summary": "Remove um Motivo de Parada",
+        "description": "",
+        "operationId": "deleteStopReasonID",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stopReason/v1/1_000/jsonschema/schemas/StopReason_1_000.json#/definitions/StopReason"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da exclusão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Motivo de Parada não localizado na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           }
         },
         "x-totvs": {
@@ -242,5 +307,20 @@
         }
       }
     }
+  },
+  "components": {
+    "parameters": {
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "Codigo do motivo de parada",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "char(10)"
+        }
+      }
+    },
+    "schemas": {}
   }
 }
