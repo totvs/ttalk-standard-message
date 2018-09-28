@@ -1,0 +1,218 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Ship_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "Ship",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Ship",
+        "description": "Cadastro de Navio",
+        "segment": "Serviços"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "",
+          "note": "",
+          "adapter": "TURI014.PRW"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Código da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "Char",
+              "length": "2",
+              "note": "Gestão de Empresa ativado",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Código da Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "Char",
+              "length": "2",
+              "note": "pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da chave completa da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Code": {
+          "description": "Código do Navio",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "G4H.G4H_CODIGO",
+              "required": true,
+              "type": "Char",
+              "length": "4",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId do Navio",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "cEmpAnt+G4H.G4H_FILIAL+G4H.G4H_CODIGO",
+              "required": true,
+              "type": "Char",
+              "length": "136",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Name": {
+          "description": "Nome do Navio",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "G4H.G4H_NOME",
+              "required": true,
+              "type": "Char",
+              "length": "40",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Description": {
+          "description": "Descrição do Navio",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "G4H.G4H_DESCR",
+              "required": true,
+              "type": "Memo",
+              "length": "XXX",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "VendorCode": {
+          "description": "Código do Fornecedor",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "G4H.G4H_FORNEC+G4H.G4H_LOJA",
+              "required": true,
+              "type": "Char",
+              "length": "4",
+              "note": "Seu conteúdo é pré determinado pelo cadastro de Fornecedor (Mata020 - SA2 )",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "VendorInternalId": {
+          "description": "InternalId do Fornecedor",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "G4H.G4H_FILIAL+G4H.G4H_FORNEC+G4H.G4H_LOJA",
+              "required": true,
+              "type": "Char",
+              "length": "136",
+              "note": "O InternalId dessa Tag é referente ao internalId do Fornecedor (SA2 - CustomerVendor - Mata020)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Situation": {
+          "description": "Situação? (\"1-Ativo / 2-Bloqueado\")",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "G4H.G4H_MSBLQL",
+              "required": false,
+              "type": "Char",
+              "length": "1",
+              "note": "Campo Opcional, se no cadastro esse campo existir, será enviado a TAG",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

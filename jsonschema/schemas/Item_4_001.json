@@ -1,0 +1,2144 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Item_4_001.json#",
+  "info": {
+    "description": "",
+    "version": "4.001",
+    "title": "Item",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Produto",
+        "description": "cadastro de Produtos",
+        "segment": "Manufatura"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "...",
+          "note": "......",
+          "adapter": "MATA010.PRX"
+        },
+        {
+          "product": "lOGIX",
+          "contact": "...consulte guia de documentacao...",
+          "note": "...consulte guia de documentacao...",
+          "adapter": "ADPXXXXX"
+        },
+        {
+          "product": "RM",
+          "contact": "...",
+          "note": "Cadastro de Produtos/Serviços",
+          "adapter": "EstPrdDataBR"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Código da empresa.",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "Char",
+              "length": "2",
+              "note": "pode ter tamanho variável até 4 com Gestão de Empresa ativado",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTO.CODCOLIGADA",
+              "required": true,
+              "type": "integer",
+              "length": "2",
+              "note": "Codigo da Coligada",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "ID Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "Char",
+              "length": "2",
+              "note": "pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não possui campo físico na tabela",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da chave completa de empresa do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework                 estando no ambiente (Empresa x Filial) correto",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTO.CODCOLIGADA | CONTEXT.CODFILIAL",
+              "required": true,
+              "type": "char",
+              "length": "10",
+              "note": "Concatenação da coligada do registro e filial do contexto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchInternalId": {
+          "description": "InternalId do Estabelecimento/Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "DATASUL",
+              "field": "item.cod-estabel",
+              "required": true,
+              "type": "char",
+              "length": "5",
+              "note": "Código do estabelecimento. Tabela do De-para padrão do EAI: estabelec",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Code": {
+          "description": "Código Item",
+          "type": "string",
+          "maxLength": 30,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_COD",
+              "required": true,
+              "type": "char",
+              "length": "15",
+              "note": "campo expansivel ate 30",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTO.CODIGOPRD",
+              "required": true,
+              "type": "varchar",
+              "length": "30",
+              "note": "Código do produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId de Integração",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_FILIAL+SB1.B1_COD",
+              "required": true,
+              "type": "char",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": ".",
+              "required": true,
+              "type": "varchar",
+              "length": "6",
+              "note": "O InternalID do Produto é formado por TPRODUTO.CODCOLIGADA|TPRODUTO.IDPRD",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Name": {
+          "description": "Nome",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_DESC",
+              "required": true,
+              "type": "char",
+              "length": "30",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTO.DESCRICAO",
+              "required": false,
+              "type": "varchar",
+              "length": "240",
+              "note": "Descrição",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ShortName": {
+          "description": "Nome Curto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTO.NOMEFANTASIA",
+              "required": true,
+              "type": "varchar",
+              "length": "100",
+              "note": "Nome Fantasia",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Detail": {
+          "description": "Detalhes do item",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "LOGIX",
+              "field": "esp_item_sup",
+              "required": false,
+              "type": "char",
+              "length": "60",
+              "note": "Especificações do item concatenadas",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Active": {
+          "description": "Item Ativo?",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_ATIVO",
+              "required": true,
+              "type": "char",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTO.INATIVO",
+              "required": false,
+              "type": "boolean",
+              "length": "",
+              "note": "Produto Inativo: 0-Ativo 1-Inativo",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StockGroupCode": {
+          "description": "Código Grupo Estoque",
+          "type": "string",
+          "maxLength": 2,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_TIPO",
+              "required": true,
+              "type": "char",
+              "length": "30",
+              "note": "campo possui conteúdo validado com cadastro de SX5 que pode ser editado pelo cliente",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TTB2.CODTB2FAT",
+              "required": true,
+              "type": "varchar",
+              "length": "10",
+              "note": "Código Tabela de Classificação2 Produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StockGroupInternalId": {
+          "description": "InternalId da chave completa de Grupo de Estoque do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.CODCOLIGADA|TPRODUTODEF.CODTB2FAT",
+              "required": false,
+              "type": "varchar",
+              "length": "10",
+              "note": "Código Tabela Classificação2 Produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StockGroupDescription": {
+          "description": "Descrição Grupo Estoque",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TTB2.DESCRICAO",
+              "required": false,
+              "type": "varchar",
+              "length": "100",
+              "note": "Descrição",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UnitOfMeasureCode": {
+          "description": "Código Unidade Medida",
+          "type": "string",
+          "maxLength": 6,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_UM",
+              "required": true,
+              "type": "char",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.CODUNDCONTROLE",
+              "required": false,
+              "type": "varchar",
+              "length": "5",
+              "note": "Código Unidade Controle",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UnitOfMeasureInternalId": {
+          "description": "InternalId da chave completa de Unidade Medida do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAH.AH_FILIAL+SB1.B1_UM",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.CODUNDCONTROLE",
+              "required": false,
+              "type": "varchar",
+              "length": "5",
+              "note": "Código Unidade Controle",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ObtainingType": {
+          "description": "Forma de Obtenção / 1 - Comprado / 2 - Fabricado",
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DeployDate": {
+          "description": "Data Implantação",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTO.DTCADASTRAMENTO",
+              "required": false,
+              "type": "datetime",
+              "length": "8",
+              "note": "Data Cadastramento",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ReleaseDate": {
+          "description": "Data Liberação",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StandardWarehouseCode": {
+          "description": "Código Depósito Padrão",
+          "type": "string",
+          "maxLength": 10,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_LOCPAD",
+              "required": true,
+              "type": "char",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StandardWarehouseInternalId": {
+          "description": "InternalId da chave completa de Depósito Padrão do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "NNR.NNR_FILIAL+SB1.B1_LOCPAD",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StandardWarehouseDescription": {
+          "description": "Descrição Depósito Padrão",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MultipleLot": {
+          "description": "Lote Múltiplo",
+          "type": "number",
+          "multipleOf": 0.0001,
+          "minimum": -99999999.9999,
+          "maximum": 99999999.9999,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "EconomicLot": {
+          "description": "Lote Econômico",
+          "type": "number",
+          "multipleOf": 0.0001,
+          "minimum": -99999999.9999,
+          "maximum": 99999999.9999,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_LE",
+              "required": false,
+              "type": "decimal",
+              "length": "12,2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRDLOCINFO.LOTEECONCOMPRAS",
+              "required": false,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Lote econômico de compras",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MinimumLot": {
+          "description": "Lote Mínimo",
+          "type": "number",
+          "multipleOf": 0.0001,
+          "minimum": -99999999.9999,
+          "maximum": 99999999.9999,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_LM",
+              "required": false,
+              "type": "decimal",
+              "length": "12,2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "QualityControl": {
+          "description": "Controla Qualidade",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ControlType": {
+          "description": "Tipo Controle / 1 - Físico / 2 - Total / 3 - Consignado / 4 - Débito Direto / 5 - Não Definido",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRDFIL.CONSIGNADO",
+              "required": true,
+              "type": "integer",
+              "length": "2",
+              "note": "Consignado. No RM são utilizados os valores 3-Consigando e 5-Não definido",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StockControlType": {
+          "description": "Tipo Controle Estoque / 1 - Serial / 2 - Número Série / 3 - Lote / 4 - Referência",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.USANUMSERIE ou TPRODUTODEF.CONTROLADOPORLOTE",
+              "required": false,
+              "type": "integer",
+              "length": "4",
+              "note": "TPRODUTODEF.USANUMSERIE: Indica se utiliza número de série. Usa o tipo 2-Número Série                 TPRODUTODEF.CONTROLADOPORLOTE: Controlado por lote. Usa o tipo 3-Lote",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FractionalQuantity": {
+          "description": "Quantidade Fracionada",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "NetWeight": {
+          "description": "Peso Líquido",
+          "type": "number",
+          "multipleOf": 0.00001,
+          "minimum": -9999999.99999,
+          "maximum": 9999999.99999,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_PESO",
+              "required": false,
+              "type": "decimal",
+              "length": "11,4",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTO.PESOLIQUIDO",
+              "required": false,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Peso Líquido",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GrossWeight": {
+          "description": "Peso Bruto",
+          "type": "number",
+          "multipleOf": 0.00001,
+          "minimum": -9999999.99999,
+          "maximum": 9999999.99999,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_PESBRU",
+              "required": false,
+              "type": "decimal",
+              "length": "11,4",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRODUTO.PESOBRUTO",
+              "required": false,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Peso Bruto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FamilyCode": {
+          "description": "Código Família",
+          "type": "string",
+          "maxLength": 10,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FamilyInternalId": {
+          "description": "InternalId da chave completa de Família do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FamilyDescription": {
+          "description": "Descrição Família",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FamilyClassificationCode": {
+          "description": "Classificaçãio da Família de Materiais",
+          "type": "string"
+        },
+        "FormulaType": {
+          "description": "Tipo Fórmula / 1 - Não Utiliza / 2 - Concentração / 3 - PPM / 4 - Veículo",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PerMillion": {
+          "description": "Valor Per PPM",
+          "type": "number",
+          "multipleOf": 0.0001,
+          "minimum": -99999999.9999,
+          "maximum": 99999999.9999,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IsScrapStockControl": {
+          "description": "Controla Estoque Refugo",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IsScrapFiscalPrice": {
+          "description": "Refugo ao Preco Fiscal",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ScrapItemCode": {
+          "description": "Código Item Refugo",
+          "type": "string",
+          "maxLength": 30,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ScrapItemInternalId": {
+          "description": "InternalId da chave completa de Item Refugo do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ScrapItemQuantity": {
+          "description": "Quantidade Item Refugo",
+          "type": "number",
+          "multipleOf": 0.00001,
+          "minimum": -99999.99999,
+          "maximum": 99999.99999,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Origin": {
+          "description": "Origem da mercadoria / 0 - Nacional / 1 - Estrangeira - Importacao direta / 2 - Estrangeira - Adquirida no mercado externo",
+          "type": "string",
+          "enum": [
+            "0",
+            "1",
+            "2"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTO.REFERENCIACP",
+              "required": false,
+              "type": "interger",
+              "length": "2",
+              "note": "Referência Procedência",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FiscalInformation": {
+          "$ref": "#/definitions/FiscalInformationType",
+          "type": "object"
+        },
+        "ListOfCustomerItemInformation": {
+          "description": "Verificar com a equipe responsável se será CustomerItemInformation ou CustomerInformation como está no fonte Protheus",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomerItemInformationType",
+            "type": "object"
+          }
+        },
+        "CostCenterCode": {
+          "description": "Código do Centro de Custo",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_CC",
+              "required": false,
+              "type": "char",
+              "length": "9",
+              "note": "campo expansivel ate 20",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza no RM, pois não possui campo físico na tabela.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfComercialFamilyItem": {
+          "description": "Lista de códigos de familias(categorias) com produto",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComercialFamilyItemType",
+            "type": "object"
+          }
+        },
+        "CostCenterInternalId": {
+          "description": "InternalId do CostCenterCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "CTT.CTT_FILIAL+SB1.B1_CC",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza no RM, pois não possui campo físico na tabela.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GroupCode": {
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_GRUPO",
+              "required": false,
+              "type": "char",
+              "length": "4",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza no RM.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GroupInternalId": {
+          "description": "InternalId do GroupCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SBM.BM_FILIAL+SB1.B1_GRUPO",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza no RM.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GroupName": {
+          "type": "string"
+        },
+        "SecondUnitOfMeasureCode": {
+          "description": "Segunda Unidade de Medida Utilizada para converter a quantidade para uma segunda unidade",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_SEGUM",
+              "required": false,
+              "type": "char",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SecondUnitOfMeasureInternalId": {
+          "description": "InternalId do SecondUnitOfMeasureCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAH.AH_FILIAL+SB1.B1_SEGUM",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MultiplicationFactorValue": {
+          "description": "Fator multiplicador da conversão para a segunda unidade de medida",
+          "type": "number",
+          "multipleOf": 0.00001,
+          "minimum": -999.99999,
+          "maximum": 999.99999,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB1.B1_CONV",
+              "required": false,
+              "type": "decimal",
+              "length": "5,2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza no RM.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Values": {
+          "$ref": "#/definitions/ValuesType",
+          "description": "Valores do Item (preço de venda, preço de custo, etc)",
+          "type": "object"
+        },
+        "ProductType": {
+          "description": "Tipo de produto / 01 - ATIVO IMOBILIZADO / 02 - BENEFICIAMENTO / 03 - EMBALAGEM / 04 - GASTOS GERAIS / 05 - MATERIAL DE CONSUMO / 06 - MERCADORIA / 07 - MAO DE OBRA / 08 - MATERIA PRIMA / 09 - OUTROS INSUMOS / 10 - PRODUTO ACABADO / 11 - PRODUTO INTERMEDIARIO / 12 - PRODUTO EM PROCESSO / 13 - PRODUTO VEICULO / 14 - SELO DE CONTROLE / 15 - SUBPRODUTO / 16 - INSUMO    AGRICOLA / 17 - MATERIAIS MANFRO / 18 - PRODUTOS  INDUSTRIAIS / 19 - INSUMO    INDUSTRIAIS / 20 - SERVIÇO / 21 - GENERICO / 22 - PRODUZIDO / 23 - COMPRADO / 24 - FANTASMA / 25 - BENEFICIADO / 26 - FINAL",
+          "type": "string",
+          "enum": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26"
+          ],
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTO.TIPO",
+              "required": true,
+              "type": "varchar",
+              "length": "1",
+              "note": "Tipo: no RM é Produto ou Serviço.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Trail": {
+          "description": "Rastro por lote ou Sublote, sem rastro / S - SubLote / L - Lote / N - Nao utiliza rastro",
+          "type": "string",
+          "enum": [
+            "S",
+            "L",
+            "N"
+          ]
+        },
+        "GovernmentCode": {
+          "description": "Código Item",
+          "type": "string",
+          "maxLength": 30,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SB5.B5_CATMAT",
+              "required": true,
+              "type": "char",
+              "length": "20",
+              "note": "campo expansivel ate 30",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BinControl": {
+          "description": "Campo que identifica se o produto possui localização(Endereço/Numero de Serie)",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_LOCALIZ",
+              "required": false,
+              "type": "Boolean",
+              "length": "1",
+              "note": "True Or False",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemTypeCode": {
+          "description": "Código do Tipo de Produto",
+          "type": "string",
+          "maxLength": 10,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTO.CODTB1FAT",
+              "required": false,
+              "type": "char",
+              "length": "10",
+              "note": "Código Tabela De Classificação1 Produto",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemTypeInternalId": {
+          "description": "InternalId da chave completa do Tipo de Produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTO.CODCOLIGADA|TPRODUTO.CODTB1FAT Sim integer|integer Chave Primaria para a Tabela Tabela De Classificação 1",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfGenericPrices": {
+          "description": "Lista de Preços do Produto",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfGenericPricesType",
+            "type": "object"
+          }
+        },
+        "ListOfBarCode": {
+          "description": "Lista de Códigos de Barra",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfBarCodeType",
+            "type": "object"
+          },
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Lista de Códigos de Barra (Tabela TPRDCODIGO)",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ECFTaxing": {
+          "description": "Tributação ECF",
+          "type": "object",
+          "properties": {
+            "Code": {
+              "description": "Código da Tributação ECF",
+              "type": "string",
+              "maxLength": 10,
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "field": "TPRODUTO.TRIBUTACAOECF",
+                  "required": false,
+                  "type": "char",
+                  "length": "10",
+                  "note": "Código da Tributação ECF",
+                  "available": true,
+                  "canUpdate": false
+                },
+                {
+                  "product": "PROTHEUS",
+                  "field": "",
+                  "required": false,
+                  "type": "char",
+                  "length": "",
+                  "note": "",
+                  "available": true,
+                  "canUpdate": false
+                }
+              ]
+            },
+            "Type": {
+              "description": "Código da Tributação ECF / 1 - Tributado / 2 - Isento / 3 - Substituicao Tributaria / 4 - Não tributado / 5 - Outros",
+              "type": "string",
+              "enum": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5"
+              ],
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "field": "TTRIBUTACAOECF.TIPO",
+                  "required": false,
+                  "type": "char",
+                  "length": "10",
+                  "note": "Tipo da Tributação ECF",
+                  "available": true,
+                  "canUpdate": false
+                },
+                {
+                  "product": "PROTHEUS",
+                  "field": "",
+                  "required": false,
+                  "type": "char",
+                  "length": "",
+                  "note": "",
+                  "available": true,
+                  "canUpdate": false
+                }
+              ]
+            },
+            "Aliquot": {
+              "description": "Alíquota da Tributação ECF",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": -9999999999999.99,
+              "maximum": 9999999999999.99,
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "field": "TTRIBUTACAOECF.ALIQUOTA",
+                  "required": false,
+                  "type": "decimal",
+                  "length": "10.2",
+                  "note": "Alíquota da Tributação ECF",
+                  "available": true,
+                  "canUpdate": false
+                },
+                {
+                  "product": "PROTHEUS",
+                  "field": "",
+                  "required": false,
+                  "type": "char",
+                  "length": "",
+                  "note": "",
+                  "available": true,
+                  "canUpdate": false
+                }
+              ]
+            }
+          },
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TTRIBUTACAOECF",
+              "required": false,
+              "type": "Tabela",
+              "length": "",
+              "note": "Dados de Tributação ECF",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "FiscalInformationType": {
+      "description": "Informações fiscais do Item",
+      "type": "object",
+      "properties": {
+        "FiscalClassification": {
+          "$ref": "#/definitions/FiscalClassificationType",
+          "type": "object"
+        },
+        "PisRetaining": {
+          "description": "Indica se retém PIS",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_PIS",
+              "required": false,
+              "type": "char",
+              "length": "1",
+              "note": "indica se retém PIS. true = \"1\", false = \"2\"",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PisAliquot": {
+          "description": "Alíquota de PIS",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_PPIS",
+              "required": false,
+              "type": "decimal",
+              "length": "5,2",
+              "note": "Alíquota de PIS",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CofinsRetaining": {
+          "description": "Indica se retém COFINS",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_COFINS",
+              "required": false,
+              "type": "char",
+              "length": "1",
+              "note": "indica se retém COFINS. true = \"1\", false = \"2\"",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CofinsAliquot": {
+          "description": "Alíquota de COFINS",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_PCOFINS",
+              "required": false,
+              "type": "decimal",
+              "length": "5,2",
+              "note": "Alíquota de COFINS",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CsllRetaining": {
+          "description": "Indica se retém CSLL",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_CSLL",
+              "required": false,
+              "type": "char",
+              "length": "1",
+              "note": "indica se retém CSLL. true = \"1\", false = \"2\"",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CsllAliquot": {
+          "description": "Alíquota de CSLL",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_PCSLL",
+              "required": false,
+              "type": "decimal",
+              "length": "5,2",
+              "note": "Alíquota de CSLL",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IrrfIncidence": {
+          "description": "Indica se tem incidência de IRRF",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_IRRF",
+              "required": false,
+              "type": "char",
+              "length": "1",
+              "note": "indica se tem incidência de IRRF. true = \"1\", false = \"2\"",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IssAliquot": {
+          "description": "Alíquota de ISS",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_ALIQISS",
+              "required": false,
+              "type": "decimal",
+              "length": "5,2",
+              "note": "Alíquota de ISS",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "IssServiceCode": {
+          "description": "Código de Serviço do ISS",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_CODQISS",
+              "required": false,
+              "type": "Char",
+              "length": "9",
+              "note": "Código de Serviço do ISS",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "MunicipalTaxCode": {
+          "description": "Código de Tributação Municipal",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_TRIBMUN",
+              "required": false,
+              "type": "Char",
+              "length": "20",
+              "note": "Código de Tributação Municipal",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TaxSubstitutionCode": {
+          "description": "Código Especificador da Substituição Tributária (CEST)",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "B1_CEST",
+              "required": false,
+              "type": "Char",
+              "length": "9",
+              "note": "Código Especificador da Substituição Tributária",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "CustomerItemInformationType": {
+      "description": "Amarração Cliente X Item",
+      "type": "object",
+      "properties": {
+        "CustomerCode": {
+          "description": "Código do cliente",
+          "type": "string",
+          "maxLength": 15,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA7.A7_CLIENTE+SA7.A7_LOJA",
+              "required": false,
+              "type": "char",
+              "length": "8",
+              "note": "expansivel ate 24 (uniao dos campos cliente e loja)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerInternalId": {
+          "description": "InternalId do CustomerCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA1.A1_FILIAL+SA7.A7_CLIENTE+SA7.A7_LOJA",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "GovernmentalInformation": {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/commons_1_000.json#/definitions/GovernmentalInformationType",
+          "description": "CNPJ/CPF e Inscrição estadual do cliente/fornecedor",
+          "type": "object"
+        },
+        "CustomerItemCode": {
+          "description": "Código do Item X Cliente",
+          "type": "string",
+          "maxLength": 30,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA7.A7_CODCLI",
+              "required": false,
+              "type": "char",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerItemInternalId": {
+          "description": "InternalId do CustomerItemCode",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA7.A7_FILIAL+SA7.A7_CLIENTE+SA7.A7_LOJA+SA7.A7_PRODUTO",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "FiscalClassificationType": {
+      "description": "Informacoes fiscais Item",
+      "type": "object",
+      "properties": {
+        "FiscalClassificationCode": {
+          "description": "Codigo Classificacao Fiscal",
+          "type": "string",
+          "maxLength": 10
+        },
+        "FiscalClassificationInternalId": {
+          "description": "InternalId do FiscalClassificationCode",
+          "type": "string"
+        },
+        "FiscalClassificationDescription": {
+          "description": "Descricao Classificacao Fiscal",
+          "type": "string",
+          "maxLength": 35
+        }
+      }
+    },
+    "ValuesType": {
+      "type": "object",
+      "properties": {
+        "CostPrice": {
+          "description": "Preço de Custo",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -9999999999.99,
+          "maximum": 9999999999.99,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.PRECO1",
+              "required": true,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Preço1 Produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "SalesPrice": {
+          "description": "Preço de Venda",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -9999999999.99,
+          "maximum": 9999999999.99,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.PRECO2",
+              "required": true,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Preço2 Produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AverageCostPrice": {
+          "description": "Preço Médio de Custo",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -9999999999.99,
+          "maximum": 9999999999.99,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.CUSTOMEDIO",
+              "required": false,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Custo médio Produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "StandardCostPrice": {
+          "description": "Preço Padrão",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -9999999999.99,
+          "maximum": 9999999999.99,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.CUSTOUNITARIO",
+              "required": false,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Custo unitário Produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BaseDate": {
+          "description": "Data Base do Calculo dos preços",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.DATABASEPRECO1",
+              "required": false,
+              "type": "datetime",
+              "length": "8",
+              "note": "Data Base Preço1 Produto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PackingQuantity": {
+          "description": "Quantidade na Embalagem",
+          "type": "string"
+        },
+        "AccountantAccountCode": {
+          "description": "Código da Conta Contábil",
+          "type": "string"
+        },
+        "AllowsPurchase": {
+          "description": "Permite Comprar do Item",
+          "type": "boolean"
+        },
+        "IsStorable": {
+          "description": "Item é  Estocável (true)  ou Aplicação direta (false) ?",
+          "type": "boolean"
+        },
+        "LastUpdateItem": {
+          "description": "Data Última atualização do Item",
+          "type": "string",
+          "format": "date"
+        },
+        "LastPurchaseItem": {
+          "description": "Data Última Compra do Item",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "ListOfGenericPricesType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GenericPricesType",
+        "type": "object"
+      }
+    },
+    "GenericPricesType": {
+      "type": "object",
+      "properties": {
+        "PriceId": {
+          "description": "Identificador do preço",
+          "type": "integer",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Identificador do preço. No RM pode ser de 1 a 5, referente à numeração do campo.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CurrencyInternalId": {
+          "description": "Código da Moeda no Preço",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.CODMOEPRECO1                 TPRODUTODEF.CODMOEPRECO2                 TPRODUTODEF.CODMOEPRECO3                 TPRODUTODEF.CODMOEPRECO4                 TPRODUTODEF.CODMOEPRECO5",
+              "required": true,
+              "type": "varchar",
+              "length": "10",
+              "note": "Código da Moeda no Preço. No RM pode ser de 1 a 5, referente à numeração do campo.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BaseDatePrice": {
+          "description": "Data-base de Preço",
+          "type": "string",
+          "format": "date-time",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.DATABASEPRECO1                 TPRODUTODEF.DATABASEPRECO2                 TPRODUTODEF.DATABASEPRECO3                 TPRODUTODEF.DATABASEPRECO4                 TPRODUTODEF.DATABASEPRECO5",
+              "required": true,
+              "type": "datetime",
+              "length": "8",
+              "note": "Data-base de Preço. No RM pode ser de 1 a 5, referente à numeração do campo.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Price": {
+          "description": "Preço",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "TPRODUTODEF.PRECO1                 TPRODUTODEF.PRECO2                 TPRODUTODEF.PRECO3                 TPRODUTODEF.PRECO4                 TPRODUTODEF.PRECO5",
+              "required": true,
+              "type": "decimal",
+              "length": "15,4",
+              "note": "Preço. No RM pode ser de 1 a 5, referente à numeração do campo.",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "SB0.B0_PRV",
+              "required": true,
+              "type": "decimal",
+              "length": "14,2",
+              "note": "Preço do Produto. No Protheus pode ser de 1 a 9.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfBarCodeType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BarCodeType",
+        "type": "object"
+      }
+    },
+    "ComercialFamilyItemType": {
+      "description": "Amarração familias(categorias) pertencentes ao produto",
+      "type": "object",
+      "properties": {
+        "ComercialFamilyCode": {
+          "description": "Código Família Comercial",
+          "type": "string",
+          "maxLength": 10,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza.",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "ACV.ACV_CATEGO",
+              "required": true,
+              "type": "char",
+              "length": "6",
+              "note": "Codigo da categoria de produtos",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ComercialFamilyInternalId": {
+          "description": "InternalId da chave completa de Família Comercial do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ComercialFamilyDescription": {
+          "description": "Descrição Família Comercial",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Não utiliza.",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "PROTHEUS",
+              "field": "ACU.ACU_DESC",
+              "required": true,
+              "type": "char",
+              "length": "30",
+              "note": "descrição numero 1 de hierarquia das categorias",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "BarCodeType": {
+      "type": "object",
+      "properties": {
+        "Code": {
+          "description": "Código de Barras do Produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SLK.LK_CODBAR",
+              "required": true,
+              "type": "String",
+              "length": "15",
+              "note": "Código de Barras do Produto",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRDCODIGO.CODIGO",
+              "required": true,
+              "type": "string",
+              "length": "60",
+              "note": "Código de Barras do Produto.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId do Código de Barras",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "String",
+              "length": "50",
+              "note": "O InternalID do Código de Barras é formado por EMPRESA|LK_FILIAL|LK_CODBAR",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "length": "64",
+              "note": "O InternalID do Código de Barras é formado por TPRDCODIGO.CODCOLIGADA|TPRDCODIGO.TIPO|TPRDCODIGO.CODIGO",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "UnifOfMeasureInternalId": {
+          "description": "Unidade do Código do Produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TPRDCODIGO.CODUND",
+              "required": true,
+              "type": "string",
+              "length": "30",
+              "note": "Código do Produto.",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ItemQuantity": {
+          "description": "Quantidade do Produto",
+          "type": "number",
+          "multipleOf": 0.0001,
+          "minimum": -99999999999.9999,
+          "maximum": 99999999999.9999,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SLK.LK_QUANT",
+              "required": false,
+              "type": "Double",
+              "length": "4,0",
+              "note": "Quantidade do Produto no caso do Código de Barras ser uma caixa Valor Default = 0",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "TUND.FATORCONVERSAO",
+              "required": true,
+              "type": "decimal",
+              "length": "9",
+              "note": "Fator Conversão da Unidade Base",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
