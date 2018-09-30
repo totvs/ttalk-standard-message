@@ -6,8 +6,8 @@ var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
 
 
-describe("Validating files...", function() {
-  it("test suite started",function() {
+describe("Validating files...", function () {
+  it("test suite started", function () {
 
   })
 });
@@ -21,33 +21,47 @@ fs.readdir(dirname, function (err, filenames) {
 
   console.log('OPENAPI files');
   console.log(filenames);
-  ///DE ALGUMA FORMA, ESSE FOREACH VAI TER QUE FICAR DENTRO
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
-      let openAPIPath =  path.join(dirname, filename);
-
-      let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
-        encoding: 'utf-8'
-      }));
+      let openAPIPath = path.join(dirname, filename);
 
       describe("OpenAPI - " + filename, function () {
-        pathValidator.clear();
-        let pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
+        // let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
+        //   encoding: 'utf-8'
+        // }));
+
+        var file = fs.readFileSync(openAPIPath, {
+          encoding: 'utf-8'
+        });
+        var parsedOpenAPI;
+        var pathValidatorResult
+
+        before(function() {
+          parsedOpenAPI = JSON.parse(file);
+          pathValidator.clear();
+          pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
+        })
+
+        describe(" - Content Format: ", function () {
+          it("should be complient with OpenAPI in version 3.0'", function () {
+            expect(parsedOpenAPI).to.have.property("openapi");
+            expect(parsedOpenAPI).to.not.have.property("swagger");
+          });
+        });
+
+        
         describe(" - Filename: ", function () {
           it("should start with uppercase letter", function () {
-
+            expect(filename[0]).to.equal(filename[0].toUpperCase());
           });
 
-          it("should contain version", function () {
-
+          it("should contain version (lowercase 'v')", function () {
+            let containsVersion = filename.includes("_v");
+            expect(containsVersion).to.equal(true);
           });
         });
 
         describe(" - Content Format: ", function () {
-          it("should be a valid JsonSchema'", function () {
-
-          });
-
           it("should be complient with OpenAPI in version 3.0'", function () {
             expect(parsedOpenAPI).to.have.property("openapi");
             expect(parsedOpenAPI).to.not.have.property("swagger");
@@ -60,29 +74,37 @@ fs.readdir(dirname, function (err, filenames) {
             expect(parsedOpenAPI.servers[0]).to.have.property("variables");
             expect(parsedOpenAPI.servers[0]).to.have.property("url");
           });
-          it("should have an URL consistent with our model", function () {
-            //Todo: substrings based on '/' Validate "api" and "version"
+          it("should have an URL consistent with our model", function () {   
+            var patt = /(?:.*)\/api\/(?:.*)\/v[0-9]*$/;
+            var result = patt.test(parsedOpenAPI.servers[0].url);
+            expect(result).to.equal(true);
           });
         });
 
         describe(" - Version: ", function () {
           it("should contain the same version on 'info' as in filename", function () {
-
+            var fileNameVersion = filename.substr(filename.lastIndexOf("_v") + 2, filename.length)
+              .replace("_", ".")
+              .replace(".json", "");
+            var infoVersion = parsedOpenAPI.info.version;
+            expect(fileNameVersion).to.equal(infoVersion);
           });
         });
 
         describe(" - Endpoints: ", function () {
           it("shouldn't contain 'post', 'put', 'get' or 'delete' in the URL", function () {
-
+            expect(pathValidatorResult.useHttpVerbInEndpointUrl).to.not.equal(true);
           });
         });
 
         describe(" - Schemas: ", function () {
           it("shouldn't contain schemas", function () {
-            if (parsedOpenAPI.components.schemas) {
-              expect(parsedOpenAPI.components.schemas).to.eql({});
-            } else {
-              expect(parsedOpenAPI.components.schemas).to.be.an('undefined');
+            if (parsedOpenAPI.components) {
+              if (parsedOpenAPI.components.schemas) {
+                expect(parsedOpenAPI.components.schemas).to.eql({});
+              } else {
+                expect(parsedOpenAPI.components.schemas).to.be.an('undefined');
+              }
             }
           });
 
@@ -145,16 +167,16 @@ fs.readdir(dirname, function (err, filenames) {
 //       describe("Schema content", function () {
 //         describe(" - Content Format: ", function () {
 //           it("should be a valid JsonSchema'", function () {
-      
+
 //           });
 //         });
-      
+
 //         describe(" - Parameters: ", function () {
 //           it("shouldn't have common parameters", function () {
-      
+
 //           })
 //         });
-      
+
 //         //TODO: Arrumar
 //         describe(" - xtotvs: ", function () {
 //           it("should be an array ", function () {
@@ -170,21 +192,20 @@ fs.readdir(dirname, function (err, filenames) {
 //             //   }
 //           });
 //         });
-      
+
 //         describe(" - Enum: ", function () {
 //           it("must be a string ", function () {
-      
+
 //           });
 //         })
-      
+
 //         describe(" - Errors: ", function () {
 //           it("shouldn't contain error model", function () {
-      
+
 //           });
 //         });
 //       });
-    
+
 //     };
 //   });
 // });
-

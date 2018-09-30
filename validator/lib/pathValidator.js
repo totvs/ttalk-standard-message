@@ -60,6 +60,16 @@ var checkCommonErrorSchema = function (response, responseKey) {
     }
 };
 
+var checkHttpVerbInUrl = function (pathkey) {
+    if (results.useHttpVerbInEndpointUrl != true) {
+        results.useHttpVerbInEndpointUrl = (pathkey.includes("get") ||
+            pathkey.includes("put") ||
+            pathkey.includes("post") ||
+            pathkey.includes("delete"))
+    }
+    results.useHttpVerbInEndpointUrl;
+}
+
 var addSchema = function (response) {
     var ref = response.content["application/json"].schema.$ref;
     if (!ref) ref = response.content["application/json"].schema.items.$ref;
@@ -85,7 +95,7 @@ var runThroughParams = function (parameters, httpVerbkey, pathkey) {
     }
 };
 
-exports.clear = function() {
+exports.clear = function () {
     results = {
         schemaUrlList: []
     };
@@ -96,6 +106,7 @@ exports.clear = function() {
 
 exports.runThroughPaths = function name(parsedOpenAPI) {
     for (var pathkey in parsedOpenAPI.paths) {
+        checkHttpVerbInUrl(pathkey);
         for (var httpVerbkey in parsedOpenAPI.paths[pathkey]) {
             var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
             checkXtotvs(httpVerbInfo);
