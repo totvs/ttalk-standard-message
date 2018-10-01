@@ -1,2057 +1,1970 @@
-{
-    "$schema":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#",
-    "info":{
-        "description":"Contrato de Mensagem Padronizada para Invent·rio de Estoque para produtos TOTVS",
-        "version":"2.000",
-        "title":"Inventory Counts",
-        "contact":{
-            "name":"T-Talk",
-            "url":"API.Totvs.com.br",
-            "email":"comiteintegracao@totvs.com.br"
-        },
-        "x-totvs":{
-            "messageDocumentation":{
-                "name":"InventoryCounts",
-                "description":"Invent·rio Estoque",
-                "segment":"Manufatura"
-            },
-            "productInformation":[
-                {
-                    "product":"datasul",
-                    "contact":"SUPPLY.ML.MAN.ESTOQUE@totvs.com.br",
-                    "description":"Contrato de Mensagem Padronizada para Invent·rio de Estoque",
-                    "adapter":"/totvs-rest/prg/mat/v1/inventoryCounts.p",
-                    "helpUrl":""
-                },
-                {
-                    "product":"logix",
-                    "contact":"",
-                    "description":"Contrato de Mensagem Padronizada para Invent·rio de Estoque",
-                    "adapter":"",
-                    "helpUrl":""
-                }
-            ]
-        }
-    },
-    "definitions":{
-        "pagedInventoryCounts":{
-            "type":"object",
-            "allOf":[
-                {
-                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-                },
-                {
-                    "type":"object",
-                    "properties":{
-                        "items":{
-                            "type":"array",
-                            "items":{
-                                "$ref":"#/definitions/inventoryCountType"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "inventoryCountType":{
-            "type":"object",
-            "properties":{
-                "inventoryCountInternalId": {
-                    "type": "string",
-                    "description": "InternalId da chave completa do registro de invent·rio",
-                    "x-totvs": [
-                      {
-                        "product": "Datasul",
-                        "available": false,
-                        "required": false
-                      }
-                    ]
-                 },            
-                "countingSheetNumber":{
-                    "type":"number",
-                    "description":"N˙mero da ficha de invent·rio",
-                    "format":"int32",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.nr-ficha",
-                            "required":true,
-                            "length":"7",
-                            "type":"integer",
-                            "note":"N˙mero da ficha de invent·rio | formato >>>>,>>9. N˙mero sequencial por data de inventario",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_cartao",
-                            "required":false,
-                            "length":"8",
-                            "type":"decimal",
-                            "note":"N˙mero da ficha de invent·rio | formato >>>>>,>>9. N˙mero sequencial por item de inventario",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "sequenceCountingSheetNumber":{
-                    "type":"number",
-                    "description":"SequÍncia do n˙mero da ficha de invent·rio",
-                    "format":"int32",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui Hora do invent·rio."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_seq",
-                            "required":false,
-                            "length":"10",
-                            "type":"decimal",
-                            "note":"SequÍncia do n˙mero da ficha de invent·rio | formato >>>>>,>>9. N˙mero sequencial por ficha de invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "inventoryDate":{
-                    "type":"string",
-                    "format":"date",
-                    "description":"Data de invent·rio",
-                    "example":"2018-01-01",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.dt-saldo",
-                            "required":true,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Data de corte do invent·rio",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.dat_selecao",
-                            "required":true,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Data de corte do invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "inventoryTime":{
-                    "type":"string",
-                    "format":"00:00:00",
-                    "description":"Hora do invent·rio",
-                    "example":"00:00:00",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui hora do invent·rio."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.hor_selecao",
-                            "required":true,
-                            "type":"string",
-                            "length":"6",
-                            "note":"Hora de corte do invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemInternalId": {
-                    "type": "string",
-                    "description": "InternalId do item",
-                    "x-totvs": [
-                        {
-                            "product": "Datasul",
-                            "available": false,
-                            "required": false
-                        },
-                        {
-                            "product": "logix",
-                            "available": false,
-                            "required": false
-                        }
-                    ]
-                 },
-                "itemCode":{
-                    "type":"string",
-                    "description":"CÛdigo do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.it-codigo",
-                            "required":true,
-                            "type":"string",
-                            "length":"16",
-                            "note":"CÛdigo do Item",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_item",
-                            "required":true,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo do Item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemDescription":{
-                    "type":"string",
-                    "description":"DescriÁ„o do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"item.desc-item",
-                            "required":false,
-                            "type":"string",
-                            "length":"60",
-                            "note":"DescriÁ„o do Item - TABELA: item.desc-item",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"item.den_item",
-                            "required":false,
-                            "type":"string",
-                            "length":"76",
-                            "note":"DescriÁ„o do Item - TABELA: item.den_item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "statusItem":{
-                    "type":"string",
-                    "description":"SituaÁ„o do Item no Estoque.",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui SituaÁ„o do Item no Estoque."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.ies_situa_qtd",
-                            "required":true,
-                            "type":"string",
-                            "length":"1",
-                            "note":"DescriÁ„o da situaÁ„o do item no estoque: L-Liberada; I-Impedida; E-Liberada Excepcional; R-Rejeitada",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "lotOrSerialNumber":{
-                    "type":"string",
-                    "description":"CÛdigo do Lote ou N˙mero de SÈrie do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.lote",
-                            "required":false,
-                            "type":"string",
-                            "length":"40",
-                            "note":"N˙mero do lote ou n˙mero de sÈrie do item. Elemento obigatÛrio para itens controlados por lote, referencia ou n˙mero de sÈrie.",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_lote",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"N˙mero do lote do item. Elemento obigatÛrio para itens controlados por lote.",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "referenceCode":{
-                    "type":"string",
-                    "description":"CÛdigo da ReferÍncia do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cod-refer",
-                            "required":false,
-                            "type":"string",
-                            "length":"8",
-                            "note":"CÛdigo da ReferÍncia do Item",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui cadastro do CÛdigo da ReferÍncia do Item."
-                        }
-                    ]
-                },
-                "referenceDescription":{
-                    "type":"string",
-                    "description":"DescriÁ„o da ReferÍncia do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"referencia.descricao",
-                            "required":false,
-                            "type":"string",
-                            "length":"32",
-                            "note":"DescriÁ„o da ReferÍncia do Item. TABELA: referencia,descricao",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui cadastro do CÛdigo da ReferÍncia do Item."
-                        }
-                    ]
-                },
-                "branchInternalId": {
-                    "type":"string",
-                    "description":"InternalId da Filial",
-                    "x-totvs":[
-                        {
-                            "product": "Datasul",
-                            "available": false,
-                            "required": false
-                        },
-                        {
-                            "product": "logix",
-                            "available": false,
-                            "required": false
-                        }
-                    ]
-                },
-                "branchId":{
-                    "type":"string",
-                    "description":"CÛdigo da Filial",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cod-estabel",
-                            "required":true,
-                            "type":"string",
-                            "length":"5",
-                            "note":"CÛdigo Estabelecimento"
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui cadastro do CÛdigo da Filial."
-                        }
-                    ]
-                },
-                "branchDescription":{
-                    "type":"string",
-                    "description":"DescriÁ„o do Filial",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"estabelec.nome",
-                            "required":false,
-                            "type":"string",
-                            "length":"40",
-                            "note":"DescriÁ„o do estabelecimento. TABELA: estabelec.nome",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui cadastro da DescriÁ„o da Filial."
-                        }
-                    ]
-                },
-                "companyInternalId": {
-                    "type": "string",
-                    "description": "InternalId da chave completa da empresa",
-                    "x-totvs": [
-                      {
-                        "product": "Datasul",
-                        "available": false,
-                        "required": false
-                      },
-                      {
-                        "product": "logix",
-                        "available": false,
-                        "required": false
-                      }
-                    ]
-                },
-                "companyCode":{
-                    "type":"string",
-                    "description":"CÛdigo da empresa",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui cadastro do CÛdigo da empresa."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_empresa",
-                            "required":true,
-                            "type":"string",
-                            "length":"2",
-                            "note":"CÛdigo da Empresa"
-                        }
-                    ]
-                },
-                "warehouseInternalId": {
-                    "type":"string",
-                    "description":"InternalId do DepÛsito",
-                    "x-totvs":[
-                        {
-                            "product": "Datasul",
-                            "available": false,
-                            "required": false
-                        },
-                        {
-                            "product": "logix",
-                            "available": false,
-                            "required": false
-                        }
-                    ]
-                },
-                "warehouseCode":{
-                    "type":"string",
-                    "description":"CÛdigo do DepÛsito",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cod-depos",
-                            "required":true,
-                            "type":"string",
-                            "length":"3",
-                            "note":"CÛdigo do depÛsito",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui cadastro do CÛdigo do DepÛsito."
-                        }
-                    ]
-                },
-                "warehouseDescription":{
-                    "type":"string",
-                    "description":"DescriÁ„o do DepÛsito",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"deposito.nome",
-                            "required":false,
-                            "type":"string",
-                            "length":"40",
-                            "note":"DescriÁ„o do depÛsito. TABELA: deposito.nome",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent_grade.deposit",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"DescriÁ„o do depÛsito WMS",
-                            "canUpdate":false
-                        }                   
-                    ]
-                },
-                "locationCode":{
-                    "type":"string",
-                    "description":"CÛdigo da localizaÁ„o do material",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cod-localiz",
-                            "required":false,
-                            "type":"string",
-                            "length":"10",
-                            "note":"CÛdigo da localizaÁ„o do material",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_local_estoq",
-                            "required":true,
-                            "type":"string",
-                            "length":"10",
-                            "note":"CÛdigo da localizaÁ„o do material",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "locationDescription":{
-                    "type":"string",
-                    "description":"DescriÁ„o da localizaÁ„o do material.",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"localizacao.descricao",
-                            "required":false,
-                            "type":"string",
-                            "length":"30",
-                            "note":"DescriÁ„o da localizaÁ„o do material. TABELA: localizacao.descricao",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"local.den_local",
-                            "required":false,
-                            "type":"string",
-                            "length":"30",
-                            "note":"DescriÁ„o da localizaÁ„o do material. TABELA: local.den_local",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "sublocationCode":{
-                    "type":"string",
-                    "description":"CÛdigo da SublocalizaÁ„o do material",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui cadastro da SublocalizaÁ„o do material."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_sublocacao",
-                            "required":true,
-                            "type":"string",
-                            "length":"10",
-                            "note":"CÛdigo da SublocalizaÁ„o do material",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "status":{
-                    "type":"integer",
-                    "description":"SituaÁ„o (estado) da ficha de invent·rio \n Tipo: \n    1 - Atualizado\n    2 - N„o Atualizado\n    3 - Invent·rio OK\n    4 - OK p/ Invent·rio\n",
-                    "enum":[
-                        1,
-                        2,
-                        3,
-                        4
-                    ],
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.situacao",
-                            "required":false,
-                            "type":"integer",
-                            "length":"1",
-                            "note":"SituaÁ„o da ficha de contagem. Valores possÌveis: 1-Atualizado; 2-N„o Atualizado; 3-Invent·rio OK, 4-OK p/Inventario. Include = ininc/i01in157.i",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.ies_situacao",
-                            "required":false,
-                            "type":"char",
-                            "length":"1",
-                            "note":"SituaÁ„o da ficha de contagem. Valores possÌveis: G-gerada;  E- Bloqueio dos itens; D- Quantidade digitada; ",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "countedValue":{
-                    "type":"array",
-                    "description":"Quantidade contada durante o invent·rio",
-                    "minItems":1,
-                    "maxItems":3,
-                    "items":{
-                        "type":"number",
-                        "format":"float",
-                        "maximum":9999999999.9999,
-                        "minimum":-9999999999.9999,
-                        "multipleOf":0.01,
-                        "example":[
-                            null,
-                            null,
-                            null
-                        ]
-                    },
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.val-apurado[1..3]",
-                            "required":false,
-                            "length":"14",
-                            "type":"decimal",
-                            "format":"float",
-                            "note":"Valor apurado. formato >>>>,>>>,>>9.9999. inventario.val-apurado[1..3]. Quando a quantidade ainda n„o foi apurada o valor padr„o È ? (nulo)",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.qtd_estoque_cont",
-                            "required":false,
-                            "length":"15",
-                            "type":"decimal",
-                            "format":"float",
-                            "note":"Quando a quantidade ainda n„o foi apurada o valor padr„o È ? (nulo)",
-                            "canUpdate":true
-                        }
-                    ]
-                },
-                "updateDate":{
-                    "type":"string",
-                    "description":"Data atualizaÁ„o",
-                    "format":"date",
-                    "example":"2018-01-01",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.dt-atualiza",
-                            "required":false,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Data de atualizaÁ„o do invent·rio",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui Data de atualizaÁ„o do invent·rio."
-                        }
-                    ]
-                },
-                "currentQuantity":{
-                    "description":"Saldo Atual",
-                    "type":"number",
-                    "format":"float",
-                    "maximum":9999999999.9999,
-                    "minimum":-9999999999.9999,
-                    "multipleOf":0.01,
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.qtidade-atu",
-                            "required":false,
-                            "length":"15",
-                            "type":"decimal",
-                            "format":"double",
-                            "note":"Saldo Atual.  ->>>>,>>>,>>9.9999. TABELA: inventario.qtidade-atu",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.qtd_estoque_sist",
-                            "required":false,
-                            "length":"15",
-                            "type":"decimal",
-                            "format":"double",
-                            "note":"Saldo Atual.  ->>>>,>>>,>>9.9999. TABELA: itens_invent.qtd_estoque_sist",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "printed":{
-                    "type":"boolean",
-                    "description":"Indica se a ficha de invent·rio est· impressa",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.impressa",
-                            "required":false,
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui indicador de ficha impressa, isso pode ser verificado pelo status do invent·rio."
-                        }
-                    ]
-                },
-                "situationWMS":{
-                    "type":"number",
-                    "description":"SituaÁ„o da ficha no mÛdulo WMS",
-                    "maxLength":1,
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.ind-sit-invent-wm",
-                            "required":false,
-                            "length":"9",
-                            "format":"integer",
-                            "note":"SituaÁ„o da ficha no mÛdulo WMS",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui SituaÁ„o da ficha no mÛdulo WMS."
-                        }
-                    ]
-                },
-                "groupingCode":{
-                    "type":"number",
-                    "description":"CÛdigo do agrupador do invent·rio",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cdn-agrup",
-                            "required":false,
-                            "type":"integer",
-                            "length":"9",
-                            "note":"CÛdigo do Agrupador - Formato: >>>,>>>,>>9",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui CÛdigo do agrupador do invent·rio."
-                        }
-                    ]
-                },
-                "groupingDescription":{
-                    "type":"string",
-                    "description":"DescriÁ„o do agrupador do invent·rio",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"agrup-invent.descricao",
-                            "required":false,
-                            "type":"integer",
-                            "length":"200",
-                            "note":"DescriÁ„o do Agrupador do Invent·rio. Tabela: agrup-invent",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui DescriÁ„o do agrupador do invent·rio."
-                        }
-                    ]
-                },
-                "balanceAccounting":{
-                    "type":"number",
-                    "description":"Saldo cont·bil",
-                    "maximum":9999999999.9999,
-                    "minimum":-9999999999.9999,
-                    "multipleOf":0.01,
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.valor-contab",
-                            "required":true,
-                            "length":"15",
-                            "type":"decimal",
-                            "format":"double",
-                            "note":"Saldo cont·bil. formato >>>>,>>>,>>9.9999"
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza da informaÁ„o do Saldo cont·bil."
-                        }
-                    ]
-                },
-                "lecturerUser1":{
-                    "type":"string",
-                    "description":"CÛdigo Conferente Primeira Contagem ",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":" inventario.cod-confte-contag-1",
-                            "required":false,
-                            "type":"string",
-                            "length":"30",
-                            "note":"CÛdigo Conferente Primeira Contagem",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza o CÛdigo Conferente Primeira Contagem."
-                        }
-                    ]
-                },
-                "lecturerUser2":{
-                    "type":"string",
-                    "description":"CÛdigo Conferente Segunda Contagem ",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":" inventario.cod-confte-contag-2",
-                            "required":false,
-                            "type":"string",
-                            "length":"30",
-                            "note":"CÛdigo Conferente Segunda Contagem",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza o CÛdigo Conferente Segunda Contagem."
-                        }
-                    ]
-                },
-                "lecturerUser3":{
-                    "type":"string",
-                    "description":"CÛdigo Conferente Terceira Contagem ",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":" inventario.cod-confte-contag-3",
-                            "required":false,
-                            "type":"string",
-                            "length":"30",
-                            "note":"CÛdigo Conferente Terceira Contagem",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza o CÛdigo Conferente Terceira Contagem."
-                        }
-                    ]
-                },
-                "gridCode1":{
-                    "type":"string",
-                    "description":"CÛdigo da grade 1",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o CÛdigo da grade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.cod_grade_1",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo da Grade 1, referente a definiÁ„o de Cor ou Tamanho ou demais grades ",
-                            "canUpdate":false
+Ôªø{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/InventoryCounts/v1/2_000/jsonschema/schemas/InventoryCounts_2_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para Invent√°rio de Estoque para produtos TOTVS",
+		"version": "2.000",
+		"title": "Inventory Counts",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "InventoryCounts",
+				"description": "Invent√°rio Estoque",
+				"segment": "Manufatura"
+			},
+			"productInformation": [{
+					"product": "datasul",
+					"contact": "SUPPLY.ML.MAN.ESTOQUE@totvs.com.br",
+					"description": "Contrato de Mensagem Padronizada para Invent√°rio de Estoque",
+					"adapter": "/totvs-rest/prg/mat/v1/inventoryCounts.p",
+					"helpUrl": ""
+				},
+				{
+					"product": "logix",
+					"contact": "",
+					"description": "Contrato de Mensagem Padronizada para Invent√°rio de Estoque",
+					"adapter": "",
+					"helpUrl": ""
+				}
+			]
+		}
+	},
+	"definitions": {
+		"pagedInventoryCounts": {
+			"type": "object",
+			"allOf": [{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/inventoryCountType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"inventoryCountType": {
+			"type": "object",
+			"properties": {
+				"inventoryCountInternalId": {
+					"type": "string",
+					"description": "InternalId da chave completa do registro de invent√°rio",
+					"x-totvs": [{
+						"product": "Datasul",
+						"available": false,
+						"required": false
+					}]
+				},
+				"countingSheetNumber": {
+					"type": "number",
+					"description": "N√∫mero da ficha de invent√°rio",
+					"format": "int32",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.nr-ficha",
+							"required": true,
+							"length": "7",
+							"type": "integer",
+							"note": "N√∫mero da ficha de invent√°rio | formato >>>>,>>9. N√∫mero sequencial por data de inventario",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_cartao",
+							"required": false,
+							"length": "8",
+							"type": "decimal",
+							"note": "N√∫mero da ficha de invent√°rio | formato >>>>>,>>9. N√∫mero sequencial por item de inventario",
+							"canUpdate": false
+						}
+					]
+				},
+				"sequenceCountingSheetNumber": {
+					"type": "number",
+					"description": "Sequ√™ncia do n√∫mero da ficha de invent√°rio",
+					"format": "int32",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui Hora do invent√°rio."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_seq",
+							"required": false,
+							"length": "10",
+							"type": "decimal",
+							"note": "Sequ√™ncia do n√∫mero da ficha de invent√°rio | formato >>>>>,>>9. N√∫mero sequencial por ficha de invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"inventoryDate": {
+					"type": "string",
+					"format": "date",
+					"description": "Data de invent√°rio",
+					"example": "2018-01-01",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.dt-saldo",
+							"required": true,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Data de corte do invent√°rio",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.dat_selecao",
+							"required": true,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Data de corte do invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"inventoryTime": {
+					"type": "string",
+					"format": "00:00:00",
+					"description": "Hora do invent√°rio",
+					"example": "00:00:00",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui hora do invent√°rio."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.hor_selecao",
+							"required": true,
+							"type": "string",
+							"length": "6",
+							"note": "Hora de corte do invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemInternalId": {
+					"type": "string",
+					"description": "InternalId do item",
+					"x-totvs": [{
+							"product": "Datasul",
+							"available": false,
+							"required": false
+						},
+						{
+							"product": "logix",
+							"available": false,
+							"required": false
+						}
+					]
+				},
+				"itemCode": {
+					"type": "string",
+					"description": "C√≥digo do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.it-codigo",
+							"required": true,
+							"type": "string",
+							"length": "16",
+							"note": "C√≥digo do Item",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_item",
+							"required": true,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo do Item",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemDescription": {
+					"type": "string",
+					"description": "Descri√ß√£o do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "item.desc-item",
+							"required": false,
+							"type": "string",
+							"length": "60",
+							"note": "Descri√ß√£o do Item - TABELA: item.desc-item",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "item.den_item",
+							"required": false,
+							"type": "string",
+							"length": "76",
+							"note": "Descri√ß√£o do Item - TABELA: item.den_item",
+							"canUpdate": false
+						}
+					]
+				},
+				"statusItem": {
+					"type": "string",
+					"description": "Situa√ß√£o do Item no Estoque.",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui situa√ß√£o do item no Estoque."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.ies_situa_qtd",
+							"required": true,
+							"type": "string",
+							"length": "1",
+							"note": "Descri√ß√£o da situa√ß√£o do item no estoque: L-Liberada; I-Impedida; E-Liberada Excepcional; R-Rejeitada",
+							"canUpdate": false
+						}
+					]
+				},
+				"lotOrSerialNumber": {
+					"type": "string",
+					"description": "C√≥digo do Lote ou N√∫mero de S√©rio do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.lote",
+							"required": false,
+							"type": "string",
+							"length": "40",
+							"note": "N√∫mero do lote ou n√∫mero de S√©rie do item. Elemento obrigat√≥rio para itens controlados por lote, referencia ou n√∫mero de s√©rie.",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_lote",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "N√∫mero do lote do item. Elemento obrigat√≥rio para itens controlados por lote.",
+							"canUpdate": false
+						}
+					]
+				},
+				"referenceCode": {
+					"type": "string",
+					"description": "C√≥digo da Refer√™ncia do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cod-refer",
+							"required": false,
+							"type": "string",
+							"length": "8",
+							"note": "C√≥digo da Refer√™ncia do Item",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui cadastro do C√≥digo da Refer√™ncia do Item."
+						}
+					]
+				},
+				"referenceDescription": {
+					"type": "string",
+					"description": "Descri√ß√£o da Refer√™ncia do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "referencia.descricao",
+							"required": false,
+							"type": "string",
+							"length": "32",
+							"note": "Descri√ß√£o da Refer√™ncia do Item. TABELA: referencia,descricao",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui cadastro do c√≥digo da Refer√™ncia do Item."
+						}
+					]
+				},
+				"branchInternalId": {
+					"type": "string",
+					"description": "InternalId da Filial",
+					"x-totvs": [{
+							"product": "Datasul",
+							"available": false,
+							"required": false
+						},
+						{
+							"product": "logix",
+							"available": false,
+							"required": false
+						}
+					]
+				},
+				"branchId": {
+					"type": "string",
+					"description": "C√≥digo da Filial",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cod-estabel",
+							"required": true,
+							"type": "string",
+							"length": "5",
+							"note": "C√≥digo Estabelecimento"
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui cadastro do C√≥digo da Filial."
+						}
+					]
+				},
+				"branchDescription": {
+					"type": "string",
+					"description": "Descri√ß√£o do Filial",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "estabelec.nome",
+							"required": false,
+							"type": "string",
+							"length": "40",
+							"note": "Descri√ß√£o do estabelecimento. TABELA: estabelec.nome",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui cadastro da Descri√ß√£o da Filial."
+						}
+					]
+				},
+				"companyInternalId": {
+					"type": "string",
+					"description": "InternalId da chave completa da empresa",
+					"x-totvs": [{
+							"product": "Datasul",
+							"available": false,
+							"required": false
+						},
+						{
+							"product": "logix",
+							"available": false,
+							"required": false
+						}
+					]
+				},
+				"companyCode": {
+					"type": "string",
+					"description": "C√≥digo da empresa",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza cadastro do c√≥digo da empresa."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_empresa",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"note": "C√≥digo da Empresa"
+						}
+					]
+				},
+				"warehouseInternalId": {
+					"type": "string",
+					"description": "InternalId do Dep√≥sito",
+					"x-totvs": [{
+							"product": "Datasul",
+							"available": false,
+							"required": false
+						},
+						{
+							"product": "logix",
+							"available": false,
+							"required": false
+						}
+					]
+				},
+				"warehouseCode": {
+					"type": "string",
+					"description": "C√≥digo do Dep√≥sito",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cod-depos",
+							"required": true,
+							"type": "string",
+							"length": "3",
+							"note": "C√≥digo do dep√≥sito",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√ßai possui cadastro do c√≥digo do dep√≥sito."
+						}
+					]
+				},
+				"warehouseDescription": {
+					"type": "string",
+					"description": "Descri√ß√£o do Dep√≥sito",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "deposito.nome",
+							"required": false,
+							"type": "string",
+							"length": "40",
+							"note": "Descri√ß√£o do dep√≥sito. TABELA: deposito.nome",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent_grade.deposit",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "Descri√ß√£o do dep√≥sito WMS",
+							"canUpdate": false
+						}
+					]
+				},
+				"locationCode": {
+					"type": "string",
+					"description": "C√≥digo da localiza√ß√£o do material",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cod-localiz",
+							"required": false,
+							"type": "string",
+							"length": "10",
+							"note": "C√≥digo da localiza√ß√£o do material",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_local_estoq",
+							"required": true,
+							"type": "string",
+							"length": "10",
+							"note": "C√≥digo da localiza√ß√£o do material",
+							"canUpdate": false
+						}
+					]
+				},
+				"locationDescription": {
+					"type": "string",
+					"description": "Descri√ß√£o da localiza√ß√£o do material.",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "localizacao.descricao",
+							"required": false,
+							"type": "string",
+							"length": "30",
+							"note": "Descri√ß√£o da localiza√ß√£o do material. TABELA: localizacao.descricao",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "local.den_local",
+							"required": false,
+							"type": "string",
+							"length": "30",
+							"note": "Descri√ß√£o da localiza√ß√£o do material. TABELA: local.den_local",
+							"canUpdate": false
+						}
+					]
+				},
+				"sublocationCode": {
+					"type": "string",
+					"description": "C√≥digo da Sublocaliza√ß√£o do material",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui cadastro da Sublocaliza√ß√£o do material."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_sublocacao",
+							"required": true,
+							"type": "string",
+							"length": "10",
+							"note": "C√≥digo da Sublocaliza√ß√£o do material",
+							"canUpdate": false
+						}
+					]
+				},
+				"status": {
+					"type": "integer",
+					"description": "Situa√ß√£o (estado) da ficha de invent√°rio \n Tipo: \n    1 - Atualizado\n    2 - N√£o Atualizado\n    3 - Invent√°rio OK\n    4 - OK p/ Invent√°rio\n",
+					"enum": [
+						1,
+						2,
+						3,
+						4
+					],
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.situacao",
+							"required": false,
+							"type": "integer",
+							"length": "1",
+							"note": "Situa√ß√£o da ficha de contagem. Valores poss√≠veis: 1-Atualizado; 2-N√£o Atualizado; 3-Invent√°rio OK, 4-OK p/Inventario. Include = ininc/i01in157.i",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.ies_situacao",
+							"required": false,
+							"type": "char",
+							"length": "1",
+							"note": "Situa√ß√£o da ficha de contagem. Valores poss√≠veis: G-gerada;  E- Bloqueio dos itens; D- Quantidade digitada; ",
+							"canUpdate": false
+						}
+					]
+				},
+				"countedValue": {
+					"type": "array",
+					"description": "Quantidade contada durante o invent√°rio",
+					"minItems": 1,
+					"maxItems": 3,
+					"items": {
+						"type": "number",
+						"format": "float",
+						"maximum": 9999999999.9999,
+						"minimum": -9999999999.9999,
+						"multipleOf": 0.01,
+						"example": [
+							null,
+							null,
+							null
+						]
+					},
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.val-apurado[1..3]",
+							"required": false,
+							"length": "14",
+							"type": "decimal",
+							"format": "float",
+							"note": "Valor apurado. formato >>>>,>>>,>>9.9999. inventario.val-apurado[1..3]. Quando a quantidade ainda n√£o foi apurada o valor padr√£o √© ? (nulo)",
+							"canUpdate": true
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.qtd_estoque_cont",
+							"required": false,
+							"length": "15",
+							"type": "decimal",
+							"format": "float",
+							"note": "Quando a quantidade ainda n√£o foi apurada o valor padr√ß√£o √© ? (nulo)",
+							"canUpdate": true
+						}
+					]
+				},
+				"updateDate": {
+					"type": "string",
+					"description": "Data atualiza√ß√£o",
+					"format": "date",
+					"example": "2018-01-01",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.dt-atualiza",
+							"required": false,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Data de atualiza√ß√£o do invent√°rio",
+							"canUpdate": true
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui Data de atualiza√ß√£o do invent√°rio."
+						}
+					]
+				},
+				"currentQuantity": {
+					"description": "Saldo Atual",
+					"type": "number",
+					"format": "float",
+					"maximum": 9999999999.9999,
+					"minimum": -9999999999.9999,
+					"multipleOf": 0.01,
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.qtidade-atu",
+							"required": false,
+							"length": "15",
+							"type": "decimal",
+							"format": "double",
+							"note": "Saldo Atual.  ->>>>,>>>,>>9.9999. TABELA: inventario.qtidade-atu",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.qtd_estoque_sist",
+							"required": false,
+							"length": "15",
+							"type": "decimal",
+							"format": "double",
+							"note": "Saldo Atual.  ->>>>,>>>,>>9.9999. TABELA: itens_invent.qtd_estoque_sist",
+							"canUpdate": false
+						}
+					]
+				},
+				"printed": {
+					"type": "boolean",
+					"description": "Indica se a ficha de invent√°rio est√° impressa",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.impressa",
+							"required": false,
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui indicador de ficha impressa, isso pode ser verificado pelo status do invent√°rio."
+						}
+					]
+				},
+				"situationWMS": {
+					"type": "number",
+					"description": "Situa√ß√£o da ficha no m√≥dulo WMS",
+					"maxLength": 1,
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.ind-sit-invent-wm",
+							"required": false,
+							"length": "9",
+							"format": "integer",
+							"note": "Situa√ß√£o da ficha no m√≥dulo WMS",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui situa√ß√£o da ficha no m√≥dulo WMS."
+						}
+					]
+				},
+				"groupingCode": {
+					"type": "number",
+					"description": "C√≥digo do agrupador do invent√°rio",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cdn-agrup",
+							"required": false,
+							"type": "integer",
+							"length": "9",
+							"note": "C√≥digo do Agrupador - Formato: >>>,>>>,>>9",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui C√≥digo do agrupador do invent√°rio."
+						}
+					]
+				},
+				"groupingDescription": {
+					"type": "string",
+					"description": "Descri√ß√£o do agrupador do invent√°rio",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "agrup-invent.descricao",
+							"required": false,
+							"type": "integer",
+							"length": "200",
+							"note": "Descri√ß√£o do Agrupador do Invent√°rio. Tabela: agrup-invent",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui Descri√ß√£o do agrupador do invent√°rio."
+						}
+					]
+				},
+				"balanceAccounting": {
+					"type": "number",
+					"description": "Saldo cont√°bil",
+					"maximum": 9999999999.9999,
+					"minimum": -9999999999.9999,
+					"multipleOf": 0.01,
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.valor-contab",
+							"required": true,
+							"length": "15",
+							"type": "decimal",
+							"format": "double",
+							"note": "Saldo cont√°bil. formato >>>>,>>>,>>9.9999"
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o utiliza da informa√ß√£o do Saldo cont√°bil."
+						}
+					]
+				},
+				"lecturerUser1": {
+					"type": "string",
+					"description": "C√≥digo Conferente Primeira Contagem ",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": " inventario.cod-confte-contag-1",
+							"required": false,
+							"type": "string",
+							"length": "30",
+							"note": "C√≥digo Conferente Primeira Contagem",
+							"canUpdate": true
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o utiliza o C√≥digo Conferente Primeira Contagem."
+						}
+					]
+				},
+				"lecturerUser2": {
+					"type": "string",
+					"description": "C√≥digo Conferente Segunda Contagem ",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": " inventario.cod-confte-contag-2",
+							"required": false,
+							"type": "string",
+							"length": "30",
+							"note": "C√≥digo Conferente Segunda Contagem",
+							"canUpdate": true
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o utiliza o C√≥digo Conferente Segunda Contagem."
+						}
+					]
+				},
+				"lecturerUser3": {
+					"type": "string",
+					"description": "C√≥digo Conferente Terceira Contagem ",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": " inventario.cod-confte-contag-3",
+							"required": false,
+							"type": "string",
+							"length": "30",
+							"note": "C√≥digo Conferente Terceira Contagem",
+							"canUpdate": true
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o utiliza o C√≥digo Conferente Terceira Contagem."
+						}
+					]
+				},
+				"gridCode1": {
+					"type": "string",
+					"description": "C√≥digo da grade 1",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o C√≥digo da grade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.cod_grade_1",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo da Grade 1, referente a defini√ß√£o de Cor ou Tamanho ou demais grades ",
+							"canUpdate": false
 
-                        }
-                    ]
-                },
-                "gridCode2":{
-                    "type":"string",
-                    "description":"CÛdigo da grade 2",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o CÛdigo da grade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.cod_grade_2",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo da Grade 2, referente a definiÁ„o de Cor ou Tamanho ou demais grades ",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "gridCode3":{
-                    "type":"string",
-                    "description":"CÛdigo da grade 3",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o CÛdigo da grade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.cod_grade_3",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo da Grade 3, referente a definiÁ„o de Cor ou Tamanho ou demais grades ",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "gridCode4":{
-                    "type":"string",
-                    "description":"CÛdigo da grade 4",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o CÛdigo da grade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.cod_grade_4",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo da Grade 4, referente a definiÁ„o de Cor ou Tamanho ou demais grades ",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "gridCode5":{
-                    "type":"string",
-                    "description":"CÛdigo da grade 5",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o CÛdigo da grade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.cod_grade_5",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo da Grade 5, referente a definiÁ„o de Cor ou Tamanho ou demais grades ",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "storageAdress":{
-                    "type":"string",
-                    "description":"CÛdigo do dimensional endereÁo",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o CÛdigo do endereÁo."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.endereco",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo do dimensional endereÁo",
-                            "canUpdate":false
+						}
+					]
+				},
+				"gridCode2": {
+					"type": "string",
+					"description": "C√≥digo da grade 2",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o C√≥digo da grade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.cod_grade_2",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo da Grade 2, referente a defini√ß√£o de Cor ou Tamanho ou demais grades ",
+							"canUpdate": false
+						}
+					]
+				},
+				"gridCode3": {
+					"type": "string",
+					"description": "C√≥digo da grade 3",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o C√≥digo da grade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.cod_grade_3",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo da Grade 3, referente a defini√ß√£o de Cor ou Tamanho ou demais grades ",
+							"canUpdate": false
+						}
+					]
+				},
+				"gridCode4": {
+					"type": "string",
+					"description": "C√≥digo da grade 4",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o C√≥digo da grade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.cod_grade_4",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo da Grade 4, referente a defini√ß√£o de Cor ou Tamanho ou demais grades ",
+							"canUpdate": false
+						}
+					]
+				},
+				"gridCode5": {
+					"type": "string",
+					"description": "C√≥digo da grade 5",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o C√≥digo da grade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.cod_grade_5",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo da Grade 5, referente a defini√ß√£o de Cor ou Tamanho ou demais grades ",
+							"canUpdate": false
+						}
+					]
+				},
+				"storageAdress": {
+					"type": "string",
+					"description": "C√≥digo do dimensional endere√ßo",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o C√≥digo do endere√ßo."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.endereco",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo do dimensional endere√ßo",
+							"canUpdate": false
 
-                        }
-                    ]
-                },
-                "itemVolume":{
-                    "type":"number",
-                    "description":"CÛdigo do dimensional Volume do item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Volume do item."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.num_volume",
-                            "required":false,
-                            "type":"decimal",
-                            "length":"10",
-                            "note":"CÛdigo do dimensional Volume do item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "productionDate":{
-                    "type":"date",
-                    "description":"Dimensional Data de produÁ„o",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Data de produÁ„o."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.dat_hor_producao",
-                            "required":false,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Dimensional Data de produÁ„o",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "expirationDate":{
-                    "type":"date",
-                    "description":"Dimensional Data de Validade",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Data de Validade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.dat_hor_valid",
-                            "required":false,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Dimensional Data de Validade",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemPiece":{
-                    "type":"string",
-                    "description":"Dimensional N˙mero da PeÁa",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional N˙mero da PeÁa."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.peca",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"Dimensional N˙mero da PeÁa",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemSerie":{
-                    "type":"string",
-                    "description":"Dimensional N˙mero da SÈrie do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional N˙mero da SÈrie do Item."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.serie",
-                            "required":false,
-                            "type":"string",
-                            "length":"25",
-                            "note":"Dimensional N˙mero da SÈrie do Item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemLength":{
-                    "type":"number",
-                    "description":"Dimensional Comprimento do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Comprimento do Item."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.comprimento",
-                            "required":false,
-                            "type":"number",
-                            "length":"15",
-                            "note":"Dimensional Comprimento do Item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemWidth":{
-                    "type":"number",
-                    "description":"Dimensional Largura do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Largura do Item."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.largura",
-                            "required":false,
-                            "type":"number",
-                            "length":"15",
-                            "note":"Dimensional Largura do Item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemHeight":{
-                    "type":"number",
-                    "description":"Dimensional Altura do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Altura do Item."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.altura",
-                            "required":false,
-                            "type":"number",
-                            "length":"15",
-                            "note":"Dimensional Altura do Item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemDiameter":{
-                    "type":"number",
-                    "description":"Dimensional di‚metro do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional di‚metro do Item."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.diametro",
-                            "required":false,
-                            "type":"number",
-                            "length":"15",
-                            "note":"Dimensional di‚metro do Item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationDateTime1":{
-                    "type":"datetime",
-                    "description":"Dimensional Reservado Data e hora 1",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado Data e hora."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.dat_hor_reserva_1",
-                            "required":false,
-                            "type":"datetime",
-                            "length":"99/99/9999 00:00:00",
-                            "note":"Dimensional Reservado Data e hora 1",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationDateTime2":{
-                    "type":"datetime",
-                    "description":"Dimensional Reservado Data e hora 2",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado Data e hora."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.dat_hor_reserva_2",
-                            "required":false,
-                            "type":"datetime",
-                            "length":"99/99/9999 00:00:00",
-                            "note":"Dimensional Reservado Data e hora 2",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationDateTime3":{
-                    "type":"datetime",
-                    "description":"Dimensional Reservado Data e hora 3",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado Data e hora."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.dat_hor_reserva_3",
-                            "required":false,
-                            "type":"datetime",
-                            "length":"99/99/9999 00:00:00",
-                            "note":"Dimensional Reservado Data e hora 3",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationAmount1":{
-                    "type":"number",
-                    "description":"Dimensional Reservado Quantidade 1",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado Quantidade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.qtd_reservada_1",
-                            "required":false,
-                            "type":"number",
-                            "length":"15",
-                            "note":"Dimensional Reservado Quantidade 1",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationAmount2":{
-                    "type":"number",
-                    "description":"Dimensional Reservado Quantidade 2",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado Quantidade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.qtd_reservada_2",
-                            "required":false,
-                            "type":"number",
-                            "length":"15",
-                            "note":"Dimensional Reservado Quantidade 2",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationAmount3":{
-                    "type":"number",
-                    "description":"Dimensional Reservado Quantidade 3",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado Quantidade."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.qtd_reservada_3",
-                            "required":false,
-                            "type":"number",
-                            "length":"15",
-                            "note":"Dimensional Reservado Quantidade 3",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationNumber1":{
-                    "type":"number",
-                    "description":"Dimensional Reservado N˙mero 1",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado N˙mero."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.num_reserva_1",
-                            "required":false,
-                            "type":"number",
-                            "length":"10",
-                            "note":"Dimensional Reservado N˙mero 1",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationNumber2":{
-                    "type":"number",
-                    "description":"Dimensional Reservado N˙mero 2",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado N˙mero."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.num_reserva_2",
-                            "required":false,
-                            "type":"number",
-                            "length":"10",
-                            "note":"Dimensional Reservado N˙mero 2",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationNumber3":{
-                    "type":"number",
-                    "description":"Dimensional Reservado N˙mero 3",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado N˙mero."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.num_reserva_3",
-                            "required":false,
-                            "type":"number",
-                            "length":"10",
-                            "note":"Dimensional Reservado N˙mero 3",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "reservationText":{
-                    "type":"string",
-                    "description":"Dimensional Reservado Texto",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Dimensional Reservado Texto."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.texto_reservado",
-                            "required":false,
-                            "type":"string",
-                            "length":"100",
-                            "note":"Dimensional Reservado Texto",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "stockHandle":{
-                    "type":"string",
-                    "description":"Identificador de estoque WMS",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o utiliza o Identificador de estoque WMS."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":" itens_invent_grade.identif_estoque",
-                            "required":false,
-                            "type":"string",
-                            "length":"30",
-                            "note":"Identificador de estoque WMS",
-                            "canUpdate":false
-                        }
-                    ]
-                }
-            }
-        },
-        "inventoryCountInfo":{
-            "type":"object",
-            "properties":{
-                "countingSheetNumber":{
-                    "type":"number",
-                    "description":"N˙mero da ficha de invent·rio",
-                    "format":"int32",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.nr-ficha",
-                            "required":true,
-                            "length":"7",
-                            "type":"integer",
-                            "note":"N˙mero da ficha de invent·rio | formato >>>>,>>9. N˙mero sequencial por data de inventario",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_cartao",
-                            "required":false,
-                            "length":"8",
-                            "type":"integer",
-                            "note":"N˙mero da ficha de invent·rio | formato >>>>,>>9. N˙mero sequencial por item de inventario",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "sequenceCountingSheetNumber":{
-                    "type":"number",
-                    "description":"SequÍncia do n˙mero da ficha de invent·rio",
-                    "format":"int32",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui Hora do invent·rio."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_seq",
-                            "required":false,
-                            "length":"10",
-                            "type":"decimal",
-                            "note":"SequÍncia do n˙mero da ficha de invent·rio | formato >>>>>,>>9. N˙mero sequencial por ficha de invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "warehouseCode":{
-                    "type":"string",
-                    "description":"CÛdigo do DepÛsito",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cod-depos",
-                            "required":true,
-                            "type":"string",
-                            "length":"3",
-                            "note":"CÛdigo do depÛsito",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza o CÛdigo do DepÛsito."
-                        }
-                    ]
-                },
-                "companyCode":{
-                    "type":"string",
-                    "description":"CÛdigo da empresa",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui cadastro do CÛdigo da empresa."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_empresa",
-                            "required":true,
-                            "type":"string",
-                            "length":"2",
-                            "note":"CÛdigo da Empresa"
-                        }
-                    ]
-                },
-                "locationCode":{
-                    "type":"string",
-                    "description":"CÛdigo da localizaÁ„o do material",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cod-localiz",
-                            "required":false,
-                            "type":"string",
-                            "length":"10",
-                            "note":"CÛdigo da localizaÁ„o do material",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_local_estoq",
-                            "required":false,
-                            "type":"string",
-                            "length":"10",
-                            "note":"CÛdigo da localizaÁ„o do material",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "sublocationCode":{
-                    "type":"string",
-                    "description":"CÛdigo da SublocalizaÁ„o do material",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui cadastro da SublocalizaÁ„o do material."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_sublocacao",
-                            "required":true,
-                            "type":"string",
-                            "length":"10",
-                            "note":"CÛdigo da SublocalizaÁ„o do material",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "referenceCode":{
-                    "type":"string",
-                    "description":"CÛdigo da ReferÍncia do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cod-refer",
-                            "required":false,
-                            "type":"string",
-                            "length":"8",
-                            "note":"CÛdigo da ReferÍncia do Item",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza o CÛdigo da ReferÍncia do Item."
-                        }
-                    ]
-                },
-                "inventoryDate":{
-                    "type":"string",
-                    "format":"date",
-                    "description":"Data de invent·rio",
-                    "example":"2018-01-01",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.dt-saldo",
-                            "required":true,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Data de corte do invent·rio",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.dat_selecao",
-                            "required":true,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Data de corte do invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "inventoryTime":{
-                    "type":"string",
-                    "format":"00:00:00",
-                    "description":"Hora do invent·rio",
-                    "example":"00:00:00",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui Hora do invent·rio."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.hor_selecao",
-                            "required":true,
-                            "type":"string",
-                            "length":"6",
-                            "note":"Hora de corte do invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "itemCode":{
-                    "type":"string",
-                    "description":"CÛdigo do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.it-codigo",
-                            "required":true,
-                            "type":"string",
-                            "length":"16",
-                            "note":"CÛdigo do Item",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_item",
-                            "required":true,
-                            "type":"string",
-                            "length":"15",
-                            "note":"CÛdigo do Item",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "lotOrSerialNumber":{
-                    "type":"string",
-                    "description":"CÛdigo do Lote ou N˙mero de SÈrie do Item",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.lote",
-                            "required":false,
-                            "type":"string",
-                            "length":"40",
-                            "note":"N˙mero do lote ou n˙mero de sÈrie do item. Elemento obigatÛrio para itens controlados por lote, referencia ou n˙mero de sÈrie.",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_lote",
-                            "required":false,
-                            "type":"string",
-                            "length":"15",
-                            "note":"N˙mero do lote do item. Elemento obigatÛrio para itens controlados por lote.",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "statusItem":{
-                    "type":"string",
-                    "description":"SituaÁ„o do Item no Estoque.",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui SituaÁ„o do Item no Estoque."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.ies_situa_qtd",
-                            "required":true,
-                            "type":"string",
-                            "length":"1",
-                            "note":"DescriÁ„o da situaÁ„o do item no estoque: L-Liberada; I-Impedida; E-Liberada Excepcional; R-Rejeitada",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "countedValue":{
-                    "type":"number",
-                    "description":"Quantidade contada durante o invent·rio",
-                    "format":"float",
-                    "maximum":9999999999.9999,
-                    "minimum":-9999999999.9999,
-                    "multipleOf":0.01,
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.val-apurado[1]",
-                            "required":false,
-                            "length":"14",
-                            "type":"decimal",
-                            "format":"float",
-                            "note":"Valor apurado. formato >>>>,>>>,>>9.9999. inventario.val-apurado[1].",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.qtd_estoque_cont",
-                            "required":false,
-                            "length":"15",
-                            "type":"decimal",
-                            "format":"float",
-                            "note":"Quando a quantidade ainda n„o foi apurada o valor padr„o È ? (nulo)",
-                            "canUpdate":true
-                        }
-                    ]
-                },
-                "groupingCode":{
-                    "type":"number",
-                    "description":"CÛdigo do agrupador do invent·rio",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.cdn-agrup",
-                            "required":false,
-                            "type":"integer",
-                            "length":"9",
-                            "note":"CÛdigo do Agrupador - Formato: >>>,>>>,>>9",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o possui CÛdigo do agrupador do invent·rio."
-                        }
-                    ]
-                },
-                "lecturerUser":{
-                    "type":"string",
-                    "description":"CÛdigo Conferente Primeira Contagem ",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":" inventario.cod-confte-contag-1",
-                            "required":false,
-                            "type":"string",
-                            "length":"30",
-                            "note":"CÛdigo Conferente Primeira Contagem",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza o CÛdigo Conferente Primeira Contagem."
-                        }
-                    ]
-                }
-            }
-        },
-        "updateParams":{
-            "type":"object",
-            "properties":{
-                "companyCode":{
-                    "type":"string",
-                    "description":"CÛdigo da empresa",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui cadastro do CÛdigo da empresa."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.cod_empresa",
-                            "required":true,
-                            "type":"string",
-                            "length":"2",
-                            "note":"CÛdigo da Empresa"
-                        }
-                    ]
-                },
-                "inventoryDate":{
-                    "type":"string",
-                    "format":"date",
-                    "description":"Data de invent·rio",
-                    "example":"2018-01-01",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.dt-saldo",
-                            "required":true,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Data de corte do invent·rio",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.dat_selecao",
-                            "required":true,
-                            "type":"date",
-                            "length":"99/99/9999",
-                            "note":"Data de corte do invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "inventoryTime":{
-                    "type":"string",
-                    "format":"00:00:00",
-                    "description":"Hora do invent·rio",
-                    "example":"00:00:00",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui Hora do invent·rio."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.hor_selecao",
-                            "required":true,
-                            "type":"string",
-                            "length":"6",
-                            "note":"Hora de corte do invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "countingSheetNumber":{
-                    "type":"number",
-                    "description":"N˙mero da ficha de invent·rio",
-                    "format":"int32",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.nr-ficha",
-                            "required":true,
-                            "length":"7",
-                            "type":"integer",
-                            "note":"N˙mero da ficha de invent·rio | formato >>>>,>>9. N˙mero sequencial por data de inventario",
-                            "canUpdate":false
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_cartao",
-                            "required":false,
-                            "length":"8",
-                            "type":"decimal",
-                            "note":"N˙mero da ficha de invent·rio | formato >>>>>,>>9. N˙mero sequencial por item de inventario",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "sequenceCountingSheetNumber":{
-                    "type":"number",
-                    "description":"SequÍncia do n˙mero da ficha de invent·rio",
-                    "format":"int32",
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Datasul n„o possui Hora do invent·rio."
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.num_seq",
-                            "required":false,
-                            "length":"10",
-                            "type":"decimal",
-                            "note":"SequÍncia do n˙mero da ficha de invent·rio | formato >>>>>,>>9. N˙mero sequencial por ficha de invent·rio",
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                },
-                "numOfCount":{
-                    "type":"number",
-                    "description":"N˙mero da contagem de invet·rio",
-                    "maximum":1,
-                    "minimum":3,
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "note":"Campo indicador da contagem do invent·rio. Com base nessa informaÁ„o ser· atualizado o campo inventario.val-apurado[numOfCount]"
-                        },
-                        {
-                            "product":"logix",
-                            "field":"",
-                            "required":false,
-                            "available":false,
-                            "description":"Logix n„o utiliza o N˙mero da contagem de invet·rio, È definido por par‚metro."
-                        }
-                    ]
-                },
-                "countedValue":{
-                    "type":"number",
-                    "description":"Quantidade contada durante o invent·rio",
-                    "format":"float",
-                    "maximum":9999999999.9999,
-                    "minimum":-9999999999.9999,
-                    "multipleOf":0.01,
-                    "x-totvs":[
-                        {
-                            "product":"datasul",
-                            "available":true,
-                            "field":"inventario.val-apurado[1]",
-                            "required":false,
-                            "length":"14",
-                            "type":"decimal",
-                            "format":"float",
-                            "note":"Valor apurado. formato >>>>,>>>,>>9.9999. inventario.val-apurado[1].",
-                            "canUpdate":true
-                        },
-                        {
-                            "product":"logix",
-                            "available":true,
-                            "field":"itens_invent.qtd_estoque_cont",
-                            "required":false,
-                            "length":"15",
-                            "type":"decimal",
-                            "format":"float",
-                            "note":"Quando a quantidade ainda n„o foi apurada o valor padr„o È ? (nulo)",
-                            "canUpdate":true
-                        }
-                    ]
-                }
-            }
-        }
-    }
+						}
+					]
+				},
+				"itemVolume": {
+					"type": "number",
+					"description": "C√≥digo do dimensional Volume do item",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Volume do item."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.num_volume",
+							"required": false,
+							"type": "decimal",
+							"length": "10",
+							"note": "C√≥digo do dimensional Volume do item",
+							"canUpdate": false
+						}
+					]
+				},
+				"productionDate": {
+					"type": "date",
+					"description": "Dimensional Data de produ√ß√£o",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Data de produ√ß√£o."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.dat_hor_producao",
+							"required": false,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Dimensional Data de produ√ß√£o",
+							"canUpdate": false
+						}
+					]
+				},
+				"expirationDate": {
+					"type": "date",
+					"description": "Dimensional Data de Validade",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Data de Validade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.dat_hor_valid",
+							"required": false,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Dimensional Data de Validade",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemPiece": {
+					"type": "string",
+					"description": "Dimensional N√∫mero da Pe√ßa",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional N√∫mero da Pe√ßa."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.peca",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "Dimensional N√∫mero da Pe√ßa",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemSerie": {
+					"type": "string",
+					"description": "Dimensional N√∫mero da S√©rie do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional N√∫mero da S√©rie do Item."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.serie",
+							"required": false,
+							"type": "string",
+							"length": "25",
+							"note": "Dimensional N√∫mero da S√©rie do Item",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemLength": {
+					"type": "number",
+					"description": "Dimensional Comprimento do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Comprimento do Item."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.comprimento",
+							"required": false,
+							"type": "number",
+							"length": "15",
+							"note": "Dimensional Comprimento do Item",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemWidth": {
+					"type": "number",
+					"description": "Dimensional Largura do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Largura do Item."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.largura",
+							"required": false,
+							"type": "number",
+							"length": "15",
+							"note": "Dimensional Largura do Item",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemHeight": {
+					"type": "number",
+					"description": "Dimensional Altura do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Altura do Item."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.altura",
+							"required": false,
+							"type": "number",
+							"length": "15",
+							"note": "Dimensional Altura do Item",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemDiameter": {
+					"type": "number",
+					"description": "Dimensional di√¢metro do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional di√¢metro do Item."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.diametro",
+							"required": false,
+							"type": "number",
+							"length": "15",
+							"note": "Dimensional di√¢metro do Item",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationDateTime1": {
+					"type": "datetime",
+					"description": "Dimensional Reservado Data e hora 1",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado Data e hora."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.dat_hor_reserva_1",
+							"required": false,
+							"type": "datetime",
+							"length": "99/99/9999 00:00:00",
+							"note": "Dimensional Reservado Data e hora 1",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationDateTime2": {
+					"type": "datetime",
+					"description": "Dimensional Reservado Data e hora 2",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado Data e hora."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.dat_hor_reserva_2",
+							"required": false,
+							"type": "datetime",
+							"length": "99/99/9999 00:00:00",
+							"note": "Dimensional Reservado Data e hora 2",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationDateTime3": {
+					"type": "datetime",
+					"description": "Dimensional Reservado Data e hora 3",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado Data e hora."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.dat_hor_reserva_3",
+							"required": false,
+							"type": "datetime",
+							"length": "99/99/9999 00:00:00",
+							"note": "Dimensional Reservado Data e hora 3",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationAmount1": {
+					"type": "number",
+					"description": "Dimensional Reservado Quantidade 1",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado Quantidade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.qtd_reservada_1",
+							"required": false,
+							"type": "number",
+							"length": "15",
+							"note": "Dimensional Reservado Quantidade 1",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationAmount2": {
+					"type": "number",
+					"description": "Dimensional Reservado Quantidade 2",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado Quantidade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.qtd_reservada_2",
+							"required": false,
+							"type": "number",
+							"length": "15",
+							"note": "Dimensional Reservado Quantidade 2",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationAmount3": {
+					"type": "number",
+					"description": "Dimensional Reservado Quantidade 3",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado Quantidade."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.qtd_reservada_3",
+							"required": false,
+							"type": "number",
+							"length": "15",
+							"note": "Dimensional Reservado Quantidade 3",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationNumber1": {
+					"type": "number",
+					"description": "Dimensional Reservado N√∫mero 1",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado N√∫mero."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.num_reserva_1",
+							"required": false,
+							"type": "number",
+							"length": "10",
+							"note": "Dimensional Reservado N√∫mero 1",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationNumber2": {
+					"type": "number",
+					"description": "Dimensional Reservado N√∫mero 2",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado N√∫mero."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.num_reserva_2",
+							"required": false,
+							"type": "number",
+							"length": "10",
+							"note": "Dimensional Reservado N√∫mero 2",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationNumber3": {
+					"type": "number",
+					"description": "Dimensional Reservado N√∫mero 3",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado N√∫mero."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.num_reserva_3",
+							"required": false,
+							"type": "number",
+							"length": "10",
+							"note": "Dimensional Reservado N√∫mero 3",
+							"canUpdate": false
+						}
+					]
+				},
+				"reservationText": {
+					"type": "string",
+					"description": "Dimensional Reservado Texto",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Dimensional Reservado Texto."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.texto_reservado",
+							"required": false,
+							"type": "string",
+							"length": "100",
+							"note": "Dimensional Reservado Texto",
+							"canUpdate": false
+						}
+					]
+				},
+				"stockHandle": {
+					"type": "string",
+					"description": "Identificador de estoque WMS",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o utiliza o Identificador de estoque WMS."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": " itens_invent_grade.identif_estoque",
+							"required": false,
+							"type": "string",
+							"length": "30",
+							"note": "Identificador de estoque WMS",
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"inventoryCountInfo": {
+			"type": "object",
+			"properties": {
+				"countingSheetNumber": {
+					"type": "number",
+					"description": "N√∫mero da ficha de invent√°rio",
+					"format": "int32",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.nr-ficha",
+							"required": true,
+							"length": "7",
+							"type": "integer",
+							"note": "N√∫mero da ficha de invent√°rio | formato >>>>,>>9. N√∫mero sequencial por data de inventario",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_cartao",
+							"required": false,
+							"length": "8",
+							"type": "integer",
+							"note": "N√∫mero da ficha de invent√°rio | formato >>>>,>>9. N√∫mero sequencial por item de inventario",
+							"canUpdate": false
+						}
+					]
+				},
+				"sequenceCountingSheetNumber": {
+					"type": "number",
+					"description": "Sequ√™ncia do n√∫mero da ficha de invent√°rio",
+					"format": "int32",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui Hora do invent√°rio."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_seq",
+							"required": false,
+							"length": "10",
+							"type": "decimal",
+							"note": "Sequ√™ncia do n√∫mero da ficha de invent√°rio | formato >>>>>,>>9. N√∫mero sequencial por ficha de invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"warehouseCode": {
+					"type": "string",
+					"description": "C√≥digo do Dep√≥sito",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cod-depos",
+							"required": true,
+							"type": "string",
+							"length": "3",
+							"note": "C√≥digo do dep√≥sito",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o utiliza o C√≥digo do Dep√≥sito."
+						}
+					]
+				},
+				"companyCode": {
+					"type": "string",
+					"description": "C√≥digo da empresa",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui cadastro do C√≥digo da empresa."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_empresa",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"note": "C√≥digo da Empresa"
+						}
+					]
+				},
+				"locationCode": {
+					"type": "string",
+					"description": "C√≥digo da localiza√ß√£o do material",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cod-localiz",
+							"required": false,
+							"type": "string",
+							"length": "10",
+							"note": "C√≥digo da localiza√ß√£o do material",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_local_estoq",
+							"required": false,
+							"type": "string",
+							"length": "10",
+							"note": "C√≥digo da localiza√ß√£o do material",
+							"canUpdate": false
+						}
+					]
+				},
+				"sublocationCode": {
+					"type": "string",
+					"description": "C√≥digo da Sublocaliza√ß√£o do material",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui cadastro da Sublocaliza√ß√£o do material."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_sublocacao",
+							"required": true,
+							"type": "string",
+							"length": "10",
+							"note": "C√≥digo da Sublocaliza√ß√£o do material",
+							"canUpdate": false
+						}
+					]
+				},
+				"referenceCode": {
+					"type": "string",
+					"description": "C√≥digo da Refer√™ncia do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cod-refer",
+							"required": false,
+							"type": "string",
+							"length": "8",
+							"note": "C√≥digo da Refer√™ncia do Item",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o utiliza o C√≥digo da Refer√™ncia do Item."
+						}
+					]
+				},
+				"inventoryDate": {
+					"type": "string",
+					"format": "date",
+					"description": "Data de invent√°rio",
+					"example": "2018-01-01",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.dt-saldo",
+							"required": true,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Data de corte do invent√°rio",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.dat_selecao",
+							"required": true,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Data de corte do invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"inventoryTime": {
+					"type": "string",
+					"format": "00:00:00",
+					"description": "Hora do invent√°rio",
+					"example": "00:00:00",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui Hora do invent√°rio."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.hor_selecao",
+							"required": true,
+							"type": "string",
+							"length": "6",
+							"note": "Hora de corte do invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"itemCode": {
+					"type": "string",
+					"description": "C√≥digo do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.it-codigo",
+							"required": true,
+							"type": "string",
+							"length": "16",
+							"note": "C√≥digo do Item",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_item",
+							"required": true,
+							"type": "string",
+							"length": "15",
+							"note": "C√≥digo do Item",
+							"canUpdate": false
+						}
+					]
+				},
+				"lotOrSerialNumber": {
+					"type": "string",
+					"description": "C√≥digo do Lote ou N√∫mero de S√©rie do Item",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.lote",
+							"required": false,
+							"type": "string",
+							"length": "40",
+							"note": "N√∫mero do lote ou n√∫mero de s√©rie do item. Elemento obrigat√≥rio para itens controlados por lote, referencia ou n√∫mero de s√©rie.",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_lote",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "N√∫mero do lote do item. Elemento obrigat√≥rio para itens controlados por lote.",
+							"canUpdate": false
+						}
+					]
+				},
+				"statusItem": {
+					"type": "string",
+					"description": "Situa√ß√£o do Item no Estoque.",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui Situa√ß√£o do Item no Estoque."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.ies_situa_qtd",
+							"required": true,
+							"type": "string",
+							"length": "1",
+							"note": "Descri√ß√£o da situa√ß√£o do item no estoque: L-Liberada; I-Impedida; E-Liberada Excepcional; R-Rejeitada",
+							"canUpdate": false
+						}
+					]
+				},
+				"countedValue": {
+					"type": "number",
+					"description": "Quantidade contada durante o invent√°rio",
+					"format": "float",
+					"maximum": 9999999999.9999,
+					"minimum": -9999999999.9999,
+					"multipleOf": 0.01,
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.val-apurado[1]",
+							"required": false,
+							"length": "14",
+							"type": "decimal",
+							"format": "float",
+							"note": "Valor apurado. formato >>>>,>>>,>>9.9999. inventario.val-apurado[1].",
+							"canUpdate": true
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.qtd_estoque_cont",
+							"required": false,
+							"length": "15",
+							"type": "decimal",
+							"format": "float",
+							"note": "Quando a quantidade ainda n√£o foi apurada o valor padr√£o √© ? (nulo)",
+							"canUpdate": true
+						}
+					]
+				},
+				"groupingCode": {
+					"type": "number",
+					"description": "C√≥digo do agrupador do invent√°rio",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.cdn-agrup",
+							"required": false,
+							"type": "integer",
+							"length": "9",
+							"note": "C√≥digo do Agrupador - Formato: >>>,>>>,>>9",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o possui c√≥digo do agrupador do invent√°rio."
+						}
+					]
+				},
+				"lecturerUser": {
+					"type": "string",
+					"description": "C√≥digo Conferente Primeira Contagem ",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": " inventario.cod-confte-contag-1",
+							"required": false,
+							"type": "string",
+							"length": "30",
+							"note": "C√≥digo Conferente Primeira Contagem",
+							"canUpdate": true
+						},
+						{
+							"product": "logix",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Logix n√£o utiliza o C√≥digo Conferente Primeira Contagem."
+						}
+					]
+				}
+			}
+		},
+		"updateParams": {
+			"type": "object",
+			"properties": {
+				"companyCode": {
+					"type": "string",
+					"description": "C√≥digo da empresa",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui cadastro do c√≥digo da empresa."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.cod_empresa",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"note": "C√≥digo da Empresa"
+						}
+					]
+				},
+				"inventoryDate": {
+					"type": "string",
+					"format": "date",
+					"description": "Data de invent√°rio",
+					"example": "2018-01-01",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.dt-saldo",
+							"required": true,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Data de corte do invent√°rio",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.dat_selecao",
+							"required": true,
+							"type": "date",
+							"length": "99/99/9999",
+							"note": "Data de corte do invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"inventoryTime": {
+					"type": "string",
+					"format": "00:00:00",
+					"description": "Hora do invent√°rio",
+					"example": "00:00:00",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui Hora do invent√°rio."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.hor_selecao",
+							"required": true,
+							"type": "string",
+							"length": "6",
+							"note": "Hora de corte do invent√°rio",
+							"canUpdate": false
+						}
+					]
+				},
+				"countingSheetNumber": {
+					"type": "number",
+					"description": "N√∫mero da ficha de invent√°rio",
+					"format": "int32",
+					"x-totvs": [{
+							"product": "datasul",
+							"available": true,
+							"field": "inventario.nr-ficha",
+							"required": true,
+							"length": "7",
+							"type": "integer",
+							"note": "N√∫mero da ficha de invent√°rio | formato >>>>,>>9. N√∫mero sequencial por data de inventario",
+							"canUpdate": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_cartao",
+							"required": false,
+							"length": "8",
+							"type": "decimal",
+							"note": "N√∫mero da ficha de invent√°rio | formato >>>>>,>>9. N√∫mero sequencial por item de inventario",
+							"canUpdate": false
+						}
+					]
+				},
+				"sequenceCountingSheetNumber": {
+					"type": "number",
+					"description": "Sequ√™ncia do n√∫mero da ficha de invent√°rio",
+					"format": "int32",
+					"x-totvs": [{
+							"product": "datasul",
+							"field": "",
+							"required": false,
+							"available": false,
+							"description": "Datasul n√£o possui Hora do invent√°rio."
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"field": "itens_invent.num_seq",
+							"required": false,
+							"length": "10",
+							"type": "decimal",
+							"note": "Sequ√™ncia do n√∫mero da ficha de invent√°rio | formato >>>>>,>>9. N√∫mero sequencial por ficha de invent√°rio",
+							"canUpdate": false
+						}
+					]
+				}
+			},
+			"numOfCount": {
+				"type": "number",
+				"description": "N√∫mero da contagem de invent√°rio",
+				"maximum": 1,
+				"minimum": 3,
+				"x-totvs": [{
+						"product": "datasul",
+						"note": "Campo indicador da contagem do invent√°rio. Com base nessa informa√ß√£o ser√° atualizado o campo inventario.val-apurado[numOfCount]"
+					},
+					{
+						"product": "logix",
+						"field": "",
+						"required": false,
+						"available": false,
+						"description": "Logix n√£o utiliza o N√∫mero da contagem de invent√°rio, √© definido por par√¢metro."
+					}
+				]
+			},
+			"countedValue": {
+				"type": "number",
+				"description": "Quantidade contada durante o invent√°rio",
+				"format": "float",
+				"maximum": 9999999999.9999,
+				"minimum": -9999999999.9999,
+				"multipleOf": 0.01,
+				"x-totvs": [{
+						"product": "datasul",
+						"available": true,
+						"field": "inventario.val-apurado[1]",
+						"required": false,
+						"length": "14",
+						"type": "decimal",
+						"format": "float",
+						"note": "Valor apurado. formato >>>>,>>>,>>9.9999. inventario.val-apurado[1].",
+						"canUpdate": true
+					},
+					{
+						"product": "logix",
+						"available": true,
+						"field": "itens_invent.qtd_estoque_cont",
+						"required": false,
+						"length": "15",
+						"type": "decimal",
+						"format": "float",
+						"note": "Quando a quantidade ainda n√£o foi apurada o valor padr√£o √© ? (nulo)",
+						"canUpdate": true
+					}
+				]
+			}
+		}
+	}
 }
