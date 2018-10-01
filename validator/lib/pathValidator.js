@@ -4,6 +4,7 @@ var results;
 var foundorder;
 var foundpage;
 var foundpagesize;
+var hasgetcollectionendpoint;
 
 var checkXtotvs = function (httpVerbInfo) {
     if (httpVerbInfo["x-totvs"]) {
@@ -40,6 +41,7 @@ var checkUseOfCommonsParams = function (parameter) {
 
 var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, pathkey) {
     if (httpVerbkey == "get" && !pathkey.includes("{")) {
+        hasgetcollectionendpoint = true;
         if (parameter.$ref) {
             if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order")) {
                 foundorder = true;
@@ -120,6 +122,7 @@ exports.clear = function () {
     foundorder = false;
     foundpage = false;
     foundpagesize = false;
+    hasgetcollectionendpoint = false;
 };
 
 exports.runThroughPaths = function name(parsedOpenAPI) {
@@ -134,7 +137,9 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
             runThroughResponses(responses);
         }
     }
-    if (foundorder && foundpage && foundpagesize && results.useAllRequiredParamsForCollection != false)
+    if (!hasgetcollectionendpoint)
+        results.useAllRequiredParamsForCollection = true;
+    else if (foundorder && foundpage && foundpagesize && results.useAllRequiredParamsForCollection != false)
         results.useAllRequiredParamsForCollection = true;
     return results;
 };
