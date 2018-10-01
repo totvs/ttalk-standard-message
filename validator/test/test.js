@@ -4,6 +4,9 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
+var jsonValidator = require('../lib/jsonValidator.js');
+var https = require('https');
+
 
 
 describe("Validating files...", function () {
@@ -26,17 +29,13 @@ fs.readdir(dirname, function (err, filenames) {
       let openAPIPath = path.join(dirname, filename);
 
       describe("OpenAPI - " + filename, function () {
-        // let parsedOpenAPI = JSON.parse(fs.readFileSync(openAPIPath, {
-        //   encoding: 'utf-8'
-        // }));
-
         var file = fs.readFileSync(openAPIPath, {
           encoding: 'utf-8'
         });
         var parsedOpenAPI;
         var pathValidatorResult
 
-        before(function() {
+        before(function () {
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
@@ -49,7 +48,7 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        
+
         describe(" - Filename: ", function () {
           it("should start with uppercase letter", function () {
             expect(filename[0]).to.equal(filename[0].toUpperCase());
@@ -74,7 +73,7 @@ fs.readdir(dirname, function (err, filenames) {
             expect(parsedOpenAPI.servers[0]).to.have.property("variables");
             expect(parsedOpenAPI.servers[0]).to.have.property("url");
           });
-          it("should have an URL consistent with our model", function () {   
+          it("should have an URL consistent with our model", function () {
             var patt = /(?:.*)\/api\/(?:.*)\/v[0-9]*$/;
             var result = patt.test(parsedOpenAPI.servers[0].url);
             expect(result).to.equal(true);
@@ -97,8 +96,8 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        describe(" - Schemas: ", function () {
-          it("shouldn't contain schemas", function () {
+        describe(" - Schemas: ", function () {         
+          it("shouldn't contain 'schemas'", function () {
             if (parsedOpenAPI.components) {
               if (parsedOpenAPI.components.schemas) {
                 expect(parsedOpenAPI.components.schemas).to.eql({});
@@ -108,7 +107,41 @@ fs.readdir(dirname, function (err, filenames) {
             }
           });
 
-          //TODO: Executar promisse que lê todos os arquivos e verifica se estão validos. APós executação, chama o 'done()'
+          it("should use external schemas for all responses", function() {
+            expect(pathValidatorResult.useResponseExternalSchema).to.equal(true);
+          });
+
+          it("should use external schemas for all requests", function() {
+
+          });
+
+          // it("should reference valid schema files", function (done) {
+          //   var responses = [];
+          //   var completed_requests = 0;
+          //   for (var i in pathValidatorResult.schemaUrlList) {
+          //     https.get(pathValidatorResult.schemaUrlList[i], function (res) {
+          //       res.on('error', function (e) {
+          //         console.log("Got error: " + e.message);
+          //         expect(false).to.equal('Error while getting schema file. Check if URL is valid')
+          //         done();
+          //       });
+
+          //       res.on("data", function (chunk) {
+          //         var body ="" + chunk;
+          //         responses.push(res);
+          //         completed_requests++;
+          //         console.log(body.length);
+          //         console.log(body[body.length - 1])
+          //         expect(jsonValidator.IsJsonString(chunk)).to.equal(true)
+          //         if (completed_requests == pathValidatorResult.schemaUrlList.length) {
+          //           // All download done, process responses array
+          //           console.log(responses);
+          //           done()
+          //         }
+          //       });
+          //     });
+          //   }
+          // });
         });
 
         describe(" - Parameters: ", function () {
@@ -140,6 +173,7 @@ fs.readdir(dirname, function (err, filenames) {
     };
   });
 });
+
 
 
 //TODO: Único método que varre todos os paths, e pega as informações necessárias para validar nos testes

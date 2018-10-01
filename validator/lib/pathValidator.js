@@ -70,11 +70,28 @@ var checkHttpVerbInUrl = function (pathkey) {
     results.useHttpVerbInEndpointUrl;
 }
 
+var checkIfRequestIsSettedToExternalSchema = function (request) {
+
+}
+
+var checkIfResponseIsSettedToExternalSchema = function (response) {
+    if (response.content["application/json"].schema) {
+        var ref = response.content["application/json"].schema.$ref;
+        if (!ref) ref = response.content["application/json"].schema.items.$ref;
+        if (results.useResponseExternalSchema != false && ref) {
+            results.useResponseExternalSchema = !ref.includes("#/components/");
+        }
+    }
+}
+
+//TODO: Pegar schemas de request também. Só adicionar se o schema (sem levar em consideração o que vem depois do #/definition) for diferente
 var addSchema = function (response) {
-    var ref = response.content["application/json"].schema.$ref;
-    if (!ref) ref = response.content["application/json"].schema.items.$ref;
-    if (ref) results.schemaUrlList.push(ref.slice(0, ref.indexOf("#")));
-    else results.errorAddingSchema = true;
+    if (response.content["application/json"].schema) {
+        var ref = response.content["application/json"].schema.$ref;
+        if (!ref) ref = response.content["application/json"].schema.items.$ref;
+        if (ref) results.schemaUrlList.push(ref.slice(0, ref.indexOf("#")));
+        else results.errorAddingSchema = true;
+    }
 };
 
 var runThroughResponses = function (responses) {
@@ -82,6 +99,7 @@ var runThroughResponses = function (responses) {
         var response = responses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
+            checkIfResponseIsSettedToExternalSchema(response);
             addSchema(response);
         }
     }
