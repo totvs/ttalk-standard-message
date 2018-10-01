@@ -1,0 +1,346 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/event/v1/1_000/jsonschema/schemas/Events_1_000.json#",
+    "info": {
+        "description": "API para retornar os documentos das entidades armazenado no banco de conhecimento, (x-totvs) para produtos TOTVS",
+        "version": "1.000",
+        "title": "Event",
+        "contact": {
+            "name": "T-Talk",
+            "url": "api.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "transactionDefinition": {
+                "subType": "event",
+                "businessContentType": {
+                    "type": "object",
+                    "$ref": "#/definitions/EventInfo"
+                },
+                "returnContentType": {
+                    "type": "object",
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/event/v1/1_000/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+                }
+            },
+            "messageDocumentation": {
+                "name": "Event",
+                "description": "Cadastro de eventos",
+                "segment": "Faturamento"
+            },
+            "productInformation": [
+                {
+                    "product":"protheus",
+                    "contact":"squad.crm@totvs.com.br",
+                    "description":"Cadastro de eventos",
+                    "adapter":"CRMS340.prw"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "PagedEvent":{
+            "type":"object",
+            "allOf":[
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/event/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref":"#/definitions/Events"
+                }
+            ]
+        },
+        "Events":{
+            "type":"object",
+            "properties":{
+                "items":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/EventsInfo"
+                    }
+                }
+            }
+        },
+        "EventsInfo":{
+            "description": "Descreve um evento",
+            "type":"object",
+            "properties": {
+                "CompanyId":{
+                    "type":"string",
+                    "description":"Código da empresa",
+                    "maxLength":3
+                
+                },
+                "BranchId":{
+                    "type":"string",
+                    "description":"Código da Filial",
+                    "example": "D MG 01",
+                    "maxLength":8,
+                    "x-totvs":[
+                         {
+                             "product":"protheus",
+                             "field":"ACD.ACD_FILIAL",
+                             "required":true,                               
+                             "length":"8",
+                             "available":true,
+                             "canUpdate":false
+                         }
+                     ]
+                 },
+                "CompanyInternalId":{
+                    "type":"string",
+                    "description":"Código da Empresa",
+                    "x-totvs":[
+                         {
+                             "product": "protheus",
+                             "field": "EMPRESA|ACD.ACD_FILIAL|ACD.ACD_CODIGO",
+                             "required": true,
+                             "type": "varchar",
+                             "length": "6",
+                             "avialable": true,
+                             "canUpdate": false
+                         }
+                     ]                       
+                 },
+                "Code":{
+                    "type":"string",
+                    "description":"Código do evento a ser cadastrado.",
+                    "example": "000001",
+                    "maxLength":6,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_CODIGO",
+                         "type":"varchar",
+                         "length": "6",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": false
+                        }
+                    ]
+                 },
+                "Description":{
+                    "type":"string",
+                    "description":"Descrição do evento.",
+                    "example": "Evento nova API",
+                    "maxLength":30,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_DESC",
+                         "type":"varchar",
+                         "length": "30",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": false
+                        }
+                    ]
+                 },
+                 "Location":{
+                    "type":"string",
+                    "description":"Local do evento.",
+                    "example": "Local do evento",
+                    "maxLength":40,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_LOCAL",
+                         "type":"varchar",
+                         "length": "30",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": true
+                        }
+                    ]
+                 },
+                 "InitDate":{
+                    "type":"string",
+                    "description":"Data início do evento.",
+                    "example": "10/10/2018",
+                    "maxLength":8,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_DTINI",
+                         "type":"date",
+                         "length": "8",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },
+                 "EndDate":{
+                    "type":"string",
+                    "description":"Data final do evento.",
+                    "example": "11/10/2018",
+                    "maxLength":8,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_DTFIM",
+                         "type":"varchar",
+                         "length": "8",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },
+                 "InitialTime":{
+                    "type":"string",
+                    "description":"Hora início do evento.",
+                    "example": "08:00",
+                    "maxLength":4,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_HRINI",
+                         "type":"varchar",
+                         "length": "4",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },
+                 "EndTime":{
+                    "type":"string",
+                    "description":"Hora final do evento.",
+                    "example": "22:00",
+                    "maxLength":4,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_HRFIM",
+                         "type":"varchar",
+                         "length": "4",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": true
+                        }
+                    ]
+                },
+                "Bloqued":{
+                    "type":"string",
+                    "description":"Evento bloqueado para uso (1-bloqueado 2-não bloqueado).",
+                    "example": "1",
+                    "maxLength":1,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACD.ACD_MSBLQL",
+                         "type":"varchar",
+                         "length": "1",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": true
+                        }
+                    ]
+                },
+                "DescriptionGrade":{
+                    "type":"string",
+                    "description":"Descrição da grade do evento.",
+                    "example": "Abertura do evento",
+                    "maxLength":20,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACE.ACE_GRADE",
+                         "type":"varchar",
+                         "length": "20",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": true
+                        }
+                    ]
+                 },
+                 "InitialTimeGrade":{
+                    "type":"string",
+                    "description":"Hora início da grade.",
+                    "example": "08:30",
+                    "maxLength":4,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACE.ACE_HRINI",
+                         "type":"varchar",
+                         "length": "4",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": true
+                        }
+                    ]
+                 },
+                 "EndTimeGrade":{
+                    "type":"string",
+                    "description":"Hora final da grade.",
+                    "example": "11:30",
+                    "maxLength":4,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACE.ACE_HRFIM",
+                         "type":"varchar",
+                         "length": "4",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate": true
+                        }
+                    ]
+                 },
+                 "GradeDate":{
+                    "type":"string",
+                    "description":"Data início da grade do evento.",
+                    "example": "10/10/2018",
+                    "maxLength":8,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACE.ACE_DATA",
+                         "type":"varchar",
+                         "length": "8",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },
+                 "Marge":{
+                    "type":"number",
+                    "description":"Percentual de margem de segurança.",
+                    "minimum": -999.99,
+                    "maximum": 999.99,
+                    "example": "100.00",
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACE.ACE_MARGEM",
+                         "type":"number",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },
+                 "Status":{
+                    "type":"string",
+                    "description":"Status da grade de eventos.(1-Aberto,2-Lotado,3-Finalizado,4-Cancelado )",
+                    "example": "1",
+                    "minimum": 1,
+                    "maximum": 4,
+                    "enum":1,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"ACE.ACE_STATUS",
+                         "type":"string",
+                         "length": "1",
+                         "required":true,
+                         "avaliable":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 }
+            }
+        }
+    }
+}
