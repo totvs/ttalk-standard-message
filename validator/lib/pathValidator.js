@@ -5,6 +5,7 @@ var foundorder;
 var foundpage;
 var foundpagesize;
 var hasgetcollectionendpoint;
+var thisisagetcollectionendpoint;
 
 var checkXtotvs = function (httpVerbInfo) {
     if (httpVerbInfo["x-totvs"]) {
@@ -39,17 +40,16 @@ var checkUseOfCommonsParams = function (parameter) {
     }
 };
 
-var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, pathkey) {
-    if (httpVerbkey == "get" && !pathkey.includes("{")) {
-        hasgetcollectionendpoint = true;
+var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, pathkey) { 
+    if (thisisagetcollectionendpoint) {
         if (parameter.$ref) {
-            if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order")) {
+            if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message") && parameter.$ref.includes("jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order")) {
                 foundorder = true;
-            }
-            if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page")) {
+            }         
+            if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message") && parameter.$ref.includes("jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page")) {
                 foundpage = true;
             }
-            if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize")) {
+            if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message") && parameter.$ref.includes("jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize")) {
                 foundpagesize = true;
             }
         }
@@ -58,7 +58,8 @@ var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, path
 
 var checkCommonErrorSchema = function (response, responseKey) {
     if (results.useErrorSchema != false && (responseKey >= 400 && responseKey <= 599)) {
-        results.useErrorSchema = response.content["application/json"].schema.$ref == "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel";
+        var ref = response.content["application/json"].schema.$ref;
+        results.useErrorSchema = ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel");
     }
 };
 
@@ -115,26 +116,43 @@ var runThroughParams = function (parameters, httpVerbkey, pathkey) {
     }
 };
 
+var clearCollectionParamsValidation = function() {
+    foundorder = false;
+    foundpage = false;
+    foundpagesize = false;
+}
+
 exports.clear = function () {
     results = {
         schemaUrlList: []
     };
-    foundorder = false;
-    foundpage = false;
-    foundpagesize = false;
-    hasgetcollectionendpoint = false;
+    clearCollectionParamsValidation();
+    hasgetcollectionendpoint = undefined;
+    thisisagetcollectionendpoint = undefined;
 };
 
 exports.runThroughPaths = function name(parsedOpenAPI) {
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
         for (var httpVerbkey in parsedOpenAPI.paths[pathkey]) {
+           //TODO: EXTRACT METHOD            
+            if (httpVerbkey == "get" && !pathkey.includes("{")) {
+                if(hasgetcollectionendpoint) { //Will be hit if there is more then one get collection endpoint
+                    clearCollectionParamsValidation();
+                }
+                hasgetcollectionendpoint = true;
+                thisisagetcollectionendpoint = true;
+            } else {
+                thisisagetcollectionendpoint = false;
+            }
+            /////
+
             var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
             checkXtotvs(httpVerbInfo);
-            var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
+            var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;         
             runThroughParams(parameters, httpVerbkey, pathkey);
             var responses = httpVerbInfo.responses;
-            runThroughResponses(responses);
+            runThroughResponses(responses);            
         }
     }
     if (!hasgetcollectionendpoint)
