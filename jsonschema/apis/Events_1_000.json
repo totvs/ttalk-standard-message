@@ -1,0 +1,369 @@
+{
+	"openapi": "3.0.1",
+	"servers":[
+		{
+			"description": "API para retornar os eventos, (x-totvs) para produtos TOTVS",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/crm/v1/events",
+            "variables": {			
+                "serverUrl": {
+                    "default":"localhost"
+                },
+                "serverHttpPort": {
+                    "default":"8080"
+                }
+            }     
+		}
+    ],
+    "info":{
+		"description": "API para retornar os eventos, para produtos TOTVS",
+		"version": "1.000",
+		"title": "Events",
+		"contact":{
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs":{
+			"messageDocumentation":{
+				"name": "Events",
+				"description": "Cadastro de eventos",
+				"segment": "Services"
+			},
+			"productInformation":[
+				{
+					"product":"protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Retorna os eventos",
+					"adapter": "CRMS340.prw"
+				}
+			]
+		}
+    },
+    "paths":{
+        "/events":{
+			"get":{
+				"tags":[
+					"events"
+				],
+				"summary": "Retorna os eventos cadastrados",
+				"x-totvs":{
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"description": "Retorna os eventos cadastrados",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"description": "Retorna os eventos cadastrados",
+				"operationId": "getevents",
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },          
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description":"Operação realizada com sucesso!",
+                        "content":{
+                            "application/json":{
+                                "schema":{                                    
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/schemas/Events_1_000.json#/definitions/PagedEvent"                                    
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "post":{
+				"tags":[
+					"events"
+				],
+				"summary": "Inclui um novo evento",
+				"description": "Inclui um novo evento",
+				"operationId": "postevents",
+				"x-totvs":{
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"note": "Inclui um novo evento",
+							"minimalVersion": "12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/schemas/Events_1_000.json#/definitions/Events"
+                            }
+                        }
+                    },
+                    "description": "evento a ser incluido"
+                },
+                "responses" : {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/schemas/Events_1_000.json#/definitions/EventsInfo"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{code}":{
+			"get":{
+				"tags":[
+					"code"
+				],
+				"summary":"Retorna as informações do evento informado",
+                "description":"Retorna as informações do evento informado",
+                "operationId":"getEvents",
+                "x-totvs":{
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"note": "Retorna o evento informado",
+							"minimalVersion": "12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/schemas/Events_1_000.json#/definitions/EventsInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Documento não localizado na base",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },            
+            "put":{
+                "tags":[
+                    "code"
+                ],
+                "summary": "Altera o evento informado",
+                "description": "Altera o evento informado",
+                "operationId": "putEvents",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"protheus",
+                            "available": true,
+                            "note": "Altera o evento informado",
+                            "minimalVersion": "12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/schemas/Events_1_000.json#/definitions/EventsInfo"
+                            }
+                        }
+                    },
+                    "description": "Documento a ser alterado"
+                },
+                "responses":{
+                    "200":{
+                        "description": "Operação realizada com sucesso",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/schemas/Events_1_000.json#/definitions/EventsInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "Erro na requisição!",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404":{
+                        "description": "Documento não localizado na base!",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },    
+            "delete":{
+                "tags":[
+                    "code"
+                ],
+                "summary": "Exclui o evento informado",
+                "description": "Exclui o evento informado",
+                "operationId": "deleteEvents",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"protheus",
+                            "available": true,
+                            "note": "Exclui o evento informado",
+                            "minimalVersion": "12.1.21"
+                        }
+                    ]
+                },
+                "parameters":[
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso"
+                    },
+                    "400": {
+                        "description": "erro no momento da exclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                    },
+                    "404": {
+                        "description": "Documento não localizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/events/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "Code":{
+                "name": "code",
+                "in": "path",
+                "description":"Identificador do evento",
+                "required": true,
+                "example": "D MG 01 000001",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"protheus",
+                            "avaliable":true,
+                            "note": "Informar o campo ACD.ACD_CODIGO",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                }
+            }
+        }
+    }
+}
