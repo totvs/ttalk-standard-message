@@ -1,0 +1,187 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/adressstock/jsonschema/schemas/AdressStock_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "AdressStock",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Endereços",
+        "description": "Cadastro de Endereços",
+        "segment": "Services"
+      },
+	  
+      "productInformation": [
+        {
+          "product": "RM",
+          "contact": "",
+          "note": "Grupo De Produto",
+          "adapter": "EAI"
+        },
+        {
+          "product": "DATASUL",
+          "contact": "....",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "lOGIX",
+          "contact": "",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "PROTHEUS",
+          "contact": "",
+          "note": "",
+          "adapter": "MATA035.PRW"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+	"PagedAdressStock": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AdressStockInfo"
+							}
+						}
+					}
+				}
+      ]
+    },
+	"AdressStockInfo": {
+      "description": "Lista do Grupo de Produtos",
+      "properties": {
+        "CompanyId": {
+          "description": "Código da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "pode ter tamanho variável até 4 com Gestão de Empresa ativado",
+              "length": "2",
+              "type": "string"
+            }
+          ]
+        },
+		"BranchId": {
+          "description": "Código da Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+              "length": "2",
+              "type": "string"
+            }
+          ]
+        },
+		"CompanyInternalId": {
+          "description": "InternalId da chave completa da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial",
+              "length": "12",
+              "type": "string"
+            }
+          ]
+        },
+		"InternalId": {
+          "description": "InternalId da localização",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "InternalId do endereço",
+              "field": "cEmpAnt|SBE.BE_FILIAL|SBE.BE_LOCAL|SBE.BE_LOCALIZ",
+              "length": "50",
+              "type": "string"
+            }
+          ]
+        },
+        "WarehouseCode": {
+          "description": "Código do Armazém/Depósito",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Código do armazém",
+              "field": "SBM.BM_GRUPO",
+              "length": "4",
+              "type": "string"
+            }
+          ]
+        },
+        "LocationCode": {
+          "description": "Endereço/Localização",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Endereço/Localização",
+              "field": "SBE.BE_LOCALIZ",
+              "length": "15",
+              "type": "string"
+            }
+          ]
+        },
+        "AddressStockDescription": {
+          "description": "Descrição do endereço",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Descrição do endereço",
+              "field": "SBE.BE_DESCRIC",
+              "length": "30",
+              "type": "string"
+            }
+          ]
+        }
+    },
+  },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
