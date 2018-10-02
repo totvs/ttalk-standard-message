@@ -37,35 +37,36 @@
         }
     },
     "definitions": {
-        "Pagedannotations":{
+        "PagedAnnotations":{
             "type":"object",
             "allOf":[
                 {
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
                 },
                 {
-                    "$ref":"#/definitions/annotationss"
+                    "$ref":"#/definitions/Annotations"
                 }
             ]
         },
-        "annotationss":{
+        "Annotations":{
             "type":"object",
             "properties":{
                 "items":{
                     "type":"array",
                     "items":{
-                        "$ref":"#/definitions/annotationsInfo"
+                        "$ref":"#/definitions/AnnotationsInfo"
                     }
                 }
             }
         },
-        "annotationsInfo":{
-            "description": "Descreve uma Condição de pagamento",
+        "AnnotationsInfo":{
+            "description": "Descreve um Apontamento",
             "type":"object",
             "properties": {
                 "CompanyId":{
                     "type":"string",
                     "description":"Código da empresa",
+                    "example": "T1",
                     "maxLength":3
                 },
                 "BranchId":{
@@ -76,7 +77,7 @@
                    "x-totvs":[
                         {
                             "product":"protheus",
-                            "field":"SE4.E4_FILIAL",
+                            "field":"AD5.AD5_FILIAL",
                             "required":true,                               
                             "length":"8",
                             "available":true,
@@ -90,172 +91,275 @@
                    "x-totvs":[
                         {
                             "product": "protheus",
-                            "field": "EMPRESA|SE4.E4_FILIAL|SE4.E4_CODIGO",
+                            "field": "EMPRESA|AD5.AD5_FILIAL|AD5.AD5_VEND|AD5.AD5_DATA|AD5.AD5_SEQUEN",
                             "required": true,
                             "type": "varchar",
-                            "length": "13",
+                            "length": "26",
                             "avialable": true,
-                            "canUpdate": false
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Empresa, Filial, Codigo do vendedor, Data e Sequencia"
                         }
                     ]                       
-                },
-                "Code":{
-                   "type":"string",
-                   "description":"Código da Condição de Pagamento.",
-                   "example": "001",
-                   "maxLength":3,
-                   "x-totvs":[
-                       {
-                        "product": "protheus",
-                        "field":"SE4.E4_CODIGO",
-                        "type":"varchar",
-                        "length": "3",
-                        "required":true,
-                        "avaliable":true,
-                        "canUpdate": false
-                       }
-                   ]                       
-                },
+                },                
                 "InternalId":{
-                    "type":"string",
-                    "description":"InternalId da condição de pagamento no ERP",
+                    "type":"string",                    
+                    "description":"InternalId da Anotação no ERP",
                     "x-totvs":[
                         {
                             "product": "protheus",
-                            "field": "SE4.E4_FILIAL|SE4.E4_CODIGO",
+                            "field": "AD5.AD5_FILIAL|AD5.AD5_VEND|AD5.AD5_DATA|AD5.AD5_SEQUEN",
                             "type": "varchar",
-                            "length": "11",
-                            "note":"O internalID da Condição de Pagamento é formado por SE4.E4_FILIAL|E4.E4_CODIGO"
+                            "length": "24",
+                            "note": "Este dado e formado pelos campos Empresa, Filial, Codigo do vendedor, Data e Sequencia"
                         }                         
                     ]
                 },
-                "Description":{
-                    "type":"string",
-                    "description":"Descrição da Condição de Pagamento",
-                    "example": "A VISTA",
-                    "maxLength":50,
-                    "x-totvs": [
+                "SellerId":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Codigo do Vendedor",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_VEND",
+                            "type": "varchar",
+                            "length": "6",
+                            "required": true,
+                            "avialable": true,
+                            "canUpdate": false
+                        }                         
+                    ]
+                },
+                "RegisterDate": {
+                    "type": "string",
+					"format": "date-time",
+                    "example": "1900-01-01T12:00:00Z",
+                    "description": "Data do Apontamento",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_DATA",
+                            "type": "date-time",
+                            "length": "08",
+                            "required": true,
+                            "avialable": true,
+                            "canUpdate": false
+                        }                         
+                    ]
+                },
+                "Sequence": {
+                    "type": "string",
+                    "example": "01",
+                    "description": "Sequência do Contato",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_SEQUEN",
+                            "type": "varchar",
+                            "length": "2",
+                            "required": true,
+                            "avialable": true,
+                            "canUpdate": false
+                        }                         
+                    ]
+                },
+                "CustomerId":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Código do Cliente",
+                    "x-totvs":[
                         {
                             "product":"protheus",
-                            "field":"SE4.E4_DESCRI",
-                            "type":"varchar",
-                            "length":"15",
-                            "required":true,
-                            "note":"Descrição"
+                            "field": "AD5.AD5_CODCLI",                            
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
                         }
                     ]
                 },
-                "MeanTime":{
-                    "type":"integer",
-                    "format":"int32",
-                    "description":"Número Médio de Dias",
-                    "minimum":0,
-                    "maximum":99
-                },
-                "DaysFirstDue":{
-                    "type":"integer",
-                    "format":"int32",
-                    "description":"Quantidade de dias para o vencimento da primeira parcela (0 a 99)",
-                    "minimum":0,
-                    "maximum":99
-                },
-                "QuantityPlots":{
-                    "type":"integer",
-                    "format":"int32",
-                    "description":"Quantidade de parcelas (1 a 99).",
-                    "minimum":1,
-                    "maximum":99
-                },
-                "RangePlots":{
-                    "type":"integer",
-                    "format":"int32",
-                    "description":"Intervalo entre cada parcela, em dias (0 a 999).",
-                    "minimum":0,
-                    "maximum":999
-                },
-                "WeekDayFixed":{
-                    "type":"String",                    
-                    "description":"Define um dia da semana fixo para o vencimento das parcelas. 1 - Domingo 2 - Segunda 3 - Terça 4 - Quarta 5 - Quinta 6 - Sexta 7 - Sábado.",
-                    "minimum":1,
-                    "maximum":7,
-                    "enum":[
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7"
+                "CustomerUnit": {
+                    "type": "string",
+                    "example": "01",
+                    "description": "Loja do Cliente",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_LOJA",
+                            "type": "varchar",
+                            "length": "2",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": false
+                        }                         
                     ]
                 },
-                "DayMonthFixed":{
-                    "type":"integer",
-                    "format":"int32",
-                    "description":"Define um dia do mês fixo para o vencimento das parcelas (1 a 31).",
-                    "minimum":1,
-                    "maximum":31
-                },
-                "DaysCondition":{
-                    "type":"String",
-                    "description":"Define como será a contagem dos dias do intervalo de cada parcela. 1 - Data do Dia 2 - Fora o Dia 3 - Fora Semana 4 - Fora Quinzena 5 - Fora Mês 6 - Fora Dezena.",
-                    "minimum":1,
-                    "maximum":6,
-                    "enum":[
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",                            
-                        "6"
+                "EventId": {
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Codigo do Evento",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_EVENTO",
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
+                        }                         
                     ]
                 },
-                "FinancialDiscountDays":{
-                    "type":"integer",
-                    "format":"int32",
-                    "description":"Quantidade de dias para o desconto financeiro (1 a 99).",
-                    "minimum":1,
-                    "maximum":99
+                "OpportunityID":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Numero da Oportunidade",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_NROPOR",
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
+                        }                         
+                    ]
                 },
-                "PercentageDiscountDays":{                    
-                    "description":"Percentual do desconto financeiro para a condição",
-                    "type":"number",
-                    "minimum": -99.99,
-                    "maximum": 99.99
+                "ProspectId":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Código do Prospect",
+                    "x-totvs":[
+                        {
+                            "product":"protheus",
+                            "field": "AD5.AD5.AD5_PROSPE",                            
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
+                        }
+                    ]
                 },
-                "PercentageIncrease":{
-                    "description":"Percentual do acréscimo financeiro para a condição.",                    
-                    "minimum": -999.99,
-                    "maximum": 999.99                   
-                },
-                "Plots":{
+                "ProspectUnit":{
+                    "type": "string",
+                    "example": "01",
+                    "description": "Loja do Prospect",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_LOJPRO",
+                            "type": "varchar",
+                            "length": "2",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": false
+                        }                         
+                    ]
+                },                
+                "ItensCostAnnotation":{
                     "type":"object",
-                    "description":"Define as parcelas da condição de pagamento quando o intervalo não for regular ou o valor das parcelas não for dividido de forma igual.",
+                    "description":"Lista de Custos do Apontamento.",
                     "properties":{
-                        "Due":{
-                            "type":"array",
-                            "items":{
-                                "$ref":"#/definitions/DueType"
-                            }
+                        "type":"array",
+                        "items":{
+                            "$ref":"#/definitions/CostAnnotation"
                         }
                     }
                 }
             }
         },
-        "DueType":{
-            "type":"object",
-            "properties":{
-                "DueDay":{
-                    "type":"integer",
-                    "format": "int32",
-                    "description":"Quantidade de dias para o vencimento da parcela (0 a 999).",
-                    "minimum":0,
-                    "maximum":999
+        "CostAnnotation":{
+            "description": "Descreve os Custos dos apontamentos",
+            "type":"Array",
+            "properties": {
+                "Item":{
+                    "type": "string",
+                    "example": "01",
+                    "description": "Numero sequencial do item do Apontamento",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD6.AD6_ITEM",
+                            "type": "varchar",
+                            "length": "2",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": false
+                        }                         
+                    ]
                 },
-                "Percentage":{
-                    "type":"number",                    
-                    "description":"Indica se o valor da parcela deverá ser um percentual do total.",
-                    "minimum": -999.99,
-                    "maximum": 999.99
+                "ProductId":{
+                    "description": "Código do Produto",
+                    "type": "string",
+                    "example": "PROD00000000001",                    
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD6.AD6_CODPRO",
+                            "type": "varchar",
+                            "length": "15",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
+                        }                         
+                    ]         	
+                },
+                "Quantity":{                                        
+                    "description": "Quantidade",
+                    "example": 1,
+                    "type":"number",
+                    "minimum": 0.01,
+                    "maximum": 999999.99,
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD6.AD6_QUANT",
+                            "type": "integer",
+                            "length": "9",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
+                        }                         
+                    ]
+                },
+                "UnitValue":{
+                    "description": "Valor Unitario do item",
+                    "example": 149.99,
+                    "type":"number",
+                    "minimum": 0.01,
+                    "maximum": 999999999.99,
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD6.AD6_VLUNIT",
+                            "type": "integer",
+                            "length": "12",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
+                        }                         
+                    ]
+                },
+                "TotalValue":{
+                    "description": "Valor Total do item",
+                    "example": 149.99,
+                    "type":"number",
+                    "minimum": 0.01,
+                    "maximum": 999999999.99,
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD6.AD6_TOTAL",
+                            "type": "integer",
+                            "length": "12",
+                            "required": false,
+                            "avialable": true,
+                            "canUpdate": true
+                        }                         
+                    ]                    
                 }
             }
         }
