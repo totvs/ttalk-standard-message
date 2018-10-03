@@ -1,0 +1,685 @@
+{
+  "openapi": "3.0.0",
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/InspectionScript_v2_000.json#",
+  "info": {
+    "description": "",
+    "version": "2.000",
+    "title": "InspectionScript",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "InspectionScript",
+        "description": "Roteiro de Inspeção",
+        "segment": ""
+      },
+      "transactionDefinition": {
+        "subType": "event"
+      }
+    }
+  },
+  "definitions": {
+    "UpdateDraftVersionInitialInformation": {
+      "title": "UpdateDraftVersionInitialInformation",
+      "description": "Classe que contém informações iniciais da versão do roteiro de inspeção",
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "Título da versão do roteiro de inspeção",
+          "type": "string"
+        },
+        "description": {
+          "description": "Descrição da versão do roteiro de inspeção",
+          "type": "string"
+        },
+        "executionStyleId": {
+          "format": "int32",
+          "description": "Identificador do estilo de execução da versão do roteiro de inspeção",
+          "type": "integer"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+    },
+    "GetDetailedDraftVersionFromInspectionScriptResponse": {
+      "title": "GetDetailedDraftVersionFromInspectionScript",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "executionStyle": {
+          "$ref": "DefaultEnumeration_ExecutionStyle"
+        },
+        "inspectionObjectType": {
+          "$ref": "DefaultEnumeration_InspectionObjectType"
+        },
+        "vehicularCategory": {
+          "$ref": "CategoryCompleteInformation"
+        },
+        "categories": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "CategoryCompleteInformation"
+          }
+        }
+      }
+    },
+    "CategoryCompleteInformation": {
+      "title": "CategoryCompleteInformation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "icon": {
+          "$ref": "DefaultEnumeration_Icon"
+        },
+        "items": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "ItemCompleteInformation"
+          }
+        }
+      }
+    },
+    "ItemCompleteInformation": {
+      "title": "ItemCompleteInformation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "questionType": {
+          "$ref": "DefaultEnumeration_QuestionType"
+        },
+        "hasObservation": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "helpPhrase": {
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "EvidenceCompleteInformation"
+        },
+        "nonComplianceSuggestions": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "NonComplianceSuggestionCompleteInformation"
+          }
+        }
+      }
+    },
+    "EvidenceCompleteInformation": {
+      "title": "EvidenceCompleteInformation",
+      "type": "object",
+      "properties": {
+        "photoConfig": {
+          "$ref": "PhotoConfigCompleteInformation"
+        },
+        "maxPhoto": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "NonComplianceSuggestionCompleteInformation": {
+      "title": "NonComplianceSuggestionCompleteInformation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "criticality": {
+          "$ref": "DefaultEnumeration_Criticality"
+        }
+      }
+    },
+    "PhotoConfigCompleteInformation": {
+      "title": "PhotoConfigCompleteInformation",
+      "type": "object",
+      "properties": {
+        "photoSize": {
+          "$ref": "PhotoSize"
+        },
+        "photoQuality": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "PhotoSize": {
+      "title": "PhotoSize",
+      "description": "Enumeration de tamanho de foto (PhotoSize)",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "width": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "height": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "AddCustomCategoryInDraftVersion": {
+      "title": "AddCustomCategoryInDraftVersion",
+      "description": "Classe que contém informações de uma categoria de usuário",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Nome da categoria de usuário",
+          "type": "string"
+        },
+        "description": {
+          "description": "Descrição da categoria de usuário",
+          "type": "string"
+        },
+        "iconId": {
+          "format": "int32",
+          "description": "Identificador do ícone da categoria de usuário",
+          "type": "integer"
+        }
+      }
+    },
+    "UpdateCustomCategoryInDraftVersion": {
+      "title": "UpdateCustomCategoryInDraftVersion",
+      "description": "Classe que contém informações de uma categoria de usuário",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Nome da categoria de usuário",
+          "type": "string"
+        },
+        "description": {
+          "description": "Descrição da categoria de usuário",
+          "type": "string"
+        },
+        "iconId": {
+          "format": "int32",
+          "description": "Identificador do ícone da categoria de usuário",
+          "type": "integer"
+        }
+      }
+    },
+    "AddItemToCustomCategoryInDraftVersion": {
+      "title": "AddItemToCustomCategoryInDraftVersion",
+      "description": "Classe que contém informações de um item de uma categoria de usuário",
+      "type": "object",
+      "properties": {
+        "questionTypeId": {
+          "format": "int32",
+          "description": "Identificador do Tipo da pergunta do item",
+          "type": "integer"
+        },
+        "name": {
+          "description": "Nome da pergunta do Item",
+          "type": "string"
+        },
+        "hasObservation": {
+          "description": "Flag que indica se o item permite observações",
+          "type": "boolean"
+        },
+        "helpPhrase": {
+          "description": "Frase de apoio do Item utilizada para auxiliar durante a execução",
+          "type": "string"
+        },
+        "defineEvidence": {
+          "$ref": "Evidence"
+        },
+        "description": "Representa as configurações e parametrizações referentes a registro de evidêcia no item",
+        "nonComplianceSuggestions": {
+          "description": "Sugestões de não conformidades relacionadas ao item",
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "NonComplianceSuggestions"
+          }
+        }
+      }
+    },
+    "Evidence": {
+      "title": "Evidence",
+      "description": "Classe que contém informações de evidência de um item de uma categoria de usuário",
+      "type": "object",
+      "properties": {
+        "maxPhoto": {
+          "format": "int32",
+          "description": "Valor inteiro que indica o número máximo de fotos permitido",
+          "type": "integer"
+        },
+        "photoConfig": {
+          "$ref": "PhotoConfig"
+        },
+        "description": "Configuração da foto"
+      }
+    },
+    "NonComplianceSuggestions": {
+      "title": "NonComplianceSuggestions",
+      "description": "Classe que contém informações de sugestões de não conformidades relacionadas ao item",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Nome de uma não conformidade",
+          "type": "string"
+        },
+        "criticalityId": {
+          "format": "int32",
+          "description": "Identificador da criticidade da sugestão de não conformidade do item",
+          "type": "integer"
+        }
+      }
+    },
+    "PhotoConfig": {
+      "title": "PhotoConfig",
+      "description": "Classe que contém informações de configuração de fotos de evidência de um item",
+      "type": "object",
+      "properties": {
+        "photoSizeId": {
+          "format": "int32",
+          "description": "Identificador do Tamanho da foto",
+          "type": "integer"
+        },
+        "photoQuality": {
+          "format": "int32",
+          "description": "Valor inteiro que representa a qualidade da foto",
+          "type": "integer"
+        }
+      }
+    },
+    "UpdateBasicInformationItemOfCustomCategoryOfDraftVersion": {
+      "title": "UpdateBasicInformationItemOfCustomCategoryOfDraftVersion",
+      "description": "Classe que contém informações de um item de uma categoria de usuário",
+      "type": "object",
+      "properties": {
+        "questionTypeId": {
+          "format": "int32",
+          "description": "Identificador do Tipo da pergunta do item",
+          "type": "integer"
+        },
+        "name": {
+          "description": "Nome da pergunta do Item",
+          "type": "string"
+        },
+        "hasObservation": {
+          "description": "Flag que indica se o item permite observações",
+          "type": "boolean"
+        },
+        "helpPhrase": {
+          "description": "Frase de apoio do Item utilizada para auxiliar durante a execução",
+          "type": "string"
+        },
+        "updateEvidence": {
+          "$ref": "Evidence"
+        },
+        "description": "Representa as configurações e parametrizações referentes a registro de evidêcia no item"
+      }
+    },
+    "AddNonComplianceSuggestionInItemToCustomCategoryInDraftVersion": {
+      "title": "AddNonComplianceSuggestionInItemToCustomCategoryInDraftVersion",
+      "description": "Classe que contém informações de sugestões de não conformidades relacionadas ao item",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Nome de uma não conformidade",
+          "type": "string"
+        },
+        "criticalityId": {
+          "format": "int32",
+          "description": "Identificador da criticidade da sugestão de não conformidade do item",
+          "type": "integer"
+        }
+      }
+    },
+    "ChangeNonComplianceSuggestionCriticality": {
+      "title": "ChangeNonComplianceSuggestionCriticality",
+      "description": "Representa os dados necessários para alterar a criticidade de uma sugestão de não conformidade",
+      "type": "object",
+      "properties": {
+        "criticalityId": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "CreateInspectionScriptWithDraftVersion": {
+      "title": "CreateInspectionScriptWithDraftVersion",
+      "type": "object",
+      "properties": {
+        "versionTitle": {
+          "type": "string"
+        },
+        "versionDescription": {
+          "type": "string"
+        },
+        "versionInspectionObjectTypeId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "versionExecutionStyleId": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "GetAllInspectionScriptWithLastVersionResponse": {
+      "title": "GetAllInspectionScriptWithLastVersion",
+      "description": "Classe que contém informações de um roteiro",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "currentVersionId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "draftVersionId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "amountOfVersions": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "lastVersion": {
+          "$ref": "VersionResumeInformation"
+        }
+      }
+    },
+    "VersionResumeInformation": {
+      "title": "VersionResumeInformation",
+      "description": "Consulta do histórico de versões de um roteiro de inspeção",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "description": "Identificador da versão",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Título da versão",
+          "type": "string"
+        },
+        "creationDate": {
+          "format": "date-time",
+          "description": "Data/Hora de criação da versão",
+          "type": "string"
+        },
+        "creationUser": {
+          "format": "int64",
+          "description": "Identificador do usuário de criação",
+          "type": "integer"
+        }
+      }
+    },
+    "GetAllVersionsByInspectionScriptResponse": {
+      "title": "GetAllVersionsByInspectionScript",
+      "description": "Consulta do histórico de versões de um roteiro de inspeção",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "description": "Identificador da versão",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Título da versão",
+          "type": "string"
+        },
+        "creationDate": {
+          "format": "date-time",
+          "description": "Data/Hora de criação da versão",
+          "type": "string"
+        },
+        "creationUser": {
+          "format": "int64",
+          "description": "Identificador do usuário de criação",
+          "type": "integer"
+        }
+      }
+    },
+    "GetDetailedVersionByIdResponse": {
+      "title": "GetDetailedVersionById",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "executionStyleName": {
+          "type": "string"
+        },
+        "inspectionObjectTypeName": {
+          "type": "string"
+        },
+        "categories": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "CategoryResumeInformation"
+          }
+        },
+        "vehicularCategory": {
+          "$ref": "CategoryResumeInformation"
+        }
+      }
+    },
+    "CategoryResumeInformation": {
+      "title": "CategoryResumeInformation",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "iconName": {
+          "type": "string"
+        },
+        "items": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "ItemResumeInformation"
+          }
+        }
+      }
+    },
+    "ItemResumeInformation": {
+      "title": "ItemResumeInformation",
+      "type": "object",
+      "properties": {
+        "questionTypeName": {
+          "type": "string"
+        },
+        "hasObservation": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "helpPhrase": {
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "EvidenceResumeInformation"
+        },
+        "nonComplianceSuggestions": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "NonComplianceSuggestionResumeInformation"
+          }
+        }
+      }
+    },
+    "EvidenceResumeInformation": {
+      "title": "EvidenceResumeInformation",
+      "type": "object",
+      "properties": {
+        "photoConfig": {
+          "$ref": "PhotoConfigResumeInformation"
+        },
+        "maxPhoto": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "NonComplianceSuggestionResumeInformation": {
+      "title": "NonComplianceSuggestionResumeInformation",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "criticalityName": {
+          "type": "string"
+        }
+      }
+    },
+    "PhotoConfigResumeInformation": {
+      "title": "PhotoConfigResumeInformation",
+      "type": "object",
+      "properties": {
+        "photoSizeName": {
+          "type": "string"
+        },
+        "photoQuality": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "DefaultEnumeration_ExecutionStyle": {
+      "title": "DefaultEnumeration`1",
+      "description": "Classe que representa a saída padrão para todos os Enumeration sem customização, ou seja, só possui os campos Id e Name",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "DefaultEnumeration_InspectionObjectType": {
+      "title": "DefaultEnumeration`1",
+      "description": "Classe que representa a saída padrão para todos os Enumeration sem customização, ou seja, só possui os campos Id e Name",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "DefaultEnumeration_Icon_": {
+      "title": "DefaultEnumeration`1",
+      "description": "Classe que representa a saída padrão para todos os Enumeration sem customização, ou seja, só possui os campos Id e Name",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "DefaultEnumeration_QuestionType_": {
+      "title": "DefaultEnumeration`1",
+      "description": "Classe que representa a saída padrão para todos os Enumeration sem customização, ou seja, só possui os campos Id e Name",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "DefaultEnumeration_Criticality_": {
+      "title": "DefaultEnumeration`1",
+      "description": "Classe que representa a saída padrão para todos os Enumeration sem customização, ou seja, só possui os campos Id e Name",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "IList_GetAllVersionsByInspectionScriptResponse_": {
+      "title": "IList`1",
+      "type": "object",
+      "properties": {
+        "hasNext": {
+          "type": "boolean"
+        },
+        "items": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "GetAllVersionsByInspectionScriptResponse"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "",
+      "url": "API.totvs.com.br/"
+    }
+  ]
+}
