@@ -6,7 +6,7 @@ var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
 var jsonValidator = require('../lib/jsonValidator.js');
 var https = require('https');
-
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 
 describe("Validating files...", function () {
@@ -40,14 +40,6 @@ fs.readdir(dirname, function (err, filenames) {
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
         })
-
-        describe(" - Content Format: ", function () {
-          it("should be complient with OpenAPI in version 3.0'", function () {
-            expect(parsedOpenAPI).to.have.property("openapi");
-            expect(parsedOpenAPI).to.not.have.property("swagger");
-          });
-        });
-
 
         describe(" - Filename: ", function () {
           it("should start with uppercase letter", function () {
@@ -96,7 +88,8 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        describe(" - Schemas: ", function () {         
+        describe(" - Schemas: ", function () {
+          this.timeout(30000);
           it("shouldn't contain 'schemas'", function () {
             if (parsedOpenAPI.components) {
               if (parsedOpenAPI.components.schemas) {
@@ -107,41 +100,45 @@ fs.readdir(dirname, function (err, filenames) {
             }
           });
 
-          it("should use external schemas for all responses", function() {
-            expect(pathValidatorResult.useResponseExternalSchema).to.equal(true);
+          it("should use external schemas for all requests and responses ", function () {
+            expect(pathValidatorResult.useExternalSchema).to.equal(true);
           });
-
-          it("should use external schemas for all requests", function() {
-
+         
+          //TODO: Mandar essa logica para outro arquivo
+          it("should reference valid schema files", function (done) {
+            this.timeout(30000);
+            setTimeout(done, 30000);
+            ///var responses = []; //TODO: Vai ser últil, provavelmente, para validar se o objeto existe no schema
+            var completed_requests = 0;
+            for (var i in pathValidatorResult.schemaUrlList) {
+              var rawFile = new XMLHttpRequest();
+              rawFile.open("GET", pathValidatorResult.schemaUrlList[i], false);
+              rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4) {
+                  if (rawFile.status === 200 || rawFile.status == 0) {
+                    var body = rawFile.responseText;
+                    //responses.push(body);
+                    completed_requests++;
+                    var isValidSchemaFile = jsonValidator.IsJsonString(body);
+                    expect(isValidSchemaFile).to.equal(true)
+                    if (completed_requests == pathValidatorResult.schemaUrlList.length || !isValidSchemaFile) {                      
+                      done();
+                    }
+                  }
+                  else {
+                    expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
+                    done();
+                    return;
+                  }
+                } else {
+                  expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
+                  done();
+                  return;
+                }
+              }
+              rawFile.send(null); //This triggers onreadystatechange           
+            }
           });
-
-          // it("should reference valid schema files", function (done) {
-          //   var responses = [];
-          //   var completed_requests = 0;
-          //   for (var i in pathValidatorResult.schemaUrlList) {
-          //     https.get(pathValidatorResult.schemaUrlList[i], function (res) {
-          //       res.on('error', function (e) {
-          //         console.log("Got error: " + e.message);
-          //         expect(false).to.equal('Error while getting schema file. Check if URL is valid')
-          //         done();
-          //       });
-
-          //       res.on("data", function (chunk) {
-          //         var body ="" + chunk;
-          //         responses.push(res);
-          //         completed_requests++;
-          //         console.log(body.length);
-          //         console.log(body[body.length - 1])
-          //         expect(jsonValidator.IsJsonString(chunk)).to.equal(true)
-          //         if (completed_requests == pathValidatorResult.schemaUrlList.length) {
-          //           // All download done, process responses array
-          //           console.log(responses);
-          //           done()
-          //         }
-          //       });
-          //     });
-          //   }
-          // });
         });
 
         describe(" - Parameters: ", function () {
