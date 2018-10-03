@@ -1,0 +1,379 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API para cadastro de Apontamentos de Visita dos produtos TOTVS",                
+            "url": "http://{serverUrl}:{serverHttpPort}/api/fat/v1",
+            "variables": {			
+                "serverUrl": {
+                    "default":"localhost"
+                },
+                "serverHttpPort": {
+                    "default":"8080"
+                }
+            }
+        }
+    ],
+    "info": {
+        "description": "API para a entidade Apontamento de Visita (annotation) para produtos TOTVS",
+        "version": "2.000",
+        "title": "annotation",
+        "contact": {
+            "name": "T-Talk",
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation":{
+                "name": "Annotation",
+                "description": "Apontamentos de Visita",
+                "segment": "Services"
+            },
+            "productInformation":[
+                {
+                    "product":"protheus",
+                    "contact":"squad.crm@totvs.com.br",
+                    "description":"Cadastro de Apontamentos de Visita",
+                    "adapter":"MATS310.prw"
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/annotation": {
+            "get": {
+                "tags":[
+                    "Annotation"
+                ],
+                "summary":"Retorna lista de apontamentos de visita",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note":"Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "description":"Retorna lista completa dos apontamentos de visita",
+                "operationId":"getAnnotation",
+                "parameters": [
+                    { 
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },          
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description":"operação realizada com sucesso!",
+                        "content":{
+                            "application/json":{
+                                "schema":{                                    
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/schemas/annotation_2_000.json#/definitions/PagedAnnotation"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "post": {
+                "tags": [
+                    "Annotation"
+                ],
+                "summary": "Inclui Apontamemto de Visita",
+                "description": "Inclui um apontamento de visita conforme dados enviados na requisição.",
+                "operationId": "postAnnotation",
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"protheus",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {                                
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/schemas/annotation_2_000.json#/definitions/AnnotationInfo"
+                            }
+                        }
+                    },
+                    "description": "Apontamento de Visita a ser incluida"
+                },
+                "responses" : {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/schemas/annotation_2_000.json#/definitions/PagedAnnotation"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/annotation/{AnnotationId}": {
+            "get": {
+                "tags":[
+                    "AnnotationId"
+                ],
+                "summary":"Retorna o Apontamento de Visita pelo Id",
+                "description": "Retorna o apontamento de visita pelo Id",
+                "operationId":"getAnnotationId",
+                "x-totvs":{
+                    "productInformation": [                        
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note":"Este verbo está disponível com todos os parâmetros",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/AnnotationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/schemas/annotation_2_000.json#/definitions/AnnotationInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Apontamento de visita não localizada na base",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "tags":[
+                    "AnnotationId"
+                ],
+                "summary":"Altera uma apontamento de visita",
+                "description":"Atualiza o apontamento de visita conforme dados enviados na requisição",
+                "operationId":"putAnnotationId",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization, AnnotationId e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/AnnotationId"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/schemas/annotation_2_000.json#/definitions/AnnotationInfo"
+                            }
+                        }
+                    },
+                    "description": "Apontamento de visita a ser alterada"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/schemas/annotation_2_000.json#/definitions/AnnotationInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Apontamento de visita não localizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "tags":[
+                    "AnnotationId"
+                ],
+                "summary":"Exclui uma apontamento de visita",
+                "description":"Exclui a apontamento de visita conforme dados enviados na requisição.",
+                "operationId":"deleteAnnotationId",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/AnnotationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/schemas/annotation_2_000.json#/definitions/AnnotationInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da exclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Apontamento de visita não localizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/annotations/v1/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "AnnotationId":{
+                "name": "AnnotationId",
+                "in": "path",
+                "description":"Identificador único do apontamento de visita",
+                "required": true,
+                "example": "D MG 01 VEND0103/10/201801",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"protheus",
+                            "avaliable":true,
+                            "note": "Informar os campos Filial (AD5.D5_FILIAL), Código do vendedor (AD5.D5_CODIGO), Data da visita (AD5.D5_DATA) e a Sequência (AD5.D5_SEQUEN)",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                }
+            }
+        },
+        "schemas": {
+
+        }
+    }
+}
