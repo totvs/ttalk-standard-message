@@ -110,12 +110,20 @@ var addSchema = function (responseRequest) {
     }
 };
 
+var checkIfThereIsSuccessResponse = function(responseKey){    
+    if(responseKey >= 200 || responseKey < 300){
+        results.foundSuccessResponse = true;
+    }
+};
+
 var runThroughResponses = function (responses) {
+    results.foundSuccessResponse = false;
     for (var responseKey in responses) {
         var response = responses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
             checkIfSchemaIsSettedToExternaFile(response, true);
+            checkIfThereIsSuccessResponse(responseKey);
             addSchema(response);
         }
     }
