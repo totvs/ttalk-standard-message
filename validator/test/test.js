@@ -90,6 +90,10 @@ fs.readdir(dirname, function (err, filenames) {
           it("should contain success responses for all http verbs", function () {
             expect(pathValidatorResult.foundSuccessResponse).to.equal(true);
           });   
+
+          it("should specify 'Id' for all PUT or DELETE operations", function () {
+            expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.equal(true);
+          });             
         });       
 
         describe(" - Schemas: ", function () {
