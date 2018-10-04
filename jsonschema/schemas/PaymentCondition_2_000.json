@@ -1,379 +1,181 @@
 {
-  "openapi": "3.0.1",
-  "servers": [
-      {
-          "description": "API para cadastro Condição de Pagamento dos produtos TOTVS",                
-          "url": "http://{serverUrl}:{serverHttpPort}/api/fat/v1/paymentcondition",
-          "variables": {			
-              "serverUrl": {
-                  "default":"localhost"
-              },
-              "serverHttpPort": {
-                  "default":"8080"
-              }
-          }
-      }
-  ],
-  "info": {
-      "description": "API para a entidade Condição de Pagamento (PaymentCondition) para produtos TOTVS",
-      "version": "2.001",
-      "title": "paymentCondition",
-      "contact": {
-          "name": "T-Talk",
-          "url": "https://api.totvs.com.br",
-          "email": "comiteintegracao@totvs.com.br"
-      },
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_000.json#",
+    "info": {
+      "description": "",
+      "version": "2.000",
+      "title": "PaymentCondition",
+      "contact": {},
       "x-totvs": {
-          "messageDocumentation":{
-              "name": "PaymentCondition",
-              "description": "Cadastro de Condição de Pagamento",
-              "segment": "Services"
+        "messageDocumentation": {
+          "name": "PaymentCondition",
+          "description": "Condição de Pagamento",
+          "segment": ""
+        },
+        "transactionDefinition": {
+          "subType": "event",
+          "businessContentType": {
+            "$ref": "#/definitions/BusinessContentType",
+            "type": "object"
           },
-          "productInformation":[
-              {
-                  "product":"protheus",
-                  "contact":"squad.crm@totvs.com.br",
-                  "description":"Cadastro de Condição de Pagamento",
-                  "adapter":"MATS360.prw"
-              }
-          ]
+          "returnContentType": {
+            "$ref": "#/definitions/ReturnContent",
+            "type": "object"
+          }
+        }
       }
-  },
-  "paths": {
-      "/paymentcondition": {
-          "get": {
-              "tags":[
-                  "PaymentCondition"
-              ],
-              "summary":"Retorna lista de Condições de pagamento",
-              "x-totvs":{
-                  "productInformation":[
-                      {
-                          "product":"protheus",
-                          "avaliable":true,
-                          "note":"Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
-                          "minimalVersion":"12.1.21"
-                      }
-                  ]
-              },
-              "description":"Retorna lista completa das condições de pagamento",
-              "operationId":"getPaymentCondition",
-              "parameters": [
-                  {                        
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-                  },
-                  {
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-                  },
-                  {
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-                  },
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-                  },          
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-                  }
-              ],
-              "responses": {
-                  "200": {
-                      "description":"operação realizada com sucesso!",
-                      "content":{
-                          "application/json":{
-                              "schema":{                                    
-                                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/schemas/paymentCondition_2_001.json#/definitions/PagedPaymentCondition"                                    
-                              }
-                          }
-                      }
-                  },
-                  "400": {
-                      "description": "erro no momento da requisição",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                              }
-                          }
-                      }
-                  }
-              }
-          }, 
-          "post": {
-              "tags": [
-                  "PaymentCondition"
-              ],
-              "summary": "Inclui Condição de Pagamento",
-              "description": "Inclui uma condição de pagamento conforme dados enviados na requisição.",
-              "operationId": "postPaymentCondition",
-              "x-totvs": {
-        "productInformation":[
-          {
-            "product":"protheus",
-                          "avaliable":true,
-                          "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
-                          "minimalVersion":"12.1.21"
+    },
+    "definitions": {
+      "BusinessContentType": {
+        "type": "object",
+        "properties": {
+          "CompanyId": {
+            "description": "Código da empresa.",
+            "type": "string",
+            "maxLength": 3
+          },
+          "BranchId": {
+            "description": "Código da filial.",
+            "type": "string",
+            "maxLength": 12
+          },
+          "CompanyInternalId": {
+            "description": "InternalId da chave completa de empresa do produto",
+            "type": "string"
+          },
+          "Code": {
+            "description": "Código da condição de pagamento.",
+            "type": "string",
+            "maxLength": 3
+          },
+          "InternalId": {
+            "description": "InternalId do Code",
+            "type": "string"
+          },
+          "Description": {
+            "description": "Descrição da condição de pagamento.",
+            "type": "string",
+            "maxLength": 50
+          },
+          "DaysFirstDue": {
+            "description": "Quantidade de dias para o vencimento da primeira parcela (0 a 99).",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99,
+            "format": "int32"
+          },
+          "QuantityPlots": {
+            "description": "Quantidade de parcelas (1 a 99).",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 99,
+            "format": "int32"
+          },
+          "RangePlots": {
+            "description": "Intervalo entre cada parcela, em dias (0 a 999).",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 999,
+            "format": "int32"
+          },
+          "WeekDayFixed": {
+            "description": "Define um dia da semana fixo para o vencimento das parcelas.             1 - Domingo             2 - Segunda             3 - Terça             4 - Quarta             5 - Quinta             6 - Sexta             7 - Sábado",
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7"
+            ]
+          },
+          "DayMonthFixed": {
+            "description": "Define um dia do mês fixo para o vencimento das parcelas (1 a 31).",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 31,
+            "format": "int32"
+          },
+          "DaysCondition": {
+            "description": "Define como será a contagem dos dias do intervalo de cada parcela.             1 - Data do Dia             2 - Fora o Dia             3 - Fora Semana             4 - Fora Quinzena             5 - Fora Mês             6 - Fora Dezena",
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ]
+          },
+          "FinancialDiscountDays": {
+            "description": "Quantidade de dias para o desconto financeiro (1 a 99).",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 99,
+            "format": "int32"
+          },
+          "PercentageDiscountDays": {
+            "description": "Percentual do desconto financeiro para a condição.",
+            "type": "number",
+            "multipleOf": 0.01,
+            "minimum": -99.99,
+            "maximum": 99.99
+          },
+          "PercentageIncrease": {
+            "description": "Percentual do acréscimo financeiro para a condição.",
+            "type": "number",
+            "multipleOf": 0.01,
+            "minimum": -999.99,
+            "maximum": 999.99
+          },
+          "Plots": {
+            "$ref": "#/definitions/PlotsType",
+            "description": "Define as parcelas da condição de pagamento quando o intervalo não for regular ou o valor das parcelas não for dividido de forma igual.",
+            "type": "object"
           }
-        ]
-              },
-              "parameters": [
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-                  },
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-                  }
-              ],
-              "requestBody": {
-                  "content": {
-                      "application/json": {
-                          "schema": {                                
-                              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/schemas/paymentCondition_2_001.json#/definitions/PaymentConditionInfo"
-                          }
-                      }
-                  },
-                  "description": "Condição de Pagamento a ser incluida"
-              },
-              "responses" : {
-                  "200": {
-                      "description": "Operação realizada com sucesso",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/schemas/paymentCondition_2_001.json#/definitions/PagedPaymentCondition"
-                              }   
-                          }
-                      }
-                  },
-                  "400": {
-                      "description": "erro no momento da Inclusão",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                              }
-                          }
-                      }
-                  }
-              }
-          }
+        }
       },
-      "/paymentecondition/{code}": {
-          "get": {
-              "tags":[
-                  "Code"
-              ],
-              "summary":"Retorna a condição de pagamento pelo Código",
-              "description": "Retorna a condição de pagamento pelo Código",
-              "operationId":"getCode",
-              "x-totvs":{
-                  "productInformation": [                        
-                      {
-                          "product":"protheus",
-                          "avaliable":true,
-                          "note":"Este verbo está disponível com todos os parâmetros",
-                          "minimalVersion":"12.1.21"
-                      }
-                  ]
-              },
-              "parameters": [
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-                  },
-                  {
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-                  },
-                  {
-          "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-                  },
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-                  },  
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
-                  },
-                  {
-                      "$ref": "#/components/parameters/Code"
-                  }
-              ],
-              "responses": {
-                  "200": {
-                      "description": "Operação realizada com sucesso",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/schemas/paymentCondition_2_001.json#/definitions/PaymentConditionInfo"
-                              }
-                          }
-                      }
-                  },
-                  "404": {
-                      "description": "Condição de pagamento não localizada na base",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                              }
-                          }
-                      }
-                  }
-              }
-          },
-          "put":{
-              "tags":[
-                  "Code"
-              ],
-              "summary":"Altera uma condição de pagamento",
-              "description":"Atualiza a condição de pagamento conforme dados enviados na requisição",
-              "operationId":"putCode",
-              "x-totvs": {
-                  "productInformation": [
-                      {
-                          "product":"protheus",
-                          "avaliable":true,
-                          "note": "Este verbo esta disponivel com os parametros Authorization, Code e Fields",
-                          "minimalVersion":"12.1.21"
-                      }
-                  ]
-              },
-              "parameters": [
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-                  },                    
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-                  },
-                  {
-                      "$ref": "#/components/parameters/Code"
-                  }  
-              ],
-              "requestBody": {
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/schemas/paymentCondition_2_001.json#/definitions/PaymentConditionInfo"
-                          }
-                      }
-                  },
-                  "description": "Condição de pagamento a ser alterada"
-              },
-              "responses": {
-                  "200": {
-                      "description": "Operação realizada com sucesso",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/schemas/paymentCondition_2_001.json#/definitions/PaymentConditionInfo"
-                              }
-                          }
-                      }
-                  },
-                  "400": {
-                      "description": "erro no momento da alteração",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                              }
-                          }
-                      }                        
-                    },
-                  "404": {
-                      "description": "Condição de pagamento não localizada",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                              }
-                          }
-                      }
-                  }
-              }
-          },
-          "delete":{
-              "tags":[
-                  "Code"
-              ],
-              "summary":"Exclui uma condição de pagamento",
-              "description":"Exclui a condição de pagamento conforme dados enviados na requisição.",
-              "operationId":"deleteCode",
-              "x-totvs": {
-                  "productInformation": [
-                      {
-                          "product":"protheus",
-                          "avaliable":true,
-                          "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
-                          "minimalVersion":"12.1.21"
-                      }
-                  ]
-              },
-              "parameters": [
-                  {
-                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-                  },
-                  {
-                      "$ref": "#/components/parameters/Code"
-                  }
-              ],
-              "responses": {
-                  "200": {
-                      "description": "Operação realizada com sucesso",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/schemas/paymentCondition_2_001.json#/definitions/PaymentConditionInfo"
-                              }
-                          }
-                      }
-                  },
-                  "400": {
-                      "description": "erro no momento da exclusão",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                              }
-                          }
-                      }                        
-                    },
-                  "404": {
-                      "description": "Condição de pagamento não localizada",
-                      "content": {
-                          "application/json": {
-                              "schema": {
-                                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/paymentcondition/v1/2_001/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                              }
-                          }
-                      }
-                  }
-              }
+      "PlotsType": {
+        "type": "object",
+        "properties": {
+          "Due": {
+            "$ref": "#/definitions/DueType",
+            "type": "object"
           }
-      }
-  },
-  "components": {
-      "parameters": {
-          "Code":{
-              "name": "code",
-              "in": "path",
-              "description":"Identificador único da condição de pagamento",
-              "required": true,
-              "example": "D MG 01 001",
-              "schema":{
-                  "type": "string"
-              },
-              "x-totvs": {
-        "productInformation":[
-          {
-            "product":"protheus",
-                          "avaliable":true,
-                          "note": "Informar os campos Filial (SE4.E4_FILIAL) e Código da condição de pagamento (SE4.E4_CODIGO)",
-                          "minimalVersion":"12.1.21"
-          }
-        ]
-              }
-          }
+        }
       },
-      "schemas": {
-
+      "DueType": {
+        "type": "object",
+        "properties": {
+          "DueDay": {
+            "description": "Quantidade de dias para o vencimento da parcela (0 a 999).",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 999,
+            "format": "int32"
+          },
+          "Percentage": {
+            "description": "Indica se o valor da parcela deverá ser um percentual do total.",
+            "type": "number",
+            "multipleOf": 0.01,
+            "minimum": -999.99,
+            "maximum": 999.99
+          }
+        }
+      },
+      "ReturnContent": {
+        "type": "object",
+        "properties": {
+          "ListOfInternalId": {
+            "type": "array",
+            "items": {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+              "type": "object"
+            }
+          }
+        }
       }
+    }
   }
-}
