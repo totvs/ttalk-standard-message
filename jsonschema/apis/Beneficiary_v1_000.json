@@ -1,0 +1,587 @@
+{
+  "openapi":"3.0.1",
+  "servers":[
+    {
+      "description":"API para a entidade Beneficiaries (Beneficiarios) do segmento HealthCare para produtos TOTVS",
+      "url":"http://{serverUrl}:{serverHttpPort}/api/healthcare/central/v1",
+      "variables":{
+        "serverUrl":{
+          "default":"localhost"
+        },
+        "serverHttpPort":{
+          "default":"4202"
+        }
+      }
+    }
+  ],
+  "info":{
+    "description":"API para a entidade Beneficiaries (Beneficiarios) do segmento HealthCare para produtos TOTVS",
+    "version":"1.000",
+    "title":"Beneficiaries",
+    "contact":{
+      "name":"T-Talk",
+      "url":"api.Totvs.com.br",
+      "email":"comiteintegracao@totvs.com.br"
+    },
+    "x-totvs":{
+      "messageDocumentation":{
+        "name":"Beneficiaries",
+        "description":"Beneficiaries",
+        "segment":"HealthCare"
+      },
+      "productInformation":[
+        {
+          "product":"central-obrigacoes",
+          "contact":"centraldeobrigacoes@totvs.com.br",
+          "description":"Beneficiarios",
+          "adapter":"RestCenBenefi.prw"
+        }
+      ]
+    }
+  },
+  "paths":{
+    "/beneficiaries":{
+      "get":{
+        "tags":[
+          "collection"
+        ],
+        "summary":"Retorna informacoes dos Beneficiarios",
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":""
+            }
+          ]
+        },
+        "description":"Retorna um lote de beneficiario de acordo com os parametros enviados",
+        "operationId":"insBeneficiario",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref":"#/components/parameters/healthInsurerCode"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Operação realizada com sucesso!",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/PagedBeneficiary"
+                }
+              }
+            }
+          },
+          "404":{
+            "description":"Erro ao localizar beneficiario",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "collection"
+        ],
+        "summary":"Inclusão de beneficiarios",
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":"",
+              "note":"É possivel a inclusão somente de um beneficiário por requisição."
+            }
+          ]
+        },
+        "description":"Realiza a inclusão de um beneficiario conforme body da requisição.",
+        "operationId":"insCenBenefi",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "requestBody":{
+          "description":"Beneficiario a ser incluído.",
+          "content":{
+            "application/json":{
+              "schema":{
+              "type": "array",
+              "items": {
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/beneficiary"
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "201":{
+            "description":"Operação realizada com sucesso!",
+            "content":{
+              "application/json":{
+                "schema":{
+                "type": "array",
+                "items": {
+                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/beneficiary"
+                  }
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Erro durante inclusão do beneficiario",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beneficiaries/{subscriberId}":{
+      "get":{
+        "tags":[
+          "single"
+        ],
+        "summary":"Retorna informacoes dos Beneficiarios",
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":""
+            }
+          ]
+        },
+        "description":"Retorna um beneficiario de acordo com o ID informado",
+        "operationId":"getBenef",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref":"#/components/parameters/subscriberId"
+          },
+          {
+            "$ref":"#/components/parameters/healthInsurerCode"
+          },
+          {
+            "$ref":"#/components/parameters/codeCco"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Operação realizada com sucesso!",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/beneficiary"
+                }
+              }
+            }
+          },
+          "404":{
+            "description":"Erro ao localizar beneficiario",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put":{
+        "tags":[
+          "single"
+        ],
+        "summary":"Altera informacoes do Beneficiarios",
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":""
+            }
+          ]
+        },
+        "description":"Altera informações do beneficiario de acordo com o ID informado",
+        "operationId":"altBenefi",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref":"#/components/parameters/subscriberId"
+          },
+          {
+            "$ref":"#/components/parameters/healthInsurerCode"
+          },
+          {
+            "$ref":"#/components/parameters/codeCco"
+          }
+        ],
+        "requestBody":{
+          "description":"Beneficiario a ser incluído.",
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/beneficiary"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200":{
+            "description":"Operação realizada com sucesso!",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/beneficiary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados do beneficiário invalido"
+          },
+          "404": {
+            "description": "Beneficiário(s) nao encontrado(s).",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete":{
+        "tags":[
+          "single"
+        ],
+        "summary":"Deleta um beneficiario",
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":"",
+              "note":""
+            }
+          ]
+        },
+        "description":"Deleta um beneficiario.",
+        "operationId":"delBenefi",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {                    
+            "$ref":"#/components/parameters/subscriberId"
+          },
+          {
+            "$ref":"#/components/parameters/healthInsurerCode"
+          },
+          {
+            "$ref":"#/components/parameters/codeCco"
+          }
+        ],
+        "responses":{
+          "204":{
+            "description":"Operação realizada com sucesso!"
+          },
+          "404": {
+            "description":"Beneficiário não localizado.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beneficiaries/{subscriberId}/block":{
+      "summary":"Altera informacoes do Beneficiarios",
+      "post":{
+        "tags": [
+          "actions"
+        ],
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":""
+            }
+          ]
+        },
+        "description":"Bloqueia um beneficiario",
+        "operationId":"cancelBenefi",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },          
+          {
+            "$ref":"#/components/parameters/subscriberId"
+          }
+        ],
+        "requestBody":{
+          "description":"Dados do bloqueio do Beneficiário",
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/block"
+              }
+            }
+          }
+        },
+        "responses":{
+          "204":{
+            "description":"Operação realizada com sucesso!"
+          },
+          "400": {
+            "description": "Dados invalidos",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Beneficiário nao encontrado.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beneficiaries/{subscriberId}/unblock":{
+      "summary":"Altera informações do Beneficiário",
+      "post":{
+        "tags": [
+          "actions"
+        ],
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":""
+            }
+          ]
+        },
+        "description":"Reativa um Beneficiário.",
+        "operationId":"reactBenefi",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },          
+          {
+            "$ref":"#/components/parameters/subscriberId"
+          }
+        ],
+        "requestBody":{
+          "description":"Dados da reativação do Beneficiário.",
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/unblock"
+              }
+            }
+          }
+        },
+        "responses":{
+          "204":{
+            "description":"Operação realizada com sucesso!"
+          },
+          "400": {
+            "description": "Dados invalidos",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Beneficiário nao encontrado.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beneficiaries/{subscriberId}/changerContract":{
+      "summary":"Altera informacoes do Beneficiarios",
+      "post":{
+        "tags": [
+          "actions"
+        ],
+        "x-totvs":{
+          "productInformation":[
+            {
+              "product":"central-obrigacoes",
+              "available":true,
+              "minimalVersion":""
+            }
+          ]
+        },
+        "description":"Alteração contratual do Beneficiário.",
+        "operationId":"changContrBene",
+        "parameters":[
+          {
+            "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref":"#/components/parameters/subscriberId"
+          }
+        ],
+        "requestBody":{
+          "description":"Dados da alteração contratual do Beneficiário",
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/schemas/Beneficiary_1_000.json#/definitions/changerContract"
+              }
+            }
+          }
+        },
+        "responses":{
+          "204":{
+            "description":"Operação realizada com sucesso!"
+          },
+          "400": {
+            "description": "Dados invalidos",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Beneficiário não encontrado.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/beneficiary/v1/1_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components":{
+    "parameters":{
+      "healthInsurerCode":{
+        "name":"healthInsurerCode",
+        "in":"query",
+        "description":"Código da operadora",
+        "schema":{
+          "type":"integer",
+          "format":"int32",
+          "default":20
+        },
+        "x-totvs":[
+          {
+            "product":"central-obrigacoes",
+            "field":"B3K.B3K_CODOPE",
+            "required":true,
+            "type":"string",
+            "length":"6",
+            "note":"Código da operadora",
+            "available":true
+          }
+        ]
+      },
+      "subscriberId":{
+        "name":"subscriberId",
+        "in":"path",
+        "description":"Número da carteirinha do beneficiário",
+        "required":true,
+        "schema":{
+          "type":"string"
+        },
+        "x-totvs":[
+          {
+            "product":"central-obrigacoes",
+            "field":"B3K.B3K_MATRIC",
+            "required":true,
+            "type":"string",
+            "note":"Número da carteirinha do beneficiário",
+            "available":true
+          }
+        ]
+      },
+      "codeCco":{
+        "name":"codeCco",
+        "in":"query",
+        "description":"Código CCO do beneficiário",
+        "schema":{
+          "type":"integer",
+          "format":"int32",
+          "default":20
+        },
+        "x-totvs":[
+          {
+            "product":"central-obrigacoes",
+            "field":"B3K.B3K_CODCCO",
+            "required":true,
+            "type":"string",
+            "note":"Codigo CCO do beneficiário",
+            "available":true
+          }
+        ]
+      }
+    }
+  }
+}
