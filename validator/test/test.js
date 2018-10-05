@@ -131,7 +131,7 @@ fs.readdir(dirname, function (err, filenames) {
                     //responses.push(body);
                     completed_requests++;
                     var isValidSchemaFile = jsonValidator.IsJsonString(body);
-                    expect(isValidSchemaFile).to.be.true
+                    expect(isValidSchemaFile, pathValidatorResult.schemaUrlList[i]).to.be.true
                     if (completed_requests == pathValidatorResult.schemaUrlList.length || !isValidSchemaFile) {                      
                       done();
                     }
