@@ -5,9 +5,10 @@ var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
 var jsonValidator = require('../lib/jsonValidator.js');
-var https = require('https');
+var fileHandler = require('../lib/fileHandler.js');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
+var expect = require('chai').expect;
 
 describe("Validating files...", function () {
   it("test suite started", function () {
@@ -34,11 +35,13 @@ fs.readdir(dirname, function (err, filenames) {
         });
         var parsedOpenAPI;
         var pathValidatorResult
+        var apiSchemasList;
 
-        before(function () {
+        before(function () { //function (done)
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
+          //apiSchemasList = fileHandler.getAllExternalFiles(pathValidatorResult.schemaUrlList, done);
         })
 
         describe(" - Filename: ", function () {
@@ -48,7 +51,7 @@ fs.readdir(dirname, function (err, filenames) {
 
           it("should contain version (lowercase 'v')", function () {
             let containsVersion = filename.includes("_v");
-            expect(containsVersion).to.equal(true);
+            expect(containsVersion).to.be.true;
           });
         });
 
@@ -60,7 +63,7 @@ fs.readdir(dirname, function (err, filenames) {
         });
 
         describe(" - Servers: ", function () {
-          it("should have a 'servers' property", function () {
+          it("should have a 'servers' property with 'URL' and 'variables'", function () {
             expect(parsedOpenAPI).to.have.property("servers");
             expect(parsedOpenAPI.servers[0]).to.have.property("variables");
             expect(parsedOpenAPI.servers[0]).to.have.property("url");
@@ -68,7 +71,7 @@ fs.readdir(dirname, function (err, filenames) {
           it("should have an URL consistent with our model", function () {
             var patt = /(?:.*)\/api\/(?:.*)\/v[0-9]*$/;
             var result = patt.test(parsedOpenAPI.servers[0].url);
-            expect(result).to.equal(true);
+            expect(result, "http://tdn.totvs.com.br/pages/releaseview.action?pageId=271660444").to.be.true;
           });
         });
 
@@ -88,8 +91,12 @@ fs.readdir(dirname, function (err, filenames) {
           });   
           
           it("should contain success responses for all http verbs", function () {
-            expect(pathValidatorResult.foundSuccessResponse).to.equal(true);
+            expect(pathValidatorResult.foundSuccessResponse).to.be.true;
           });   
+
+          it("should specify 'Id' for all PUT or DELETE operations", function () {
+            expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.be.true;
+          });             
         });       
 
         describe(" - Schemas: ", function () {
@@ -105,11 +112,11 @@ fs.readdir(dirname, function (err, filenames) {
           });
 
           it("should use external schemas for all requests and responses ", function () {
-            expect(pathValidatorResult.useExternalSchema).to.equal(true);
+            expect(pathValidatorResult.useExternalSchema).to.be.true;
           });
          
           //TODO: Mandar essa logica para outro arquivo
-          it("should reference valid schema files", function (done) {
+          it("should reference valid JSON schema files", function (done) {
             this.timeout(30000);
             setTimeout(done, 30000);
             ///var responses = []; //TODO: Vai ser últil, provavelmente, para validar se o objeto existe no schema
@@ -124,7 +131,7 @@ fs.readdir(dirname, function (err, filenames) {
                     //responses.push(body);
                     completed_requests++;
                     var isValidSchemaFile = jsonValidator.IsJsonString(body);
-                    expect(isValidSchemaFile).to.equal(true)
+                    expect(isValidSchemaFile, pathValidatorResult.schemaUrlList[i]).to.be.true
                     if (completed_requests == pathValidatorResult.schemaUrlList.length || !isValidSchemaFile) {                      
                       done();
                     }
@@ -145,29 +152,32 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        describe(" - Parameters: ", function () {
+        describe(" - Parameters: ", function () {         
           it("should have 'pagination', 'query' and 'order' for collection endpoints", function () {
-            expect(pathValidatorResult.useAllRequiredParamsForCollection).to.equal(true);
+            var collectionsWithoutRequiredParams = "Please check this endpoint: " + pathValidatorResult.collectionsWithoutRequiredParams;
+            expect(pathValidatorResult.useAllRequiredParamsForCollection, collectionsWithoutRequiredParams).to.be.true;
           });
 
           it("should use common parameters", function () {
-            expect(pathValidatorResult.useCommonParams).to.equal(true);
+            var notUsingCommonParams = "Please check this endpoint|httpverb: " +  pathValidatorResult.notUsingCommonParams;
+            expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
           });
         });
 
         describe(" - Errors: ", function () {
           it("should use common errors schema", function () {
-            expect(pathValidatorResult.useErrorSchema).to.equal(true);
+            expect(pathValidatorResult.useErrorSchema).to.be.true;
           });
         });
 
         describe(" - xtotvs: ", function () {
-          it("should contain xtotvs/productinformation as an array on 'info'", function () {
+          it("should contain xtotvs/productinformation as an array on 'info'", function () {           
             expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
           });
 
           it("should contain xtotvs/productinformation as an array on 'paths'", function () {
-            expect(pathValidatorResult.useProductInfoAsArray).to.equal(true);
+            var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
+            expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
           });
         });
       });
