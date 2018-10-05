@@ -7,26 +7,33 @@ var foundpagesize;
 var thisIsCollectionEdpoint;
 var hasgetcollectionendpoint;
 
-var checkXtotvs = function (httpVerbInfo) {
+var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
     if (httpVerbInfo["x-totvs"]) {
         var productInfo = httpVerbInfo["x-totvs"].productInformation;
-        if (results.useProductInfoAsArray != false)
-            results.useProductInfoAsArray = Array.isArray(productInfo);
+        if (results.useProductInfoAsArray != false && Array.isArray(productInfo)) {
+            results.useProductInfoAsArray = true            
+        }
+        else {
+            results.useProductInfoAsArray = false;  
+            results.wrongXTotvs = pathkey + "|" + httpVerbkey;
+        }
     } else {
         results.useProductInfoAsArray = true;
     }
 };
 
-var checkUseOfCommonsParams = function (parameter) {
+var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
     if (results.useCommonParams != false) {
         if (parameter.$ref) {
-            results.useCommonParams = !(parameter.$ref.includes("#/components/parameters/Authorization") ||
-                parameter.$ref.includes("#/components/parameters/Order") ||
-                parameter.$ref.includes("#/components/parameters/Page") ||
-                parameter.$ref.includes("#/components/parameters/PageSize") ||
-                parameter.$ref.includes("#/components/parameters/AcceptLanguage") ||
-                parameter.$ref.includes("#/components/parameters/Fields") ||
-                parameter.$ref.includes("#/components/parameters/Expand"));
+            results.useCommonParams = !(
+                (parameter.$ref.includes("Authorization") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Order") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Page") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("PageSize") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("AcceptLanguage") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Fields") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Expand") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) 
+            )
         }
         if (parameter.name) {
             results.useCommonParams = !(parameter.name.includes("Authorization") ||
@@ -36,6 +43,9 @@ var checkUseOfCommonsParams = function (parameter) {
                 parameter.name.includes("AcceptLanguage") ||
                 parameter.name.includes("Fields") ||
                 parameter.name.includes("Expand"));
+        }
+        if(results.useCommonParams == false){
+            results.notUsingCommonParams = pathkey + "|" + httpVerbkey
         }
     }
 };
@@ -90,7 +100,6 @@ var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
     }
 }
 
-//TODO: Pegar schemas de request também. Só adicionar se o schema (sem levar em consideração o que vem depois do #/definition) for diferente
 var addSchema = function (responseRequest) {
     if (responseRequest) {
         if (responseRequest.content["application/json"].schema) {
@@ -137,7 +146,7 @@ var runThroughResponses = function (responses) {
 var runThroughParams = function (parameters, httpVerbkey, pathkey) {
     for (var parameterKey in parameters) {
         var parameter = parameters[parameterKey];
-        checkUseOfCommonsParams(parameter);
+        checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
         checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
     }
 };
@@ -148,7 +157,7 @@ var clearCollectionParamsValidation = function () {
     foundpagesize = false;
 }
 
-var checkIfThisIsCollectionEndpoint = function (pathkey) {
+var verifyIfThisIsCollectionEndpoint = function (pathkey) {
     if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
         thisIsCollectionEdpoint = false;
     } else {
@@ -156,7 +165,7 @@ var checkIfThisIsCollectionEndpoint = function (pathkey) {
     }
 }
 
-var checkIfThisIsGETCollectionRequest = function (httpVerbkey) {
+var verifyIfThisIsGETCollectionRequest = function (httpVerbkey) {
     if (thisIsCollectionEdpoint && httpVerbkey == 'get') {
         if (hasgetcollectionendpoint) { //Will be hit if there is more then one get collection endpoint
             clearCollectionParamsValidation();
@@ -167,7 +176,10 @@ var checkIfThisIsGETCollectionRequest = function (httpVerbkey) {
 
 exports.clear = function () {
     results = {
-        schemaUrlList: []
+        schemaUrlList: [],
+        collectionsWithoutRequiredParams: "",
+        wrongXTotvs: "",
+        notUsingCommonParams: "",
     };
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;
@@ -178,12 +190,12 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
         var httpVerbsList = parsedOpenAPI.paths[pathkey]
-        checkIfThisIsCollectionEndpoint(pathkey);
+        verifyIfThisIsCollectionEndpoint(pathkey);
         checkIfPutAndDeleteHaveId(thisIsCollectionEdpoint, httpVerbsList);
         for (var httpVerbkey in httpVerbsList) {
-            checkIfThisIsGETCollectionRequest(httpVerbkey);
+            verifyIfThisIsGETCollectionRequest(httpVerbkey);
             var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
-            checkXtotvs(httpVerbInfo);
+            checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
             var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
             runThroughParams(parameters, httpVerbkey, pathkey);
             var request = httpVerbInfo.requestBody;
@@ -196,9 +208,11 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
             results.useAllRequiredParamsForCollection = true;
         else if (foundorder && foundpage && foundpagesize && results.useAllRequiredParamsForCollection != false)
             results.useAllRequiredParamsForCollection = true;
-        else
+        else {
+            if (results.useAllRequiredParamsForCollection != false)
+                results.collectionsWithoutRequiredParams += "'" + pathkey + "'";
             results.useAllRequiredParamsForCollection = false
+        }
     }
-
     return results;
 };
