@@ -5,11 +5,10 @@ var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
 var jsonValidator = require('../lib/jsonValidator.js');
+var fileHandler = require('../lib/fileHandler.js');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-var assert = require('assert');
 var expect = require('chai').expect;
-var should = require('chai').should();
 
 describe("Validating files...", function () {
   it("test suite started", function () {
@@ -36,11 +35,13 @@ fs.readdir(dirname, function (err, filenames) {
         });
         var parsedOpenAPI;
         var pathValidatorResult
+        var apiSchemasList;
 
-        before(function () {
+        before(function () { //function (done)
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
+          //apiSchemasList = fileHandler.getAllExternalFiles(pathValidatorResult.schemaUrlList, done);
         })
 
         describe(" - Filename: ", function () {

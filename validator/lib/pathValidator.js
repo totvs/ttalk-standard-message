@@ -11,10 +11,9 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
     if (httpVerbInfo["x-totvs"]) {
         var productInfo = httpVerbInfo["x-totvs"].productInformation;
         if (results.useProductInfoAsArray != false && Array.isArray(productInfo)) {
-            results.useProductInfoAsArray = true            
-        }
-        else {
-            results.useProductInfoAsArray = false;  
+            results.useProductInfoAsArray = true
+        } else {
+            results.useProductInfoAsArray = false;
             results.wrongXTotvs = pathkey + "|" + httpVerbkey;
         }
     } else {
@@ -32,7 +31,7 @@ var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
                 (parameter.$ref.includes("PageSize") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
                 (parameter.$ref.includes("AcceptLanguage") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
                 (parameter.$ref.includes("Fields") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
-                (parameter.$ref.includes("Expand") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) 
+                (parameter.$ref.includes("Expand") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json"))
             )
         }
         if (parameter.name) {
@@ -44,7 +43,7 @@ var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
                 parameter.name.includes("Fields") ||
                 parameter.name.includes("Expand"));
         }
-        if(results.useCommonParams == false){
+        if (results.useCommonParams == false) {
             results.notUsingCommonParams = pathkey + "|" + httpVerbkey
         }
     }
@@ -193,16 +192,18 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
         verifyIfThisIsCollectionEndpoint(pathkey);
         checkIfPutAndDeleteHaveId(thisIsCollectionEdpoint, httpVerbsList);
         for (var httpVerbkey in httpVerbsList) {
-            verifyIfThisIsGETCollectionRequest(httpVerbkey);
-            var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
-            checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
-            var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
-            runThroughParams(parameters, httpVerbkey, pathkey);
-            var request = httpVerbInfo.requestBody;
-            checkIfSchemaIsSettedToExternaFile(request);
-            addSchema(request);
-            var responses = httpVerbInfo.responses;
-            runThroughResponses(responses);
+            if (httpVerbkey != "parameters") {
+                verifyIfThisIsGETCollectionRequest(httpVerbkey);
+                var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
+                checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
+                var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
+                runThroughParams(parameters, httpVerbkey, pathkey);
+                var request = httpVerbInfo.requestBody;
+                checkIfSchemaIsSettedToExternaFile(request);
+                addSchema(request);
+                var responses = httpVerbInfo.responses;
+                runThroughResponses(responses);
+            }
         }
         if (!hasgetcollectionendpoint)
             results.useAllRequiredParamsForCollection = true;
