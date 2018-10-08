@@ -5,8 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
 var jsonValidator = require('../lib/jsonValidator.js');
-var fileHandler = require('../lib/fileHandler.js');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var fileGetter = require('../lib/fileGetter.js');
 
 var expect = require('chai').expect;
 
@@ -35,13 +34,16 @@ fs.readdir(dirname, function (err, filenames) {
         });
         var parsedOpenAPI;
         var pathValidatorResult
-        var apiSchemasList;
+        var fileGetterResult;
 
-        before(function () { //function (done)
+        before(function (done) {
+          this.timeout(30000);
+          setTimeout(done, 30000);
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
-          //apiSchemasList = fileHandler.getAllExternalFiles(pathValidatorResult.schemaUrlList, done);
+          fileGetter.clear();
+          fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaUrlList, done);
         })
 
         describe(" - Filename: ", function () {
@@ -88,16 +90,16 @@ fs.readdir(dirname, function (err, filenames) {
         describe(" - Endpoints: ", function () {
           it("shouldn't contain 'post', 'put', 'get' or 'delete' in the URL", function () {
             expect(pathValidatorResult.useHttpVerbInEndpointUrl).to.not.equal(true);
-          });   
-          
+          });
+
           it("should contain success responses for all http verbs", function () {
             expect(pathValidatorResult.foundSuccessResponse).to.be.true;
-          });   
+          });
 
           it("should specify 'Id' for all PUT or DELETE operations", function () {
             expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.be.true;
-          });             
-        });       
+          });
+        });
 
         describe(" - Schemas: ", function () {
           this.timeout(30000);
@@ -114,53 +116,24 @@ fs.readdir(dirname, function (err, filenames) {
           it("should use external schemas for all requests and responses ", function () {
             expect(pathValidatorResult.useExternalSchema).to.be.true;
           });
-         
-          //TODO: Mandar essa logica para outro arquivo
+
           it("should reference valid JSON schema files", function () {
-          //   this.timeout(30000);
-          //   setTimeout(done, 30000);
-          //   ///var responses = []; //TODO: Vai ser últil, provavelmente, para validar se o objeto existe no schema
-          //   var completed_requests = 0;
-          //   for (var i in pathValidatorResult.schemaUrlList) {
-          //     var rawFile = new XMLHttpRequest();
-          //     rawFile.open("GET", pathValidatorResult.schemaUrlList[i], false);
-          //     rawFile.onreadystatechange = function () {
-          //       if (rawFile.readyState === 4) {
-          //         if (rawFile.status === 200 || rawFile.status == 0) {
-          //           var body = rawFile.responseText;
-          //           //responses.push(body);
-          //           completed_requests++;
-          //           var isValidSchemaFile = jsonValidator.IsJsonString(body);                    
-          //           expect(isValidSchemaFile, pathValidatorResult.schemaUrlList[i]).to.be.true
-          //           if (completed_requests == pathValidatorResult.schemaUrlList.length || !isValidSchemaFile) {                      
-          //             done();
-          //             return;
-          //           }
-          //         }
-          //         else {
-          //           expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
-          //           done();
-          //           return;
-          //         }
-          //       } else {
-          //         expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
-          //         done();
-          //         return;
-          //       }
-          //     }
-          //     rawFile.send(null); //This triggers onreadystatechange           
-          //   }
+            var errorMessage = "Could not find schemas : ";
+            for(notFoundSchema in fileGetterResult.notFoundSchemas){
+              errorMessage += notFoundSchema + ";"
+            }
+            expect(fileGetterResult.notFoundSchemas.length).to.equal(0);
           });
         });
 
-        describe(" - Parameters: ", function () {         
+        describe(" - Parameters: ", function () {
           it("should have 'pagination', 'query' and 'order' for collection endpoints", function () {
             var collectionsWithoutRequiredParams = "Please check this endpoint: " + pathValidatorResult.collectionsWithoutRequiredParams;
             expect(pathValidatorResult.useAllRequiredParamsForCollection, collectionsWithoutRequiredParams).to.be.true;
           });
 
           it("should use common parameters", function () {
-            var notUsingCommonParams = "Please check this endpoint|httpverb: " +  pathValidatorResult.notUsingCommonParams;
+            var notUsingCommonParams = "Please check this endpoint|httpverb: " + pathValidatorResult.notUsingCommonParams;
             expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
           });
         });
@@ -172,7 +145,7 @@ fs.readdir(dirname, function (err, filenames) {
         });
 
         describe(" - xtotvs: ", function () {
-          it("should contain xtotvs/productinformation as an array on 'info'", function () {           
+          it("should contain xtotvs/productinformation as an array on 'info'", function () {
             expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
           });
 
