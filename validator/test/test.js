@@ -36,14 +36,12 @@ fs.readdir(dirname, function (err, filenames) {
         var pathValidatorResult
         var fileGetterResult;
 
-        before(function (done) {
-          this.timeout(30000);
-          setTimeout(done, 30000);
+        before(function () {  
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
           fileGetter.clear();
-          fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaUrlList, done);
+          fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaUrlList);
         })
 
         describe(" - Filename: ", function () {
@@ -118,11 +116,11 @@ fs.readdir(dirname, function (err, filenames) {
           });
 
           it("should reference valid JSON schema files", function () {
-            var errorMessage = "Could not find schemas : ";
-            for(notFoundSchema in fileGetterResult.notFoundSchemas){
-              errorMessage += notFoundSchema + ";"
+            var errorMessage = "Could not find schemas: ";
+            for(var i in fileGetterResult.notFoundSchemas){
+              errorMessage += fileGetterResult.notFoundSchemas[i] + ";"
             }
-            expect(fileGetterResult.notFoundSchemas.length).to.equal(0);
+            expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
           });
         });
 
