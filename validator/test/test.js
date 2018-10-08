@@ -116,39 +116,40 @@ fs.readdir(dirname, function (err, filenames) {
           });
          
           //TODO: Mandar essa logica para outro arquivo
-          it("should reference valid JSON schema files", function (done) {
-            this.timeout(30000);
-            setTimeout(done, 30000);
-            ///var responses = []; //TODO: Vai ser últil, provavelmente, para validar se o objeto existe no schema
-            var completed_requests = 0;
-            for (var i in pathValidatorResult.schemaUrlList) {
-              var rawFile = new XMLHttpRequest();
-              rawFile.open("GET", pathValidatorResult.schemaUrlList[i], false);
-              rawFile.onreadystatechange = function () {
-                if (rawFile.readyState === 4) {
-                  if (rawFile.status === 200 || rawFile.status == 0) {
-                    var body = rawFile.responseText;
-                    //responses.push(body);
-                    completed_requests++;
-                    var isValidSchemaFile = jsonValidator.IsJsonString(body);
-                    expect(isValidSchemaFile, pathValidatorResult.schemaUrlList[i]).to.be.true
-                    if (completed_requests == pathValidatorResult.schemaUrlList.length || !isValidSchemaFile) {                      
-                      done();
-                    }
-                  }
-                  else {
-                    expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
-                    done();
-                    return;
-                  }
-                } else {
-                  expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
-                  done();
-                  return;
-                }
-              }
-              rawFile.send(null); //This triggers onreadystatechange           
-            }
+          it("should reference valid JSON schema files", function () {
+          //   this.timeout(30000);
+          //   setTimeout(done, 30000);
+          //   ///var responses = []; //TODO: Vai ser últil, provavelmente, para validar se o objeto existe no schema
+          //   var completed_requests = 0;
+          //   for (var i in pathValidatorResult.schemaUrlList) {
+          //     var rawFile = new XMLHttpRequest();
+          //     rawFile.open("GET", pathValidatorResult.schemaUrlList[i], false);
+          //     rawFile.onreadystatechange = function () {
+          //       if (rawFile.readyState === 4) {
+          //         if (rawFile.status === 200 || rawFile.status == 0) {
+          //           var body = rawFile.responseText;
+          //           //responses.push(body);
+          //           completed_requests++;
+          //           var isValidSchemaFile = jsonValidator.IsJsonString(body);                    
+          //           expect(isValidSchemaFile, pathValidatorResult.schemaUrlList[i]).to.be.true
+          //           if (completed_requests == pathValidatorResult.schemaUrlList.length || !isValidSchemaFile) {                      
+          //             done();
+          //             return;
+          //           }
+          //         }
+          //         else {
+          //           expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
+          //           done();
+          //           return;
+          //         }
+          //       } else {
+          //         expect(false).to.equal('Error while getting schema file in ' + pathValidatorResult.schemaUrlList[i] + '. Check if URL is valid')
+          //         done();
+          //         return;
+          //       }
+          //     }
+          //     rawFile.send(null); //This triggers onreadystatechange           
+          //   }
           });
         });
 
