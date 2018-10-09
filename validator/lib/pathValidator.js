@@ -84,16 +84,18 @@ var checkHttpVerbInUrl = function (pathkey) {
 
 var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
     if (responseRequest) {
-        if (responseRequest.content["application/json"].schema) {
-            //TODO: Extrair essa questão de encontrar quem é o REF. Já está duplicado aqui e no método abaixo
-            var ref = responseRequest.content["application/json"].schema.$ref;
-            if (!ref) {
-                if (responseRequest.content["application/json"].schema.items) {
-                    ref = responseRequest.content["application/json"].schema.items.$ref;
+        if (responseRequest.content) {
+            if (responseRequest.content["application/json"].schema) {
+                //TODO: Extrair essa questão de encontrar quem é o REF. Já está duplicado aqui e no método abaixo
+                var ref = responseRequest.content["application/json"].schema.$ref;
+                if (!ref) {
+                    if (responseRequest.content["application/json"].schema.items) {
+                        ref = responseRequest.content["application/json"].schema.items.$ref;
+                    }
                 }
-            }
-            if (results.useExternalSchema != false && ref) {
-                results.useExternalSchema = !ref.includes("#/components/");
+                if (results.useExternalSchema != false && ref) {
+                    results.useExternalSchema = !ref.includes("#/components/");
+                }
             }
         }
     }
@@ -116,7 +118,7 @@ var addSchema = function (responseRequest, schematype, pathkey, iscollection, ht
                     schematype: schematype,
                     pathkey: pathkey,
                     iscollection: iscollection,
-                    httpVerbkey : httpVerbkey
+                    httpVerbkey: httpVerbkey
                 }
                 results.schemaObjList.push(schemaObj);
             } else results.errorAddingSchema = true;
