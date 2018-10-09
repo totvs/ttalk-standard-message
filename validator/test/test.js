@@ -133,51 +133,23 @@ fs.readdir(dirname, function (err, filenames) {
             }
           });
 
-          it("should have 'hasItems' and 'items' property in collection endpoints", function () {
+          it("should contain the same Id property name in URL and body", function () {
             for (var i in pathValidatorResult.schemaObjList) {
-              var pathkey = pathValidatorResult.schemaObjList[i].pathkey;
-              var objectName = pathValidatorResult.schemaObjList[i].objectName;
-              var schemaObjectBody = pathValidatorResult.schemaObjList[i].objectBody;
-              var objectBody = schemaObjectBody.definitions[objectName];
-              var properties = objectBody.properties;
-              var iscollection = pathValidatorResult.schemaObjList[i].iscollection;
-              var schematype = pathValidatorResult.schemaObjList[i].schematype;
-              var httpVerbkey = pathValidatorResult.schemaObjList[i].httpVerbkey;
-
-              if (iscollection) {
-                if (httpVerbkey == "get") { //There isn't validation in else because POST can allow both 'collection' and 'single'
-                  if (properties) {
-                    var errorMessage = "Endpoint '" + pathkey + "' should contain a response collection body";
-                    expect(properties, errorMessage).to.have.property('hasNext');
-                    expect(properties, errorMessage).to.have.property('items');
-                  } else {
-                    //TODO: Separar função (JsonHandler - Find element based on object property)
-                    //Buscar se dentro do AllOf existe referência para o PAGING
-                    var found = false;
-                    for (var i = 0; i < objectBody.allOf.length; i++) {
-                      if (objectBody.allOf[i].$ref == 'https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging') {
-                        found = true;
-                        break;
-                      }
-                    }
-                    ////////
-                    expect(found).to.be.true;
-                  }
-                }
-              } else {
-                var errorMessage = "Endpoint '" + pathkey + "' should contain a single element body instead of a collection";
-                expect(properties, errorMessage).to.not.have.property('hasNext');
-                expect(properties, errorMessage).to.not.have.property('items');
+              var iscolleciton = pathValidatorResult.schemaObjList[i].iscollection;
+              if (!iscolleciton) {
+                var pathkey = pathValidatorResult.schemaObjList[i].pathkey;
+                var pathidkey = pathkey.substr(pathkey.lastIndexOf("/{") + 2, pathkey.length).replace("}", "").replace("{", "");
+                var objectName = pathValidatorResult.schemaObjList[i].objectName;
+                var schemaObjectBody = pathValidatorResult.schemaObjList[i].objectBody;
+                var objectBody = schemaObjectBody.definitions[objectName];
+                var properties = objectBody.properties;
+                var containsTheSameKeyInUrlAndBody;
+                if(properties) { //Had to do this validation because there are some none-collection endpoints which return list as the entity been approved (business requirement)
+                  containsTheSameKeyInUrlAndBody = properties.hasOwnProperty(pathidkey);
+                  expect(containsTheSameKeyInUrlAndBody, "Check the endpoint '" + pathkey + "'").to.be.true;
+                }               
               }
             }
-          });
-
-          it("should be a single element in endpoints that specify ID", function () {
-            //Vai usar o exemplo acima
-          });
-
-          it("should contain the same Id property name in URL and body", function () {
-
           });
         });
 
