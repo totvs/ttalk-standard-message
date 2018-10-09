@@ -5,7 +5,7 @@ var results;
 exports.clear = function() {    
     completed_requests = 0;
     results = {
-        apiSchema: {},
+        apiSchema: "",
         typesBaseSchema: {}, //Já posso colocar de default aqui
         notFoundSchemas: []
     };

@@ -100,7 +100,7 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        describe(" - Schemas: ", function () {          
+        describe(" - Schemas: ", function () {
           it("shouldn't contain 'schemas'", function () {
             if (parsedOpenAPI.components) {
               if (parsedOpenAPI.components.schemas) {
@@ -123,12 +123,32 @@ fs.readdir(dirname, function (err, filenames) {
             expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
           });
 
+          //TODO: Refatorar duplicação de código e muitos loopings acontecendo da mesma iteração. APISchemaBodyValidator
           it("should reference valid objects inside schema file", function () {
-            for(var i in pathValidatorResult.schemaObjList) {
+            for (var i in pathValidatorResult.schemaObjList) {
               var objectName = pathValidatorResult.schemaObjList[i].objectName;
-              var objectBody = pathValidatorResult.schemaObjList[i].objectBody;
+              var schemaObjectBody = pathValidatorResult.schemaObjList[i].objectBody;
               var ref = pathValidatorResult.schemaObjList[i].ref;
-              expect(objectBody.definitions, "Could not find the object '" + objectName + "' inside the json schema file '" + ref + "'").to.have.property(objectName);
+              expect(schemaObjectBody.definitions, "Could not find the object '" + objectName + "' inside the json schema file '" + ref + "'").to.have.property(objectName);
+            }
+          });
+
+          it("should contain the same Id property name in URL and body", function () {
+            for (var i in pathValidatorResult.schemaObjList) {
+              var iscolleciton = pathValidatorResult.schemaObjList[i].iscollection;
+              if (!iscolleciton) {
+                var pathkey = pathValidatorResult.schemaObjList[i].pathkey;
+                var pathidkey = pathkey.substr(pathkey.lastIndexOf("/{") + 2, pathkey.length).replace("}", "").replace("{", "");
+                var objectName = pathValidatorResult.schemaObjList[i].objectName;
+                var schemaObjectBody = pathValidatorResult.schemaObjList[i].objectBody;
+                var objectBody = schemaObjectBody.definitions[objectName];
+                var properties = objectBody.properties;
+                var containsTheSameKeyInUrlAndBody;
+                if(properties) { //Had to do this validation because there are some none-collection endpoints which return list as the entity been approved (business requirement)
+                  containsTheSameKeyInUrlAndBody = properties.hasOwnProperty(pathidkey);
+                  expect(containsTheSameKeyInUrlAndBody, "Check the endpoint '" + pathkey + "'").to.be.true;
+                }               
+              }
             }
           });
         });
