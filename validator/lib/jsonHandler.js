@@ -7,10 +7,15 @@ exports.IsJsonString = function IsJsonString(str) {
     return true;
 }
 
-exports.buildSchemaObjectBody = function(pathSchemaObjList, apiSchema) {
-    var parsedObjectBody = JSON.parse(apiSchema);
-    for(var i in pathSchemaObjList){
-        pathSchemaObjList[i].objectBody = parsedObjectBody; 
+exports.buildSchemaObjectBody = function (pathSchemaObjList, apiSchema) {
+    if (apiSchema) {
+        var parsedObjectBody = JSON.parse(apiSchema);
+        for (var i in pathSchemaObjList) {
+            pathSchemaObjList[i].objectBody = parsedObjectBody;
+        }
+        return pathSchemaObjList;
     }
-    return pathSchemaObjList;
+    else {
+        return "Undefined apiSchema"
+    }
 }

@@ -100,7 +100,7 @@ var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
 }
 
 //Schema types: 'request', 'response', 'parameter'
-var addSchema = function (responseRequest, schematype, pathkey, iscollection) {
+var addSchema = function (responseRequest, schematype, pathkey, iscollection, httpVerbkey) {
     if (responseRequest) {
         if (responseRequest.content["application/json"].schema) {
             var ref = responseRequest.content["application/json"].schema.$ref;
@@ -115,7 +115,8 @@ var addSchema = function (responseRequest, schematype, pathkey, iscollection) {
                     objectName: ref.slice(ref.indexOf("definitions/") + 12, ref.length),
                     schematype: schematype,
                     pathkey: pathkey,
-                    iscollection: iscollection
+                    iscollection: iscollection,
+                    httpVerbkey : httpVerbkey
                 }
                 results.schemaObjList.push(schemaObj);
             } else results.errorAddingSchema = true;
@@ -135,15 +136,15 @@ var checkIfThereIsSuccessResponse = function (responses) {
     }
 };
 
-var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint) {
+var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint, httpVerbkey) {
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
             checkIfSchemaIsSettedToExternaFile(response, true);
-            if (responseKey < 400)
-                addSchema(response, "response", pathkey, thisIsCollectionEndpoint, responseKey);
+            if (responseKey < 400) //Only success response
+                addSchema(response, "response", pathkey, thisIsCollectionEndpoint, httpVerbkey);
         }
     }
 };
@@ -206,9 +207,9 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
                 runThroughParams(parameters, httpVerbkey, pathkey);
                 var request = httpVerbInfo.requestBody;
                 checkIfSchemaIsSettedToExternaFile(request);
-                addSchema(request, "request", pathkey, thisIsCollectionEndpoint);
+                addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
                 var responses = httpVerbInfo.responses;
-                runThroughResponses(responses, pathkey, thisIsCollectionEndpoint);
+                runThroughResponses(responses, pathkey, thisIsCollectionEndpoint, httpVerbkey);
             }
         }
         if (!hasgetcollectionendpoint)
