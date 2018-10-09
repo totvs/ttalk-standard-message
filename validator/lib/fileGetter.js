@@ -14,7 +14,7 @@ exports.clear = function() {
 exports.getAllExternalFiles = function (schemaObjList) {
     var schemaUrlList = getSchemaUrls(schemaObjList);  
     for (var i in schemaUrlList) {
-        getExternalFile(schemaUrlList[i], schemaUrlList.length);
+        getExternalFile(schemaUrlList[i]);
     }
     return results;
 }
@@ -36,9 +36,7 @@ var getExternalFile = function (url) {
         if (rawFile.readyState === 4) {
             if (rawFile.status === 200 || rawFile.status == 0) {
                 var body = rawFile.responseText;
-                //var isValidSchemaFile = jsonValidator.IsJsonString(body); //TODO: Ver se faz sentido isso já ficar nesse momento, e como lidaria com ele.
-                //Provavelmente não.. lá na função de verificar se o schema é válido que fariamos isso. Ou então na própria validação de schema...
-                //Na própria validação do esquema é o melhor
+                //var isValidSchemaFile = jsonValidator.IsJsonString(body); //TODO: Validar estrutura do schema em um momento de teste
                 results.apiSchema = body;
             } else {
                 results.notFoundSchemas.push(url);
