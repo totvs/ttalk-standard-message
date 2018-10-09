@@ -4,7 +4,7 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
-var jsonValidator = require('../lib/jsonValidator.js');
+var jsonHandler = require('../lib/jsonHandler.js');
 var fileGetter = require('../lib/fileGetter.js');
 
 var expect = require('chai').expect;
@@ -36,12 +36,13 @@ fs.readdir(dirname, function (err, filenames) {
         var pathValidatorResult
         var fileGetterResult;
 
-        before(function () {  
+        before(function () {
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
           fileGetter.clear();
-          fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaUrlList);
+          fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaObjList);
+          pathValidatorResult.schemaObjBody = jsonHandler.buildSchemaObjectBody(pathValidatorResult.schemaObjList, fileGetterResult.apiSchema);
         })
 
         describe(" - Filename: ", function () {
@@ -99,8 +100,7 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });
 
-        describe(" - Schemas: ", function () {
-          this.timeout(30000);
+        describe(" - Schemas: ", function () {          
           it("shouldn't contain 'schemas'", function () {
             if (parsedOpenAPI.components) {
               if (parsedOpenAPI.components.schemas) {
@@ -115,12 +115,21 @@ fs.readdir(dirname, function (err, filenames) {
             expect(pathValidatorResult.useExternalSchema).to.be.true;
           });
 
-          it("should reference valid JSON schema files", function () {
+          it("should reference valid schema files", function () {
             var errorMessage = "Could not find schemas: ";
-            for(var i in fileGetterResult.notFoundSchemas){
+            for (var i in fileGetterResult.notFoundSchemas) {
               errorMessage += fileGetterResult.notFoundSchemas[i] + ";"
             }
             expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
+          });
+
+          it("should reference valid objects inside schema file", function () {
+            for(var i in pathValidatorResult.schemaObjList) {
+              var objectName = pathValidatorResult.schemaObjList[i].objectName;
+              var objectBody = pathValidatorResult.schemaObjList[i].objectBody;
+              var ref = pathValidatorResult.schemaObjList[i].ref;
+              expect(objectBody.definitions, "Could not find the object '" + objectName + "' inside the json schema file '" + ref + "'").to.have.property(objectName);
+            }
           });
         });
 
