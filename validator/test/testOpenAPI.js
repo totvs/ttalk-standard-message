@@ -149,7 +149,7 @@ fs.readdir(dirname, function (err, filenames) {
         });
 
         describe(" - Parameters: ", function () {
-          it("should have 'pagination', 'query' and 'order' for collection endpoints", function () {
+          it("should have 'page', 'pagesize' and 'order' for collection endpoints", function () {
             var collectionsWithoutRequiredParams = "Please check this endpoint: " + pathValidatorResult.collectionsWithoutRequiredParams;
             expect(pathValidatorResult.useAllRequiredParamsForCollection, collectionsWithoutRequiredParams).to.be.true;
           });
