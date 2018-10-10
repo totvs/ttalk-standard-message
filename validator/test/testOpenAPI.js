@@ -6,6 +6,7 @@ var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
 var jsonHandler = require('../lib/jsonHandler.js');
 var fileGetter = require('../lib/fileGetter.js');
+var schemaReferenceFromApi = require('../lib/schemaReferenceFromApiValidator.js');
 
 var expect = require('chai').expect;
 
@@ -35,6 +36,7 @@ fs.readdir(dirname, function (err, filenames) {
         var parsedOpenAPI;
         var pathValidatorResult
         var fileGetterResult;
+        var schemaReferenceFromApiResult;
 
         before(function () {
           parsedOpenAPI = JSON.parse(file);
@@ -43,6 +45,8 @@ fs.readdir(dirname, function (err, filenames) {
           fileGetter.clear();
           fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaObjList);
           pathValidatorResult.schemaObjBody = jsonHandler.buildSchemaObjectBody(pathValidatorResult.schemaObjList, fileGetterResult.apiSchema);
+          schemaReferenceFromApi.clear();
+          schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult);
         })
 
         describe(" - Filename: ", function () {
@@ -124,35 +128,20 @@ fs.readdir(dirname, function (err, filenames) {
             expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
           });
 
-          //TODO: Refatorar duplicação de código e muitos loopings acontecendo da mesma iteração. APISchemaBodyValidator
           it("should reference valid objects inside schema file", function () {
-            for (var i in pathValidatorResult.schemaObjList) {
-              var objectName = pathValidatorResult.schemaObjList[i].objectName;
-              var schemaObjectBody = pathValidatorResult.schemaObjList[i].objectBody;
-              var ref = pathValidatorResult.schemaObjList[i].ref;
-              expect(schemaObjectBody.definitions, "Could not find the object '" + objectName + "' inside the json schema file '" + ref + "'").to.have.property(objectName);
-            }
+            var errorMessage = "";
+            if (schemaReferenceFromApiResult.erroredObjectName)
+              errorMessage = "Could not find the object '" + schemaReferenceFromApiResult.erroredObjectName + "' inside the json schema file '" + schemaReferenceFromApiResult.ref + "'"
+            expect(schemaReferenceFromApiResult.validObject, errorMessage).to.be.true;
           });
 
           it("should contain the same Id property name in URL and body", function () {
-            for (var i in pathValidatorResult.schemaObjList) {
-              var iscolleciton = pathValidatorResult.schemaObjList[i].iscollection;
-              if (!iscolleciton) {
-                var pathkey = pathValidatorResult.schemaObjList[i].pathkey;
-                var pathidkey = pathkey.substr(pathkey.lastIndexOf("/{") + 2, pathkey.length).replace("}", "").replace("{", "");
-                var objectName = pathValidatorResult.schemaObjList[i].objectName;
-                var schemaObjectBody = pathValidatorResult.schemaObjList[i].objectBody;
-                var objectBody = schemaObjectBody.definitions[objectName];
-                var properties = objectBody.properties;
-                var containsTheSameKeyInUrlAndBody;
-                if (properties) { //Had to do this validation because there are some none-collection endpoints which return list as the entity been approved (business requirement)
-                  containsTheSameKeyInUrlAndBody = properties.hasOwnProperty(pathidkey);
-                  expect(containsTheSameKeyInUrlAndBody, "Check the endpoint '" + pathkey + "'").to.be.true;
-                }
-              }
-            }
+            var errorMessage = "";
+            if (schemaReferenceFromApiResult.erroredPath)
+              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";            
+              if(schemaReferenceFromApiResult.validObject)
+              expect(schemaReferenceFromApiResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
           });
-          /////////////////
 
           // it("should contain Id (path param) defined 'params' property", function(){
 
@@ -168,6 +157,10 @@ fs.readdir(dirname, function (err, filenames) {
           it("should use common parameters", function () {
             var notUsingCommonParams = "Please check this endpoint|httpverb: " + pathValidatorResult.notUsingCommonParams;
             expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
+          });
+
+          it("should reference valid param objects", function () {
+
           });
         });
 
@@ -191,5 +184,3 @@ fs.readdir(dirname, function (err, filenames) {
     };
   });
 });
-
-

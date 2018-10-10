@@ -2,6 +2,8 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 
+var expect = require('chai').expect;
+
 //SCHEMAS
 var dirname = "./jsonschema/schemas/";
 fs.readdir(dirname, function (err, filenames) {
@@ -54,7 +56,7 @@ fs.readdir(dirname, function (err, filenames) {
         //   });
         // });
 
-        //TODO: Arrumar
+        //TODO: Arrumar / Schema validator
         // describe(" - xtotvs: ", function () {
         //   it("should be an array ", function () {
         //     // for (var definitionKey in parsedSchema.definitions) {
