@@ -3,7 +3,7 @@ var results;
 var check
 
 var checkIfObjectIsValid = function (schemaObjectBody, objectName, ref) {
-    if (results.validObject != false) { //If another object was already defined as invalid, this wont't verify the next, improving performance and preventing one correct object replacing the info of an incorrect object
+    if (results.validObject != false && schemaObjectBody.definitions) { //If another object was already defined as invalid, this wont't verify the next, improving performance and preventing one correct object replacing the info of an incorrect object
         results.validObject = (schemaObjectBody.definitions[objectName] != undefined &&
             schemaObjectBody.definitions[objectName] != null)
         if (results.validObject == false) {
