@@ -33,7 +33,9 @@ fs.readdir(dirname, function (err, filenames) {
 
           it("should contain version separtor (_)", function () {
             let containsVersion = filename.includes("_");
+            let containsWrongVersionPattern = filename.includes("_v");
             expect(containsVersion).to.be.true;
+            expect(containsWrongVersionPattern).to.be.false;
           });
         });      
 
