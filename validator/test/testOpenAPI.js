@@ -4,8 +4,9 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../lib/pathValidator.js');
-var jsonValidator = require('../lib/jsonValidator.js');
+var jsonHandler = require('../lib/jsonHandler.js');
 var fileGetter = require('../lib/fileGetter.js');
+var schemaReferenceFromApi = require('../lib/schemaReferenceFromApiValidator.js');
 
 var expect = require('chai').expect;
 
@@ -35,13 +36,17 @@ fs.readdir(dirname, function (err, filenames) {
         var parsedOpenAPI;
         var pathValidatorResult
         var fileGetterResult;
+        var schemaReferenceFromApiResult;
 
-        before(function () {  
+        before(function () {
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
           fileGetter.clear();
-          fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaUrlList);
+          fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaObjList);
+          pathValidatorResult.schemaObjBody = jsonHandler.buildSchemaObjectBody(pathValidatorResult.schemaObjList, fileGetterResult.apiSchema);
+          schemaReferenceFromApi.clear();
+          schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult);
         })
 
         describe(" - Filename: ", function () {
@@ -71,7 +76,8 @@ fs.readdir(dirname, function (err, filenames) {
           it("should have an URL consistent with our model", function () {
             var patt = /(?:.*)\/api\/(?:.*)\/v[0-9]*$/;
             var result = patt.test(parsedOpenAPI.servers[0].url);
-            expect(result, "http://tdn.totvs.com.br/pages/releaseview.action?pageId=271660444").to.be.true;
+            var errorMessage = "Make sure there isn't a '/' in the end of your URL and read this document for more details about a consistent URL: http://tdn.totvs.com.br/pages/releaseview.action?pageId=271660444";
+            expect(result, errorMessage).to.be.true;
           });
         });
 
@@ -100,8 +106,7 @@ fs.readdir(dirname, function (err, filenames) {
         });
 
         describe(" - Schemas: ", function () {
-          this.timeout(30000);
-          it("shouldn't contain 'schemas'", function () {
+          it("shouldn't contain 'schemas' definition inside this file", function () {
             if (parsedOpenAPI.components) {
               if (parsedOpenAPI.components.schemas) {
                 expect(parsedOpenAPI.components.schemas).to.eql({});
@@ -115,17 +120,36 @@ fs.readdir(dirname, function (err, filenames) {
             expect(pathValidatorResult.useExternalSchema).to.be.true;
           });
 
-          it("should reference valid JSON schema files", function () {
+          it("should reference valid schema files", function () {
             var errorMessage = "Could not find schemas: ";
-            for(var i in fileGetterResult.notFoundSchemas){
+            for (var i in fileGetterResult.notFoundSchemas) {
               errorMessage += fileGetterResult.notFoundSchemas[i] + ";"
             }
             expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
           });
+
+          it("should reference valid objects inside schema file", function () {
+            var errorMessage = "";
+            if (schemaReferenceFromApiResult.erroredObjectName)
+              errorMessage = "Could not find the object '" + schemaReferenceFromApiResult.erroredObjectName + "' inside the json schema file '" + schemaReferenceFromApiResult.ref + "'"
+            expect(schemaReferenceFromApiResult.validObject, errorMessage).to.be.true;
+          });
+
+          it("should contain the same Id property name in URL and body", function () {
+            var errorMessage = "";
+            if (schemaReferenceFromApiResult.erroredPath)
+              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";            
+              if(schemaReferenceFromApiResult.validObject)
+              expect(schemaReferenceFromApiResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
+          });
+
+          // it("should contain Id (path param) defined 'params' property", function(){
+
+          // })
         });
 
         describe(" - Parameters: ", function () {
-          it("should have 'pagination', 'query' and 'order' for collection endpoints", function () {
+          it("should have 'page', 'pagesize' and 'order' for collection endpoints", function () {
             var collectionsWithoutRequiredParams = "Please check this endpoint: " + pathValidatorResult.collectionsWithoutRequiredParams;
             expect(pathValidatorResult.useAllRequiredParamsForCollection, collectionsWithoutRequiredParams).to.be.true;
           });
@@ -133,6 +157,10 @@ fs.readdir(dirname, function (err, filenames) {
           it("should use common parameters", function () {
             var notUsingCommonParams = "Please check this endpoint|httpverb: " + pathValidatorResult.notUsingCommonParams;
             expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
+          });
+
+          it("should reference valid param objects", function () {
+
           });
         });
 
@@ -156,73 +184,3 @@ fs.readdir(dirname, function (err, filenames) {
     };
   });
 });
-
-
-
-//TODO: Único método que varre todos os paths, e pega as informações necessárias para validar nos testes
-//Ideal seria isso para resolver uma questão de performance, mas só de ter o código + organizado já vai ajudar muito
-//Já teria que colocar os TRUE, FALSE, dentro desse 'método único' de varredura, e na estrutura do teste só retorno se equal true
-
-
-//TODO: Later
-//SCHEMAS
-// var dirname = "./schema/";
-// fs.readdir(dirname, function (err, filenames) {
-//   if (err) {
-//     console.log(err);
-//   }
-
-//   ///DE ALGUMA FORMA, ESSE FOREACH VAI TER QUE FICAR DENTRO
-//   filenames.forEach(function (filename) {
-//     if (filename.includes(".json") && !filename.includes("package")) {
-//       let schemaPath =  path.join(dirname, filename);
-
-//       let parsedSchema = JSON.parse(fs.readFileSync(schemaPath, {
-//         encoding: 'utf-8'
-//       }));
-
-//       describe("Schema content", function () {
-//         describe(" - Content Format: ", function () {
-//           it("should be a valid JsonSchema'", function () {
-
-//           });
-//         });
-
-//         describe(" - Parameters: ", function () {
-//           it("shouldn't have common parameters", function () {
-
-//           })
-//         });
-
-//         //TODO: Arrumar
-//         describe(" - xtotvs: ", function () {
-//           it("should be an array ", function () {
-//             // for (var definitionKey in parsedSchema.definitions) {
-//             //   if (parsedSchema.definitions[definitionKey].properties["x-totvs"]) {
-//             //     expect(parsedSchema.definitions[definitionKey].properties["x-totvs"]).to.be.an('array');
-//             //   }
-//             //TODO: Isolar isso em um método recursivo para varrer até o último nível possível
-//             //Check for LowerLevel
-//             // if (parsedSchema.definitions[definitionKey].type == 'object') {
-//             //Chamar o mesmo loop acima
-//             //     }
-//             //   }
-//           });
-//         });
-
-//         describe(" - Enum: ", function () {
-//           it("must be a string ", function () {
-
-//           });
-//         })
-
-//         describe(" - Errors: ", function () {
-//           it("shouldn't contain error model", function () {
-
-//           });
-//         });
-//       });
-
-//     };
-//   });
-// });

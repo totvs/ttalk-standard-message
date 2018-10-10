@@ -4,7 +4,7 @@ var results;
 var foundorder;
 var foundpage;
 var foundpagesize;
-var thisIsCollectionEdpoint;
+var thisIsCollectionEndpoint;
 var hasgetcollectionendpoint;
 
 var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
@@ -50,7 +50,7 @@ var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
 };
 
 var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, pathkey) {
-    if (thisIsCollectionEdpoint && httpVerbkey == 'get') {
+    if (thisIsCollectionEndpoint && httpVerbkey == 'get') {
         if (parameter.$ref) {
             if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message") && parameter.$ref.includes("jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order")) {
                 foundorder = true;
@@ -84,22 +84,25 @@ var checkHttpVerbInUrl = function (pathkey) {
 
 var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
     if (responseRequest) {
-        if (responseRequest.content["application/json"].schema) {
-            //TODO: Extrair essa questão de encontrar quem é o REF. Já está duplicado aqui e no método abaixo
-            var ref = responseRequest.content["application/json"].schema.$ref;
-            if (!ref) {
-                if (responseRequest.content["application/json"].schema.items) {
-                    ref = responseRequest.content["application/json"].schema.items.$ref;
+        if (responseRequest.content) {
+            if (responseRequest.content["application/json"].schema) {
+                //TODO: Extrair essa questão de encontrar quem é o REF. Já está duplicado aqui e no método abaixo
+                var ref = responseRequest.content["application/json"].schema.$ref;
+                if (!ref) {
+                    if (responseRequest.content["application/json"].schema.items) {
+                        ref = responseRequest.content["application/json"].schema.items.$ref;
+                    }
                 }
-            }
-            if (results.useExternalSchema != false && ref) {
-                results.useExternalSchema = !ref.includes("#/components/");
+                if (results.useExternalSchema != false && ref) {
+                    results.useExternalSchema = !ref.includes("#/components/");
+                }
             }
         }
     }
 }
 
-var addSchema = function (responseRequest) {
+//Schema types: 'request', 'response', 'parameter'
+var addSchema = function (responseRequest, schematype, pathkey, iscollection, httpVerbkey) {
     if (responseRequest) {
         if (responseRequest.content["application/json"].schema) {
             var ref = responseRequest.content["application/json"].schema.$ref;
@@ -109,17 +112,22 @@ var addSchema = function (responseRequest) {
                 }
             }
             if (ref) {
-                var ref = ref.slice(0, ref.indexOf("#"));
-                if (!results.schemaUrlList.includes(ref)) {
-                    results.schemaUrlList.push(ref);
+                var schemaObj = {
+                    ref: ref.slice(0, ref.indexOf("#")),
+                    objectName: ref.slice(ref.indexOf("definitions/") + 12, ref.length),
+                    schematype: schematype,
+                    pathkey: pathkey,
+                    iscollection: iscollection,
+                    httpVerbkey: httpVerbkey
                 }
+                results.schemaObjList.push(schemaObj);
             } else results.errorAddingSchema = true;
         }
     }
 };
 
-var checkIfPutAndDeleteHaveId = function (thisIsCollectionEdpoint, httpVerbsList) { //Collection shouldn't have PUT or DELETE
-    if (thisIsCollectionEdpoint) {
+var checkIfPutAndDeleteHaveId = function (thisIsCollectionEndpoint, httpVerbsList) { //Collection shouldn't have PUT or DELETE
+    if (thisIsCollectionEndpoint) {
         results.useIdInAllPutsAndDeletes = !((httpVerbsList.hasOwnProperty("put") || httpVerbsList.hasOwnProperty("delete")));
     }
 }
@@ -130,14 +138,15 @@ var checkIfThereIsSuccessResponse = function (responses) {
     }
 };
 
-var runThroughResponses = function (responses) {
+var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint, httpVerbkey) {
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
             checkIfSchemaIsSettedToExternaFile(response, true);
-            addSchema(response);
+            if (responseKey < 400) //Only success response
+                addSchema(response, "response", pathkey, thisIsCollectionEndpoint, httpVerbkey);
         }
     }
 };
@@ -158,14 +167,14 @@ var clearCollectionParamsValidation = function () {
 
 var verifyIfThisIsCollectionEndpoint = function (pathkey) {
     if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
-        thisIsCollectionEdpoint = false;
+        thisIsCollectionEndpoint = false;
     } else {
-        thisIsCollectionEdpoint = true;
+        thisIsCollectionEndpoint = true;
     }
 }
 
 var verifyIfThisIsGETCollectionRequest = function (httpVerbkey) {
-    if (thisIsCollectionEdpoint && httpVerbkey == 'get') {
+    if (thisIsCollectionEndpoint && httpVerbkey == 'get') {
         if (hasgetcollectionendpoint) { //Will be hit if there is more then one get collection endpoint
             clearCollectionParamsValidation();
         }
@@ -175,14 +184,14 @@ var verifyIfThisIsGETCollectionRequest = function (httpVerbkey) {
 
 exports.clear = function () {
     results = {
-        schemaUrlList: [],
+        schemaObjList: [],
         collectionsWithoutRequiredParams: "",
         wrongXTotvs: "",
         notUsingCommonParams: "",
     };
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;
-    thisIsCollectionEdpoint = undefined;
+    thisIsCollectionEndpoint = undefined;
 };
 
 exports.runThroughPaths = function name(parsedOpenAPI) {
@@ -190,7 +199,7 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
         checkHttpVerbInUrl(pathkey);
         var httpVerbsList = parsedOpenAPI.paths[pathkey]
         verifyIfThisIsCollectionEndpoint(pathkey);
-        checkIfPutAndDeleteHaveId(thisIsCollectionEdpoint, httpVerbsList);
+        checkIfPutAndDeleteHaveId(thisIsCollectionEndpoint, httpVerbsList);
         for (var httpVerbkey in httpVerbsList) {
             if (httpVerbkey != "parameters") {
                 verifyIfThisIsGETCollectionRequest(httpVerbkey);
@@ -200,9 +209,9 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
                 runThroughParams(parameters, httpVerbkey, pathkey);
                 var request = httpVerbInfo.requestBody;
                 checkIfSchemaIsSettedToExternaFile(request);
-                addSchema(request);
+                addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
                 var responses = httpVerbInfo.responses;
-                runThroughResponses(responses);
+                runThroughResponses(responses, pathkey, thisIsCollectionEndpoint, httpVerbkey);
             }
         }
         if (!hasgetcollectionendpoint)
