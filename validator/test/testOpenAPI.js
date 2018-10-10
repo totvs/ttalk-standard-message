@@ -72,7 +72,8 @@ fs.readdir(dirname, function (err, filenames) {
           it("should have an URL consistent with our model", function () {
             var patt = /(?:.*)\/api\/(?:.*)\/v[0-9]*$/;
             var result = patt.test(parsedOpenAPI.servers[0].url);
-            expect(result, "http://tdn.totvs.com.br/pages/releaseview.action?pageId=271660444").to.be.true;
+            var errorMessage = "Make sure there isn't a '/' in the end of your URL and read this document for more details about a consistent URL: http://tdn.totvs.com.br/pages/releaseview.action?pageId=271660444";
+            expect(result, errorMessage).to.be.true;
           });
         });
 
@@ -101,7 +102,7 @@ fs.readdir(dirname, function (err, filenames) {
         });
 
         describe(" - Schemas: ", function () {
-          it("shouldn't contain 'schemas'", function () {
+          it("shouldn't contain 'schemas' definition inside this file", function () {
             if (parsedOpenAPI.components) {
               if (parsedOpenAPI.components.schemas) {
                 expect(parsedOpenAPI.components.schemas).to.eql({});
@@ -144,13 +145,18 @@ fs.readdir(dirname, function (err, filenames) {
                 var objectBody = schemaObjectBody.definitions[objectName];
                 var properties = objectBody.properties;
                 var containsTheSameKeyInUrlAndBody;
-                if(properties) { //Had to do this validation because there are some none-collection endpoints which return list as the entity been approved (business requirement)
+                if (properties) { //Had to do this validation because there are some none-collection endpoints which return list as the entity been approved (business requirement)
                   containsTheSameKeyInUrlAndBody = properties.hasOwnProperty(pathidkey);
                   expect(containsTheSameKeyInUrlAndBody, "Check the endpoint '" + pathkey + "'").to.be.true;
-                }               
+                }
               }
             }
           });
+          /////////////////
+
+          // it("should contain Id (path param) defined 'params' property", function(){
+
+          // })
         });
 
         describe(" - Parameters: ", function () {
@@ -187,71 +193,3 @@ fs.readdir(dirname, function (err, filenames) {
 });
 
 
-
-//TODO: Único método que varre todos os paths, e pega as informações necessárias para validar nos testes
-//Ideal seria isso para resolver uma questão de performance, mas só de ter o código + organizado já vai ajudar muito
-//Já teria que colocar os TRUE, FALSE, dentro desse 'método único' de varredura, e na estrutura do teste só retorno se equal true
-
-
-//TODO: Later
-//SCHEMAS
-// var dirname = "./schema/";
-// fs.readdir(dirname, function (err, filenames) {
-//   if (err) {
-//     console.log(err);
-//   }
-
-//   ///DE ALGUMA FORMA, ESSE FOREACH VAI TER QUE FICAR DENTRO
-//   filenames.forEach(function (filename) {
-//     if (filename.includes(".json") && !filename.includes("package")) {
-//       let schemaPath =  path.join(dirname, filename);
-
-//       let parsedSchema = JSON.parse(fs.readFileSync(schemaPath, {
-//         encoding: 'utf-8'
-//       }));
-
-//       describe("Schema content", function () {
-//         describe(" - Content Format: ", function () {
-//           it("should be a valid JsonSchema'", function () {
-
-//           });
-//         });
-
-//         describe(" - Parameters: ", function () {
-//           it("shouldn't have common parameters", function () {
-
-//           })
-//         });
-
-//         //TODO: Arrumar
-//         describe(" - xtotvs: ", function () {
-//           it("should be an array ", function () {
-//             // for (var definitionKey in parsedSchema.definitions) {
-//             //   if (parsedSchema.definitions[definitionKey].properties["x-totvs"]) {
-//             //     expect(parsedSchema.definitions[definitionKey].properties["x-totvs"]).to.be.an('array');
-//             //   }
-//             //TODO: Isolar isso em um método recursivo para varrer até o último nível possível
-//             //Check for LowerLevel
-//             // if (parsedSchema.definitions[definitionKey].type == 'object') {
-//             //Chamar o mesmo loop acima
-//             //     }
-//             //   }
-//           });
-//         });
-
-//         describe(" - Enum: ", function () {
-//           it("must be a string ", function () {
-
-//           });
-//         })
-
-//         describe(" - Errors: ", function () {
-//           it("shouldn't contain error model", function () {
-
-//           });
-//         });
-//       });
-
-//     };
-//   });
-// });
