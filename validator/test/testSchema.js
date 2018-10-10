@@ -37,13 +37,7 @@ fs.readdir(dirname, function (err, filenames) {
             expect(containsVersion).to.be.true;
             expect(containsWrongVersionPattern).to.be.false;
           });
-        });      
-
-        // describe(" - Parameters: ", function () {
-        //   it("shouldn't have common parameters", function () {
-
-        //   })
-        // });
+        });         
 
 
         // describe(" - Schemas: ", function () {
@@ -52,12 +46,7 @@ fs.readdir(dirname, function (err, filenames) {
         //   });
         // });
 
-        // describe(" - Errors: ", function () {
-        //   it("shouldn't contain error model", function () {
-
-        //   });
-        // });
-
+        
         //TODO: Arrumar / Schema validator
         // describe(" - xtotvs: ", function () {
         //   it("should be an array ", function () {

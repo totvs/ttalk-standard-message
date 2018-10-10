@@ -138,9 +138,16 @@ fs.readdir(dirname, function (err, filenames) {
           it("should contain the same Id property name in URL and body", function () {
             var errorMessage = "";
             if (schemaReferenceFromApiResult.erroredPath)
-              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";            
-              if(schemaReferenceFromApiResult.validObject)
+              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";
+            if (schemaReferenceFromApiResult.validObject)
               expect(schemaReferenceFromApiResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
+          });
+
+          it("should contain 'hasNext' prop if there is 'items' prop and vice versa", function () {
+            var errorMessage = "";
+            if (schemaReferenceFromApiResult.erroredPath)
+              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";
+            expect(schemaReferenceFromApiResult.containsItemsAndHasNext, errorMessage).to.be.true;
           });
 
           // it("should contain Id (path param) defined 'params' property", function(){
@@ -159,9 +166,9 @@ fs.readdir(dirname, function (err, filenames) {
             expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
           });
 
-          it("should reference valid param objects", function () {
+          // it("should reference valid param objects", function () {
 
-          });
+          // });
         });
 
         describe(" - Errors: ", function () {
