@@ -1,0 +1,434 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/GetEmployeeTimeSheet_1_000.json#",
+  "info": {
+    "description": "",
+    "version": "1.000",
+    "title": "GetEmployeeTimeSheet",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Folha de ponto do funcionário(s)",
+        "description": "Busca/Retorna as batidas de ponto para a lista de funcionários de acordo com o período de datas informado. Inicialmente criada para uso do TOP Mobile x Protheus",
+        "segment": "Recursos humanos"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "NATIÊ SUGAHARA",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "RM",
+          "contact": "Wellington Vieira Colacio",
+          "note": "",
+          "adapter": ""
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "request",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContent",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContent",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContent": {
+      "type": "object",
+      "properties": {
+        "RequestTimeSheet": {
+          "$ref": "#/definitions/RequestType",
+          "type": "object"
+        }
+      }
+    },
+    "ReturnContent": {
+      "type": "object",
+      "properties": {
+        "ReturnTimeSheet": {
+          "$ref": "#/definitions/ReturnType",
+          "type": "object"
+        }
+      }
+    },
+    "RequestType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Id da coligada/empresa/companhia",
+          "type": "integer",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "não possui campo físico na tabela",
+              "required": true,
+              "type": "varchar",
+              "length": "02",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "PFUNC.CODCOLIGADA",
+              "required": true,
+              "type": "int",
+              "length": "",
+              "note": "Será enviado a coligada onde o usuário está logado",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Id da filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SRAXX0.RA_FILIAL",
+              "required": true,
+              "type": "varchar",
+              "length": "02",
+              "note": "pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "CODFILIAL",
+              "required": false,
+              "type": "int",
+              "length": "",
+              "note": "Será enviado a filial onde o usuário está logado caso o módulo do RM tenha este valor",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId das informações da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "o InternalID da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "CODCOLIGADA+CODFILIAL",
+              "required": true,
+              "type": "string",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TimeSheetStartDate": {
+          "description": "Data de inicio (inclusive) do período para a folha de ponto",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "",
+              "length": "",
+              "note": "Será aplicado este valor como filtro inical ao campo acima na busca das informações",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TimeSheetFinishDate": {
+          "description": "Data de final(inclusive) do período para a folha de ponto",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "",
+              "note": "Será aplicado este valor como filtro final ao campo acima na busca das informações",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfEmployee": {
+          "description": "Lista com os funcionários dos quais se deseja recuperar as batidas de ponto",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ReturnType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Codigo da coligada/empresa/companhia",
+          "type": "integer",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "char",
+              "length": "02",
+              "note": "Será retornado o valor equivalente no Protheus do valor enviado a ele",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Id da filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "char",
+              "length": "02",
+              "note": "Será retornado o valor equivalente no Protheus do valor enviado a ele",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfEmployeeTimeSheet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeTimeSheetType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "EmployeeTimeSheetType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Id da coligada/empresa/companhia do funcionário",
+          "type": "integer",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "char",
+              "length": "02",
+              "note": "Será retornado o valor equivalente no Protheus do valor enviado a ele",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "PFUNC.CODCOLIGADA",
+              "required": true,
+              "type": "int",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Id da filial do funcionário",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SRAXX0.RA_FILIAL",
+              "required": true,
+              "type": "varchar",
+              "length": "02",
+              "note": "pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "PFUNC.CODFILIAL",
+              "required": true,
+              "type": "int",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "EmployeeCode": {
+          "description": "Chapa/Matricula do funcionario",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SRAXX0.RA_MAT",
+              "required": true,
+              "type": "varchar",
+              "length": "6",
+              "note": "contém máscara numérica",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "PFUNC.CHAPA",
+              "required": true,
+              "type": "varchar",
+              "length": "16",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "EmployeeInternalId": {
+          "description": "InternalId do funcionário",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SRAXX0.RA_FILIAL",
+              "required": true,
+              "type": "varchar",
+              "length": "50",
+              "note": "o InternalID do cadastro é formado pelos campos empresa|RA_FILIAL|RA_MAT",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "PFUNC.CODCOLIGADA+PFUNC.CHAPA",
+              "required": true,
+              "type": "string",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfTimeSheet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSheetType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "TimeSheetType": {
+      "type": "object",
+      "properties": {
+        "EventDate": {
+          "description": "Datas das ocorrências/batida de ponto",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "date",
+              "length": "",
+              "note": "Data da batida que está no campo xxx da tabela de registro de ponto xxx",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfInOutTime": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InOutTimeType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "InOutTimeType": {
+      "type": "object",
+      "properties": {
+        "RegisterTime": {
+          "description": "Hora da batida de ponto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "length": "",
+              "note": "Horário da batida/registro, tabela xxx",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "RegisterType": {
+          "description": "Tipo da batida (entrada ou saída) / In - Entrada / Out - Saída",
+          "type": "string",
+          "enum": [
+            "In",
+            "Out"
+          ],
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "length": "",
+              "note": "Tipo da marcação, tabela xxx",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Order": {
+          "description": "Indicativo a qual jornada de trabalho pertence a batida pois as batidas podem estar em dias diferentes mas pertencerem a uma mesma jornada",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "length": "",
+              "note": "Indicativo da jornada, tabela xxx",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}
