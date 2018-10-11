@@ -39,6 +39,7 @@ fs.readdir(dirname, function (err, filenames) {
         var schemaReferenceFromApiResult;
 
         before(function () {
+          this.timeout(40000);
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
@@ -166,9 +167,16 @@ fs.readdir(dirname, function (err, filenames) {
             expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
           });
 
-          // it("should reference valid param objects", function () {
-
-          // });
+          it("should reference valid param objects", function () {
+            var parametersDefinedInComponentList = pathValidatorResult.parametersDefinedInComponentList
+            var errorMessage = "";
+            for (var i in parametersDefinedInComponentList) {
+              var containsParamObject = parsedOpenAPI.components.parameters.hasOwnProperty(parametersDefinedInComponentList[i])
+              if (!containsParamObject)
+                errorMessage += "Couldn't find the parameter object '#/components/parameters/" + parametersDefinedInComponentList[i] + "'; "
+              expect(containsParamObject, errorMessage).to.be.true;
+            }
+          });
         });
 
         describe(" - Errors: ", function () {

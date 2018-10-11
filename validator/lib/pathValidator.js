@@ -82,11 +82,22 @@ var checkHttpVerbInUrl = function (pathkey) {
     results.useHttpVerbInEndpointUrl;
 }
 
+var addParamDefinedInComponentList = function (parameter) {
+    if (parameter) {
+        if (parameter.$ref) {
+            if (parameter.$ref.includes("#/components/parameters/")) {
+                var paramName = parameter.$ref.substring(24);
+                if (!results.parametersDefinedInComponentList.includes(paramName))
+                    results.parametersDefinedInComponentList.push(paramName);
+            }
+        }
+    }
+}
+
 var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
     if (responseRequest) {
         if (responseRequest.content) {
             if (responseRequest.content["application/json"].schema) {
-                //TODO: Extrair essa questão de encontrar quem é o REF. Já está duplicado aqui e no método abaixo
                 var ref = responseRequest.content["application/json"].schema.$ref;
                 if (!ref) {
                     if (responseRequest.content["application/json"].schema.items) {
@@ -101,27 +112,29 @@ var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
     }
 }
 
-//Schema types: 'request', 'response', 'parameter'
+//Schema types: 'request', 'response', 
 var addSchema = function (responseRequest, schematype, pathkey, iscollection, httpVerbkey) {
     if (responseRequest) {
-        if (responseRequest.content["application/json"].schema) {
-            var ref = responseRequest.content["application/json"].schema.$ref;
-            if (!ref) {
-                if (responseRequest.content["application/json"].schema.items) {
-                    ref = responseRequest.content["application/json"].schema.items.$ref;
+        if (responseRequest.content) {
+            if (responseRequest.content["application/json"].schema) {
+                var ref = responseRequest.content["application/json"].schema.$ref;
+                if (!ref) {
+                    if (responseRequest.content["application/json"].schema.items) {
+                        ref = responseRequest.content["application/json"].schema.items.$ref;
+                    }
                 }
+                if (ref) {
+                    var schemaObj = {
+                        ref: ref.slice(0, ref.indexOf("#")),
+                        objectName: ref.slice(ref.indexOf("definitions/") + 12, ref.length),
+                        schematype: schematype,
+                        pathkey: pathkey,
+                        iscollection: iscollection,
+                        httpVerbkey: httpVerbkey
+                    }
+                    results.schemaObjList.push(schemaObj);
+                } else results.errorAddingSchema = true;
             }
-            if (ref) {
-                var schemaObj = {
-                    ref: ref.slice(0, ref.indexOf("#")),
-                    objectName: ref.slice(ref.indexOf("definitions/") + 12, ref.length),
-                    schematype: schematype,
-                    pathkey: pathkey,
-                    iscollection: iscollection,
-                    httpVerbkey: httpVerbkey
-                }
-                results.schemaObjList.push(schemaObj);
-            } else results.errorAddingSchema = true;
         }
     }
 };
@@ -151,13 +164,24 @@ var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint
     }
 };
 
-var runThroughParams = function (parameters, httpVerbkey, pathkey) {
+var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey, pathkey) {
     for (var parameterKey in parameters) {
         var parameter = parameters[parameterKey];
-        checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
-        checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
+        if (parameterType == "httpVerb") {
+            checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
+            checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
+        }
+        addParamDefinedInComponentList(parameters[parameterKey])
     }
-};
+}
+
+var runThroughGeneralParams = function (parameters) {
+    runThroughParamsInternal(parameters, "general");
+}
+
+var runThroughHttpVerbParams = function (parameters, httpVerbkey, pathkey) {
+    runThroughParamsInternal(parameters, "httpVerb", httpVerbkey, pathkey);
+}
 
 var clearCollectionParamsValidation = function () {
     foundorder = false;
@@ -185,6 +209,7 @@ var verifyIfThisIsGETCollectionRequest = function (httpVerbkey) {
 exports.clear = function () {
     results = {
         schemaObjList: [],
+        parametersDefinedInComponentList: [],
         collectionsWithoutRequiredParams: "",
         wrongXTotvs: "",
         notUsingCommonParams: "",
@@ -201,12 +226,14 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
         verifyIfThisIsCollectionEndpoint(pathkey);
         checkIfPutAndDeleteHaveId(thisIsCollectionEndpoint, httpVerbsList);
         for (var httpVerbkey in httpVerbsList) {
-            if (httpVerbkey != "parameters") {
+            if (httpVerbkey == "parameters") {
+                runThroughGeneralParams(httpVerbsList[httpVerbkey]);
+            } else {
                 verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
                 checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
-                runThroughParams(parameters, httpVerbkey, pathkey);
+                runThroughHttpVerbParams(parameters, httpVerbkey, pathkey);
                 var request = httpVerbInfo.requestBody;
                 checkIfSchemaIsSettedToExternaFile(request);
                 addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
