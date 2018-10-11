@@ -1,0 +1,645 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Bank_2_002.json#",
+  "info": {
+    "description": "",
+    "version": "2.002",
+    "title": "Bank",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Bank",
+        "description": "Cadastro de Bancos",
+        "segment": "ERP base"
+      },
+      "productInformation": [
+        {
+          "product": "DATASUL",
+          "contact": "....",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "lOGIX",
+          "contact": "...",
+          "note": "",
+          "adapter": ""
+        },
+        {
+          "product": "PROTHEUS",
+          "contact": "Eduardo Souza",
+          "note": "",
+          "adapter": "MATI070.prw"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "02",
+              "note": "Será enviado o valor da variável cEmpAnt( empresa)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "char",
+              "length": "12",
+              "note": "Será enviado o valor da variável cFilAnt",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "char",
+              "length": "10",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Code": {
+          "description": "Código do banco",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_COD",
+              "required": true,
+              "type": "char",
+              "length": "03",
+              "note": "Código do Banco",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId do Code",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "tabela.campo",
+              "required": false,
+              "type": "char",
+              "length": "10",
+              "note": "Código que irá identificar o banco no sistema externo: xFilial('SA6') + M->A6_COD + M->A6_AGENCIA + M->A6_NUMCON",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Febraban": {
+          "description": "Numero Oficial do Banco no Brasil",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_FEBRABAN",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Name": {
+          "description": "Descricao Banco",
+          "type": "string",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_NOME",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ShortName": {
+          "description": "Descricao reduzida Banco",
+          "type": "string",
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_NREDUZ",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfAgency": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfAgencyType",
+            "type": "object"
+          }
+        },
+        "CheckingAcctType": {
+          "description": "Tipo Conta Corrente",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren.ind_tip_cta_corren",
+              "required": true,
+              "type": "string",
+              "length": "15",
+              "note": "Valores Possiveis: Bancária / Caixa / Mútuo Ativo / Mútuo Passivo / Garantida",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Site": {
+          "description": "Estabelecimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren.cod_estab",
+              "required": true,
+              "type": "string",
+              "length": "5",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BusinessUnit": {
+          "description": "Unidade de Negocio",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren.cod_unid_negoc",
+              "required": true,
+              "type": "string",
+              "length": "3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Purpose": {
+          "description": "Finalidade da Conta Corrente",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren.cod_finalid_econ",
+              "required": true,
+              "type": "string",
+              "length": "10",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ListOfAgencyType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgencyType",
+        "type": "object"
+      }
+    },
+    "AgencyType": {
+      "type": "object",
+      "properties": {
+        "Number": {
+          "description": "Numero da Agencia",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_AGENCIA",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Name": {
+          "description": "Descricao Agencia",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_NOMEAGE",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Address": {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Commons_1_000.json#/definitions/AddressType",
+          "description": "Endereco Agencia",
+          "type": "object",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_END",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfContactInformation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfContactInformationType",
+            "type": "object"
+          }
+        },
+        "ListOfAccount": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListOfAccountType",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ListOfContactInformationType": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Commons_1_000.json#/definitions/ContactInformationType",
+        "type": "object"
+      }
+    },
+    "ListOfAccountType": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContractType",
+        "type": "object"
+      }
+    },
+    "AccountType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Empresa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "Será enviado o valor da variável cEmpAnt( empresa)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Number": {
+          "description": "Numero da Conta",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_NUMCON",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DigitAccount": {
+          "description": "Dígito verificador da Conta",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_DVCTA",
+              "required": false,
+              "type": "varchar",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccountantAccountCode": {
+          "description": "Numero da Conta - RM: Não irá utilizar inicialmente este campo, pois é permitido informar mais de uma Conta Contabil no momento do Cadastro, o que difere das outras Linhas.",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_NUMCON",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "AccountantAccountInternalId": {
+          "description": "InternalId da conta contábil.",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "Logix",
+              "field": "plano_conta.num_conta",
+              "required": true,
+              "type": "",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Name": {
+          "description": "RM: Nome da Conta Caixa",
+          "type": "string"
+        },
+        "PurposeAcct": {
+          "description": "Finalidade Conta Contábil",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren_cta_ctbl.ind_finalid_ctbl_cta_corren",
+              "required": true,
+              "type": "char",
+              "length": "17",
+              "note": "Valores Válidos: Principal Ativo / Principal Passivo",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ChartOfAccts": {
+          "description": "Plano de Contas",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren_cta_ctbl.cod_plano_cta_ctbl",
+              "required": true,
+              "type": "char",
+              "length": "8",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ValidityStart": {
+          "description": "Data Inicial de Validade da Conta Contábil",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren_cta_ctbl.dat_inic_valid",
+              "required": true,
+              "type": "date",
+              "length": "99/99/9999",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ValidityEnd": {
+          "description": "Data Final de Validade da Conta Contábil",
+          "type": "string",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cta_corren_cta_ctbl.dat_fim_valid",
+              "required": true,
+              "type": "date",
+              "length": "99/99/9999",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ContractType": {
+      "type": "object",
+      "properties": {
+        "ContractNumber": {
+          "description": "Número do contrato (Convênio)",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SEEXX0.EE_NUMCTR",
+              "required": false,
+              "type": "varchar",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TransferorName": {
+          "description": "Nome do Cedente",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SM0.SM0_NOMECOM",
+              "required": false,
+              "type": "varchar",
+              "length": "40",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "TransferorCode": {
+          "description": "Código do Cedente",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SA6.A6_CODCED",
+              "required": false,
+              "type": "varchar",
+              "length": "40",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BookType": {
+          "description": "Tipo da carteira",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SEEXX0.EE_TIPOCAR",
+              "required": false,
+              "type": "varchar",
+              "length": "2",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BookCode": {
+          "description": "Código do carteira",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SEEXX0.EE_CODCART",
+              "required": false,
+              "type": "varchar",
+              "length": "3",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ChargeType": {
+          "description": "Tipo de Cobrança",
+          "type": "array",
+          "items": {
+            "description": "1 - Registrada / 2 - Não Registrada",
+            "type": "string",
+            "enum": [
+              "1",
+              "2"
+            ]
+          },
+          "properties": {
+            "ChargeType": {
+              "description": "1 - Registrada / 2 - Não Registrada",
+              "type": "string",
+              "enum": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SEEXX0.EE_TPCOBRA",
+              "required": false,
+              "type": "varchar",
+              "length": "1",
+              "note": "",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
