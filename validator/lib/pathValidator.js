@@ -25,13 +25,13 @@ var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
     if (results.useCommonParams != false) {
         if (parameter.$ref) {
             results.useCommonParams = !(
-                (parameter.$ref.includes("Authorization") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
-                (parameter.$ref.includes("Order") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
-                (parameter.$ref.includes("Page") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
-                (parameter.$ref.includes("PageSize") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
-                (parameter.$ref.includes("AcceptLanguage") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
-                (parameter.$ref.includes("Fields") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json")) ||
-                (parameter.$ref.includes("Expand") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json"))
+                (parameter.$ref.includes("Authorization") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Order") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Page") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("PageSize") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("AcceptLanguage") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Fields") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Expand") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json"))
             )
         }
         if (parameter.name) {
