@@ -213,6 +213,7 @@ exports.clear = function () {
         collectionsWithoutRequiredParams: "",
         wrongXTotvs: "",
         notUsingCommonParams: "",
+        useIdInAllPutsAndDeletes: true
     };
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;

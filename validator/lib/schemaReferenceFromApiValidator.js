@@ -27,7 +27,7 @@ var checkIfHasNextAndItems = function (properties, pathkey) {
 
 exports.clear = function () {
     results = {
-        containsItemsAndHasNext: true
+        containsItemsAndHasNext: true        
     };
 }
 
