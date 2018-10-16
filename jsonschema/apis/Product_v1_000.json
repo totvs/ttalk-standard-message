@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "servers": [{
-    "description": "API para a entidade Professionals (Profissionais) do segmento HealthCare para produtos TOTVS",
-    "url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/hat/v1",
+    "description": "API para a entidade Products (Produtos) do segmento HealthCare para produtos TOTVS",
+    "url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1",
     "variables": {
       "serverUrl": {
         "default": "localhost"
@@ -13,9 +13,9 @@
     }
   }],
   "info": {
-    "description": "API para a entidade Professionals (Profissionais) do segmento HealthCare para produtos TOTVS",
+    "description": "API para a entidade Products (Produtos) do segmento HealthCare para produtos TOTVS",
     "version": "1.000",
-    "title": "Professionals",
+    "title": "Products",
     "contact": {
       "name": "T-Talk",
       "url": "api.Totvs.com.br",
@@ -23,34 +23,34 @@
     },
     "x-totvs": {
       "messageDocumentation": {
-        "name": "Professionals",
-        "description": "Professionals",
+        "name": "Products",
+        "description": "Products",
         "segment": "HealthCare"
       },
       "productInformation": [{
-        "product": "hat",
-        "contact": "hat@totvs.com.br",
-        "description": "Profissionais",
-        "adapter": "RestProfissional.prw"
+        "product": "central-obrigacoes",
+        "contact": "",
+        "description": "Products",
+        "adapter": "RestCenProd.prw"
       }]
     }
   },
   "paths": {
-    "/professionals": {
+    "/products": {
       "get": {
         "tags": [
           "collection"
         ],
-        "summary": "Retorna informacoes dos Profissionais",
+        "summary": "Retorna informacoes dos Produtos do plano de saude.",
         "x-totvs": {
           "productInformation": [{
-            "product": "hat",
+            "product": "central-obrigacoes",
             "avaliable": true,
             "minimalVersion": ""
           }]
         },
-        "description": "Retorna um lote de profissional de acordo com os parametros enviados. É possivel filtrar o resultado através de todas as propriedades com excessão do CBOS",
-        "operationId": "getLotProf",
+        "description": "Retorna um lote de produtos.",
+        "operationId": "getLotBenef",
         "parameters": [{
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
@@ -64,10 +64,10 @@
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
           },
           {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
           },
           {
-            "$ref": "#/components/parameters/Expires_at"
+            "$ref": "#/components/parameters/healthInsurerCode"
           }
         ],
         "responses": {
@@ -76,13 +76,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Professional_1_000.json#/definitions/PagedProfessional"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/product/v1/1_000/jsonschema/schemas/Product_1_000.json#/definitions/PagedProduct"
                 }
               }
             }
           },
           "404": {
-            "description": "Erro ao localizar profissional",
+            "description": "Erro ao localizar produto",
             "content": {
               "application/json": {
                 "schema": {
@@ -97,42 +97,26 @@
         "tags": [
           "collection"
         ],
-        "summary": "Inclusão de profissional",
+        "summary": "Inclusão de produtos",
         "x-totvs": {
           "productInformation": [{
-            "product": "hat",
+            "product": "central-obrigacoes",
             "avaliable": true,
             "minimalVersion": "",
-            "note": "E possivel realizar a inclusão de uma coleção ou um unico profissional. Para realizar a inclusao de apenas um, enviar o body com o padrão de paginação"
+            "note": "É possivel a inclusão de um produto por requisição."
           }]
         },
-        "description": "Realiza a inclusão de um profissional conforme body da requisição.",
-        "operationId": "postProf",
+        "description": "Realiza a inclusão de um produto.",
+        "operationId": "procInsCenProd",
         "parameters": [{
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/Expires_at"
-          }
-        ],
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+        }],
         "requestBody": {
-          "description": "Profissional a ser incluído.",
+          "description": "Produto a ser incluído.",
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [{
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Professional_1_000.json#/definitions/professional"
-                  },
-                  {
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Professional_1_000.json#/definitions/PagedProfessional"
-                  }
-                ]
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/product/v1/1_000/jsonschema/schemas/Product_1_000.json#/definitions/product"
               }
             }
           }
@@ -143,13 +127,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Professional_1_000.json#/definitions/professional"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/product/v1/1_000/jsonschema/schemas/Product_1_000.json#/definitions/product"
                 }
               }
             }
           },
           "400": {
-            "description": "Erro durante inclusão do profissional",
+            "description": "Erro durante inclusão do produtos",
             "content": {
               "application/json": {
                 "schema": {
@@ -161,50 +145,40 @@
         }
       }
     },
-    "/professionals/{idOnHealthInsurer}": {
+    "/products/{healthInsurerCode}": {
       "parameters": [{
-        "$ref": "#/components/parameters/idOnHealthInsurer"
+        "$ref": "#/components/parameters/healthInsurerCode"
       }],
       "get": {
         "tags": [
           "single"
         ],
-        "summary": "Retorna informacoes dos Profissionais",
+        "summary": "Retorna informacoes do Produto",
         "x-totvs": {
           "productInformation": [{
-            "product": "hat",
+            "product": "central-obrigacoes",
             "avaliable": true,
             "minimalVersion": ""
           }]
         },
-        "description": "Retorna um profissional de acordo com o ID informado",
-        "operationId": "getProf",
+        "description": "Retorna um produtos.",
+        "operationId": "getBenef",
         "parameters": [{
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
-          },
-          {
-            "$ref": "#/components/parameters/Expires_at"
-          }
-        ],
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+        }],
         "responses": {
           "200": {
             "description": "Operação realizada com sucesso!",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Professional_1_000.json#/definitions/professional"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/product/v1/1_000/jsonschema/schemas/Product_1_000.json#/definitions/product"
                 }
               }
             }
           },
           "404": {
-            "description": "Erro ao localizar profissional",
+            "description": "Erro ao localizar produto",
             "content": {
               "application/json": {
                 "schema": {
@@ -219,35 +193,29 @@
         "tags": [
           "single"
         ],
-        "summary": "Altera informacoes do Profissionais",
+        "summary": "Altera informacoes do(s) produto(s)",
         "x-totvs": {
           "productInformation": [{
-            "product": "hat",
+            "product": "central-obrigacoes",
             "avaliable": true,
             "minimalVersion": ""
           }]
         },
-        "description": "Altera informações do profissional de acordo com o ID informado",
-        "operationId": "putProf",
+        "description": "Altera informações do produto.",
+        "operationId": "putBenef",
         "parameters": [{
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
-          },
-          {
-            "$ref": "#/components/parameters/Expires_at"
+            "$ref": "#/components/parameters/healthInsurerCode"
           }
         ],
         "requestBody": {
-          "description": "Profissional a ser incluído.",
+          "description": "Produto a ser incluído.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Professional_1_000.json#/definitions/professional"
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/product/v1/1_000/jsonschema/schemas/Product_1_000.json#/definitions/product"
               }
             }
           }
@@ -258,16 +226,23 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Professional_1_000.json#/definitions/professional"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/product/v1/1_000/jsonschema/schemas/Product_1_000.json#/definitions/product"
                 }
               }
             }
           },
           "400": {
-            "description": "Dados do profissional invalido"
+            "description": "Dados do produto invalido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Profissional nao encontrado.",
+            "description": "Produto(s) nao encontrado(s).",
             "content": {
               "application/json": {
                 "schema": {
@@ -282,22 +257,19 @@
         "tags": [
           "single"
         ],
-        "summary": "Deleta um profissional",
+        "summary": "Deleta um produto",
         "x-totvs": {
           "productInformation": [{
-            "product": "hat",
+            "product": "central-obrigacoes",
             "avaliable": true,
             "minimalVersion": "",
             "note": ""
           }]
         },
-        "description": "Deleta um profissional conforme ID enviado.",
-        "operationId": "deleteProf",
+        "description": "Deleta um produto.",
+        "operationId": "deleteBenef",
         "parameters": [{
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/Expires_at"
           },
           {
             "$ref": "#/components/parameters/healthInsurerCode"
@@ -308,7 +280,7 @@
             "description": "Operação realizada com sucesso!"
           },
           "404": {
-            "description": "Profissional não localizado.",
+            "description": "Produto não localizado.",
             "content": {
               "application/json": {
                 "schema": {
@@ -323,61 +295,39 @@
   },
   "components": {
     "parameters": {
-      "Expires_at": {
-        "name": "expires_at",
-        "in": "header",
-        "required": false,
-        "description": "Tempo de expiracao do token",
-        "schema": {
-          "type": "string"
-        },
-        "x-totvs": [{
-          "product": "hat",
-          "required": true,
-          "type": "string",
-          "length": "6",
-          "note": "Nao possui campo relacionado",
-          "available": true
-        }]
-      },
-      "idOnHealthInsurer": {
-        "name": "idOnHealthInsurer",
+      "healthInsuranceCode": {
+        "name": "healthInsuranceCode",
         "in": "path",
+        "description": "Código do produto a ser retornado",
         "required": true,
-        "description": "Quantidade de Itens por Página",
         "schema": {
           "type": "string"
         },
         "x-totvs": [{
-          "product": "hat",
-          "field": "BB0.BB0_CODIGO",
+          "product": "central-obrigacoes",
+          "field": "B3J.B3J_CODOPE",
           "required": true,
           "type": "string",
-          "length": "6",
-          "note": "Código do Profissional na operadora",
+          "note": "Código da operadora",
           "available": true
         }]
       },
       "healthInsurerCode": {
         "name": "healthInsurerCode",
-        "in": "query",
+        "in": "path",
         "description": "Código da operadora",
         "schema": {
-          "type": "integer",
-          "format": "int32",
-          "default": 20
+          "type": "string"
         },
         "x-totvs": [{
-          "product": "hat",
-          "field": "BAU.BAU_CODIGO",
+          "product": "central-obrigacoes",
+          "field": "B3J.B3J_CODOPE",
           "required": true,
           "type": "string",
-          "length": "6",
           "note": "Código da operadora",
           "available": true
         }]
       }
-    },
-    "schemas": {}
+    }
   }
 }

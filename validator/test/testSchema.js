@@ -2,6 +2,8 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 
+var expect = require('chai').expect;
+
 //SCHEMAS
 var dirname = "./jsonschema/schemas/";
 fs.readdir(dirname, function (err, filenames) {
@@ -33,14 +35,12 @@ fs.readdir(dirname, function (err, filenames) {
             let containsVersion = filename.includes("_");
             expect(containsVersion).to.be.true;
           });
+
+          it("shouldn't contain v (_v)", function() {
+            let containsWrongVersionPattern = filename.includes("_v");
+            expect(containsWrongVersionPattern).to.be.false;
+          });
         });      
-
-        // describe(" - Parameters: ", function () {
-        //   it("shouldn't have common parameters", function () {
-
-        //   })
-        // });
-
 
         // describe(" - Schemas: ", function () {
         //   it("should reference valid objects", function() {
@@ -48,13 +48,8 @@ fs.readdir(dirname, function (err, filenames) {
         //   });
         // });
 
-        // describe(" - Errors: ", function () {
-        //   it("shouldn't contain error model", function () {
-
-        //   });
-        // });
-
-        //TODO: Arrumar
+        
+        //TODO: Arrumar / Schema validator
         // describe(" - xtotvs: ", function () {
         //   it("should be an array ", function () {
         //     // for (var definitionKey in parsedSchema.definitions) {
