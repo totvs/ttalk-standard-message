@@ -104,6 +104,10 @@ fs.readdir(dirname, function (err, filenames) {
           it("should specify 'Id' for all PUT or DELETE operations", function () {
             expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.be.true;
           });
+
+          it("should have unique 'operationId'", function () {
+            expect(pathValidatorResult.operationIdUnique, pathValidatorResult.repeatedUniqueId).to.be.true;
+          });
         });
 
         describe(" - Schemas: ", function () {
