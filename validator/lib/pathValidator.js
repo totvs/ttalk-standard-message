@@ -8,6 +8,7 @@ var thisIsCollectionEndpoint;
 var hasgetcollectionendpoint;
 var parsedOpenAPI;
 var idWasCorrecltyDefinedInGeneralParams;
+var operationIdList;
 
 var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
     if (httpVerbInfo["x-totvs"]) {
@@ -153,6 +154,18 @@ var checkIfThereIsSuccessResponse = function (responses) {
     }
 };
 
+var checkIfOperationIdIsUnique = function (operationId) {
+    if (results.operationIdUnique != false) {
+        if (operationIdList.includes(operationId)) {
+            results.operationIdUnique = false;
+            results.repeatedUniqueId = "The operation id '" + operationId + "' was found more then once. Should be unique"
+        } else {
+            operationIdList.push(operationId);        
+            results.operationIdUnique = true;    
+        }
+    }
+}
+
 var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint, httpVerbkey) {
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
@@ -228,15 +241,15 @@ var verifyIfThisIsThePathParameter = function (parameter, pathkey, alreadyfoundp
     return alreadyfoundpathid;
 }
 
-var checkIfParametersContainPathId = function(alreadyfoundpathid, pathkey, parameterType) {
+var checkIfParametersContainPathId = function (alreadyfoundpathid, pathkey, parameterType) {
     if (!thisIsCollectionEndpoint && !idWasCorrecltyDefinedInGeneralParams) { //If Id was already setted correctly in general, no need to validate this for httpVerb
-        if(alreadyfoundpathid == false && parameterType == "pathLevel") //If it isn't in general (pathlevel), I need to keep looking for it in the httpVerbs
+        if (alreadyfoundpathid == false && parameterType == "pathLevel") //If it isn't in general (pathlevel), I need to keep looking for it in the httpVerbs
             return;
-        else if(alreadyfoundpathid == true && parameterType == "pathLevel"){
+        else if (alreadyfoundpathid == true && parameterType == "pathLevel") {
             idWasCorrecltyDefinedInGeneralParams = true;
-        }        
+        }
         results.hasPathParamDefinedInParameters = alreadyfoundpathid;
-        
+
         if (!alreadyfoundpathid && !results.endpointsWihtoutPathParamDefinedInParameters) {
             results.endpointsWihtoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive)";
         }
@@ -256,9 +269,10 @@ exports.clear = function () {
     hasgetcollectionendpoint = undefined;
     thisIsCollectionEndpoint = undefined;
     idWasCorrecltyDefinedInGeneralParams = undefined;
+    operationIdList = [];
 };
 
-exports.runThroughPaths = function name(_parsedOpenAPI) {
+exports.runThroughPaths = function (_parsedOpenAPI) {
     parsedOpenAPI = _parsedOpenAPI;
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
@@ -273,6 +287,7 @@ exports.runThroughPaths = function name(_parsedOpenAPI) {
                 verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
                 checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
+                checkIfOperationIdIsUnique(httpVerbInfo.operationId);
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid);
                 var request = httpVerbInfo.requestBody;
@@ -294,5 +309,3 @@ exports.runThroughPaths = function name(_parsedOpenAPI) {
     }
     return results;
 };
-
-
