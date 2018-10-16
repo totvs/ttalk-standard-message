@@ -4,29 +4,37 @@ var results;
 var foundorder;
 var foundpage;
 var foundpagesize;
-var thisIsCollectionEdpoint;
+var thisIsCollectionEndpoint;
 var hasgetcollectionendpoint;
+var parsedOpenAPI;
+var idWasCorrecltyDefinedInGeneralParams;
 
-var checkXtotvs = function (httpVerbInfo) {
+var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
     if (httpVerbInfo["x-totvs"]) {
         var productInfo = httpVerbInfo["x-totvs"].productInformation;
-        if (results.useProductInfoAsArray != false)
-            results.useProductInfoAsArray = Array.isArray(productInfo);
+        if (results.useProductInfoAsArray != false && Array.isArray(productInfo)) {
+            results.useProductInfoAsArray = true
+        } else {
+            results.useProductInfoAsArray = false;
+            results.wrongXTotvs = pathkey + "|" + httpVerbkey;
+        }
     } else {
         results.useProductInfoAsArray = true;
     }
 };
 
-var checkUseOfCommonsParams = function (parameter) {
+var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
     if (results.useCommonParams != false) {
         if (parameter.$ref) {
-            results.useCommonParams = !(parameter.$ref.includes("#/components/parameters/Authorization") ||
-                parameter.$ref.includes("#/components/parameters/Order") ||
-                parameter.$ref.includes("#/components/parameters/Page") ||
-                parameter.$ref.includes("#/components/parameters/PageSize") ||
-                parameter.$ref.includes("#/components/parameters/AcceptLanguage") ||
-                parameter.$ref.includes("#/components/parameters/Fields") ||
-                parameter.$ref.includes("#/components/parameters/Expand"));
+            results.useCommonParams = !(
+                (parameter.$ref.includes("Authorization") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Order") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Page") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("PageSize") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("AcceptLanguage") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Fields") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json")) ||
+                (parameter.$ref.includes("Expand") && !parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && !parameter.$ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json"))
+            )
         }
         if (parameter.name) {
             results.useCommonParams = !(parameter.name.includes("Authorization") ||
@@ -37,11 +45,14 @@ var checkUseOfCommonsParams = function (parameter) {
                 parameter.name.includes("Fields") ||
                 parameter.name.includes("Expand"));
         }
+        if (results.useCommonParams == false) {
+            results.notUsingCommonParams = pathkey + "|" + httpVerbkey
+        }
     }
 };
 
 var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, pathkey) {
-    if (thisIsCollectionEdpoint && httpVerbkey == 'get') {
+    if (thisIsCollectionEndpoint && httpVerbkey == 'get') {
         if (parameter.$ref) {
             if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message") && parameter.$ref.includes("jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order")) {
                 foundorder = true;
@@ -73,45 +84,65 @@ var checkHttpVerbInUrl = function (pathkey) {
     results.useHttpVerbInEndpointUrl;
 }
 
-var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
-    if (responseRequest) {
-        if (responseRequest.content["application/json"].schema) {
-            //TODO: Extrair essa questão de encontrar quem é o REF. Já está duplicado aqui e no método abaixo
-            var ref = responseRequest.content["application/json"].schema.$ref;
-            if (!ref) {
-                if (responseRequest.content["application/json"].schema.items) {
-                    ref = responseRequest.content["application/json"].schema.items.$ref;
-                }
-            }
-            if (results.useExternalSchema != false && ref) {
-                results.useExternalSchema = !ref.includes("#/components/");
+var addParamDefinedInComponentList = function (parameter) {
+    if (parameter) {
+        if (parameter.$ref) {
+            if (parameter.$ref.includes("#/components/parameters/")) {
+                var paramName = parameter.$ref.substring(24);
+                if (!results.parametersDefinedInComponentList.includes(paramName))
+                    results.parametersDefinedInComponentList.push(paramName);
             }
         }
     }
 }
 
-//TODO: Pegar schemas de request também. Só adicionar se o schema (sem levar em consideração o que vem depois do #/definition) for diferente
-var addSchema = function (responseRequest) {
+var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
     if (responseRequest) {
-        if (responseRequest.content["application/json"].schema) {
-            var ref = responseRequest.content["application/json"].schema.$ref;
-            if (!ref) {
-                if (responseRequest.content["application/json"].schema.items) {
-                    ref = responseRequest.content["application/json"].schema.items.$ref;
+        if (responseRequest.content) {
+            if (responseRequest.content["application/json"].schema) {
+                var ref = responseRequest.content["application/json"].schema.$ref;
+                if (!ref) {
+                    if (responseRequest.content["application/json"].schema.items) {
+                        ref = responseRequest.content["application/json"].schema.items.$ref;
+                    }
+                }
+                if (results.useExternalSchema != false && ref) {
+                    results.useExternalSchema = !ref.includes("#/components/");
                 }
             }
-            if (ref) {
-                var ref = ref.slice(0, ref.indexOf("#"));
-                if (!results.schemaUrlList.includes(ref)) {
-                    results.schemaUrlList.push(ref);
+        }
+    }
+}
+
+//Schema types: 'request', 'response', 
+var addSchema = function (responseRequest, schematype, pathkey, iscollection, httpVerbkey) {
+    if (responseRequest) {
+        if (responseRequest.content) {
+            if (responseRequest.content["application/json"].schema) {
+                var ref = responseRequest.content["application/json"].schema.$ref;
+                if (!ref) {
+                    if (responseRequest.content["application/json"].schema.items) {
+                        ref = responseRequest.content["application/json"].schema.items.$ref;
+                    }
                 }
-            } else results.errorAddingSchema = true;
+                if (ref) {
+                    var schemaObj = {
+                        ref: ref.slice(0, ref.indexOf("#")),
+                        objectName: ref.slice(ref.indexOf("definitions/") + 12, ref.length),
+                        schematype: schematype,
+                        pathkey: pathkey,
+                        iscollection: iscollection,
+                        httpVerbkey: httpVerbkey
+                    }
+                    results.schemaObjList.push(schemaObj);
+                } else results.errorAddingSchema = true;
+            }
         }
     }
 };
 
-var checkIfPutAndDeleteHaveId = function (thisIsCollectionEdpoint, httpVerbsList) { //Collection shouldn't have PUT or DELETE
-    if (thisIsCollectionEdpoint) {
+var checkIfPutAndDeleteHaveId = function (thisIsCollectionEndpoint, httpVerbsList) { //Collection shouldn't have PUT or DELETE
+    if (thisIsCollectionEndpoint) {
         results.useIdInAllPutsAndDeletes = !((httpVerbsList.hasOwnProperty("put") || httpVerbsList.hasOwnProperty("delete")));
     }
 }
@@ -122,25 +153,39 @@ var checkIfThereIsSuccessResponse = function (responses) {
     }
 };
 
-var runThroughResponses = function (responses) {
+var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint, httpVerbkey) {
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
             checkIfSchemaIsSettedToExternaFile(response, true);
-            addSchema(response);
+            if (responseKey < 400) //Only success response
+                addSchema(response, "response", pathkey, thisIsCollectionEndpoint, httpVerbkey);
         }
     }
 };
 
-var runThroughParams = function (parameters, httpVerbkey, pathkey) {
+var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey, pathkey, alreadyfoundpathid) {
     for (var parameterKey in parameters) {
         var parameter = parameters[parameterKey];
-        checkUseOfCommonsParams(parameter);
-        checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
+        if (parameterType == "httpVerbLevel") {
+            checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
+            checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
+        }
+        alreadyfoundpathid = verifyIfThisIsThePathParameter(parameter, pathkey, alreadyfoundpathid);
+        addParamDefinedInComponentList(parameters[parameterKey])
     }
-};
+    checkIfParametersContainPathId(alreadyfoundpathid, pathkey, parameterType);
+}
+
+var runThroughGeneralParams = function (parameters, pathkey, alreadyfoundpathid) {
+    runThroughParamsInternal(parameters, "pathLevel", null, pathkey, alreadyfoundpathid);
+}
+
+var runThroughHttpVerbParams = function (parameters, httpVerbkey, pathkey, alreadyfoundpathid) {
+    runThroughParamsInternal(parameters, "httpVerbLevel", httpVerbkey, pathkey, alreadyfoundpathid);
+}
 
 var clearCollectionParamsValidation = function () {
     foundorder = false;
@@ -148,16 +193,16 @@ var clearCollectionParamsValidation = function () {
     foundpagesize = false;
 }
 
-var checkIfThisIsCollectionEndpoint = function (pathkey) {
+var verifyIfThisIsCollectionEndpoint = function (pathkey) {
     if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
-        thisIsCollectionEdpoint = false;
+        thisIsCollectionEndpoint = false;
     } else {
-        thisIsCollectionEdpoint = true;
+        thisIsCollectionEndpoint = true;
     }
 }
 
-var checkIfThisIsGETCollectionRequest = function (httpVerbkey) {
-    if (thisIsCollectionEdpoint && httpVerbkey == 'get') {
+var verifyIfThisIsGETCollectionRequest = function (httpVerbkey) {
+    if (thisIsCollectionEndpoint && httpVerbkey == 'get') {
         if (hasgetcollectionendpoint) { //Will be hit if there is more then one get collection endpoint
             clearCollectionParamsValidation();
         }
@@ -165,40 +210,89 @@ var checkIfThisIsGETCollectionRequest = function (httpVerbkey) {
     }
 }
 
+var verifyIfThisIsThePathParameter = function (parameter, pathkey, alreadyfoundpathid) {
+    if (!thisIsCollectionEndpoint) {
+        var urlId = pathkey.substring(pathkey.lastIndexOf("/{") + 2, pathkey.lastIndexOf("}"));
+        if (results.hasPathParamDefinedInParameters != false) {
+            if (parameter.$ref && !parameter.name && !parameter.in) { //Maybe is just a reference to parameter                
+                if (parameter.$ref.includes("#/components/parameters/")) {
+                    var paramName = parameter.$ref.substring(24);
+                    parameter = parsedOpenAPI.components.parameters[paramName];
+                }
+            }
+            if (!alreadyfoundpathid) {
+                alreadyfoundpathid = parameter.name == urlId && parameter.in == "path";
+            }
+        }
+    }
+    return alreadyfoundpathid;
+}
+
+var checkIfParametersContainPathId = function(alreadyfoundpathid, pathkey, parameterType) {
+    if (!thisIsCollectionEndpoint && !idWasCorrecltyDefinedInGeneralParams) { //If Id was already setted correctly in general, no need to validate this for httpVerb
+        if(alreadyfoundpathid == false && parameterType == "pathLevel") //If it isn't in general (pathlevel), I need to keep looking for it in the httpVerbs
+            return;
+        else if(alreadyfoundpathid == true && parameterType == "pathLevel"){
+            idWasCorrecltyDefinedInGeneralParams = true;
+        }        
+        results.hasPathParamDefinedInParameters = alreadyfoundpathid;
+        
+        if (!alreadyfoundpathid && !results.endpointsWihtoutPathParamDefinedInParameters) {
+            results.endpointsWihtoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive)";
+        }
+    }
+}
+
 exports.clear = function () {
     results = {
-        schemaUrlList: []
+        schemaObjList: [],
+        parametersDefinedInComponentList: [],
+        collectionsWithoutRequiredParams: "",
+        wrongXTotvs: "",
+        notUsingCommonParams: "",
+        useIdInAllPutsAndDeletes: true
     };
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;
-    thisIsCollectionEdpoint = undefined;
+    thisIsCollectionEndpoint = undefined;
+    idWasCorrecltyDefinedInGeneralParams = undefined;
 };
 
-exports.runThroughPaths = function name(parsedOpenAPI) {
+exports.runThroughPaths = function name(_parsedOpenAPI) {
+    parsedOpenAPI = _parsedOpenAPI;
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
         var httpVerbsList = parsedOpenAPI.paths[pathkey]
-        checkIfThisIsCollectionEndpoint(pathkey);
-        checkIfPutAndDeleteHaveId(thisIsCollectionEdpoint, httpVerbsList);
+        verifyIfThisIsCollectionEndpoint(pathkey);
+        checkIfPutAndDeleteHaveId(thisIsCollectionEndpoint, httpVerbsList);
+        var alreadyfoundpathid = false;
         for (var httpVerbkey in httpVerbsList) {
-            checkIfThisIsGETCollectionRequest(httpVerbkey);
-            var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
-            checkXtotvs(httpVerbInfo);
-            var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
-            runThroughParams(parameters, httpVerbkey, pathkey);
-            var request = httpVerbInfo.requestBody;
-            checkIfSchemaIsSettedToExternaFile(request);
-            addSchema(request);
-            var responses = httpVerbInfo.responses;
-            runThroughResponses(responses);
+            if (httpVerbkey == "parameters") {
+                runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid);
+            } else {
+                verifyIfThisIsGETCollectionRequest(httpVerbkey);
+                var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
+                checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
+                var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
+                runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid);
+                var request = httpVerbInfo.requestBody;
+                checkIfSchemaIsSettedToExternaFile(request);
+                addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
+                var responses = httpVerbInfo.responses;
+                runThroughResponses(responses, pathkey, thisIsCollectionEndpoint, httpVerbkey);
+            }
         }
         if (!hasgetcollectionendpoint)
             results.useAllRequiredParamsForCollection = true;
         else if (foundorder && foundpage && foundpagesize && results.useAllRequiredParamsForCollection != false)
             results.useAllRequiredParamsForCollection = true;
-        else
+        else {
+            if (results.useAllRequiredParamsForCollection != false)
+                results.collectionsWithoutRequiredParams += "'" + pathkey + "'";
             results.useAllRequiredParamsForCollection = false
+        }
     }
-
     return results;
 };
+
+
