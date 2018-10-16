@@ -1,0 +1,211 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/purchaseGroups/v1/2_000/jsonschema/schemas/purchaseGroups_2_000.json#",
+	"info": {
+		"description": "",
+		"version": "2.000",
+		"title": "purchasesGroups",
+		"contact": {},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+				"$ref": "#/definitions/purchasesGroupsInfo",
+				"type": "object"
+				},
+				"returnContentType": {
+				"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType",
+				"type": "object"
+				}
+			},		  
+			"messageDocumentation": {
+				"name": "T-Talk",
+
+				"url": "api.Totvs.com.br",
+				"email": "comiteintegracao@totvs.com.br"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "squad.suprimentos@totvs.com.br",
+					"description": "Cadastro de Aprovadores do Protheus.",
+					"adapter": "MATA095.prw",
+					"helpUrl": ""
+				}
+			]	
+		}
+	},
+  "definitions": {
+		"PagedPurchasesGroups":{
+			"type":"object",
+			"allOf":[
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref":"#/definitions/purchasesGroups"
+				}
+			]
+		},
+		"purchasesGroups":{
+			"type":"object",
+			"properties":{
+				"items":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/purchasesGroupsInfo"
+					}
+				}
+			}
+		},
+		"purchasesGroupsInfo":{
+			"description": "Descreve o Grupo de Compras.",
+			"type":"object",
+			"properties": {
+				"companyInternalId": {
+					"type": "string",
+					"description": "InternalId da chave completa de empresa do produto.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|SAJ.AJ_FILIAL|SAJ.AJ_GRCOM|SAJ.AJ_ITEM",
+							"available": false,
+							"canUpdate": false,
+							"note": "Para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto."
+						}
+					]
+				},
+				"branchId": {
+					"type": "string",
+					"example": "M SP 01",
+					"description": "ID Filial",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SAJ.AJ_FILIAL",
+							"required": true,
+							"type": "Char",
+							"length": "8",
+							"available": false,
+							"canUpdate": false,
+							"description": "Pode ter tamanho variável até 8 com Gestão de Empresa ativado."
+						}
+					]
+				},
+				"code": {
+					"type": "string",
+					"format": "string",
+					"example": "000001, AP-001, SP0001.",
+					"description": "Código do Grupo de Compras.",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SAJ.AJ_GRCOM",
+							"description": "Codigo do Grupo de Compras.",
+							"required": true,
+							"type": "char",
+							"length": "6",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"UsersList":{
+			"description": "Cadastra os usuários que compoem o Grupo de Compras.",
+			"type":"array",            
+			"items": {
+			"properties": {
+					"ItemSequence":{
+						"type": "string",
+						"example": "01",
+						"description": "Numero sequencial dos usuarios que fazem parte do Grupo.",
+						"x-totvs":[
+							{
+								"product": "protheus",
+								"field": "SAJ.AJ_ITEM",
+								"description": "Numero sequencial dos usuarios que fazem parte do Grupo.",
+								"required": false,
+								"type": "char",
+								"length": "2",
+								"available": true,
+								"canUpdate": false
+							}                         
+						]
+					},
+					"userCode": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Users_4_003.json#/definitions/GovernmentalInformationType",
+						"format": "string",
+						"example": "000001",
+						"description": "Código do usuário.",
+						"maxLength": 6,
+						"type": "object",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SAJ.AJ_USER",
+								"description": "Armazena o ID do Usuário Logado no Protheus.",
+								"required": true,
+								"type": "char",
+								"length": "6",
+								"available": true,
+								"canUpdate": false,
+								"note": "ID do Usuário (Login de acesso cadastrado no Protheus)."
+							}
+						]
+					},		
+					"userName": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Users_4_003.json#/definitions/GovernmentalInformationType",
+						"format": "string",
+						"example": "Colaborador Fulano da Silva.",
+						"description": "Nome do usuário no Protheus.",
+						"maxLength": 15,
+						"type": "object",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SAJ.AJ_US2NAME",
+								"description": "Armazena o nome do usuário no Protheus.",
+								"required": true,
+								"type": "char",
+								"length": "15",
+								"available": true,
+								"canUpdate": false,
+								"note": "Armazena o nome do usuário no Protheus, dado apenas para exibição/ReadOnly."
+							}
+						]
+					},
+					"quoteAnalyzes": {
+						"type": "string",
+						"format": "char",
+						"example": "S=SIM, N=NAO",
+						"description": "Se o Comprador pode analisar a cotação (S=SIM, N=NAO).",
+						"maxLength": 1,
+						"enum": [
+							"S",
+							"N"
+						],
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SAJ.AJ_COTACAO",
+								"description": "Se o Comprador pode analisar a cotação (S=SIM, N=NAO).",
+								"required": true,
+								"type": "char",
+								"length": "1",
+								"available": true,
+								"canUpdate": false,
+								"note": "Se o Comprador pode analisar a cotação (S=SIM, N=NAO)."
+							}
+						]
+					}
+				}
+			}
+		}
+	}
+}
+
+  
+
