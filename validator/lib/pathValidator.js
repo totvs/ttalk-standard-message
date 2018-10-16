@@ -6,6 +6,8 @@ var foundpage;
 var foundpagesize;
 var thisIsCollectionEndpoint;
 var hasgetcollectionendpoint;
+var parsedOpenAPI;
+var idWasCorrecltyDefinedInGeneralParams;
 
 var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
     if (httpVerbInfo["x-totvs"]) {
@@ -164,23 +166,25 @@ var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint
     }
 };
 
-var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey, pathkey) {
+var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey, pathkey, alreadyfoundpathid) {
     for (var parameterKey in parameters) {
         var parameter = parameters[parameterKey];
-        if (parameterType == "httpVerb") {
+        if (parameterType == "httpVerbLevel") {
             checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
             checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
         }
+        alreadyfoundpathid = verifyIfThisIsThePathParameter(parameter, pathkey, alreadyfoundpathid);
         addParamDefinedInComponentList(parameters[parameterKey])
     }
+    checkIfParametersContainPathId(alreadyfoundpathid, pathkey, parameterType);
 }
 
-var runThroughGeneralParams = function (parameters) {
-    runThroughParamsInternal(parameters, "general");
+var runThroughGeneralParams = function (parameters, pathkey, alreadyfoundpathid) {
+    runThroughParamsInternal(parameters, "pathLevel", null, pathkey, alreadyfoundpathid);
 }
 
-var runThroughHttpVerbParams = function (parameters, httpVerbkey, pathkey) {
-    runThroughParamsInternal(parameters, "httpVerb", httpVerbkey, pathkey);
+var runThroughHttpVerbParams = function (parameters, httpVerbkey, pathkey, alreadyfoundpathid) {
+    runThroughParamsInternal(parameters, "httpVerbLevel", httpVerbkey, pathkey, alreadyfoundpathid);
 }
 
 var clearCollectionParamsValidation = function () {
@@ -206,6 +210,39 @@ var verifyIfThisIsGETCollectionRequest = function (httpVerbkey) {
     }
 }
 
+var verifyIfThisIsThePathParameter = function (parameter, pathkey, alreadyfoundpathid) {
+    if (!thisIsCollectionEndpoint) {
+        var urlId = pathkey.substring(pathkey.lastIndexOf("/{") + 2, pathkey.lastIndexOf("}"));
+        if (results.hasPathParamDefinedInParameters != false) {
+            if (parameter.$ref && !parameter.name && !parameter.in) { //Maybe is just a reference to parameter                
+                if (parameter.$ref.includes("#/components/parameters/")) {
+                    var paramName = parameter.$ref.substring(24);
+                    parameter = parsedOpenAPI.components.parameters[paramName];
+                }
+            }
+            if (!alreadyfoundpathid) {
+                alreadyfoundpathid = parameter.name == urlId && parameter.in == "path";
+            }
+        }
+    }
+    return alreadyfoundpathid;
+}
+
+var checkIfParametersContainPathId = function(alreadyfoundpathid, pathkey, parameterType) {
+    if (!thisIsCollectionEndpoint && !idWasCorrecltyDefinedInGeneralParams) { //If Id was already setted correctly in general, no need to validate this for httpVerb
+        if(alreadyfoundpathid == false && parameterType == "pathLevel") //If it isn't in general (pathlevel), I need to keep looking for it in the httpVerbs
+            return;
+        else if(alreadyfoundpathid == true && parameterType == "pathLevel"){
+            idWasCorrecltyDefinedInGeneralParams = true;
+        }        
+        results.hasPathParamDefinedInParameters = alreadyfoundpathid;
+        
+        if (!alreadyfoundpathid && !results.endpointsWihtoutPathParamDefinedInParameters) {
+            results.endpointsWihtoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive)";
+        }
+    }
+}
+
 exports.clear = function () {
     results = {
         schemaObjList: [],
@@ -218,23 +255,26 @@ exports.clear = function () {
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;
     thisIsCollectionEndpoint = undefined;
+    idWasCorrecltyDefinedInGeneralParams = undefined;
 };
 
-exports.runThroughPaths = function name(parsedOpenAPI) {
+exports.runThroughPaths = function name(_parsedOpenAPI) {
+    parsedOpenAPI = _parsedOpenAPI;
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
         var httpVerbsList = parsedOpenAPI.paths[pathkey]
         verifyIfThisIsCollectionEndpoint(pathkey);
         checkIfPutAndDeleteHaveId(thisIsCollectionEndpoint, httpVerbsList);
+        var alreadyfoundpathid = false;
         for (var httpVerbkey in httpVerbsList) {
             if (httpVerbkey == "parameters") {
-                runThroughGeneralParams(httpVerbsList[httpVerbkey]);
+                runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid);
             } else {
                 verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
                 checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
-                runThroughHttpVerbParams(parameters, httpVerbkey, pathkey);
+                runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid);
                 var request = httpVerbInfo.requestBody;
                 checkIfSchemaIsSettedToExternaFile(request);
                 addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
@@ -254,3 +294,5 @@ exports.runThroughPaths = function name(parsedOpenAPI) {
     }
     return results;
 };
+
+
