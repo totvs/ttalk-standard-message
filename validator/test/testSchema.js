@@ -1,6 +1,7 @@
 var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
+var schemaDefinitionsValidator = require('../libSchema/schemaDefinitionsValidator.js');
 
 var expect = require('chai').expect;
 
@@ -17,6 +18,7 @@ fs.readdir(dirname, function (err, filenames) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let schemaPath = path.join(dirname, filename);
       var parsedSchema;
+      var schemaDefinitionsValidatorResult
       describe("SCHEMA - " + filename, function () {
         var file = fs.readFileSync(schemaPath, {
           encoding: 'utf-8'
@@ -24,6 +26,8 @@ fs.readdir(dirname, function (err, filenames) {
 
         before(function () {
           parsedSchema = JSON.parse(file);
+          schemaDefinitionsValidator.clear();
+          schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema);
         })
 
         describe(" - Filename: ", function () {
@@ -42,11 +46,14 @@ fs.readdir(dirname, function (err, filenames) {
           });
         });      
 
-        // describe(" - Schemas: ", function () {
-        //   it("should reference valid objects", function() {
-
-        //   });
-        // });
+        describe(" - Schemas: ", function () {
+          it("should reference valid objects", function() {
+            var errorMessage = "";
+            if (schemaDefinitionsValidatorResult.erroredObjectName)
+              errorMessage = "Could not find the object '" + schemaDefinitionsValidatorResult.erroredObjectName + "' inside 'definitions' property of this file '" 
+            expect(schemaDefinitionsValidatorResult.validObject, errorMessage).not.to.be.false;
+          });
+        });
 
         
         //TODO: Arrumar / Schema validator
