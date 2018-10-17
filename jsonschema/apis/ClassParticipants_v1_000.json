@@ -52,16 +52,13 @@
 					]
 				},
 				"description": "Retorna dados de tabela da turma especificada",
-				"operationId": "get",
+				"operationId": "getClassParticipantsId",
 				"parameters": [
 					{
-						"in": "path",
-						"name": "id",
-						"description": "Código",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
+						"$ref": "#/components/parameters/ClassParticipantsId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
@@ -103,31 +100,21 @@
 					]
 				},
 				"description": "Exclui participantes da turma",
-				"operationId": "delete",
+				"operationId": "DeleteClassParticipantsId",
 				"parameters": [
 					{
-						"in": "path",
-						"name": "id",
-						"description": "Código",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
+						"$ref": "#/components/parameters/ClassParticipantsId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "Operação executada com sucesso"
 					},
-					"400": {
-						"description": "Erro na execução da operação",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
+					"405": {
+						"description": "Não disponivel"
 					}
 				}
 			},
@@ -147,16 +134,13 @@
 					]
 				},
 				"description": "Atualiza um registro existente de participantes da turma. Caso não seja informado alguma propriedade para ser atualizada, está será considerada nula.",
-				"operationId": "put",
+				"operationId": "putClassParticipantsId",
 				"parameters": [
 					{
-						"in": "path",
-						"name": "id",
-						"description": "Código",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
+						"$ref": "#/components/parameters/ClassParticipantsId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"requestBody": {
@@ -208,7 +192,7 @@
 					}]
 				},
 				"description": "Retorna todos os participantes da turma",
-				"operationId": "getAll",
+				"operationId": "getClassParticipants",
 				"parameters": [{
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 				},
@@ -220,6 +204,12 @@
 				},
 				{
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+				},
+				{
+					"$ref": "#/components/parameters/ClassParticipantsIds"
+				},
+				{
+					"$ref": "#/components/parameters/Names"
 				}],
 				"responses": {
 					"200": {
@@ -259,8 +249,11 @@
 						}
 					]
 				},
+				"parameters": [{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+				}],
 				"description": "Inclui um novo registro na tabela de participantes de turma",
-				"operationId": "post",
+				"operationId": "postClassParticipant",
 				"requestBody": {
 					"description": "Objeto para atualizar o registro de tabela de participantes de turma",
 					"content": {
@@ -297,7 +290,37 @@
 		}
 	},
 	"components": {
-		"parameters": {},
+		"parameters": {
+			"ClassParticipantsId": {
+			  "name": "id",
+			  "in": "path",
+			  "required": true,
+			  "description": "Identificador Único representando o participante da turma",
+			  "schema": {
+				"type": "string"
+			  }
+			},           
+			"ClassParticipantsIds": {
+			  "name": "userIds",
+			  "in": "query",
+			  "description": "Códigos de participantes da turma retornados pelo get separado por vírgula (,) ",
+			  "required": false,
+			  "example": "param1,param2",
+			  "schema": {
+				"type": "string"
+			  }
+			},
+			"Names": {
+			  "name": "name",
+			  "in": "query",
+			  "description": "Busca participantes por nome",
+			  "required": false,
+			  "example": "Usuário de busca",
+			  "schema": {
+				"type": "string"
+			  }
+			}
+		  },
 		"schemas": {}
 	}
 }
