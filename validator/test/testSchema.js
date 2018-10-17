@@ -40,29 +40,38 @@ fs.readdir(dirname, function (err, filenames) {
             expect(containsVersion).to.be.true;
           });
 
-          it("shouldn't contain v (_v)", function() {
+          it("shouldn't contain v (_v)", function () {
             let containsWrongVersionPattern = filename.includes("_v");
             expect(containsWrongVersionPattern).to.be.false;
           });
-        });      
+        });
 
         describe(" - Schemas: ", function () {
-          it("should reference valid objects", function() {
+          it("should reference valid objects", function () {
             var errorMessage = "";
             if (schemaDefinitionsValidatorResult.erroredObjectName)
-              errorMessage = "Could not find the object '" + schemaDefinitionsValidatorResult.erroredObjectName + "' inside 'definitions' property of this file '" 
+              errorMessage = "Could not find the object '" + schemaDefinitionsValidatorResult.erroredObjectName + "' inside 'definitions' property of this file '"
             expect(schemaDefinitionsValidatorResult.validObject, errorMessage).not.to.be.false;
           });
         });
-        
+
         describe(" - xtotvs: ", function () {
-          it("should be an object in 'info'", function () {
+          it("should be an object in 'info' and may have a 'productInformation' porperty as an array", function () {
             expect(parsedSchema.info["x-totvs"]).to.be.an('object');
+            var productInformation = parsedSchema.info["x-totvs"].productInformation;
+            if (productInformation) {
+              expect(productInformation).to.be.an('array');
+            }
           });
+
 
           it("should be an array in properties inside 'definitions'", function () {
             var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvs;
             expect(schemaDefinitionsValidatorResult.useXTotvsAsArray, wrongXTotvs).not.to.be.false;
+          });
+
+          it("should have the property 'product'", function () {
+
           });
 
           it("should have the property 'available' correctly spelled", function () {
