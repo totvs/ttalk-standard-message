@@ -26,7 +26,7 @@ fs.readdir(dirname, function (err, filenames) {
   console.log('OPENAPI files');
   console.log(filenames);
   filenames.forEach(function (filename) {
-    if (filename.includes("asdasdsa.json") && !filename.includes("package")) {
+    if (filename.includes(".json") && !filename.includes("package")) {
       let openAPIPath = path.join(dirname, filename);
 
       describe("OpenAPI - " + filename, function () {

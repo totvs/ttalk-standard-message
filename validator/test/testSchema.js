@@ -54,33 +54,27 @@ fs.readdir(dirname, function (err, filenames) {
             expect(schemaDefinitionsValidatorResult.validObject, errorMessage).not.to.be.false;
           });
         });
-
         
-        //TODO: Arrumar / Schema validator
-        // describe(" - xtotvs: ", function () {
-        //   it("should be an array ", function () {
-        //     // for (var definitionKey in parsedSchema.definitions) {
-        //     //   if (parsedSchema.definitions[definitionKey].properties["x-totvs"]) {
-        //     //     expect(parsedSchema.definitions[definitionKey].properties["x-totvs"]).to.be.an('array');
-        //     //   }
-        //     //TODO: Isolar isso em um método recursivo para varrer até o último nível possível
-        //     //Check for LowerLevel
-        //     // if (parsedSchema.definitions[definitionKey].type == 'object') {
-        //     //Chamar o mesmo loop acima
-        //     //     }
-        //     //   }
-        //   });
+        describe(" - xtotvs: ", function () {
+          it("should be an object in 'info'", function () {
+            expect(parsedSchema.info["x-totvs"]).to.be.an('object');
+          });
 
-        //   it("should have the property 'available' correctly spelled", function () {
+          it("should be an array in properties inside 'definitions'", function () {
+            var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvs;
+            expect(schemaDefinitionsValidatorResult.useXTotvsAsArray, wrongXTotvs).not.to.be.false;
+          });
 
-        //   });
-        // });
+          it("should have the property 'available' correctly spelled", function () {
 
-        // describe(" - Enum: ", function () {
-        //   it("should be a string ", function () {
+          });
+        });
 
-        //   });
-        // })
+        describe(" - Enum: ", function () {
+          it("should be a string ", function () {
+
+          });
+        })
       });
     };
   });

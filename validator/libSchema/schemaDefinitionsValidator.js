@@ -16,30 +16,45 @@ var checkIfObjectIsValid = function (theObject, prop) {
     }
 }
 
-var getObject = function (theObject) {
+var checkXtotvs = function (theObject, prop, parentObjectName) {
+    if (parentObjectName != "info") { //Skip INFO x-totvs
+        var xTotvs = theObject[prop];
+        if (results.useXTotvsAsArray != false) {
+            if (Array.isArray(xTotvs)) {
+                results.useXTotvsAsArray = true
+            } else {
+                results.useXTotvsAsArray = false;
+                results.wrongXTotvs = "Object with invalid x-totvs: '" + parentObjectName + "'";
+            }
+        }
+    }
+};
+
+var getObjectRecursive = function (theObject, parentObjectName) {
     var result = null;
     if (theObject instanceof Array) {
         for (var i = 0; i < theObject.length; i++) {
-            result = getObject(theObject[i]);
+            result = getObjectRecursive(theObject[i], prop);
             if (result) {
                 break;
             }
         }
     } else {
         for (var prop in theObject) {
-            //console.log(prop + ': ' + theObject[prop]);
             if (prop == '$ref') {
                 checkIfObjectIsValid(theObject, prop);
             }
+            if (prop == 'x-totvs') {
+                checkXtotvs(theObject, prop, parentObjectName);
+            }
             if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) {
-                result = getObject(theObject[prop]);
+                result = getObjectRecursive(theObject[prop], prop);
                 if (result) {
                     break;
                 }
             }
         }
     }
-    return result;
 }
 
 var getAllHrefs = function () {
@@ -52,7 +67,7 @@ var checkIfReferenceIsValid = function () {
 
 exports.validateSchema = function (_parsedSchema) {
     parsedSchema = _parsedSchema;
-    getObject(parsedSchema);
+    getObjectRecursive(parsedSchema);
     return results;
 }
 
