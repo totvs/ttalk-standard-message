@@ -1,0 +1,958 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/events/priceListHeaderItem_2_005_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "2.005",  
+		"title": "priceListHeaderItem",
+		"contact": {},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/PriceListHeaderItemsInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "Tabela de Preços",
+				"description": "Cadastro de Tabela de Preços para produtos Totvs",
+				"segment": "Manufatura"
+			},
+			"productInformation": [
+				{
+					"product": "DATASUL",
+					"contact": "supply.ml.man.sup.comex.d@totvs.com.br@totvs.com.br",
+					"description": "Cadastro de Tabela de Preços",
+					"adapter": ""
+				},
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de Tabela de Preço",
+					"adapter": "omsa010.prx"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedPriceListHeaderItems": {
+			"type": "object",
+			"allOf": [
+				{
+				  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+						"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/PriceListHeaderItemsInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"PriceListHeaderItemsInfo": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"type": "string",
+					"description": "ID Filial",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"type": "Char",
+							"length": "2",
+							"description": "Pode ter tamanho variável até 8 com Gestão de Empresa ativado"
+						},
+						{
+						"product": "datasul",
+						"required": false,
+						"available": false
+						}
+					]
+				},
+				"companyInternalId": {
+					"type": "string",
+					"description": "InternalId da chave completa de empresa do produto",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto"
+						},
+						{
+						"product": "datasul",
+						"required": false,
+						"available": false
+						}
+					]
+				},
+				"identifyPriceList":{
+					"type": "string",
+					"description": "Identificador da Tabela de Preços recebida na mensagem.",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "7",
+							"available": true,
+							"note": "Para tabela de Preços do módulo de Compras, deverá ser enviada a informação 'Compras'"
+						}
+					]
+				},
+				"code": {
+					"type": "string",
+					"description": "Código da tabela de preço",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_CODTAB",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"available": true
+						},
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.nr-tab",
+							"required": true,
+							"type": "varchar",
+							"length": "10",
+							"available": true,
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": false
+						}
+					]
+				},
+				"internalId": {
+					"type": "string",
+					"description": "InternalId da chave completa da tabela de preço",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"note": "InternalID da tabela de preço utilizado na integração EAI-TOTVS formado por EMPRESA|DA0_FILIAL|DA0_CODTAB"
+						},
+						{
+						"product": "datasul",
+						"required": false,
+						"available": false
+						}
+					]
+				},
+				"companyId": {
+					"type": "string",
+					"description": "Código da empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"type": "varchar",
+							"length": "4",
+							"note": "pode ter tamanho variável até 4 com Gestão de Empresa ativado"
+						},
+						{
+						"product": "datasul",
+						"required": false,
+						"available": false
+						}
+					]
+				},
+				"name": {
+					"type": "string",
+					"description": "Descrição da Tabela",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_DESCRI",
+							"note": "Descrição",
+							"length": "30"
+						},
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.descricao",
+							"required": true,
+							"type": "varchar",
+							"length": "40",
+							"available": true,
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": true
+						}
+					]
+				},
+				"provider" : {
+					"type": "string",
+					"description": "Fornecedor da Tabela de Preços",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.cod-emitente",
+							"required": true,
+							"type": "varchar",
+							"length": "9",
+							"available": true,
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": false
+						}
+					]
+				},
+				"paymentTerms": {
+					"type": "string",
+					"description": "Condição de Pagamento da Tabela de Preço",
+					"x-totvs": [
+						{
+						"product": "datasul",
+						"field": "tb-pr-cc.cod-cond-pag",
+						"required": true,
+						"type": "varchar",
+						"length": "4",
+						"available": true,
+						"note": "Utilizado quando Identificador for 'Compras'",
+						"canUpdate": false
+						}
+					]
+				},
+				"company": {
+					"type": "string",
+					"description": "Estabelecimento da Tabela de Preço",
+					"x-totvs": [
+						{
+						"product": "datasul",
+						"field": "tb-pr-cc.cod-estabel",
+						"required": true,
+						"type": "varchar",
+						"length": "5",
+						"available": true,
+						"note": "Utilizado quando Identificador for 'Compras'",
+						"canUpdate": false
+						}
+					]
+				},
+				"initialDate": {
+					"type": "string",
+					"format": "date",
+					"example": "2018-07-19",
+					"description": "Data Inicial da Vigência AAAA-MM-DD",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_DATDE",
+							"required": true,
+							"type": "varchar",
+							"length": 10,
+							"description": "o conteúdo deve vir DD/MM/AAAA"
+						},
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.dt-inicio",
+							"required": true,
+							"type": "varchar",
+							"length": 10,
+							"description": "o conteúdo deve vir DD/MM/AAAA",
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": true
+						}
+					]
+				},
+				"finalDate": {
+					"type": "string",
+					"format": "date",
+					"example": "20180719",
+					"description": "Data Final da Vigência AAAAMMDD",
+					"x-totvs": [{
+							"product": "protheus",
+							"field": "DA0.DA0_DATATE",
+							"description": "o conteúdo deve vir DD/MM/AAAA",
+							"required": true,
+							"type": "varchar",
+							"length": 10
+						},
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.dt-termino",
+							"required": true,
+							"type": "varchar",
+							"length": 10,
+							"description": "o conteúdo deve vir DD/MM/AAAA",
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": true
+						}
+					]
+				},
+				"initiaHour": {
+					"type": "string",
+					"format": "date-time",
+					"description": "Hora Inicial Vigencia HH:MM:SS",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_HORADE",
+							"description": "Hora inicial de vigência da tabela de preço. No protheus o formato deverá ser HH:MM",
+							"required": true,
+							"type": "varchar",
+							"length": 5
+						},
+						{
+						"product": "datasul",
+						"required": false,
+						"available": false
+						}
+					]
+				},
+				"finalHour": {
+					"type": "string",
+					"format": "date-time",
+					"description": "Hora Final Vigencia HH:MM:SS",
+					"x-totvs": [{
+							"product": "protheus",
+							"field": "DA0.DA0_HORATE",
+							"description": "Hora final de vigência da tabela de preço. No protheus o formato deverá ser HH:MM",
+							"required": true,
+							"type": "varchar",
+							"length": 5
+						},
+						{
+						"product": "datasul",
+						"required": false,
+						"available": false
+						}
+					]
+				},
+				"currency": {
+					"type": "string",
+					"description": "Moeda da Tabela de Preço",
+					"x-totvs": [
+						{
+						"product": "datasul",
+						"field": "tb-pr-cc.mo-codigo",
+						"required": true,
+						"type": "varchar",
+						"length": "2",
+						"available": true,
+						"note": "Utilizado quando Identificador for 'Compras'",
+						"canUpdate": false
+						}
+					]
+				},
+				"IncludedIPI": {
+					"type": "string",
+					"description": "IPI Incluso? 1 = Sim; 2 = Não",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.codigo-ipi",
+							"required": true,
+							"type": "varchar",
+							"length": 1,
+							"description": "Determina se o percentual de IPI está incluso no preço do item pertencente à tabela",
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": true
+						}
+					]
+				},
+				"valueDescount": {
+					"type": "number",
+					"format": "double",
+					"description": "Desconto Tabela de Preço",
+					"maxLength": 12
+				},
+				"discountFactor": {
+					"type": "number",
+					"format": "double",
+					"description": "Percentual de Desconto",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.perc-descto",
+							"required": true,
+							"type": "varchar",
+							"length": 5,
+							"description": "Percentual de desconto a ser incluso ao item da Tabela de Preço",
+							"note": "Utilizado quando Identificador for 'Compras'. Campo com duas casas decimais.",
+							"canUpdate": true
+						}
+					]
+				},
+				"activeTablePrice": {
+					"type": "string",
+					"description": "Tabela de Preco Ativo? 1 = Sim; 2 = Não",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_ATIVO",
+							"decription": "Tabela Ativa",
+							"type": "varchar",
+							"length": "1"
+						},
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.situacao",
+							"required": true,
+							"type": "varchar",
+							"length": 1,
+							"description": "Tabela Ativa/Inativa",
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": true
+						}
+					]
+				},
+				"freightValue": {
+					"type": "number",
+					"format": "double",
+					"description": "Valor do Frete",
+					"maxLength": 14,
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.valor-frete",
+							"length": "12",
+							"description": "Valor do Frete",
+							"note": "Utilizado quando Identificador for 'Compras'. Campo com quatro casas decimais.",
+							"canUpdate": true
+						}
+					]
+				},
+				"IncludedFreight": {
+					"type": "string",
+					"description": "Frete Incluso? 1 = Sim; 2 = Não",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.frete",
+							"required": true,
+							"type": "varchar",
+							"length": 1,
+							"description": "Determina que o valor do frete está incluso no preço do item pertencente à tabela",
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": true
+						}
+					]
+				},
+				"aliquotICMS":{
+					"type": "number",
+					"format": "double",
+					"description": "Alíquota do ICMS",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.aliquota-icm",
+							"length": "6",
+							"description": "Alíquota do ICMS",
+							"note": "Utilizado quando Identificador for 'Compras'. Campo com duas casas decimais",
+							"canUpdate": true
+						}
+					]
+				},
+				"note":{
+					"type": "string",
+					"description": "Observação da Tabela de Preço",
+					"maxLength": 2000,
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "tb-pr-cc.observacao",
+							"length": "2000",
+							"description": "Observação da Tabela de Preço",
+							"note": "Utilizado quando Identificador for 'Compras'.",
+							"canUpdate": true
+						}
+					]
+				},
+				"itensTablePrice": {
+					"type": "object",
+					"$ref": "#/definitions/itensTablePriceInfo"
+				}
+			}
+		},
+		"PagedItensTablePrice": {
+			"type": "object",
+			"allOf": [
+				{
+				  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				}, {
+					"$ref": "#/definitions/itensTablePrices"
+				}
+			]
+		},
+		"itensTablePrices": {
+			"type": "array",
+			"description": "será necessário alterar o nome deste elemento na próxima versão. Sugestão: 'ListOfTablePrice'",
+			"items": {
+				"$ref": "#/definitions/itensTablePriceInfo"
+			}
+		},
+		"itensTablePriceInfo": {
+			"type": "array",
+			"items": {
+				"properties": {
+					"identifyPriceListItems":{
+						"type": "string",
+						"description": "Identificador da Tabela de Preços recebida na mensagem.",
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "",
+								"required": true,
+								"type": "varchar",
+								"length": "7",
+								"available": true,
+								"note": "Para tabela de Preços do módulo de Compras, deverá ser enviada a informação 'Compras'"
+							}
+						]
+					},
+					"provider" : {
+						"type": "string",
+						"description": "Fornecedor da Tabela de Preços",
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "item-tab.cod-emitente",
+								"required": true,
+								"type": "varchar",
+								"length": "9",
+								"available": true,
+								"note": "Utilizado quando Identificador for 'Compras'",
+								"canUpdate": false
+							}
+						]
+					},
+					"code": {
+						"type": "string",
+						"description": "Código da Tabela de Preço",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "DA1.DA1_CODTAB",
+								"required": true,
+								"type": "varchar",
+								"length": "6",
+								"available": true
+							},
+							{
+								"product": "datasul",
+								"field": "item-tab.nr-tab",
+								"required": true,
+								"type": "varchar",
+								"length": "10",
+								"available": true,
+								"note": "Utilizado quando Identificador for 'Compras'",
+								"canUpdate": false
+							}
+						]
+					},
+					"paymentTerms": {
+						"type": "string",
+						"description": "Condição de Pagamento da Tabela de Preço",
+						"x-totvs": [
+							{
+							"product": "datasul",
+							"field": "item-tab.cod-cond-pag",
+							"required": true,
+							"type": "varchar",
+							"length": "4",
+							"available": true,
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": false
+							}
+						]
+					},
+					"company": {
+						"type": "string",
+						"description": "Estabelecimento da Tabela de Preço",
+						"x-totvs": [
+							{
+							"product": "datasul",
+							"field": "item-tab.cod-estabel",
+							"required": true,
+							"type": "varchar",
+							"length": "5",
+							"available": true,
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": false
+							}
+						]
+					},
+					"currency": {
+						"type": "string",
+						"description": "Moeda da Tabela de Preço",
+						"x-totvs": [
+							{
+							"product": "datasul",
+							"field": "item-tab.mo-codigo",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"available": true,
+							"note": "Utilizado quando Identificador for 'Compras'",
+							"canUpdate": false
+							}
+						]
+					},
+					"itemList": {
+						"type": "string",
+						"description": "Item da Tabela",
+						"maxLength": 4,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"type": "varchar",
+								"field": "DA1.DA1_ITEM",
+								"description": "Item da Tabela de Preço",
+								"length": "4"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					},
+					"itemCode": {
+						"type": "string",
+						"description": "Código do Produto",
+						"maxLength": 30,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"type": "varchar",
+								"field": "DA1.DA1_CODPRO",
+								"description": "",
+								"length": "15"
+							},
+							{
+								"product": "datasul",
+								"type": "varchar",
+								"field": "item-tab.it-codigo",
+								"description": "",
+								"length": "16",
+								"note": "Utilizado quando Identificador for 'Compras'",
+								"canUpdate": false
+							}
+						]
+					},
+					"itemInternalId": {
+						"type": "string",
+						"description": "InternalId da chave completa do Item",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"required": true,
+								"type": "varchar",
+								"length": "50",
+								"note": "InternalID do produto formado por EMPRESA|DA1_FILIAL|DA1_CODPRO|DA1_CODTAB|DA1_ITEM"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					},
+					"referenceCode": {
+						"type": "string",
+						"description": "Código da Referência do Produto",
+						"maxLength": 8,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "cod-refer",
+								"required": true,
+								"type": "string",
+								"length": "8",
+								"note": "Utilizado quando não receber informação no Identificador"
+							}
+						]
+					},
+					"unitOfMeasureCode": {
+						"type": "string",
+						"description": "Código da Unidade de Medida de Venda",
+						"maxLength": 2,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "cod-unid-med",
+								"required": true,
+								"type": "string",
+								"length": "2",
+								"note": "Utilizado quando não receber informação no Identificador"
+							}
+						]
+					},
+					"minimumSalesPrice": {
+						"type": "number",
+						"format": "double",
+						"description": "Preco mínimo de venda do produto - Valor Sem Frete",
+						"maxLength": 12,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "DA1.DA1_PRCVEN",
+								"length": "12",
+								"description": "Preco Venda",
+								"note": "Campo com duas casas decimais"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					},
+					"itemPrice":{
+						"type": "number",
+						"format": "double",
+						"description": "Preco do Item",
+						"maxLength": 16,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "item-tab.pr-item",
+								"length": "16",
+								"description": "Preco do Item",
+								"note": "Utilizado quando Identificador for 'Compras'. Campo com cinco casas decimais",
+								"canUpdate": true
+							}
+						]
+					},
+					"aliquotIPI":{
+						"type": "number",
+						"format": "double",
+						"description": "Alíquota do IPI",
+						"maxLength": 6,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "item-tab.aliquota-ipi",
+								"length": "6",
+								"description": "Alíquota do IPI",
+								"note": "Utilizado quando Identificador for 'Compras'. Campo com duas casas decimais",
+								"canUpdate": true
+							}
+						]
+					},
+					"minimumSalesPriceFOB": {
+						"type": "number",
+						"format": "double",
+						"description": "Preco de minimo de venda do produto - FOB",
+						"maxLength": 12
+					},
+					"discountValue": {
+						"type": "number",
+						"format": "double",
+						"description": "Valor de Desconto em reais",
+						"maxLength": 12,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "DA1.DA1_VLRDES",
+								"length": "9",
+								"description": "Vlr.Desconto",
+								"note": "Campo com duas casas decimais"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					},
+					"discountAmount": {
+						"type": "number",
+						"format": "double",
+						"description": "Desconto por quantidade",
+						"maxLength": 9,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "item-tab.desco-quant",
+								"length": "9",
+								"description": "Desconto por Quantidade",
+								"note": "Utilizado quando Identificador for 'Compras'. Campo com cinco casas decimais",
+								"canUpdate": true
+							}
+						]
+					},
+					"discountFactor": {
+						"type": "number",
+						"format": "double",
+						"description": "Fator de Acresc./Desconto%",
+						"maxLength": 11,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "DA1.DA1_PERDES",
+								"length": "6",
+								"description": "Fator",
+								"note": "Campo com quatro casas decimais"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					},
+					"minimumAmount": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantidade Mínima",
+						"maxLength": 12,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "item-tab.quant-min",
+								"length": "12",
+								"description": "Quantidade mínima",
+								"note": "Atualização realizada quando Identificador for 'Compras'. Campo com 4 casas decimais"
+							}
+						]
+					},
+					"cifPrice": {
+						"type": "number",
+						"format": "double",
+						"description": "Preco CIF",
+						"maxLength": 11
+					},
+					"fobPrice": {
+						"type": "number",
+						"format": "double",
+						"description": "Preco FOB",
+						"maxLength": 11
+					},
+					"itemValidity": {
+						"type": "string",
+						"format": "date",
+						"example": "2018-07-19",
+						"description": "Data Vigência do item AAAA-MM-DD",
+						"maxLength": 10,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "DA1_DATVIG",
+								"discription": "Vigencia do item",
+								"type": "varchar",
+								"required": true,
+								"length": 1,
+								"note": "conteúdo deve vir DD/MM/AAAA"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					},
+					"aliquotICMS":{
+						"type": "number",
+						"format": "double",
+						"description": "Alíquota do ICMS",
+						"maxLength": 6,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "item-tab.aliquota-icm",
+								"length": "6",
+								"description": "Alíquota do ICMS",
+								"note": "Utilizado quando Identificador for 'Compras'. Campo com duas casas decimais",
+								"canUpdate": true
+							}
+						]
+					},
+					"correctionGroup":{
+						"type": "string",
+						"format": "double",
+						"description": "Grupo de Correções",
+						"maxLength": 3,
+						"x-totvs": [
+							{
+								"product": "datasul",
+								"field": "item-tab.int-1",
+								"required": true,
+								"type": "varchar",
+								"length": "3",
+								"available": true,
+								"note": "Utilizado quando Identificador for 'Compras'",
+								"canUpdate": true
+							}
+						]
+					},
+					"typePrice": {
+						"type": "string",
+						"description": "Tipo da Tabela de Preço: 1 = Preco Venda , 2 = Venda Consumidor, 3 = Atacado , 4 = Varejo, 5 = Promocao",
+						"maxLength": 1,
+						"enum": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5"
+						],
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "DA1.DA1_TIPPRE",
+								"description": "Tipo Preço",
+								"note": "Tipo da Tabela de Preço: Preco Venda, Venda Consumidor, Atacado , Varejo, Promoção"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					},
+					"activeItemPrice": {
+						"type": "string",
+						"description": "Status do Item da Tabela de Preço: 1 = Sim; 2 = Não",
+						"maxLength": 1,
+						"enum": [
+							"1",
+							"2"
+						],
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "DA1_ATIVO",
+								"discription": "Ativo",
+								"type": "varchar",
+								"required": false,
+								"length": 1,
+								"note": "1 = Sim; 2 = Não"
+							},
+							{
+							"product": "datasul",
+							"required": false,
+							"available": false
+							}
+						]
+					}
+				}
+			}
+		}
+	}
+}
