@@ -46,7 +46,7 @@ exports.runThroughSchemaObjects = function (pathValidatorResult) {
             var properties = objectBody.properties;
             checkIfHasNextAndItems(properties, pathkey);
             //Had to do 'properties' validation because there are some none-collection endpoints which return list as the entity been approved (business requirement)
-            if (iscolleciton) results.containsTheSameKeyInUrlAndBody = true; //No need to validate that. Collections don't have 'id' in URL
+            if (iscolleciton && results.containsTheSameKeyInUrlAndBody != false) results.containsTheSameKeyInUrlAndBody = true; //No need to validate that. Collections don't have 'id' in URL
             else {
                 if (results.containsTheSameKeyInUrlAndBody != false) {
                     results.containsTheSameKeyInUrlAndBody = properties ? properties.hasOwnProperty(pathidkey) : true;
