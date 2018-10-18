@@ -83,7 +83,8 @@ fs.readdir(dirname, function (err, filenames) {
 
         describe(" - Enum: ", function () {
           it("should be a string ", function () {
-
+            var wrongEnum = schemaDefinitionsValidatorResult.wrongEnumAsString;
+            expect(schemaDefinitionsValidatorResult.enumIsString, wrongEnum).not.to.be.false;
           });
         })
       });
