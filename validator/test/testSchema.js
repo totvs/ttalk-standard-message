@@ -70,12 +70,14 @@ fs.readdir(dirname, function (err, filenames) {
             expect(schemaDefinitionsValidatorResult.useXTotvsAsArray, wrongXTotvs).not.to.be.false;
           });
 
-          it("should have the property 'product'", function () {
-
+          it("should have the property 'product' correctly spelled", function () {
+            var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvsProduct;
+            expect(schemaDefinitionsValidatorResult.XTotvsContainProduct, wrongXTotvs).not.to.be.false;
           });
 
           it("should have the property 'available' correctly spelled", function () {
-
+            var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvsAvailable;
+            expect(schemaDefinitionsValidatorResult.XTotvsContainAvailable, wrongXTotvs).not.to.be.false;
           });
         });
 
