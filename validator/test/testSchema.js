@@ -13,7 +13,7 @@ fs.readdir(dirname, function (err, filenames) {
   }
 
   console.log('SCHEMA files');
-  console.log(filenames);
+  // console.log(filenames);
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let schemaPath = path.join(dirname, filename);
