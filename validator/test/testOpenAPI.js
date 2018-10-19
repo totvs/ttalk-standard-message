@@ -23,7 +23,7 @@ fs.readdir(dirname, function (err, filenames) {
     console.log(err);
   }
 
-  console.log('OPENAPI files');
+  // console.log('OPENAPI files');
   // console.log(filenames);
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
