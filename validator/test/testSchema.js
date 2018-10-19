@@ -1,3 +1,8 @@
+/*
+This class contains MOCHA test cases for Schema files
+@author Francisco F. Cardoso | T-TALK
+*/
+
 var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
@@ -12,8 +17,8 @@ fs.readdir(dirname, function (err, filenames) {
     console.log(err);
   }
 
-  console.log('SCHEMA files');
-  console.log(filenames);
+  // console.log('SCHEMA files');
+  // console.log(filenames);
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let schemaPath = path.join(dirname, filename);

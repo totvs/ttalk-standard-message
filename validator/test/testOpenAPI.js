@@ -1,12 +1,16 @@
 "use strict";
+/*
+This class contains MOCHA test cases for OpenAPI files
+@author Francisco F. Cardoso | T-TALK
+*/
 
 var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
-var pathValidator = require('../lib/pathValidator.js');
-var jsonHandler = require('../lib/jsonHandler.js');
-var fileGetter = require('../lib/fileGetter.js');
-var schemaReferenceFromApi = require('../lib/schemaReferenceFromApiValidator.js');
+var pathValidator = require('../libOpenAPI/pathValidator.js');
+var jsonHandler = require('../libOpenAPI/jsonHandler.js');
+var fileGetter = require('../libOpenAPI/fileGetter.js');
+var schemaReferenceFromApi = require('../libOpenAPI/schemaReferenceFromApiValidator.js');
 
 var expect = require('chai').expect;
 
@@ -23,8 +27,8 @@ fs.readdir(dirname, function (err, filenames) {
     console.log(err);
   }
 
-  console.log('OPENAPI files');
-  console.log(filenames);
+  // console.log('OPENAPI files');
+  // console.log(filenames);
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let openAPIPath = path.join(dirname, filename);
@@ -39,7 +43,7 @@ fs.readdir(dirname, function (err, filenames) {
         var schemaReferenceFromApiResult;
 
         before(function () {
-          this.timeout(40000);
+          this.timeout(60000);
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
@@ -143,7 +147,7 @@ fs.readdir(dirname, function (err, filenames) {
           it("should contain the same Id property name in URL and body", function () {
             var errorMessage = "";
             if (schemaReferenceFromApiResult.erroredPath)
-              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";
+              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'. It may be a typo or canse sensitve difference";
             if (schemaReferenceFromApiResult.validObject)
               expect(schemaReferenceFromApiResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
           });
