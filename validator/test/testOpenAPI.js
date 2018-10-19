@@ -104,6 +104,10 @@ fs.readdir(dirname, function (err, filenames) {
           it("should specify 'Id' for all PUT or DELETE operations", function () {
             expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.be.true;
           });
+
+          it("should have unique 'operationId'", function () {
+            expect(pathValidatorResult.operationIdUnique, pathValidatorResult.repeatedUniqueId).to.be.true;
+          });
         });
 
         describe(" - Schemas: ", function () {
@@ -149,11 +153,7 @@ fs.readdir(dirname, function (err, filenames) {
             if (schemaReferenceFromApiResult.erroredPath)
               errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";
             expect(schemaReferenceFromApiResult.containsItemsAndHasNext, errorMessage).to.be.true;
-          });
-
-          // it("should contain Id (path param) defined 'params' property", function(){
-
-          // })
+          });          
         });
 
         describe(" - Parameters: ", function () {
@@ -176,6 +176,11 @@ fs.readdir(dirname, function (err, filenames) {
                 errorMessage += "Couldn't find the parameter object '#/components/parameters/" + parametersDefinedInComponentList[i] + "'; "
               expect(containsParamObject, errorMessage).to.be.true;
             }
+          });
+
+          it("should contain path param defined 'params' property", function(){
+            var errorMessage = pathValidatorResult.endpointsWihtoutPathParamDefinedInParameters;
+            expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
           });
         });
 
