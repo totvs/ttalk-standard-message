@@ -1,5 +1,18 @@
+/*
+This class has the objective of doing all validations that relates OpenAPI and Schema file 
+The point is gaining performance through a single file 'run through'       
+All methods will first verify if that validation has failed before. If it did, it won't check again for the next objects.
+@author Francisco F. Cardoso | T-TALK
+*/
+
 var results;
 
+/**
+ * This method checks if the object that was referenced in the OpenAPI file exists in the Schema file
+ * @param {*} schemaObjectBody Object
+ * @param {*} objectName String
+ * @param {*} ref String
+ */
 var checkIfObjectIsValid = function (schemaObjectBody, objectName, ref) {
     if (schemaObjectBody) {
         if (results.validObject != false && schemaObjectBody.definitions) { //If another object was already defined as invalid, this wont't verify the next, improving performance and preventing one correct object replacing the info of an incorrect object
@@ -13,7 +26,11 @@ var checkIfObjectIsValid = function (schemaObjectBody, objectName, ref) {
     }
 };
 
-
+/**
+ * This method checks if 'hasNext' and 'items' exist together
+ * @param {*} properties Object
+ * @param {*} pathkey String
+ */
 var checkIfHasNextAndItems = function (properties, pathkey) {
     if (properties && results.containsItemsAndHasNext != false) {
         if (properties.hasOwnProperty("items") || properties.hasOwnProperty("hasNext")) {
@@ -25,6 +42,9 @@ var checkIfHasNextAndItems = function (properties, pathkey) {
     }
 }
 
+/**
+ * This method clears all objects before validating the next file
+ */
 exports.clear = function () {
     results = {
         containsItemsAndHasNext: true        
@@ -32,7 +52,11 @@ exports.clear = function () {
 }
 
 //TODO: Extract Methods
-exports.runThroughSchemaObjects = function (pathValidatorResult) {
+/**
+ * This method will iterate through all found schema objects
+ * @param {*} pathValidatorResult Object with schemaObj list
+ */
+exports.runThroughSchemaObjects = function (pathValidatorResult, done) {
     for (var i in pathValidatorResult.schemaObjList) {
         var iscolleciton = pathValidatorResult.schemaObjList[i].iscollection;
         var pathkey = pathValidatorResult.schemaObjList[i].pathkey;
@@ -57,5 +81,6 @@ exports.runThroughSchemaObjects = function (pathValidatorResult) {
             }
         }
     }
+    done();
     return results;
 }

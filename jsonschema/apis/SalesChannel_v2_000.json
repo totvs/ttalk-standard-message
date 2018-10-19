@@ -1,0 +1,379 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API para cadastro de Canal de Venda dos produtos TOTVS",                
+            "url": "http://{serverUrl}:{serverHttpPort}/api/dis/v1",
+            "variables": {			
+                "serverUrl": {
+                    "default":"localhost"
+                },
+                "serverHttpPort": {
+                    "default":"8080"
+                }
+            }
+        }
+    ],
+    "info": {
+        "description": "API para a entidade Canal de Venda (SalesChannel) para produtos TOTVS",
+        "version": "2.000",
+        "title": "salesChannel",
+        "contact": {
+            "name": "T-Talk",
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation":{
+                "name": "SalesChannel",
+                "description": "Cadastro de Canal de Venda",
+                "segment": "Services"
+            },
+            "productInformation":[
+                {
+                    "product":"Datasul",
+                    "contact":"ieda.soares@totvs.com.br",
+                    "description":"Cadastro de Canal de Venda",
+                    "adapter":"saleschannel.p"
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/saleschannels": {
+            "get": {
+                "tags":[
+                    "SalesChannel"
+                ],
+                "summary":"Retorna lista de Canais de Venda",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note":"Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "description":"Retorna lista completa dos canais de venda",
+                "operationId":"getSalesChannel",
+                "parameters": [
+                    {                        
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },          
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description":"operação realizada com sucesso!",
+                        "content":{
+                            "application/json":{
+                                "schema":{                                    
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SalesChannel/v1/2_000/jsonschema/schemas/SalesChannel_2_000.json#/definitions/PagedSalesChannel"                                    
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "post": {
+                "tags": [
+                    "SalesChannel"
+                ],
+                "summary": "Inclui Canal de Venda",
+                "description": "Inclui um canal de venda conforme dados enviados na requisição.",
+                "operationId": "postSalesChannel",
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"Datasul",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.23"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {                                
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SalesChannel/v1/2_000/jsonschema/schemas/SalesChannel_2_000.json#/definitions/SalesChannelInfo"
+                            }
+                        }
+                    },
+                    "description": "Canal de Venda a ser incluido"
+                },
+                "responses" : {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SalesChannel/v1/2_000/jsonschema/schemas/SalesChannel_2_000.json#/definitions/PagedSalesChannel"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/saleschannel/{Code}": {
+            "get": {
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Retorna o canal de venda pelo Código",
+                "description": "Retorna o canal de venda pelo Código",
+                "operationId":"getCode",
+                "x-totvs":{
+                    "productInformation": [                        
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note":"Este verbo está disponível com todos os parâmetros",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SalesChannel/v1/2_000/jsonschema/schemas/SalesChannel_2_000.json#/definitions/SalesChannelInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Canal de Venda não localizado na base",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Altera um canal de venda",
+                "description":"Atualiza ocanal de venda conforme dados enviados na requisição",
+                "operationId":"putCode",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization, Code e Fields",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SalesChannel/v1/2_000/jsonschema/schemas/SalesChannel_2_000.json#/definitions/SalesChannelInfo"
+                            }
+                        }
+                    },
+                    "description": "Canal de Venda a ser alterado"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SalesChannel/v1/2_000/jsonschema/schemas/SalesChannel_2_000.json#/definitions/SalesChannelInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Canal de Venda não localizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Exclui um canal de venda",
+                "description":"Exclui o canal de venda conforme dados enviados na requisição.",
+                "operationId":"deleteCode",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SalesChannel/v1/2_000/jsonschema/schemas/SalesChannel_2_000.json#/definitions/SalesChannelInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da exclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Canal de Venda não localizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "Code":{
+                "name": "Code",
+                "in": "path",
+                "description":"Identificador único do canal de venda",
+                "required": true,
+                "example": "0001",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"Datasul",
+                            "avaliable":true,
+                            "note": "Informar o campo Código do canal de venda (canal-venda.cod-canal-venda)",
+                            "minimalVersion":"12.1.23"
+						}
+					]
+                }
+            }
+        },
+        "schemas": {
+
+        }
+    }
+}
