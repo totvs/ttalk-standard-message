@@ -201,9 +201,9 @@ var addSchema = function (responseRequest, schematype, pathkey, iscollection, ht
  * @param {*} thisIsCollectionEndpoint Boolean
  * @param {*} httpVerbsList Array - Contains all httpVerbs from that path
  */
-var checkIfPutAndDeleteHaveId = function (thisIsCollectionEndpoint, httpVerbsList) { //Collection shouldn't have PUT or DELETE
+var checkIfPutHaveId = function (thisIsCollectionEndpoint, httpVerbsList) { //Collection shouldn't have PUT or DELETE
     if (thisIsCollectionEndpoint) {
-        results.useIdInAllPutsAndDeletes = !((httpVerbsList.hasOwnProperty("put") || httpVerbsList.hasOwnProperty("delete")));
+        results.useIdInAllPuts = !((httpVerbsList.hasOwnProperty("put")));
     }
 }
 
@@ -385,7 +385,7 @@ exports.clear = function () {
         collectionsWithoutRequiredParams: "",
         wrongXTotvs: "",
         notUsingCommonParams: "",
-        useIdInAllPutsAndDeletes: true
+        useIdInAllPuts: true
     };
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;
@@ -404,7 +404,7 @@ exports.runThroughPaths = function (_parsedOpenAPI) {
         checkHttpVerbInUrl(pathkey);
         var httpVerbsList = parsedOpenAPI.paths[pathkey]
         verifyIfThisIsCollectionEndpoint(pathkey);
-        checkIfPutAndDeleteHaveId(thisIsCollectionEndpoint, httpVerbsList);
+        checkIfPutHaveId(thisIsCollectionEndpoint, httpVerbsList);
         var alreadyfoundpathid = false;
         for (var httpVerbkey in httpVerbsList) {
             if (httpVerbkey == "parameters") {
