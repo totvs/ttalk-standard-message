@@ -1,3 +1,8 @@
+/*
+This class contains MOCHA test cases for Schema files
+@author Francisco F. Cardoso | T-TALK
+*/
+
 var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
