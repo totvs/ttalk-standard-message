@@ -42,7 +42,7 @@ fs.readdir(dirname, function (err, filenames) {
         var fileGetterResult;
         var schemaReferenceFromApiResult;
 
-        before(function () {
+        before(function (done) {
           this.timeout(60000);
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
@@ -51,7 +51,7 @@ fs.readdir(dirname, function (err, filenames) {
           fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaObjList);
           pathValidatorResult.schemaObjBody = jsonHandler.buildSchemaObjectBody(pathValidatorResult.schemaObjList, fileGetterResult.apiSchema);
           schemaReferenceFromApi.clear();
-          schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult);
+          schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult, done);
         })
 
         describe(" - Filename: ", function () {
