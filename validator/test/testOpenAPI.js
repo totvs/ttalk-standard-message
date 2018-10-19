@@ -43,7 +43,7 @@ fs.readdir(dirname, function (err, filenames) {
         var schemaReferenceFromApiResult;
 
         before(function () {
-          this.timeout(60000);
+          // this.timeout(60000);
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
