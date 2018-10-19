@@ -1,6 +1,7 @@
 var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
+var schemaDefinitionsValidator = require('../libSchema/schemaDefinitionsValidator.js');
 
 var expect = require('chai').expect;
 
@@ -17,6 +18,7 @@ fs.readdir(dirname, function (err, filenames) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let schemaPath = path.join(dirname, filename);
       var parsedSchema;
+      var schemaDefinitionsValidatorResult
       describe("SCHEMA - " + filename, function () {
         var file = fs.readFileSync(schemaPath, {
           encoding: 'utf-8'
@@ -24,6 +26,8 @@ fs.readdir(dirname, function (err, filenames) {
 
         before(function () {
           parsedSchema = JSON.parse(file);
+          schemaDefinitionsValidator.clear();
+          schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema);
         })
 
         describe(" - Filename: ", function () {
@@ -33,56 +37,56 @@ fs.readdir(dirname, function (err, filenames) {
 
           it("should contain version separtor (_)", function () {
             let containsVersion = filename.includes("_");
-            let containsWrongVersionPattern = filename.includes("_v");
             expect(containsVersion).to.be.true;
+          });
+
+          it("shouldn't contain v (_v)", function () {
+            let containsWrongVersionPattern = filename.includes("_v");
             expect(containsWrongVersionPattern).to.be.false;
           });
-        });      
+        });
 
-        // describe(" - Parameters: ", function () {
-        //   it("shouldn't have common parameters", function () {
+        describe(" - Schemas: ", function () {
+          it("should reference valid objects", function () {
+            var errorMessage = "";
+            if (schemaDefinitionsValidatorResult.erroredObjectName)
+              errorMessage = "Could not find the object '" + schemaDefinitionsValidatorResult.erroredObjectName + "' inside 'definitions' property of this file '"
+            expect(schemaDefinitionsValidatorResult.validObject, errorMessage).not.to.be.false;
+          });
+        });
 
-        //   })
-        // });
+        describe(" - xtotvs: ", function () {
+          it("should be an object in 'info' and may have a 'productInformation' porperty as an array", function () {
+            expect(parsedSchema.info["x-totvs"]).to.be.an('object');
+            var productInformation = parsedSchema.info["x-totvs"].productInformation;
+            if (productInformation) {
+              expect(productInformation).to.be.an('array');
+            }
+          });
 
 
-        // describe(" - Schemas: ", function () {
-        //   it("should reference valid objects", function() {
+          it("should be an array in properties inside 'definitions'", function () {
+            var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvs;
+            expect(schemaDefinitionsValidatorResult.useXTotvsAsArray, wrongXTotvs).not.to.be.false;
+          });
 
-        //   });
-        // });
+          it("should have the property 'product' correctly spelled", function () {
+            var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvsProduct;
+            expect(schemaDefinitionsValidatorResult.XTotvsContainProduct, wrongXTotvs).not.to.be.false;
+          });
 
-        // describe(" - Errors: ", function () {
-        //   it("shouldn't contain error model", function () {
+          it("should have the property 'available' correctly spelled", function () {
+            var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvsAvailable;
+            expect(schemaDefinitionsValidatorResult.XTotvsContainAvailable, wrongXTotvs).not.to.be.false;
+          });
+        });
 
-        //   });
-        // });
-
-        //TODO: Arrumar / Schema validator
-        // describe(" - xtotvs: ", function () {
-        //   it("should be an array ", function () {
-        //     // for (var definitionKey in parsedSchema.definitions) {
-        //     //   if (parsedSchema.definitions[definitionKey].properties["x-totvs"]) {
-        //     //     expect(parsedSchema.definitions[definitionKey].properties["x-totvs"]).to.be.an('array');
-        //     //   }
-        //     //TODO: Isolar isso em um método recursivo para varrer até o último nível possível
-        //     //Check for LowerLevel
-        //     // if (parsedSchema.definitions[definitionKey].type == 'object') {
-        //     //Chamar o mesmo loop acima
-        //     //     }
-        //     //   }
-        //   });
-
-        //   it("should have the property 'available' correctly spelled", function () {
-
-        //   });
-        // });
-
-        // describe(" - Enum: ", function () {
-        //   it("should be a string ", function () {
-
-        //   });
-        // })
+        describe(" - Enum: ", function () {
+          it("should be a string ", function () {
+            var wrongEnum = schemaDefinitionsValidatorResult.wrongEnumAsString;
+            expect(schemaDefinitionsValidatorResult.enumIsString, wrongEnum).not.to.be.false;
+          });
+        })
       });
     };
   });

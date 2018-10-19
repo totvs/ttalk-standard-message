@@ -39,6 +39,7 @@ fs.readdir(dirname, function (err, filenames) {
         var schemaReferenceFromApiResult;
 
         before(function () {
+          this.timeout(40000);
           parsedOpenAPI = JSON.parse(file);
           pathValidator.clear();
           pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
@@ -103,6 +104,10 @@ fs.readdir(dirname, function (err, filenames) {
           it("should specify 'Id' for all PUT or DELETE operations", function () {
             expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.be.true;
           });
+
+          it("should have unique 'operationId'", function () {
+            expect(pathValidatorResult.operationIdUnique, pathValidatorResult.repeatedUniqueId).to.be.true;
+          });
         });
 
         describe(" - Schemas: ", function () {
@@ -138,14 +143,17 @@ fs.readdir(dirname, function (err, filenames) {
           it("should contain the same Id property name in URL and body", function () {
             var errorMessage = "";
             if (schemaReferenceFromApiResult.erroredPath)
-              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";            
-              if(schemaReferenceFromApiResult.validObject)
+              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";
+            if (schemaReferenceFromApiResult.validObject)
               expect(schemaReferenceFromApiResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
           });
 
-          // it("should contain Id (path param) defined 'params' property", function(){
-
-          // })
+          it("should contain 'hasNext' prop if there is 'items' prop and vice versa", function () {
+            var errorMessage = "";
+            if (schemaReferenceFromApiResult.erroredPath)
+              errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";
+            expect(schemaReferenceFromApiResult.containsItemsAndHasNext, errorMessage).to.be.true;
+          });          
         });
 
         describe(" - Parameters: ", function () {
@@ -160,7 +168,19 @@ fs.readdir(dirname, function (err, filenames) {
           });
 
           it("should reference valid param objects", function () {
+            var parametersDefinedInComponentList = pathValidatorResult.parametersDefinedInComponentList
+            var errorMessage = "";
+            for (var i in parametersDefinedInComponentList) {
+              var containsParamObject = parsedOpenAPI.components.parameters.hasOwnProperty(parametersDefinedInComponentList[i])
+              if (!containsParamObject)
+                errorMessage += "Couldn't find the parameter object '#/components/parameters/" + parametersDefinedInComponentList[i] + "'; "
+              expect(containsParamObject, errorMessage).to.be.true;
+            }
+          });
 
+          it("should contain path param defined 'params' property", function(){
+            var errorMessage = pathValidatorResult.endpointsWihtoutPathParamDefinedInParameters;
+            expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
           });
         });
 
