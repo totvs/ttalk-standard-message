@@ -56,7 +56,7 @@ exports.clear = function () {
  * This method will iterate through all found schema objects
  * @param {*} pathValidatorResult Object with schemaObj list
  */
-exports.runThroughSchemaObjects = function (pathValidatorResult) {
+exports.runThroughSchemaObjects = function (pathValidatorResult, done) {
     for (var i in pathValidatorResult.schemaObjList) {
         var iscolleciton = pathValidatorResult.schemaObjList[i].iscollection;
         var pathkey = pathValidatorResult.schemaObjList[i].pathkey;
@@ -81,5 +81,6 @@ exports.runThroughSchemaObjects = function (pathValidatorResult) {
             }
         }
     }
+    done();
     return results;
 }
