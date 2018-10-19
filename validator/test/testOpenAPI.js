@@ -14,8 +14,8 @@ var schemaReferenceFromApi = require('../libOpenAPI/schemaReferenceFromApiValida
 
 var expect = require('chai').expect;
 
-describe("Validating files...", function () {
-  it("test suite started", function () {
+describe("Validating OpenAPI files...", function () {
+  it("test suite started", function (done) {
     //OPENAPIS //
     var dirname = "./jsonschema/apis/";
     fs.readdir(dirname, function (err, filenames) {
@@ -49,7 +49,7 @@ describe("Validating files...", function () {
               schemaReferenceFromApi.clear();
               schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult, done);
             })
-
+           
             describe(" - Filename: ", function () {
               it("should start with uppercase letter", function () {
                 expect(filename[0]).to.equal(filename[0].toUpperCase());
@@ -200,9 +200,11 @@ describe("Validating files...", function () {
                 expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
               });
             });
+            
           });
         };
       });
+      done();
     });
   })
 });
