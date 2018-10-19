@@ -10,11 +10,11 @@ var schemaDefinitionsValidator = require('../libSchema/schemaDefinitionsValidato
 
 var expect = require('chai').expect;
 
-describe("Validating files...", function () {
-  it("test suite started", function () {
+// describe("Validating files...", function () {
+//   it("test suite started", function () {
 
-  })
-});
+//   })
+// });
 
 //SCHEMAS
 var dirname = "./jsonschema/schemas/";

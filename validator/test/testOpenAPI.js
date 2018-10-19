@@ -16,7 +16,7 @@ var expect = require('chai').expect;
 
 describe("Validating files...", function () {
   it("test suite started", function () {
-
+    this.timeout(10000); //TODO: Travis sometimes returns only this test as success without that.. need to investigate further
   })
 });
 
