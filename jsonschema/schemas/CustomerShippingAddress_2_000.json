@@ -1,28 +1,101 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerShippingAddress_1_002.json#",
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/1_002/jsonschema/schemas/CustomerShippingAddress_1_002.json#",
   "info": {
+    "description": "Api para a entidade Local de Entrega (CustomerShippingAddress) para produtos TOTVS",
+    "version": "1.002",
+    "title": "CustomerShippingAddress",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
     "x-totvs": {
       "transactionDefinition": {
         "subType": "event",
         "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
+          "$ref": "#/definitions/CustomerShippingAddressInfo",
           "type": "object"
         },
         "returnContentType": {
-          "$ref": "#/definitions/ReturnContent",
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType",
           "type": "object"
         }
-      }
+      },
+      "messageDocumentation": {
+        "name": "CustomerShippingAddress",
+        "description": "Local de Entrega",
+        "segment": "Distribuição"
+      },
+      "productInformation": [
+        {
+          "product": "Datasul",
+          "contact": "ieda.soares@totvs.com.br",
+          "description": "Cadastro de Locais de Entrega ",
+          "adapter": "CustomerShippingAddress.p"
+        }
+      ]
     }
   },
   "definitions": {
-    "BusinessContentType": {
+    "PagedCustomerShippingAddress": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "$ref": "#/definitions/CustomerShippingAddresses"
+        }
+      ]
+    },
+    "CustomerShippingAddresses": {
+      "type": "object",
+      "properties": {
+        "items":{
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomerShippingAddressInfo"
+          }
+        }
+      }
+    },
+    "CustomerShippingAddressInfo": {
+      "description": "Descreve um local de entrega relacionado a um emitente",
       "type": "object",
       "properties": {
         "CustomerCode": {
           "description": "Código do cliente/fornecedor",
           "type": "string",
-          "maxLength": 20
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "Datasul",
+              "field": "loc-entr.cod-emitente",
+              "required": true,
+              "type": "integer",
+              "length": "9",
+              "note": "Código do Emitente",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CustomerInternalId": {
+          "description": "InternalID do cliente/fornecedor",
+          "type": "string",
+          "maxLength": 20,
+          "x-totvs": [
+            {
+              "product": "Datasul",
+              "field": "loc-entr.cod-emitente",
+              "required": true,
+              "type": "integer",
+              "length": "9",
+              "note": "O InternalID do Emitente no Datasul é formado apenas pelo próprio código do cliente ou fornecedor",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
         },
         "GovernmentalInformation": {
           "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
@@ -30,7 +103,19 @@
         },
         "InternalId": {
           "description": "InternalId da entidade",
-          "type": "string"
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "Datasul",
+              "field": "emitente|entrega",
+              "required": "true",
+              "type": "string",
+              "length": "22",
+              "note": "O InternalId do endereço de entrega no Datasul é formado pela junção dos campos loc-entr.cod-emitente|loc-entr.cod-entrega",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
         },
         "Code": {
           "description": "Código do Local de Entrega",
@@ -81,6 +166,7 @@
         "ExternalId": {
           "description": "Id Externo do local de entrega",
           "type": "string",
+          "maxLength": "9",
           "x-totvs": [
             {
               "product": "DATASUL",
@@ -100,16 +186,27 @@
           "type": "object"
         },
         "ShippingAddress": {
-          "description": "Datasul: Address = loc-entr.endereco(40), Number = ???, Complement = loc-entr.endereco_text, CityCode = ???, CityName = loc-entr.cidade(25), District = loc-entr.bairro(30), State = loc-entr.estado(4), CountryCode = loc-entr.pais, ZIPCode = loc-entr.cep(12), Region=???, POBox=loc-entr.caixa-postal",
+          "description": "Informações do endereço de entrega",
           "type": "array",
           "items": {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_1_000.json#/definitions/AddressType",
             "type": "object"
-          }
+          },
+          "x-totvs": [
+            {
+              "product": "Datasul",
+              "field": ": Address = loc-entr.endereco(40), Number = ???, Complement = loc-entr.endereco_text, CityCode = ???, CityName = loc-entr.cidade(25), District = loc-entr.bairro(30), State = loc-entr.estado(4), CountryCode = loc-entr.pais, ZIPCode = loc-entr.cep(12), Region=???, POBox=loc-entr.caixa-postal",
+              "required": true,
+              "note": "Neste objeto estão as informações do endereço de entrega conforme os campos especificados",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
         },
         "CarrierCode": {
           "description": "Código da transportadora informada no local de entrega do cliente",
           "type": "string",
+          "maxLength": "12",
           "x-totvs": [
             {
               "product": "PROTHEUS",
@@ -152,18 +249,22 @@
               "canUpdate": false
             }
           ]
-        }
-      }
-    },
-    "ReturnContent": {
-      "type": "object",
-      "properties": {
-        "ListOfInternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
-            "type": "object"
-          }
+        },
+        "CarrierInternalId": {
+          "descrption": "InternalId da transportadora informada no local de entrega do cliente",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "DATASUL",
+              "field": "cod-transp",
+              "required": true,
+              "type": "integer",
+              "length": "5",
+              "note": "O internalId no Datasul é formado somente pelo Código do Transportador",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
         }
       }
     }

@@ -1,0 +1,414 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API para cadastro de Local de Entrega dos produtos TOTVS",                
+            "url": "http://{serverUrl}:{serverHttpPort}/api/dis/v1",
+            "variables": {			
+                "serverUrl": {
+                    "default":"localhost"
+                },
+                "serverHttpPort": {
+                    "default":"8080"
+                }
+            }
+        }
+    ],
+    "info": {
+        "description": "API para a entidade Local de Entrega (CustomerShippingAddress) para produtos TOTVS",
+        "version": "2.000",
+        "title": "CustomerShippingAddress",
+        "contact": {
+            "name": "T-Talk",
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation":{
+                "name": "CustomerShippingAddress",
+                "description": "Cadastro de Local de Entrega",
+                "segment": "Services"
+            },
+            "productInformation":[
+                {
+                    "product":"Datasul",
+                    "contact":"ieda.soares@totvs.com.br",
+                    "description":"Cadastro de Local de Entrega",
+                    "adapter":"customershippingaddress.p"
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/customershippingaddresses/{CustomerCode}": {
+            "get": {
+                "tags":[
+                    "CustomerShippingAddress"
+                ],
+                "summary":"Retorna lista de Locais de Entrega de um cliente",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note":"Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "description":"Retorna lista completa dos locais de entrega de um cliente",
+                "operationId":"getCustomerShippingAddress",
+                "parameters": [
+                    {                        
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },          
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CustomerCode"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description":"operação realizada com sucesso!",
+                        "content":{
+                            "application/json":{
+                                "schema":{                                    
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/2_000/jsonschema/schemas/CustomerShippingAddress_2_000.json#/definitions/PagedCustomerShippingAddress"                                    
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "post": {
+                "tags": [
+                    "CustomerShippingAddress"
+                ],
+                "summary": "Inclui um Local de Entrega para um cliente",
+                "description": "Inclui um local de entrega para um cliente conforme dados enviados na requisição.",
+                "operationId": "postCustomerShippingAddress",
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"Datasul",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.23"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CustomerCode"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {                                
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/2_000/jsonschema/schemas/CustomerShippingAddress_2_000.json#/definitions/CustomerShippingAddressInfo"
+                            }
+                        }
+                    },
+                    "description": "Local de Entrega a ser incluido"
+                },
+                "responses" : {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/2_000/jsonschema/schemas/CustomerShippingAddress_2_000.json#/definitions/PagedCustomerShippingAddress"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/customershippngaddress/{CustomerCode}/{Code}": {
+            "get": {
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Retorna o local de entrega de um cliente pelo Código",
+                "description": "Retorna o local de entrega de um cliente pelo Código",
+                "operationId":"getCode",
+                "x-totvs":{
+                    "productInformation": [                        
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note":"Este verbo está disponível com todos os parâmetros",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/CustomerCode"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/2_000/jsonschema/schemas/CustomerShippingAddress_2_000.json#/definitions/CustomerShippingAddressInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Local de Entrega do cliente não localizado na base",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Altera um local de entrega de um cliente",
+                "description":"Atualiza o local de entrega de um cliente conforme dados enviados na requisição",
+                "operationId":"putCode",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization, Code e Fields",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CustomerCode"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/2_000/jsonschema/schemas/CustomerShippingAddress_2_000.json#/definitions/CustomerShippingAddressInfo"
+                            }
+                        }
+                    },
+                    "description": "Local de entrega a ser alterado"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/2_000/jsonschema/schemas/CustomerShippingAddress_2_000.json#/definitions/CustomerShippingAddressInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Endereço de entrega do cliente não localizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Exclui um local de entrega de um cliente",
+                "description":"Exclui o local de entrega conforme dados enviados na requisição.",
+                "operationId":"deleteCode",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"Datasul",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.23"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CustomerCode"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/CustomerShippingAddress/v1/2_000/jsonschema/schemas/CustomerShippingAddress_2_000.json#/definitions/CustomerShippingAddressInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da exclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Local de Entrega não localizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "Code":{
+                "name": "Code",
+                "in": "path",
+                "description":"Identificador único do endereço de entrega",
+                "required": true,
+                "example": "Padrão",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"Datasul",
+                            "avaliable":true,
+                            "note": "Informar o campo Código do local de entrega (loc-entr.cod-entrega)",
+                            "minimalVersion":"12.1.23"
+						}
+					]
+                }
+            },
+            "CustomerCode":{
+                "name": "CustomerCode",
+                "in": "path",
+                "description":"Identificador único do cliente",
+                "required": true,
+                "example": "123456789",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"Datasul",
+                            "avaliable":true,
+                            "note": "Informar o campo Código do cliente (emitente.cod-emitente)",
+                            "minimalVersion":"12.1.23"
+						}
+					]
+                }
+            }
+        },
+        "schemas": {
+
+        }
+    }
+}
