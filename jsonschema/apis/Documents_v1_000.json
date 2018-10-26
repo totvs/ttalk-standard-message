@@ -1,0 +1,369 @@
+{
+	"openapi": "3.0.1",
+	"servers":[
+		{
+			"description": "API para retornar os documentos das entidades armazenado no banco de conhecimento(x-totvs) para produtos TOTVS",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/crm/v1",
+            "variables": {			
+                "serverUrl": {
+                    "default":"localhost"
+                },
+                "serverHttpPort": {
+                    "default":"8080"
+                }
+            }     
+		}
+    ],
+    "info":{
+		"description": "API para retornar os documentos das entidades armazenado no banco de conhecimento, (Documents) para produtos TOTVS",
+		"version": "1.000",
+		"title": "Documents",
+		"contact":{
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs":{
+			"messageDocumentation":{
+				"name": "Document",
+				"description": "Cadastro de documentos no banco de conhecimento",
+				"segment": "Services"
+			},
+			"productInformation":[
+				{
+					"product":"protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Retorna os documentos das entidades armazenado no banco de conhecimento",
+					"adapter": "CRMS120.prw"
+				}
+			]
+		}
+    },
+    "paths":{
+        "/documents":{
+			"get":{
+				"tags":[
+					"documents"
+				],
+				"summary": "Retorna os documentos das entidades armazenado no banco de conhecimento",
+				"x-totvs":{
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"description": "Retorna os documentos das entidades armazenado no banco de conhecimento",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"description": "Retorna os documentos das entidades armazenado no banco de conhecimento",
+				"operationId": "getdocuments",
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },          
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description":"Operação realizada com sucesso!",
+                        "content":{
+                            "application/json":{
+                                "schema":{                                    
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/document/v1/1_000//jsonschema/schemas/Documents_1_000.json#/definitions/PagedDocument"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "post":{
+				"tags":[
+					"documents"
+				],
+				"summary": "Inclui um novo documentos no banco de conhecimento",
+				"description": "Inclui um novo documentos no banco de conhecimento",
+				"operationId": "postdocuments",
+				"x-totvs":{
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"note": "Inclui um novo documentos no banco de conhecimento",
+							"minimalVersion": "12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {                                
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/document/v1/1_000/jsonschema/schemas/Documents_1_000.json#/definitions/DocumentsImput"
+                            }
+                        }
+                    },
+                    "description": "Documento a ser incluido no banco de conhecimento"
+                },
+                "responses" : {
+                    "201": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/document/v1/1_000/jsonschema/schemas/Documents_1_000.json#/definitions/DocumentsImput"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/documents/{code}":{
+			"get":{
+				"tags":[
+					"code"
+				],
+				"summary":"Retorna o documento da entidade armazenado no banco de conhecimento",
+                "description":"Retorna o documento da entidade armazenado no banco de conhecimento",
+                "operationId":"getDocuments",
+                "x-totvs":{
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"note": "Retorna o documento armazenado no banco de conhecimento",
+							"minimalVersion": "12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/document/v1/1_000/jsonschema/schemas/Documents_1_000.json#/definitions/DocumentsImput"                                        
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Documento não localizado na base",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },            
+            "put":{
+                "tags":[
+                    "code"
+                ],
+                "summary": "Altera o documento da entidade armazenado no banco de conhecimento",
+                "description": "Altera o documento armazenado no banco de conhecimento",
+                "operationId": "putDocuments",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"protheus",
+                            "available": true,
+                            "note": "Altera o documento armazenado no banco de conhecimento",
+                            "minimalVersion": "12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/document/v1/1_000/jsonschema/schemas/Documents_1_000.json#/definitions/DocumentsImput"
+                            }
+                        }
+                    },
+                    "description": "Documento a ser alterado"
+                },
+                "responses":{
+                    "201":{
+                        "description": "Operação realizada com sucesso",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/document/v1/1_000/jsonschema/schemas/Documents_1_000.json#/definitions/DocumentsImput"
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "Erro na requisição!",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404":{
+                        "description": "Documento não localizado na base!",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },    
+            "delete":{
+                "tags":[
+                    "code"
+                ],
+                "summary": "Exclui o documento da entidade armazenado no banco de conhecimento",
+                "description": "Exclui os documento armazenado no banco de conhecimento",
+                "operationId": "deleteDocuments",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"protheus",
+                            "available": true,
+                            "note": "Exclui o documento armazenado no banco de conhecimento",
+                            "minimalVersion": "12.1.21"
+                        }
+                    ]
+                },
+                "parameters":[
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Operação realizada com sucesso"
+                    },
+                    "400": {
+                        "description": "erro no momento da exclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                    },
+                    "404": {
+                        "description": "Documento não localizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "code":{
+                "name": "code",
+                "in": "path",
+                "description":"Identificador do documento na base de conhecimento",
+                "required": true,
+                "example": "D MG 01 0000000001SUSD MG 01 00000401",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"protheus",
+                            "available":true,
+                            "note": "Informar os campos AC9.AC9_CODOBJ AC9.AC9_ENTIDA AC9.AC9_FILENT AC9.AC9_CODENT",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                }
+            }
+        }
+    }
+}
