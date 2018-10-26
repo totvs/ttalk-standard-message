@@ -1,0 +1,429 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Campaigns/v1/1_000/jsonschema/schemas/Campaigns_1_000.json#",
+    "info": {
+        "description": "API para retornar as campanhas, (x-totvs) para produtos TOTVS",
+        "version": "1.000",
+        "title": "Campaigns",
+        "contact": {
+            "name": "T-Talk",
+            "url": "api.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "transactionDefinition": {
+                "subType": "campaigns",
+                "businessContentType": {
+                    "type": "object",
+                    "$ref": "#/definitions/CampaignsInfo"
+                },
+                "returnContentType": {
+                    "type": "object",
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+                }
+            },
+            "messageDocumentation": {
+                "name": "Campaigns",
+                "description": "Cadastro de campanhas",
+                "segment": "Faturamento"
+            },
+            "productInformation": [
+                {
+                    "product":"protheus",
+                    "contact":"squad.crm@totvs.com.br",
+                    "description":"Cadastro de campanhas",
+                    "adapter":"CRMS360.prw"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "PagedCampaigns":{
+            "type":"object",
+            "allOf":[
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref":"#/definitions/Campaigns"
+                }
+            ]
+        },
+        "Campaigns":{
+            "type":"object",
+            "properties":{
+                "items":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/CampaignsInfo"
+                    }
+                }
+            }
+        },
+        "CampaignsInfo":{
+            "description": "Descreve uma campanha",
+            "type":"object",
+            "properties": {
+                "CompanyId":{
+                    "type":"string",
+                    "description":"Código da empresa",
+                    "maxLength":3
+                },
+                "InternalId": {
+                    "type":"string",  
+                    "examples": "D MG 01 000001",
+                    "description":"InternalId da campanha no ERP",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "SCO.CO_FILIAL|SCO.CO_CODCAMP",
+                            "type": "varchar",
+                            "length": "15",
+                            "note": "Este dado e formado pelos campos Filial, código da Campanha",
+                            "available":true,
+                            "canUpdate":false
+                        }
+                    ]
+                },
+                "BranchId":{
+                    "type":"string",
+                    "description":"Código da Filial",
+                    "example": "D MG 01",
+                    "maxLength":8,
+                    "x-totvs":[
+                         {
+                         "product":"protheus",
+                         "field":"SCO.CO_FILIAL",
+                         "required":true,
+                         "length":"8",
+                         "available":true,
+                         "canUpdate":false
+                         }
+                     ]
+                 },
+                "CompanyInternalId":{
+                    "type":"string",
+                    "description":"Código da Empresa",
+                    "x-totvs":[
+                         {
+                         "product": "protheus",
+                         "field": "EMPRESA|SCO.CO_FILIAL|SCO.CO_CODCAMP",
+                         "required": true,
+                         "type": "varchar",
+                         "length": "14",
+                         "available": true,
+                         "canUpdate": false
+                         }
+                     ]                       
+                 },
+                "Code":{
+                    "type":"string",
+                    "description":"Código da campanha.",
+                    "example": "000001",
+                    "maxLength":6,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "note": "O código da campanha é gerado automaticamente oela rotina, não será considerado valores enviados no mesmo.",
+                         "field":"SUO.UO_CODCAMP",
+                         "type":"varchar",
+                         "length": "6",
+                         "required":false,
+                         "available":true,
+                         "canUpdate": false
+                        }
+                    ]
+                 },
+                 "Type":{
+                    "type":"string",
+                    "description":"Tipo de atendimento.(1-Receptivo, 2-Ativo)",
+                    "example": "1",
+                    "minimum": 1,
+                    "maximum": 2,
+                    "enum":[
+                    "1",
+                    "2"
+                    ],
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "note":"Tipo de atendimento TMK",
+                         "field":"SUO.UO_TIPO",
+                         "type":"string",
+                         "length": "1",
+                         "required":true,
+                         "available":true,
+                         "canUpdate":false
+                        }
+                    ]
+                 },
+                 "CampaingDescription":{
+                    "type":"string",
+                    "description":"Descrição da campanha.",
+                    "example": "Campanha de nova versão do produto",
+                    "maxLength":40,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_DESC",
+                         "type":"varchar",
+                         "length": "40",
+                         "required":true,
+                         "available":true,
+                         "canUpdate": true
+                        }
+                    ]
+                 },
+                 "InitDate":{
+                    "type":"string",
+                    "description":"Data em que a campanha foi iniciada.",
+                    "example": "10/10/2018",
+                    "maxLength":8,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_DTINIR",
+                         "type":"date",
+                         "length": "8",
+                         "required":false,
+                         "available":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },
+                 "EndDate":{
+                    "type":"string",
+                    "description":"Data em que a campanha foi fechada ou concluída",
+                    "example": "11/10/2018",
+                    "maxLength":8,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_DTTERMR",
+                         "type":"date",
+                         "length": "8",
+                         "required":false,
+                         "available":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },			 
+                 "Objective":{
+                    "type":"string",
+                    "description":"Objetivo da campanha.",
+                    "example": "O objetivo desta campanha é demonstrar o serviço de API´s",
+                    "maxLength":254,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_OBJETIV",
+                         "type":"varchar",
+                         "length": "254",
+                         "required":true,
+                         "available":true,
+                         "canUpdate": true
+                        }
+                    ]
+                 },
+                 "Attendance":{
+                    "type":"string",
+                    "description":"Tipo de atendimento.(1-Telemarketing, 2-Televendas, 3-Telecobranca, 4-Todos, 5-Marketing)",
+                    "example": "5",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "enum":[
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                    ],
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "note":"Para campanha do CRM, é utilizado a opção 5-Marketing",
+                         "field":"SUO.UO_ATENDIM",
+                         "type":"string",
+                         "length": "1",
+                         "required":true,
+                         "available":true,
+                         "canUpdate":false
+                        }
+                    ]
+                 },
+                 "ExpectedPorcentage":{
+                    "type":"number",
+                    "description":"Percentual  de resposta esperada para a campanha.",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "example": "60",
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_TOTSUC",
+                         "type":"number",
+                         "required":true,
+                         "available":true,
+                         "canUpdate":true
+                        }
+                    ]
+                 },
+                 "BlockedRecord":{
+                    "type":"string",
+                    "description":"Campanha bloqueada para uso (1-bloqueado 2-ativo).",
+                    "example": "2",
+                    "maxLength":1,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_MSBLQL",
+                         "type":"varchar",
+                         "length": "1",
+                         "required":true,
+                         "available":true,
+                         "canUpdate": true
+                        }
+                    ]
+                },
+                "Campaign_Evolution_Status":{
+                    "type":"string",
+                    "description":"Status da evolução da campanha (1-Pronta para ser lançada, 2-Lançada, 3-Concluída, 4-Cancelada, 5-Suspensa)",
+                    "example": "1",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "enum":[
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                    ],
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_STATUS",
+                         "type":"string",
+                         "length": "20",
+                         "required":true,
+                         "available":true,
+                         "canUpdate":false
+                        }
+                    ]
+                 },
+                 "CampaingType":{
+                    "type":"string",
+                    "description":"Tipo da campanha.",
+                    "example": "000001",
+                    "maxLength":6,
+                    "x-totvs":[
+                        {
+                         "product": "protheus",
+                         "field":"SUO.UO_TPCAMP",
+                         "type":"varchar",
+                         "length": "6",
+                         "required":true,
+                         "available":true,
+                         "canUpdate": true
+                        }
+                    ]
+                 },
+                 "ListOfCampaigns":{
+                    "type":"object",
+                    "$ref":"#/definitions/ListCampaigns"
+                }
+            }
+        },
+        "ListCampaigns":{
+            "description": "Descreve a lista de campanhas",
+            "type":"array",            
+            "items": {
+                "properties": {
+                    "InternalId": {
+                        "type":"string",  
+                        "examples": "D MG 01 00000101/01/19900101",
+                        "description":"InternalId do item da Campanha no ERP",
+                        "x-totvs":[
+                            {
+                                "product": "protheus",
+                                "field": "SUW_FILIAL|SUW_CODCAMP|SUW_CODEVE",
+                                "type": "varchar",
+                                "length": "12",
+                                "note": "Este dado e formado pelos campos Filial, código do da campanha, código do evento",
+                                "required":true,
+                                "available":true,
+                                "canUpdate": false
+                            }
+                        ]
+                    },
+                    "EventCode":{
+                        "type":"string",
+                        "description":"Código do Evento.",
+                        "example": "000001",
+                        "maxLength":6,
+                        "x-totvs":[
+                            {
+                            "product": "protheus",
+                            "field":"SUW.UW_CODEVE",
+                            "type":"varchar",
+                            "length": "6",
+                            "required":true,
+                            "available":true,
+                            "canUpdate": false
+                            }
+                        ]
+                    },
+                    "ScriptCode":{
+                        "type":"string",
+                        "description":"Código do Script.",
+                        "example": "000001",
+                        "maxLength":6,
+                        "x-totvs":[
+                            {
+                            "product": "protheus",
+                            "field":"SUW.UW_CODSCRI",
+                            "type":"varchar",
+                            "length": "6",
+                            "required":true,
+                            "available":true,
+                            "canUpdate": false
+                            }
+                        ]
+                    },
+                    "ProductCode":{
+                        "type":"string",
+                        "description":"Código do Produto.",
+                        "example": "000001",
+                        "maxLength":6,
+                        "x-totvs":[
+                            {
+                            "product": "protheus",
+                            "field":"SUW.UW_PRODUTO",
+                            "type":"varchar",
+                            "length": "6",
+                            "required":true,
+                            "available":true,
+                            "canUpdate": false
+                            }
+                        ]
+                    },
+                    "MidiaCode":{
+                        "type":"string",
+                        "description":"Código da mídia.",
+                        "example": "000001",
+                        "maxLength":6,
+                        "x-totvs":[
+                            {
+                            "product": "protheus",
+                            "field":"SUW.UW_MIDIA",
+                            "type":"varchar",
+                            "length": "6",
+                            "required":true,
+                            "available":true,
+                            "canUpdate": false
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
