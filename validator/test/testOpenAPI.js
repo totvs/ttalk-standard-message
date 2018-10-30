@@ -101,8 +101,8 @@ describe("Validating OpenAPI files...", function () {
                 expect(pathValidatorResult.foundSuccessResponse).to.be.true;
               });
 
-              it("should specify 'Id' for all PUT or DELETE operations", function () {
-                expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.be.true;
+              it("should specify 'Id' for all PUT operations", function () {
+                expect(pathValidatorResult.useIdInAllPuts).to.be.true;
               });
 
               it("should have unique 'operationId'", function () {

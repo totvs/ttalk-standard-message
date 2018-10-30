@@ -1,9 +1,9 @@
 {
-    "openapi": "3.0.1",
-    "servers": [
-        {
-            "description": "API para cadastro Família Comercial dos produtos TOTVS",                
-            "url": "http://{serverUrl}:{serverHttpPort}/api/dis/v1",
+	"openapi": "3.0.1",
+	"servers":[
+		{
+			"description": "API para retornar as campanhas, (x-totvs) para produtos TOTVS",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/crm/v1",
             "variables": {			
                 "serverUrl": {
                     "default":"localhost"
@@ -11,55 +11,55 @@
                 "serverHttpPort": {
                     "default":"8080"
                 }
-            }
-        }
+            }     
+		}
     ],
-    "info": {
-        "description": "API para a entidade Família Comercial (CommercialFamily) para produtos TOTVS",
-        "version": "2.000",
-        "title": "commercialFamily",
-        "contact": {
-            "name": "T-Talk",
-            "url": "https://api.totvs.com.br",
-            "email": "comiteintegracao@totvs.com.br"
-        },
-        "x-totvs": {
-            "messageDocumentation":{
-                "name": "CommercialFamily",
-                "description": "Cadastro de Família Comercial",
-                "segment": "Services"
-            },
-            "productInformation":[
-                {
-                    "product":"Datasul",
-                    "contact":"ieda.soares@totvs.com.br",
-                    "description":"Cadastro de Família Comercial",
-                    "adapter":"commercialfamily.p"
-                }
-            ]
-        }
+    "info":{
+		"description": "API para retornar as campanhas, para produtos TOTVS",
+		"version": "1.000",
+		"title": "campaigns",
+		"contact":{
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs":{
+			"messageDocumentation":{
+				"name": "Events",
+				"description": "Cadastro de campanhas",
+				"segment": "Services"
+			},
+			"productInformation":[
+				{
+					"product":"protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Retorna as campanhas",
+					"adapter": "CRMS360.prw"
+				}
+			]
+		}
     },
-    "paths": {
-        "/commercialfamilies": {
-            "get": {
-                "tags":[
-                    "CommercialFamily"
-                ],
-                "summary":"Retorna lista de Famílias Comerciais",
-                "x-totvs":{
-                    "productInformation":[
-                        {
-                            "product":"Datasul",
-                            "avaliable":true,
-                            "note":"Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
-                            "minimalVersion":"12.1.23"
-                        }
-                    ]
-                },
-                "description":"Retorna lista completa das famílias comerciais",
-                "operationId":"getCommercialFamily",
+    "paths":{
+        "/campaigns":{
+			"get":{
+				"tags":[
+					"campaigns"
+				],
+				"summary": "Retorna as campanhas cadastradas",
+				"x-totvs":{
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"description": "Retorna as campanhas cadastradas",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"description": "Retorna as campanhas cadastradas",
+				"operationId": "getcampaigns",
                 "parameters": [
-                    {                        
+                    {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
                     },
                     {
@@ -77,11 +77,11 @@
                 ],
                 "responses": {
                     "200": {
-                        "description":"operação realizada com sucesso!",
+                        "description":"Operação realizada com sucesso!",
                         "content":{
                             "application/json":{
                                 "schema":{                                    
-                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#/definitions/PagedCommercialFamily"                                    
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Campaigns_1_000.json#/definitions/PagedCampaigns"
                                 }
                             }
                         }
@@ -97,21 +97,21 @@
                         }
                     }
                 }
-            }, 
-            "post": {
-                "tags": [
-                    "CommercialFamily"
-                ],
-                "summary": "Inclui Família Comercial",
-                "description": "Inclui uma família comercial conforme dados enviados na requisição.",
-                "operationId": "postCommercialFamily",
-                "x-totvs": {
+            },
+            "post":{
+				"tags":[
+					"campaigns"
+				],
+				"summary": "Inclui uma nova campanha",
+				"description": "Inclui uma nova campanha",
+				"operationId": "postcampaigns",
+				"x-totvs":{
 					"productInformation":[
 						{
-							"product":"Datasul",
-                            "avaliable":true,
-                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
-                            "minimalVersion":"12.1.23"
+							"product":"protheus",
+							"available": true,
+							"note": "Inclui uma nova campanha",
+							"minimalVersion": "12.1.21"
 						}
 					]
                 },
@@ -126,20 +126,20 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {                                
-                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#/definitions/CommercialFamilyInfo"
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Campaigns_1_000.json#/definitions/CampaignsInfo"
                             }
                         }
                     },
-                    "description": "Família Comercial a ser incluida"
+                    "description": "Campanha a ser incluida"
                 },
                 "responses" : {
-                    "200": {
+                    "201": {
                         "description": "Operação realizada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#/definitions/PagedCommercialFamily"
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Campaigns_1_000.json#/definitions/CampaignsInfo"
                                 }   
                             }
                         }
@@ -157,36 +157,27 @@
                 }
             }
         },
-        "/commercialfamily/{Code}": {
-            "get": {
-                "tags":[
-                    "Code"
-                ],
-                "summary":"Retorna a família comercial pelo Código",
-                "description": "Retorna a família comercial pelo Código",
-                "operationId":"getCode",
+        "/campaigns/{Code}":{
+			"get":{
+				"tags":[
+					"Code"
+				],
+				"summary":"Retorna as informações da campanha informada",
+                "description":"Retorna as informações da campanha informada",
+                "operationId":"getCampaigns",
                 "x-totvs":{
-                    "productInformation": [                        
-                        {
-                            "product":"Datasul",
-                            "avaliable":true,
-                            "note":"Este verbo está disponível com todos os parâmetros",
-                            "minimalVersion":"12.1.23"
-                        }
-                    ]
+					"productInformation":[
+						{
+							"product":"protheus",
+							"available": true,
+							"note": "Retorna a camapnha informada",
+							"minimalVersion": "12.1.21"
+						}
+					]
                 },
                 "parameters": [
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-                    },
-                    {
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-                    },
-                    {
-						"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-                    },
-                    {
-                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
                     },  
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
@@ -201,13 +192,13 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#/definitions/CommercialFamilyInfo"
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Campaigns_1_000.json#/definitions/CampaignsInfo"
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Família Comercial não localizada na base",
+                        "description": "Documento não localizado na base",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -217,21 +208,21 @@
                         }
                     }
                 }
-            },
+            },            
             "put":{
                 "tags":[
                     "Code"
                 ],
-                "summary":"Altera uma família comercial",
-                "description":"Atualiza a família comercial conforme dados enviados na requisição",
-                "operationId":"putCode",
-                "x-totvs": {
-                    "productInformation": [
+                "summary": "Altera a camapnha informada",
+                "description": "Altera a camapnha informada",
+                "operationId": "putCampaigns",
+                "x-totvs":{
+                    "productInformation":[
                         {
-                            "product":"Datasul",
-                            "avaliable":true,
-                            "note": "Este verbo esta disponivel com os parametros Authorization, Code e Fields",
-                            "minimalVersion":"12.1.23"
+                            "product":"protheus",
+                            "available": true,
+                            "note": "Altera a camapnha informada",
+                            "minimalVersion": "12.1.21"
                         }
                     ]
                 },
@@ -250,63 +241,63 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#/definitions/CommercialFamilyInfo"
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Campaigns_1_000.json#/definitions/CampaignsInfo"
                             }
                         }
                     },
-                    "description": "Família comercial a ser alterada"
+                    "description": "Campanha a ser alterada"
                 },
-                "responses": {
-                    "200": {
+                "responses":{
+                    "200":{
                         "description": "Operação realizada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#/definitions/CommercialFamilyInfo"
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Campaigns_1_000.json#/definitions/CampaignsInfo"
                                 }
                             }
                         }
                     },
-                    "400": {
-                        "description": "erro no momento da alteração",
-                        "content": {
-                            "application/json": {
-                                "schema": {
+                    "400":{
+                        "description": "Erro na requisição!",
+                        "content":{
+                            "application/json":{
+                                "schema":{
                                     "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
-                        }                        
-                      },
-                    "404": {
-                        "description": "Família comercial não localizada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
+                        }
+                    },
+                    "404":{
+                        "description": "Documento não localizado na base!",
+                        "content":{
+                            "application/json":{
+                                "schema":{
                                     "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
                         }
                     }
                 }
-            },
+            },    
             "delete":{
                 "tags":[
                     "Code"
                 ],
-                "summary":"Exclui uma família comercial",
-                "description":"Exclui a família comercial conforme dados enviados na requisição.",
-                "operationId":"deleteCode",
-                "x-totvs": {
-                    "productInformation": [
+                "summary": "Exclui a campanha informada",
+                "description": "Exclui a campanha informada",
+                "operationId": "deleteCampaigns",
+                "x-totvs":{
+                    "productInformation":[
                         {
-                            "product":"Datasul",
-                            "avaliable":true,
-                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
-                            "minimalVersion":"12.1.23"
+                            "product":"protheus",
+                            "available": true,
+                            "note": "Exclui a campanha informada",
+                            "minimalVersion": "12.1.21"
                         }
                     ]
                 },
-                "parameters": [
+                "parameters":[
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
                     },
@@ -315,32 +306,25 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Operação realizada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#/definitions/CommercialFamilyInfo"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Operação realizada com sucesso"
                     },
                     "400": {
-                        "description": "erro no momento da exclusão",
+                        "description": "Erro no momento da exclusão",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
-                        }                        
-                      },
+                        }
+                    },
                     "404": {
-                        "description": "Família Comercial não localizada",
+                        "description": "Documento não localizado",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
                         }
@@ -354,26 +338,23 @@
             "Code":{
                 "name": "Code",
                 "in": "path",
-                "description":"Identificador único da família comercial",
+                "description":"Identificador da campanha",
                 "required": true,
-                "example": "00000001",
+                "example": "D MG 01 000001",
                 "schema":{
                     "type": "string"
                 },
                 "x-totvs": {
 					"productInformation":[
 						{
-							"product":"Datasul",
+							"product":"protheus",
                             "avaliable":true,
-                            "note": "Informar o campo Código da família comercial (fam-comerc.fm-cod-com)",
-                            "minimalVersion":"12.1.23"
+                            "note": "Informar o campo SUO.UO_CODCAMP",
+                            "minimalVersion":"12.1.21"
 						}
 					]
                 }
             }
-        },
-        "schemas": {
-
         }
     }
 }
