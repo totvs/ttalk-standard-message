@@ -1,0 +1,362 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API para cadastro de Atividade do Vendedor dos produtos TOTVS",                
+            "url": "http://{serverUrl}:{serverHttpPort}/api/crm/v1",
+            "variables": {			
+                "serverUrl": {
+                    "default":"localhost"
+                },
+                "serverHttpPort": {
+                    "default":"8080"
+                }
+            }
+        }
+    ],
+    "info": {
+        "description": "API para a entidade de Atividade do Vendedor (SellerActivity) para produtos TOTVS",
+        "version": "1.000",
+        "title": "SellerActivity",
+        "contact": {
+            "name": "T-Talk",
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation":{
+                "name": "SellerActivity",
+                "description": "Atividade do Vendedor",
+                "segment": "Services"
+            },
+            "productInformation":[
+                {
+                    "product": "protheus",
+                    "contact": "squad.crm@totvs.com.br",
+                    "description": "Cadastro de Atividade",
+                    "adapter": "CRMA180.prw"
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/selleractivities": {
+            "get": {
+                "tags": [
+                    "selleractivities"
+                ],
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note":"Este verbo este disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "description":"Retorna uma lista completa de Atividades dos vendedores",
+                "operationId":"getSellerActivities",
+                "parameters": [
+                    { 
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },          
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description":"operação realizada com sucesso!",
+                        "content":{
+                            "application/json":{
+                                "schema":{                                    
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SellerActivity/v1/1_000/jsonschema/schemas/SellerActivity_1_000.json#/definitions/AnnotationInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "selleractivities"
+                ],
+                "summary": "Inclui uma Atividade",
+                "description": "Inclui uma Atividade conforme dados enviados na requisição.",
+                "operationId": "postSellerActivities",
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"protheus",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponível com os parâmetros Authorization e Fields",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {                                
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SellerActivity/v1/1_000/jsonschema/schemas/SellerActivity_1_000.json#/definitions/AnnotationInfo"
+                            }
+                        }
+                    },
+                    "description": "Atividade a ser incluída"
+                },
+                "responses" : {
+                    "201": {
+                        "description": "Inclusão realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SellerActivity/v1/1_000/jsonschema/schemas/SellerActivity_1_000.json#/definitions/AnnotationInfo"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/selleractivities/{InternalId}": {
+            "get": {
+                "tags":[
+                    "InternalId"
+                ],
+                "summary":"Retorna uma Atividade pelo InternalId",
+                "description": "Retorna uma Atividade pelo InternalId",
+                "operationId":"getInternalId",
+                "x-totvs": {
+                    "productInformation": [                        
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note":"Este verbo esta disponível com todos os parâmetros",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/InternalId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SellerActivity/v1/1_000/jsonschema/schemas/SellerActivity_1_000.json#/definitions/AnnotationInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Registro não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags":[
+                    "InternalId"
+                ],
+                "summary":"Altera uma Atividade pelo InternalId",
+                "description":"Altera uma Atividade pelo InternalId",                
+                "operationId":"putInternalId",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponível com os parâmetros Authorization, InternalId e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/InternalId"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SellerActivity/v1/1_000/jsonschema/schemas/SellerActivity_1_000.json#/definitions/AnnotationInfo"
+                            }
+                        }
+                    },
+                    "description": "Atividade a ser alterada"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/SellerActivity/v1/1_000/jsonschema/schemas/SellerActivity_1_000.json#/definitions/AnnotationInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                    },
+                    "404": {
+                        "description": "Registro não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags":[
+                    "InternalId"
+                ],
+                "summary":"Exclui uma Atividade pelo InternalId",
+                "description":"Exclui uma Atividade pelo InternalId",
+                "operationId":"deleteInternalId",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"protheus",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponível com os parâmetros Authorization e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/InternalId"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Operação realizada com sucesso"                        
+                    },
+                    "400": {
+                        "description": "erro no momento da exclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                    },
+                    "404": {
+                        "description": "Erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "InternalId":{
+                "name": "InternalId",
+                "in": "path",
+                "description":"Identificador único da Atividade",
+                "required": true,
+                "example": "D MG 01 000001",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"protheus",
+                            "avaliable":true,
+                            "note": "Informar os campos Filial (AOF.AOF_FILIAL) e Código do Atividade (AOF.AOF_CODIGO).",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                }
+            }
+        },
+        "schemas": {
+
+        }
+    }
+}
