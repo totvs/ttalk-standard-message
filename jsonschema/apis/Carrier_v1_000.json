@@ -2,13 +2,13 @@
     "openapi": "3.0.1",
     "servers": [{
 		"description": "API para a entidade Transportadora (Carrier) para produtos TOTVS",
-		"url": "http://{serverUrl}:{serverHttpPort}/api/log/v1",
+		"url": "http://{serverUrl}:{serverHttpPort}/api/fat/v1",
 		"variables":{			
 			"serverUrl":{
 			  "default":"localhost"
 			},
 			"serverHttpPort":{
-                "default":"8040"
+                "default":"8080"
 			}
 		}
 	  }
@@ -16,10 +16,10 @@
     "info": {
         "description": "API para a entidade Transportadora (Carrier) para produtos TOTVS",
         "version": "1.000",
-        "title": "Carrier",
+        "title": "carrier",
         "contact": {
             "name": "T-Talk",
-            "url": "api.totvs.com.br",
+            "url": "https://api.totvs.com.br",
             "email": "comiteintegracao@totvs.com.br"
         },
         "x-totvs": {            
@@ -42,7 +42,7 @@
         "/carrier": {
             "get": {
                 "tags": [
-                    "carrier"
+                    "carriers"
                 ],
                 "summary": "Retorna lista de Transportadoras",
                 "x-totvs": {
@@ -56,16 +56,13 @@
                     ]
                 },
                 "description": "Retorna lista completa de Transportadoras",
-                "operationId": "getcarrier",
+                "operationId": "getCarrier",
                 "parameters": [
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
                     },
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-                    },
-                    {
-                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
                     },
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
@@ -83,7 +80,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_000.json#/definitions/PagedCarriers"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#/definitions/PagedCarriers"
                                 }
                             }
                         }
@@ -102,7 +99,7 @@
             },
             "post": {
                 "tags": [
-                    "carrier"
+                    "Carrier"
                 ],
                 "summary": "Inclui uma Transportadora",
                 "description": "Inclui uma Transportadora conforme dados enviados na requisição.",
@@ -120,6 +117,9 @@
                 "parameters": [
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
                     }
                 ],
                 "requestBody": {
@@ -127,18 +127,18 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_000.json#/definitions/CarrierInfo"
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#/definitions/CarrierInfo"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Operação realizada com sucesso!",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_000.json#/definitions/CarrierInfo"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#/definitions/CarrierInfo"
                                 }
                             }
                         }
@@ -156,20 +156,20 @@
                 }
             }
         },
-        "/carrier/{carrierId}": {
+        "/carrier/{InternalId}": {
             "get": {
                 "tags": [
-                    "carrierId"
+                    "InternalId"
                 ],
                 "summary": "Retorna a Transportadora pelo seu Código",
                 "description": "Retorna a Transportadora conforme dados enviados na requisição",
-                "operationId": "getcarrierId",
+                "operationId": "getInternalId",
                 "x-totvs": {
                     "productInformation": [
                         {
                             "product": "protheus",
                             "avaliable": true,
-                            "note": "Este verbo está disponível com os parâmetros Authorization, Fields e carrierId.",
+                            "note": "Este verbo está disponível com os parâmetros Authorization, Fields e InternalId.",
                             "minimalVersion": "12.1.21"
                         }
                     ]
@@ -179,10 +179,19 @@
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
                     },
                     {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
                     },
                     {
-                        "$ref": "#/components/parameters/carrierId"
+                        "$ref": "#/components/parameters/InternalId"
                     }
                 ],
                 "responses": {
@@ -191,17 +200,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_000.json#/definitions/CarrierInfo"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Erro na requisição!",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#/definitions/CarrierInfo"
                                 }
                             }
                         }
@@ -220,17 +219,17 @@
             },
             "put": {
                 "tags": [
-                    "carrierId"
+                    "InternalId"
                 ],
-                "summary": "Altera uma Transportadora",
+                "summary": "Altera uma transportadora",
                 "description": "Atualiza cadastro de Transportadoras conforme dados enviados na requisição",
-                "operationId": "putcarrierId",                  
+                "operationId": "putInternalId",                  
                 "x-totvs": {
                     "productInformation": [
                         {
                             "product": "protheus",
                             "available": true,
-                            "note": "Este verbo esta disponível com os parâmetros authorization, carrierId e Fields",
+                            "note": "Este verbo esta disponível com os parâmetros authorization, InternalId e Fields",
                             "minimalVersion": "12.1.21"
                         }
                     ]
@@ -243,7 +242,7 @@
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
                     },
                     {
-                        "$ref": "#/components/parameters/carrierId"
+                        "$ref": "#/components/parameters/InternalId"
                     }
                 ],         
                 "requestBody": {
@@ -251,7 +250,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_000.json#/definitions/CarrierInfo"
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#/definitions/CarrierInfo"
                             }
                         }
                     }
@@ -262,7 +261,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_000.json#/definitions/CarrierInfo"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#/definitions/CarrierInfo"
                                 }
                             }
                         }
@@ -291,17 +290,17 @@
             },            
             "delete": {
                 "tags": [
-                    "carrierId"
+                    "InternalId"
                 ],
                 "summary": "Exclui uma transportadora",
                 "description": "Exclui cadastro de Transportadora conforme dados enviados na requisição.",
-                "operationId": "deletecarrierId",
+                "operationId": "deleteInternalId",
                 "x-totvs": {
                     "productInformation": [
                         {
                             "product": "protheus",
                             "available": true,
-                            "note": "Este verbo esta disponível com os parâmetros Authorization e carrierId",
+                            "note": "Este verbo esta disponível com os parâmetros Authorization e InternalId",
                             "minimalVersion": "12.1.21"
                         }
                     ]
@@ -311,7 +310,7 @@
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
                     },
                     {
-                        "$ref": "#/components/parameters/carrierId"
+                        "$ref": "#/components/parameters/InternalId"
                     }
                 ],
                 "responses": {
@@ -320,7 +319,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_000.json#/definitions/CarrierInfo"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#/definitions/CarrierInfo"
                                 }
                             }
                         }
@@ -351,13 +350,24 @@
     },
     "components": {
         "parameters": {
-            "carrierId": {
-                "name": "carrierId",
+            "InternalId": {
+                "name": "InternalId",
                 "in": "path",
                 "required": true,
                 "description": "Identificador único da Transportadora",
+                "example": "D MG 01 000001",
                 "schema": {
                     "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"protheus",
+                            "avaliable":true,
+                            "note": "Informar os campos Filial (SA4.A4_FILIAL) e Código da Transportadora (SA4.A4_COD)",
+                            "minimalVersion":"12.1.21"
+						}
+					]
                 }
             }
         },
