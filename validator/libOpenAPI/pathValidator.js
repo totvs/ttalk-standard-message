@@ -115,10 +115,10 @@ var checkCommonErrorSchema = function (response, responseKey) {
  */
 var checkHttpVerbInUrl = function (pathkey) {
     if (results.useHttpVerbInEndpointUrl != true) {
-        results.useHttpVerbInEndpointUrl = (pathkey.includes("get") ||
-            pathkey.includes("put") ||
-            pathkey.includes("post") ||
-            pathkey.includes("delete"))
+        results.useHttpVerbInEndpointUrl = (pathkey.startsWith("get") ||
+            pathkey.startsWith("put") ||
+            pathkey.startsWith("post") ||
+            pathkey.startsWith("delete"))
     }
     results.useHttpVerbInEndpointUrl;
 }
