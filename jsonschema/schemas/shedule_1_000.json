@@ -55,7 +55,7 @@
               }
           ]
       },
-      "JobSchedule": {
+      "JobScheduleGET": {
         "type": "object",
         "properties": {
           "scheduleID": {
@@ -211,7 +211,112 @@
         }
       }
     },
-      
+      "JobSchedulePOST": {
+        "type": "object",        
+          "scheduleDate": {
+              "description": "Data da última alteração no agendamento",
+              "type": "date",
+              "maxLength": 10
+          },
+          "processID": {
+              "description": "Identificador do processo (rotina) que será executado",
+              "type": "string",
+              "maxLength": 100
+          },          
+          "recurrent": {
+              "description": "indica se a execução do job deve ocorrer mais de uma vez",
+              "type": "boolean"
+          },
+          "executionParameter": {
+            "type": "object",
+            "description": "Parâmetros para execução do processo",
+            "x-totvs": {
+              "-datasul": {
+                "multiValued": true,
+                "required": true,
+                "canonicalValues": null,
+                "caseExact": false,
+                "mutability": "readWrite",
+                "returned": "default",
+                "uniqueness": "none"
+              }
+            }
+          },
+          "single": {
+            "$ref": "#/definitions/Single"
+          },
+          "daily": {
+            "$ref": "#/definitions/Daily"
+          },
+          "weekly": {
+            "$ref": "#/definitions/Weekly"
+          },
+          "monthly": {
+            "$ref": "#/definitions/Monthly"
+          },
+          "execution": {
+            "$ref": "#/definitions/JobExecution"
+          }             
+        }
+      },
+    "Daily": {
+      "type": "object",
+      "properties": {
+        "hour": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "minute": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "Weekly": {
+      "type": "object",
+      "properties": {
+        "daysOfWeek": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday"
+            ],
+            "type": "string"
+          }
+        },
+        "hour": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "minute": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "Monthly": {
+      "type": "object",
+      "properties": {
+        "day": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "hour": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "minute": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
       "JobExecution": {
         "type": "object",
         "properties": {
