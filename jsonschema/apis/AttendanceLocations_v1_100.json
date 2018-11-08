@@ -2,22 +2,22 @@
   "openapi": "3.0.1",
   "servers": [
     {
-      "description": "API para a reembolso de serviços de saúde para o aplicativo de beneficiários de plano de saúde",
-      "url": "http://{serverUrl}:{serverHttpPort}/api/prosaude/healthcare/v1/",
+      "description": "API para os locais de atendimento dos prestadores de serviço das operadoras",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/hat/healthcare/v1",
       "variables": {
         "serverUrl": {
           "default": "localhost"
         },
         "serverHttpPort": {
-          "default": "1315"
+          "default": "4202"
         }
       }
     }
   ],
   "info": {
-    "description": "",
-    "version": "1.0",
-    "title": "Refunds",
+    "description": "API para os locais de atendimento dos prestadores de serviço das operadoras",
+    "version": "1.100",
+    "title": "Attendance Locations",
     "contact": {
       "name": "T-Talk",
       "url": "http://api.totvs.com.br",
@@ -25,17 +25,17 @@
     },
     "x-totvs": {
       "messageDocumentation": {
-        "name": "Refunds",
-        "description": "Reembolso de serviços de Saúde",
+        "name": "Attendance Locations",
+        "description": "Locais de Atendimentos dos prestadores de serviço das operadoras",
         "segment": "HealthCare"
       },
       "productInformation": [
         {
-          "product": "ProSaude",
-          "contact": "healthcare.mobile@totvs.com.br",
-          "description": "Reembolso de serviços de Saúde",
-          "adapter": "prosaude.prw",
-          "helpUrl": ""
+          "product": {
+            "product": "HAT",
+            "contact": "healthcare.autorizador@totvs.com.br",
+            "description": "Operações referente aos locais de atendimento dos prestadores de serviço das operadoras",
+          }
         }
       ]
     }
@@ -46,24 +46,46 @@
         "tags": [
           "attendanceLocations"
         ],
-        "summary": "Inclusão e alteração de locais de atendimento",
-        "x-totvs": {
-          "productInformation": {
-            "-hat": {
-              "available": true,
-              "note": "Este verbo esta disponivel com todos os parametros"
-            }
-          }
-        },
-        "description": "Permite a inclusão e alteração de locais de atendimento de prestadores da operadora.",
         "operationId": "healthProviderAttendancePlaceUpdate",
+        "summary": "Inclusão e alteração de locais de atendimento",
+        "description": "Permite a inclusão e alteração de locais de atendimento de prestadores da operadora.",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": {
+                "product": "HAT",
+                "available": true,
+                "description": "Este verbo esta disponível com os parâmetros Authorization, ExpiresAt",
+                "adapter": "AutorizadorRest.prw"
+              }
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+              }
+            }
+          },
+          "description": "Informações enviadas para atualização de locais de atendimento dos prestadores"
+        },
         "responses": {
           "202": {
             "description": "Atualização adicionada na fila para processamento.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/healthProviderIntegratorResponse"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
                 }
               }
             }
@@ -73,542 +95,33 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/errorMessage"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                 }
               }
             }
           }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/healthProviderAttendanceLocationRequest"
-              }
-            }
-          },
-          "description": "Informações enviadas para atualização de locais de atendimento dos prestadores",
-          "required": true
         }
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "oauth": {
-        "type": "oauth2",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "http://10.171.67.173/totvs.rac/account/login",
-            "tokenUrl": "http://10.171.67.173/totvs.rac/connect/token",
-            "scopes": {
-              "read:openid": "read openid scope",
-              "read:profile": "read profile scope",
-              "read:email": "read email scope",
-              "read:authorization_api": "read authorization_api scope",
-              "read:backend_api": "read backend_api scope"
-            }
-          }
-        }
-      }
-    },
-    "schemas": {
-      "errorMessage": {
-        "title": "errorMessage",
-        "type": "object",
-        "properties": {
-          "code": {
-            "description": "Código do erro identificado pelo servidor",
-            "type": "integer",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "integer",
-                "length": "4",
-                "note": "Código do erro identificado pelo servidor",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "message": {
-            "description": "Mensagem com a descricao do erro informado pelo servidor",
-            "type": "string",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "string",
-                "length": "90",
-                "note": "Mensagem com a descricao do erro informado pelo servidor",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "detailedMessage": {
-            "description": "Mensagem com o detalhamento do erro informado pelo servidor",
-            "type": "string",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "string",
-                "length": "500",
-                "note": "Mensagem com o detalhamento do erro informado pelo servidor",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          }
+    "parameters": {
+      "Authorization": {
+        "name": "Authorization",
+        "in": "header",
+        "description": "Token de autorização",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
-      "healthProviderAttendanceLocationRequest": {
-        "type": "object",
-        "properties": {
-          "healthInsurerId": {
-            "description": "",
-            "type": "string",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "string",
-                "length": "4",
-                "note": "Informativo, identifica o numero da operadora ao qual esta sendo feita a atualizacao",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "ansRegistry": {
-            "description": "",
-            "type": "string",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "string",
-                "length": "6",
-                "note": "Informativo, identifica o numero da operadora ao qual esta sendo feita a atualizacao",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "locations": {
-            "description": "",
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 100,
-            "items": {
-              "$ref": "#/components/schemas/healthProviderAttendancePlaceItems"
-            }
-          }
-        }
-      },
-      "healthProviderAttendancePlaceItems": {
-        "properties": {
-          "healthProviderCode": {
-            "description": "Codigo do prestador na operadora",
-            "type": "string",
-            "maxLength": 6,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_CODIGO",
-                "required": false,
-                "type": "string",
-                "length": "6",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "locationCode": {
-            "description": "",
-            "type": "string",
-            "maxLength": 3,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8_CODLOC",
-                "required": false,
-                "type": "string",
-                "length": "3",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "locationTypeCode": {
-            "description": "",
-            "type": "string",
-            "maxLength": 3,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8_LOCAL",
-                "required": false,
-                "type": "string",
-                "length": "3",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "locationDescription": {
-            "description": "",
-            "type": "string",
-            "maxLength": 30,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_DESLOC",
-                "required": false,
-                "type": "string",
-                "length": "30",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "ZIPCode": {
-            "description": "",
-            "type": "string",
-            "maxLength": 8,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_CEP",
-                "required": false,
-                "type": "string",
-                "length": "8",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "streetType": {
-            "description": "",
-            "type": "string",
-            "maxLength": 3,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_TIPLOG",
-                "required": false,
-                "type": "string",
-                "length": "",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "address": {
-            "description": "",
-            "type": "string",
-            "maxLength": 40,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_END",
-                "required": false,
-                "type": "string",
-                "length": "40",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "addressNumber": {
-            "description": "",
-            "type": "string",
-            "maxLength": 6,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_NR_END",
-                "required": false,
-                "type": "string",
-                "length": "6",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "addressComplement": {
-            "description": "",
-            "type": "string",
-            "maxLength": 30,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_COMEND",
-                "required": false,
-                "type": "string",
-                "length": "30",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "cityCode": {
-            "description": "Código do municipio no IBGE",
-            "type": "string",
-            "example": "1234567",
-            "maxLength": 7,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_CODMUN",
-                "required": false,
-                "type": "string",
-                "length": "7",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "cityName": {
-            "description": "",
-            "type": "string",
-            "maxLength": 30,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_MUN",
-                "required": false,
-                "type": "string",
-                "length": "30",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "stateAbbreviation": {
-            "description": "",
-            "type": "string",
-            "maxLength": 2,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_EST",
-                "required": false,
-                "type": "string",
-                "length": "2",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "district": {
-            "description": "Bairro",
-            "example": "Centro",
-            "type": "string",
-            "maxLength": 30,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_BAIRRO",
-                "required": false,
-                "type": "string",
-                "length": "30",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "phoneAreaCode": {
-            "description": "",
-            "type": "string",
-            "maxLength": 4,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_DDD",
-                "required": false,
-                "type": "string",
-                "length": "",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "phone": {
-            "description": "",
-            "type": "string",
-            "maxLength": 20,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_TEL",
-                "required": false,
-                "type": "string",
-                "length": "20",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "contactName": {
-            "description": "",
-            "type": "string",
-            "maxLength": 35,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_CONTAT",
-                "required": false,
-                "type": "string",
-                "length": "35",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "cnesCode": {
-            "description": "",
-            "type": "string",
-            "maxLength": 7,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_CNES",
-                "required": false,
-                "type": "string",
-                "length": "7",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "region": {
-            "description": "",
-            "type": "string",
-            "maxLength": 3,
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_REGMUN",
-                "required": false,
-                "type": "string",
-                "length": "",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "blockDate": {
-            "description": "Define a data em que o local de atendimento foi bloqueado. Informar este item somente se o local estiver bloqueado.",
-            "type": "string",
-            "format": "date",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "BB8.BB8_DATBLO",
-                "required": false,
-                "type": "string",
-                "length": "8",
-                "note": "",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          }
-        }
-      },
-      "healthProviderIntegratorResponse": {
-        "type": "object",
-        "properties": {
-          "id_processamento": {
-            "description": "ID do processamento",
-            "type": "string",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "field": "Integracao.tokenId",
-                "required": false,
-                "type": "varchar",
-                "length": "255",
-                "note": "Utilizado para consultar a mensagem na API de consulta de processamento",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "respostaSolicitacao": {
-            "description": "Resposta do processamento do servico",
-            "type": "boolean",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "boolean",
-                "note": "Utilizado para informar ao client se a requisicao ocorreu com sucesso",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "motivosNegativa": {
-            "$ref": "#/components/schemas/motivosNegativa"
-          }
-        }
-      },
-      "motivosNegativa": {
-        "title": "motivosNegativa",
-        "type": "object",
-        "properties": {
-          "codigo": {
-            "description": "Codigo do motivo ao qual foi negado o atendimento",
-            "type": "string",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "string",
-                "length": "4",
-                "note": "Nao possui campo pois trata-se de um atributo informativo",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          },
-          "descricao": {
-            "description": "Descricao do motivo ao qual foi negado o atendimento",
-            "type": "string",
-            "x-totvs": [
-              {
-                "product": "hat",
-                "required": false,
-                "type": "string",
-                "length": "500",
-                "note": "Nao possui campo pois trata-se de um atributo informativo",
-                "available": true,
-                "canUpdate": true
-              }
-            ]
-          }
+      "ExpiresAt": {
+        "name": "Expires_at",
+        "in": "header",
+        "description": "Data e hora da expiração do token em segundos",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       }
     }
