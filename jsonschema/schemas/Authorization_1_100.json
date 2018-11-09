@@ -1,0 +1,1204 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#",
+  "info": {
+    "description": "Contrato de Mensagem Padronizada para autorização das guias de atendimento de planos de saude",
+    "version": "1.100",
+    "title": "Authorizations",
+    "contact": {
+      "name": "T-Talk",
+      "url": "http://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Authorizations",
+        "description": "Guias de atendimento",
+        "segment": "HealthCare"
+      },
+      "productInformation": [
+        {
+          "product": "HAT",
+          "contact": "healthcare.autorizador@totvs.com.br",
+          "description": "Plataforma de autorização de procedimentos e eventos em Saúde"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "PagedAuthorizations": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Authorization"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Authorization": {
+      "type": "object",
+      "properties": {
+        "observacao": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_MSG01 || BEA.BEA_MSG02",
+              "required": false,
+              "type": "string",
+              "length": "500",
+              "note": "Observacoes referente ao atendimento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "numeroGuiaPrincipal": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_GUIPRI",
+              "required": false,
+              "type": "string",
+              "length": "20",
+              "note": "Numero de identificacao de guia vinculada caso exista",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "tipoAtendimento": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_TIPATE",
+              "required": false,
+              "type": "string",
+              "length": "2",
+              "note": "Tipo de atendimento de acordo com a terminologia TISS",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "caraterAtendimento": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_TIPADM",
+              "required": false,
+              "type": "string",
+              "length": "6",
+              "note": "Carater do atendimento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "statusGuia": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_STATUS",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Status da autorizacao da guia",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "atendimentoRN": {
+          "description": "BEA.BEA_ATERNA",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Indica se quem realizou o atendimento foi um recem nascido",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "dataSolicitacao": {
+          "description": "Data de solicitacao do atendimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_DATSOL",
+              "required": false,
+              "type": "string",
+              "length": "8",
+              "note": "Formato AAAMMDD",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "jornadaDesc": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "note": "Informativo: indica qual a jornada de acordo com o tipo de guia",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "reasonsforNegative": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReasonsforNegative"
+          }
+        },
+        "liberacao": {
+          "description": "",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_LIBERA",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Indica se o atendimento e uma solicitacao ou execucao",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "tipoConsulta": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_TIPCON",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Caso for guia de consulta, se refere ao tipo",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "registroAns": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "6",
+              "note": "Codigo da operadora na ANS",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "tipoGuia": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_TIPGUI",
+              "required": false,
+              "type": "string",
+              "length": "2",
+              "note": "Tipo de guia",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "dataAutorizacao": {
+          "description": "Data de realizacao do atendimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_DATPRO",
+              "required": false,
+              "type": "string",
+              "length": "8",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "numProtAtend": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_PROATE",
+              "required": false,
+              "type": "string",
+              "length": "20",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "numeroGuiaOperadora": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_OPEMOV || BEA.BEA_ANOAUT || BEA.BEA_MESAUT || BEA.BEA_NUMAUT",
+              "required": false,
+              "type": "string",
+              "length": "20",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "indicacaoAcidente": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_INDACI",
+              "required": false,
+              "type": "string",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "motivoEncerramento": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "2",
+              "note": "Implementacao futura, retorna em branco",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "numeroGuiaPrestador": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_GUIPRE",
+              "required": false,
+              "type": "string",
+              "length": "20",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "indicacaoClinica": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_INDCLI",
+              "required": false,
+              "type": "string",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "senha": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_SENHA",
+              "required": false,
+              "type": "string",
+              "length": "20",
+              "note": "Senha gerada no atendimento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "validadeSenha": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BEA.BEA_VALSEN",
+              "required": false,
+              "type": "string",
+              "length": "8",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "beneficiary": {
+          "$ref": "#/definitions/Beneficiary"
+        },
+        "healthProvider": {
+          "$ref": "#/definitions/HealthProvider"
+        },
+        "medicalProcedures": {
+          "$ref": "#/definitions/MedicalProcedure"
+        },
+        "professional": {
+          "$ref": "#/definitions/Professional"
+        }
+      }
+    },
+    "ReasonsforNegative": {
+      "title": "reasonsforNegative",
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "description": "Codigo do motivo ao qual foi negado o atendimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "4",
+              "note": "Nao possui campo pois trata-se de um atributo informativo",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "descricao": {
+          "description": "Descricao do motivo ao qual foi negado o atendimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "500",
+              "note": "Nao possui campo pois trata-se de um atributo informativo",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        }
+      }
+    },
+    "Beneficiary": {
+      "type": "object",
+      "properties": {
+        "vencimentoCarteira": {
+          "description": "Data de vencimento da carteirinha do Beneficiario",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BA1.BA1_DTVLCR",
+              "required": false,
+              "type": "string",
+              "length": "8",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "nomeBeneficiario": {
+          "description": "Nome do Beneficiario",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BA1.BA1_NOMUSR",
+              "required": false,
+              "type": "string",
+              "length": "70",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "atendimentoRN": {
+          "description": "Informa se o atendimento e para recem nascido",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "S - Sim, N - Nao",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "numeroCNS": {
+          "description": "Numero do CNS do Beneficiario",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BTS.BTS_NRCRNA",
+              "required": false,
+              "type": "string",
+              "length": "15",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "numeroCarteira": {
+          "description": "Numero da carteirinha do beneficiario",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BA1.BA1_CODINT || BA1.BA1_CODEMP || BA1.BA1_MATRIC || BA1.BA1_TIPREG || BA1.BA1_DIGITO",
+              "required": false,
+              "type": "string",
+              "length": "17",
+              "note": "Propriedade composta por mais de um campo",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "healthInsurance": {
+          "$ref": "#/definitions/HealthInsurance"
+        }
+      }
+    },
+    "HealthInsurance": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "description": "Nome do Plano na operadora",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BI3.BI3_DESCRI",
+              "required": false,
+              "type": "string",
+              "length": "60",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "codigoPlano": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BI3.BI3_CODIGO",
+              "required": false,
+              "type": "string",
+              "length": "4",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        }
+      }
+    },
+    "HealthProvider": {
+      "type": "object",
+      "properties": {
+        "codigoContratado": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BAU.BAU_CODIGO",
+              "required": false,
+              "type": "string",
+              "length": "6",
+              "note": "Codigo de identificacao do prestador na operadora",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "documentoContratado": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BAU.BAU_CPFCGC",
+              "required": false,
+              "type": "string",
+              "length": "14",
+              "note": "Numero do documento do Prestador de Servicos",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "cnes": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BB8.BB8_CNES",
+              "required": false,
+              "type": "string",
+              "length": "7",
+              "note": "Codigo do CNES do local de atendimento do Prestador",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "nomeContratado": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BAU.BAU_NOME",
+              "required": false,
+              "type": "string",
+              "length": "60",
+              "note": "Nome/Fantasia do Prestador",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        }
+      }
+    },
+    "MedicalProcedure": {
+      "type": "object",
+      "properties": {
+        "codigoTabela": {
+          "description": "Codigo da tabela do procedimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_CODPAD",
+              "required": false,
+              "type": "string",
+              "length": "2",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "status": {
+          "description": "Status do procedimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_STATUS",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "codigoProcedimento": {
+          "description": "Codigo do procedimento na tabela de terminologias TISS",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_CODPRO",
+              "required": false,
+              "type": "string",
+              "length": "16",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "quantidadeSolicitada": {
+          "description": "Quantidade solicitada",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_QTDSOL",
+              "required": false,
+              "type": "float",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "descricaoProcedimento": {
+          "description": "Descricao/Nome do procedimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BR8.BR8_DESCRI",
+              "required": false,
+              "type": "string",
+              "length": "230",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "tipoProcedimento": {
+          "description": "",
+          "type": "string",
+          "enum": [
+            "0 - Procedimento",
+            "1 - Material",
+            "2 - Medicamento",
+            "3 - Taxas",
+            "4 - Diarias",
+            "P - Ortese",
+            "6 - Pacote",
+            "M - Gases",
+            "8 - Alugueis",
+            "9 - Outros"
+          ],
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BR8.BR8_TPPROC",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "quantidadeAutorizada": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_QTDPRO",
+              "required": false,
+              "type": "float",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "saldo": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_SALDO",
+              "required": false,
+              "type": "float",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "viaAcesso": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_VIA",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Via de acesso utilizada",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "tecnicaUtilizada": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_TECUTI",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Tecnica utilizada",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "reducaoAcrescimo": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_PRPRRL",
+              "required": false,
+              "type": "float",
+              "note": "Percentual de reducao/acrescimo do valor do procedimento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "valorUnitario": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_VLRAPR",
+              "required": false,
+              "type": "float",
+              "note": "Valor apresentado do procedimento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "valorTotal": {
+          "description": "",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "number",
+              "note": "Nao possui campo, gerado de acordo com a quantidade * valorUnitario",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "horaFinal": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_HORFIM",
+              "required": false,
+              "type": "string",
+              "length": "4",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "horaInicial": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_HORPRO",
+              "required": false,
+              "type": "string",
+              "length": "4",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "dataExecucao": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BE2.BE2_DATPRO",
+              "required": false,
+              "type": "string",
+              "length": "8",
+              "note": "Data de execucao do procedimento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "medicalTeam": {
+          "$ref": "#/definitions/MedicalTeam"
+        },
+        "reasonsforNegative": {
+          "$ref": "#/definitions/ReasonsforNegative"
+        }
+      }
+    },
+    "MedicalTeam": {
+      "type": "object",
+      "properties": {
+        "grauPart": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "B4B.B4B_GRAUPA",
+              "required": false,
+              "type": "string",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "seqRef": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "B4B.B4B_SEQUEN",
+              "required": false,
+              "type": "string",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "professional": {
+          "$ref": "#/definitions/Professional"
+        }
+      }
+    },
+    "Professional": {
+      "type": "object",
+      "properties": {
+        "codigoNaOperadora": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BB0.BB0_CODIGO",
+              "required": false,
+              "type": "string",
+              "length": "6",
+              "note": "Codigo de identificacao do Profissional na Operadora",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "documentoProfissional": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BB0.BB0_CGC",
+              "required": false,
+              "type": "string",
+              "length": "14",
+              "note": "Codigo do CPF do Profissional",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "conselhoProfissional": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BB0.BB0_CODSIG",
+              "required": false,
+              "type": "string",
+              "length": "",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "nomeProfissional": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BB0.BB0_NOME",
+              "required": false,
+              "type": "string",
+              "length": "40",
+              "note": "Nome do Profissional",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "numeroConselhoProfissional": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BB0.BB0_NUMCR",
+              "required": false,
+              "type": "string",
+              "length": "15",
+              "note": "Cadastro do Profissiona no Conselho Regional de sua atuacao",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "uf": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BB0.BB0_UF",
+              "required": false,
+              "type": "string",
+              "length": "2",
+              "note": "Codigo do UF de acordo com a Terminologia TISS",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "cbos": {
+          "$ref": "#/definitions/CBOS"
+        }
+      }
+    },
+    "CBOS": {
+      "title": "CBOS",
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BQ1.BQ1_CODIGO",
+              "required": false,
+              "type": "string",
+              "length": "6",
+              "note": "Codigo do CBOS da especialidade do atendimento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "descricao": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "field": "BQ1.BQ1_DESCRI",
+              "required": false,
+              "type": "string",
+              "length": "50",
+              "note": "",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        }
+      }
+    },
+    "AuthorizationCancellationReceipt": {
+      "type": "object",
+      "properties": {
+        "registroAns": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "6",
+              "note": "Codigo da operadora na ANS, nao possui campo vinculado nesse contexto",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "canceledAuthorizations": {
+          "$ref": "#/definitions/CanceledAuthorizations"
+        }
+      }
+    },
+    "CanceledAuthorizations": {
+      "properties": {
+        "numeroGuiaPrestador": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "20",
+              "note": "Numero da guia a ser cancelada, nao possui campo vinculado nesse contexto",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "tipoGuia": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "2",
+              "note": "Tipo da guia, nao possui campo vinculado nesse contexto",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "statusCancelamento": {
+          "description": "",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Status do processamento do cancelamento, nao possui campo vinculado nesse contexto",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        }
+      }
+    },
+    "TokenProcessResponse": {
+      "type": "object",
+      "properties": {
+        "tokenProcess": {
+          "description": "ID do Token de processamento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "varchar",
+              "length": "47",
+              "note": "Utilizado para consultar a resposta em requisicoes de tipo long-pooling",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "serviceResponse": {
+          "description": "Resposta do processamento do servico",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "boolean",
+              "note": "Utilizado pelo client consultar se o servico foi processado corretamente em requisicoes de tipo long-pooling",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "avrgTime": {
+          "description": "Tempo medio de processamento",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "hat",
+              "required": false,
+              "type": "integer",
+              "note": "Utilizado para o cliente saber quanto tempo em media o servico e processado",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        }
+      }
+    },
+    "CancelformResponse": {
+      "type": "object",
+      "properties": {
+        "authorizationCancellationReceipt": {
+          "$ref": "#/definitions/AuthorizationCancellationReceipt"
+        }
+      }
+    }
+  }
+}

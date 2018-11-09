@@ -1,0 +1,367 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para autorização das guias de atendimento de planos de saude",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/hat/healthcare/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "4202"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para autorização das guias de atendimento de planos de saude",
+    "version": "1.100",
+    "title": "Authorization",
+    "contact": {
+      "name": "T-Talk",
+      "url": "http://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Authorization",
+        "description": "Autorização das guias de atendimento",
+        "segment": "HealthCare"
+      },
+      "productInformation": [
+        {
+          "product": {
+            "product": "HAT",
+            "contact": "healthcare.autorizador@totvs.com.br",
+            "description": "Operacoes referente as guias de atendimento de planos de saude no formato TISS"
+          }
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/authorizations": {
+      "get": {
+        "tags": [
+          "authorizations"
+        ],
+        "summary": "Dados dos atendimentos realizados.",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parametros"
+            }
+          ]
+        },
+        "description": "Retorna uma mensagem do tipo colecao com as guias de atendimento realizados no autorizador. <br>Os resultados podem ser filtrados através dos parametros <b>status</b>, <b>tipoGuia</b>, <b>emissionDateFrom</b> e <b>emissionDateTo</b>",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/Status"
+          },
+          {
+            "$ref": "#/components/parameters/AuthorizationType"
+          },
+          {
+            "$ref": "#/components/parameters/EmissionDateFrom"
+          },
+          {
+            "$ref": "#/components/parameters/EmissionDateTo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_000/jsonschema/schemas/Authorization_1_100.json#/definitions/PagedAuthorizations"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "authorizations"
+        ],
+        "summary": "Dados dos atendimentos realizados.",
+        "description": "Insere uma guia na fila de processamento. Ao realizar uma requisicão, o endpoint irá responder com codigo 202 indicando que a requisicao foi adicionada a fila de processamento retornando um token de identificação, em seguida esse token deve ser utilizado nos parâmetros de URL para retornar a resposta de codigo 200 assim que o processamento for concluído",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros Authorization, ExpiresAt, authorizationType, e tokenId"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "name": "authorizationType",
+            "in": "query",
+            "description": "Identifica qual o tipo de atendimento que será incluído",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tokenId",
+            "in": "query",
+            "description": "Token com a identificação do item inserido na lista de processamento",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_000/jsonschema/schemas/Authorization_1_100.json#/definitions/Authorization"
+              }
+            }
+          },
+          "description": "Informacoes do beneficiario utilizadas para verificacao de elegibilidade",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "location": {
+                "description": "URL onde o recurso está disponível",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_000/jsonschema/schemas/Authorization_1_100.json#/definitions/Authorization"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Adicionou uma requisicao na fila de processamento",
+            "headers": {
+              "location": {
+                "description": "URL onde o recurso estará disponível",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_000/jsonschema/schemas/Authorization_1_100.json#/definitions/TokenProcessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizations/{authorizationId}": {
+      "get": {
+        "tags": [
+          "authorizations"
+        ],
+        "summary": "Dados de um atendimento realizado.",
+        "description": "Retorna uma mensagem com a guia de atendimento informada no parametro authorizationId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros Authorization, ExpiresAt, authorizationId, expand e fields"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "name": "authorizationId",
+            "in": "path",
+            "description": "Numero da guia",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_000/jsonschema/schemas/Authorization_1_100.json#/definitions/Authorization"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/authorization/{authorizationId}/cancel": {
+      "post": {
+        "tags": [
+          "authorizations"
+        ],
+        "summary": "Recibo de cancelamento de guia",
+        "description": "Efetua o cancelamento de uma guia incluída pelo prestador.",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com o parâmetro authorizationId",
+              "minimalVersion": ""
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "authorizationId",
+            "in": "path",
+            "description": "Numero do protocolo de atendimento gerado",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_000/jsonschema/schemas/Authorization_1_100.json#/definitions/CancelformResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "ExpiresAt": {
+        "name": "Expires_at",
+        "in": "header",
+        "description": "Data e hora da expiração do token em segundos",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Status": {
+        "name": "status",
+        "in": "query",
+        "description": "Status da guia",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1 - Autorizado",
+            "2 - Autorizado Parcialmente",
+            "3 - Negado",
+            "6 - Pendente",
+            "9 - Cancelado"
+          ]
+        }
+      },
+      "AuthorizationType": {
+        "name": "authorizationType",
+        "in": "query",
+        "description": "Tipo da guia",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1 - Consulta",
+            "2 - Exame",
+            "3 - Execucao"
+          ]
+        }
+      },
+      "EmissionDateFrom": {
+        "name": "emissionDateFrom",
+        "in": "query",
+        "description": "Data inicial de emissao",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "EmissionDateTo": {
+        "name": "emissionDateTo",
+        "in": "query",
+        "description": "Data final de emissao",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
