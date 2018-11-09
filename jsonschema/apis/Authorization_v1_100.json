@@ -105,7 +105,14 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           }
         }
       },
@@ -133,22 +140,10 @@
             "$ref": "#/components/parameters/ExpiresAt"
           },
           {
-            "name": "authorizationType",
-            "in": "query",
-            "description": "Identifica qual o tipo de atendimento que será incluído",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/AuthorizationType"
           },
           {
-            "name": "tokenId",
-            "in": "query",
-            "description": "Token com a identificação do item inserido na lista de processamento",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/TokenId"
           }
         ],
         "requestBody": {
@@ -202,20 +197,20 @@
         }
       }
     },
-    "/authorizations/{AuthorizationId}": {
+    "/authorizations/{authorizationId}": {
       "get": {
         "tags": [
           "authorizations"
         ],
         "operationId": "getAuthorization",
         "summary": "Dados de um atendimento realizado.",
-        "description": "Retorna uma mensagem com a guia de atendimento informada no parametro AuthorizationId",
+        "description": "Retorna uma mensagem com a guia de atendimento informada no parametro authorizationId",
         "x-totvs": {
           "productInformation": [
             {
               "product": "HAT",
               "available": true,
-              "note": "Este verbo está disponível com os parâmetros Authorization, ExpiresAt, AuthorizationId, expand e fields"
+              "note": "Este verbo está disponível com os parâmetros Authorization, ExpiresAt, authorizationId, expand e fields"
             }
           ]
         },
@@ -248,12 +243,19 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/authorizations/{AuthorizationId}/cancel": {
+    "/authorizations/{authorizationId}/cancel": {
       "post": {
         "tags": [
           "authorizations"
@@ -266,7 +268,7 @@
             {
               "product": "HAT",
               "available": true,
-              "note": "Este verbo está disponível com o parâmetro AuthorizationId"
+              "note": "Este verbo está disponível com o parâmetro authorizationId"
             }
           ]
         },
@@ -287,7 +289,14 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           }
         }
       }
@@ -305,12 +314,13 @@
         }
       },
       "AuthorizationId": {
-        "name": "AuthorizationId",
+        "name": "authorizationId",
         "in": "path",
         "description": "Numero da guia",
         "required": true,
         "schema": {
-          "type": "string"
+          "type": "integer",
+          "format": "int64"
         }
       },
       "Status": {
@@ -341,6 +351,15 @@
             "2 - Exame",
             "3 - Execucao"
           ]
+        }
+      },
+      "TokenId": {
+        "name": "tokenId",
+        "in": "query",
+        "description": "Token com a identificação do item inserido na lista de processamento",
+        "required": false,
+        "schema": {
+          "type": "string"
         }
       },
       "EmissionDateFrom": {
