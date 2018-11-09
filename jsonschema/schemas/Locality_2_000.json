@@ -1,0 +1,461 @@
+{
+    "openapi": "3.0.0",
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Locality/v2/2_000/jsonschema/schemas/locality_2_000.json#",
+    "info": {
+        "description": "",
+        "version": "2.000",
+        "title": "Locality",
+        "contact": {},
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "Locality",
+                "description": "Localidade",
+                "segment": ""
+            },
+            "transactionDefinition": {
+                "subType": "event"
+            }
+        }
+    },	  
+    "definitions": {
+        "createLocality": {
+            "title": "CreateLocality",
+            "description": "Informações necessárias para criar uma localidade",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "O nome da localidade",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "A descrição da localidade",
+                    "type": "string"
+                },
+                "locations": {
+                    "description": "As localizações da localidade",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/setLocation"
+                    }
+                },
+                "limitedToUsers": {
+                    "description": "Usuários em que a localidade está limitada",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/setUser"
+                    }
+                }
+            }
+        },
+        "setLocation": {
+            "title": "setLocation",
+            "description": "Informações de uma localização",
+            "type": "object",
+            "properties": {
+                "geoPosition": {
+                    "$ref": "#/components/schemas/geoPosition",
+                    "description": "Informações de Geo Posição da localização"
+                }
+            }
+        },
+        "setUser": {
+            "title": "SetUser",
+            "description": "Representa o usuário externo controlado pelo RAC",
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "format": "int64",
+                    "description": "Representa o id de um usu�rio externo ao sistema, controlado pelo RAC",
+                    "type": "integer"
+                }
+            }
+        },
+        "geoPosition": {
+            "title": "GeoPosition",
+            "description": "Informações de uma Geo Posição",
+            "type": "object",
+            "properties": {
+                "latitude": {
+                    "format": "double",
+                    "description": "Coordenada de latitude",
+                    "type": "number"
+                },
+                "longitude": {
+                    "format": "double",
+                    "description": "Coordenada de longitude",
+                    "type": "number"
+                }
+            }
+        },
+        "localityCreatedResponse": {
+            "title": "LocalityCreated",
+            "description": "Identificadores da localidade criada com sucesso",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador da entidade criada",
+                    "type": "integer"
+                },
+                "limitedToUsers": {
+                    "description": "Limitação da localidade aos usuários",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/userResponse"
+                    }
+                },
+                "locations": {
+                    "description": "Localizações da localidade",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/locationResponse"
+                    }
+                }
+            }
+        },
+        "userResponse": {
+            "title": "User",
+            "description": "Resposta para o usuário criado",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador do usuário criado",
+                    "type": "integer"
+                },
+                "userId": {
+                    "format": "int64",
+                    "description": "Representa o id de um usuário externo ao sistema, controlado pelo RAC",
+                    "type": "integer"
+                }
+            }
+        },
+        "locationResponse": {
+            "title": "Location",
+            "description": "Localização criada",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador da localização",
+                    "type": "integer"
+                },
+                "geoPosition": {
+                    "$ref": "#/components/schemas/geoPosition",
+                    "description": "Coordenadas da localização"
+                }
+            }
+        },
+        "ErrorResponse": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+        },
+        "NotificationEvent": {
+            "title": "ErrorDetail",
+            "type": "object",
+            "properties": {
+                "guid": {
+                    "format": "uuid",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "code": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "message": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "detailedMessage": {
+                    "type": "string",
+                    "readOnly": true
+                }
+            }
+        },
+        "localityPaginatedList": {
+            "description": "Lista paginada de localidades",
+            "type": "object",
+            "properties": {
+                "hasNext": {
+                    "description": "Indica se há mais registros na próxima página",
+                    "type": "boolean"
+                },
+                "items": {
+                    "description": "Lista das localidades",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/getAllLocalityItemResponse"
+                    }
+                }
+            }
+        },
+        "getAllLocalityItemResponse": {
+            "title": "GetAllLocalityItem",
+            "description": "Informações para listagem de uma localidade",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador interno no sistema",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "O nome da localidade",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "A descrição da localidade",
+                    "type": "string"
+                },
+                "locations": {
+                    "description": "As localizações da localidade",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/getLocation"
+                    }
+                }
+            }
+        },
+        "getLocation": {
+            "title": "GetLocation",
+            "description": "Informações de uma localização",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador interno no sistema",
+                    "type": "integer"
+                },
+                "geoPosition": {
+                    "$ref": "#/components/schemas/geoPosition",
+                    "description": "Informações de Geo posição da localização"
+                }
+            }
+        },
+        "updateLocality": {
+            "title": "UpdateLocality",
+            "description": "Informações permitidas na alteração da localidade",
+            "type": "object",
+            "properties": {
+			    "localityId": {
+				    "format": "int32",
+                    "description": "Identificador interno no sistema",
+                    "type": "integer"
+				},
+                "name": {
+                    "description": "O nome da localidade",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "A descrição da localidade",
+                    "type": "string"
+                },
+                "locations": {
+                    "description": "As localizações da localidade",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/setLocation"
+                    }
+                }
+            }
+        },
+        "localityUpdatedResponse": {
+            "title": "LocalityUpdated",
+            "description": "Identificadores da localidade atualizada com sucesso",
+            "type": "object",
+            "properties": {
+                "localityId": {
+                    "format": "int32",
+                    "description": "Identificador da entidade atualizada",
+                    "type": "integer"
+                },
+                "locations": {
+                    "description": "localizações da localidade",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/locationResponse"
+                    }
+                }
+            }
+        },
+        "setLocalityLimitedToUsers": {
+            "title": "SetLocalityLimitedToUsers",
+            "description": "Informações necess�rias limitar a localidade a usuários",
+            "type": "object",
+            "properties": {
+			    "id": {
+                    "format": "int32",
+                    "description": "Identificador da entidade atualizada",
+                    "type": "integer"
+                },
+                "limitedToUsers": {
+                    "description": "usuários em que a localidade está limitada",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/setUser"
+                    }
+                }
+            }
+        },
+        "setLimitedUsersToLocalityResponse": {
+            "title": "SetLimitedUsersToLocality",
+            "description": "Identificadores da localidade atualizada com sucesso",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador da entidade atualizada",
+                    "type": "integer"
+                },
+                "limitedToUsers": {
+                    "description": "Limitação da localidade aos usuários atualizado",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/userResponse"
+                    }
+                }
+            }
+        },
+        "getLocalityResponse": {
+            "title": "GetLocality",
+            "description": "Informações contidas em uma localidade, para edição",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador interno no sistema",
+                    "type": "integer",
+                    "x-totvs": {
+                        "totvsChecklist": {
+                            "field": "",
+                            "required": true,
+                            "type": "integer",
+                            "length": "999",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    }
+                },
+                "name": {
+                    "description": "O nome da localidade",
+                    "type": "string",
+                    "x-totvs": {
+                        "totvsChecklist": {
+                            "field": "",
+                            "required": true,
+                            "type": "string",
+                            "length": "999",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    }
+                },
+                "description": {
+                    "description": "A descrição da localidade",
+                    "type": "string",
+                    "x-totvs": {
+                        "totvsChecklist": {
+                            "field": "",
+                            "required": true,
+                            "type": "string",
+                            "length": "999",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    }
+                },
+                "locations": {
+                    "description": "As localizações da localidade",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/getLocation"
+                    },
+                    "x-totvs": {
+                        "totvsChecklist": {
+                            "field": "",
+                            "required": true,
+                            "type": "array",
+                            "length": "999",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    }
+                },
+                "limitedToUsers": {
+                    "description": "Usuários em que a localidade está limitada",
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/getUser"
+                    },
+                    "x-totvs": {
+                        "totvsChecklist": {
+                            "field": "",
+                            "required": true,
+                            "type": "array",
+                            "length": "999",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    }
+                },
+                "_expandables": {
+                    "uniqueItems": false,
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "x-totvs": {
+                        "totvsChecklist": {
+                            "field": "",
+                            "required": true,
+                            "type": "array",
+                            "length": "999",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    }
+                },
+                "internalId": {
+                    "description": "InternalId da entidade",
+                    "type": "string"
+                }
+            }
+        },
+        "getUser": {
+            "title": "GetUser",
+            "description": "Dados do usuário em que a localidade foi limitada",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "description": "Identificador interno no sistema",
+                    "type": "integer"
+                },
+                "userId": {
+                    "format": "int64",
+                    "description": "Representa o id de um usuário externo ao sistema, controlado pelo RAC",
+                    "type": "integer"
+                }
+            }
+        }
+    
+   
+  "servers": [
+            {
+                "description": "",
+                "url": "api.totvs.com.br/"
+            }
+        ]
+    }
