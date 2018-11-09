@@ -114,14 +114,18 @@ var checkCommonErrorSchema = function (response, responseKey) {
  * @param {*} pathkey String (/endpoint)
  */
 var checkHttpVerbInUrl = function (pathkey) {
+    var listOfWords = pathkey.split('/');
     if (results.useHttpVerbInEndpointUrl != true) {
-        results.useHttpVerbInEndpointUrl = (pathkey.includes("get") ||
-            pathkey.includes("put") ||
-            pathkey.includes("post") ||
-            pathkey.includes("delete"))
+        for (var i = 0; i < listOfWords.length; i++) {
+            var word = listOfWords[i].toLowerCase();
+            results.useHttpVerbInEndpointUrl = (word.startsWith("get") ||
+                pathkey.startsWith("put") ||
+                pathkey.startsWith("post") ||
+                pathkey.startsWith("delete"));
+        }
     }
     results.useHttpVerbInEndpointUrl;
-}
+};
 
 /**
  * This method checks if all parameters which reference the OpenAPI itself exist
