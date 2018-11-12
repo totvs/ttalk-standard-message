@@ -1,457 +1,440 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemReserve_1_000.json#",
-  "info": {
-    "description": "",
-    "version": "1.000",
-    "title": "ItemReserve",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "ItemReserve",
-        "description": "Mensagem para Integra√ß√£o da Reserva de Produtos",
-        "segment": ""
-      },
-      "productInformation": [
-        {
-          "product": "PROTHEUS",
-          "contact": "Alan S. R. Oliveira",
-          "note": "Inova√ß√£o Varejo",
-          "adapter": "MATI410"
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemReserve_1_000.json#",
+
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para a entidade Reserva (ItemReserve) para produtos TOTVS",
+		"version": "1.000",
+		"title": "ItemReserve",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/ItemReserveInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "ItemReserve",
+				"description": "Reserva de produto",
+				"segment": "Varejo"
+			},
+			"productInformation": [{
+					"product": "protheus",
+					"contact": "ricardo.msousa@totvs.com.br",
+					"description": "Cadastro de ItemReserve",
+					"adapter": "loji704o.prw",
+					"helpUrl": "link aqui"
+				}
+			]
+		}
+	},
+
+	"definitions": {
+		"PagedItemReserves": {
+			"type": "object",
+			"allOf": [{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				}, {
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/ItemReserves"
+							}
+						}
+					}
+				}
+			]
+        },
+        "ItemReserves": {
+            "type": "object",
+            "properties": {
+                "ItemReserve": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ItemReserveInfo"
+                    }
+                }
+            }
+        },      
+		"ItemReserveInfo": {
+			"type": "object",
+			"properties": {
+                "CompanyId": {
+                    "description": "Empresa - N„o possui campo fÌsico na tabela",
+                    "type": "boolean",
+                    "x-totvs": [
+                      {
+                        "product": "PROTHEUS",
+                        "field": "N„o possui campo fÌsico na tabela",
+                        "required": false,
+                        "type": "char",
+                        "length": "2",
+                        "note": "",
+                        "available": true,
+                        "canUpdate": true
+                      }
+                    ]
+                  },                
+                "BranchId": {
+                    "description": "Ser· enviado o valor da vari·vel cFilAnt indicando em qual Filial Ser· feita a Reserva",
+                    "type": "string",
+                    "x-totvs": [
+                      {
+                        "product": "PROTHEUS",
+                        "field": "SC0.C0_FILIAL",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "12",
+                        "note": "",
+                        "available": true,
+                        "canUpdate": true
+                      }
+                    ]
+                  },
+                "InternalId": {
+                    "description": "O InternalID da Reserva È formado por EMPRESA|C0_FILIAL|C0_NUM|C0_PRODUTO",
+                    "type": "string",
+                    "x-totvs": [
+                      {
+                        "product": "PROTHEUS",
+                        "field": "N„o possui campo fÌsico na tabela",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "12",
+                        "note": "",
+                        "available": true,
+                        "canUpdate": true
+                      }
+                    ]
+                  },
+                "ReserveNumber": {
+                    "description": "Numero da Reserva no Protheus",
+                    "type": "string",
+                    "x-totvs": [
+                      {
+                        "product": "PROTHEUS",
+                        "field": "SC0.C0_NUM",
+                        "required": true,
+                        "type": "varchar",
+                        "length": "6",
+                        "note": "",
+                        "available": true,
+                        "canUpdate": false
+                      }
+                    ]
+                  },
+                "ReserveType": {
+                    "description": "Tipo de Reserva",
+                    "type": "array",
+                    "items": {
+                      "description": "VD - Venda Direta / CL - Cliente / PD - Pedido de Venda / LB - Liberacao / NF - Nota Fiscal",
+                      "type": "string",
+                      "enum": [
+                        "VD",
+                        "CL",
+                        "PD",
+                        "LB",
+                        "NF"
+                      ]
+                    },
+                    "properties": {
+                      "ReserveType": {
+                        "description":  "VD - Venda Direta / CL - Cliente / PD - Pedido de Venda / LB - Liberacao / NF - Nota Fiscal",
+                        "type": "string",
+                        "enum": [
+                            "VD",
+                            "CL",
+                            "PD",
+                            "LB",
+                            "NF"
+                          ]
+                      }
+                    },
+                    "x-totvs": [
+                        {
+                          "product": "PROTHEUS",
+                          "field": "SC0.C0_TIPO",
+                          "required": true,
+                          "type": "varchar",
+                          "length": "2",
+                          "note": "",
+                          "available": true,
+                          "canUpdate": false
+                        }
+                      ]
+                  },                              
+                "DocumentReserve": {
+					"type": "string",					
+					"description": "N˙mero do documento que originou a reserva.",
+					"x-totvs": [{
+							"product": "protheus",
+							"Field": "SC0.C0_DOCRES",
+							"Required": true,
+							"Type": "varchar",
+							"length": "9",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+                },
+                "Requester": {
+					"type": "string",					
+					"description": "Nome do usu·rio solicitante da reserva.",
+					"x-totvs": [{
+							"product": "protheus",
+							"Field": "SC0.C0_SOLICIT",
+							"Required": true,
+							"Type": "varchar",
+							"length": "20",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+                },
+                "RequestBranch": {
+					"type": "string",					
+					"description": "Filial Respons·vel pela SolicitaÁ„o de Reserva",
+					"x-totvs": [{
+							"product": "protheus",
+							"Field": "SC0.C0_FILRES",
+							"Required": false,
+							"Type": "varchar",
+							"length": "12",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+                },	
+                "ReserveItemType": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/Item",
+                      "type": "object"
+                    }
+                },             
+                "Item": {
+                    "type": "object",
+                    "properties": {
+                      "ItemCode": {
+                        "description": "CÛdigo do Produto",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_PRODUTO",
+                            "required": true,
+                            "type": "varchar",
+                            "length": "15",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "WarehouseCode": {
+                        "description": "Codigo do Local de Estoque(Armazem)",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_LOCAL",
+                            "required": true,
+                            "type": "varchar",
+                            "length": "2",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "Quantity": {
+                        "description": "Quantidade do Item",
+                        "type": "decimal",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_QUANT",
+                            "required": true,
+                            "type": "decimal",
+                            "length": "7,2",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "ReserveExpiration": {
+                        "description": "Data de Vencimento da Reserva",
+                        "type": "dateTime",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_VALIDA",
+                            "required": true,
+                            "type": "date",
+                            "length": "8",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "IssueDateReserve": {
+                        "description": "Data de Emiss„o da Reserva",
+                        "type": "dateTime",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_EMISSAO",
+                            "required": true,
+                            "type": "dateTime",
+                            "length": "8",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": false
+                          }
+                        ]
+                      },
+                      "LotNumber": {
+                        "description": "N˙mero do lote usado no Controle de Reservas",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_LOTECTL",
+                            "required": false,
+                            "type": "char",
+                            "length": "10",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "SubLotNumber": {
+                        "description": "CÛdigo do Lote associado ao produto.",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_NUMLOTE",
+                            "required": false,
+                            "type": "char",
+                            "length": "6",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "SeriesItem": {
+                        "description": "N˙mero de SÈrie do produto, caso o produto faÁa o controle.",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_NUMSERI",
+                            "required": false,
+                            "type": "varchar",
+                            "length": "20",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "AddressingItem": {
+                        "description": "EndereÁo do produto reservado, utilizado nos casos que o estique di produto tem endereÁos.",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_LOCALIZ",
+                            "required": false,
+                            "type": "varchar",
+                            "length": "15",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "NoteReserveItem": {
+                        "description": "Observacao da Reserva",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_OBS",
+                            "required": false,
+                            "type": "varchar",
+                            "length": "80",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "ReserveBranch": {
+                        "description": "Filial onde ser· realizada a reserva do item.",
+                        "type": "string",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "SC0.C0_FILIAL",
+                            "required": false,
+                            "type": "varchar",
+                            "length": "12",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      },
+                      "IsCanceled": {
+                        "description": "Indica se o Item dever· ser excluÌdo, apenas em casos de updade.",
+                        "type": "boolean",
+                        "x-totvs": [
+                          {
+                            "product": "PROTHEUS",
+                            "field": "N„o possui campo fÌsico na tabela",
+                            "required": true,
+                            "type": "boolean",
+                            "length": "1",
+                            "note": "",
+                            "available": true,
+                            "canUpdate": true
+                          }
+                        ]
+                      }
+                    }		
+                },
+                "ReturnContentType": {
+                    "type": "object",
+                    "properties": {
+                      "ListOfInternalId": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+            }
         }
-      ],
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "CompanyId": {
-          "description": "Empresa",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "N√£o possui campo f√≠sico na tabela",
-              "required": false,
-              "type": "char",
-              "length": "2",
-              "note": "Ser√° enviado o valor da vari√°vel cEmpAnt(Empresa)",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "BranchId": {
-          "description": "Filial",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_FILIAL",
-              "required": false,
-              "type": "char",
-              "length": "12",
-              "note": "Ser√° enviado o valor da vari√°vel cFilAnt indicando em qual Filial Ser√° feita a Reserva",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "description": "InternalId da chave completa de empresa da venda",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "",
-              "length": "",
-              "note": "para o Protheus √© esperado que com o cabe√ßalho da mensagem seja identificado empresa e filial j√° pelo Framework  estando no ambiente (Empresa x Filial) correto",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "InternalId": {
-          "description": "InternalId da Reserva",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "N√£o possui campo f√≠sico na tabela",
-              "required": true,
-              "type": "Varchar",
-              "length": "50",
-              "note": "O InternalID da Reserva √© formado por EMPRESA|C0_FILIAL|C0_NUM|C0_PRODUTO",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ReserveNumber": {
-          "description": "Numero da Reserva",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_NUM",
-              "required": true,
-              "type": "Varchar",
-              "length": "6",
-              "note": "Numero da Reserva no Protheus",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ReserveType": {
-          "description": "Tipo de Reserva / VD - Venda Direta / CL - Cliente / PD - Pedido de Venda / LB - Liberacao / NF - Nota Fiscal",
-          "type": "string",
-          "enum": [
-            "VD",
-            "CL",
-            "PD",
-            "LB",
-            "NF"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SC0.C0_TIPO",
-              "required": true,
-              "type": "Varchar",
-              "length": "2",
-              "note": "Tipo de Reserva",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "DocumentReserve": {
-          "description": "Documento que Originou a Reserva",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_DOCRES",
-              "required": false,
-              "type": "Varchar",
-              "length": "9",
-              "note": "N√∫mero do documento que originou  a reserva.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Requester": {
-          "description": "Solicitante",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_SOLICIT",
-              "required": true,
-              "type": "varchar",
-              "length": "20",
-              "note": "Nome do usu√°rio solicitante da reserva.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "RequestBranch": {
-          "description": "Filial Respons√°vel pela Solicita√ß√£o de Reserva",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_FILRES",
-              "required": false,
-              "type": "VarChar",
-              "length": "12",
-              "note": "Filial solicitante da reserva.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ReserveItemType": {
-          "$ref": "#/definitions/ReserveItemType",
-          "description": "Itens da Reserva",
-          "type": "object",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "",
-              "length": "",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        }
-      }
-    },
-    "ReserveItemType": {
-      "type": "object",
-      "properties": {
-        "ItemCode": {
-          "description": "C√≥digo do Produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_PRODUTO",
-              "required": true,
-              "type": "varchar",
-              "length": "15",
-              "note": "C√≥digo identificador do produto junto ao sistema.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ItemInternalId": {
-          "description": "InternalId do Produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "N√£o possui campo f√≠sico na tabela",
-              "required": true,
-              "type": "Varchar",
-              "length": "50",
-              "note": "O InternalID do Produto √© formado por EMPRESA|FILIAL| PRODUTO",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "WarehouseCode": {
-          "description": "Codigo do Local de Estoque(Armazem)",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_LOCAL",
-              "required": false,
-              "type": "varchar",
-              "length": "2",
-              "note": "C√≥digo do Local de Estoque",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "WarehouseInternalId": {
-          "description": "Id de integra√ß√£o do Local de Estoque(Armazem)",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": true,
-              "type": "varchar",
-              "length": "50",
-              "note": "O InternalId do Local de Estoque √© formado por EMPRESA|NNR_FILIAL|NNR_CODIGO",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Quantity": {
-          "description": "Quantidade do Item",
-          "type": "number",
-          "multipleOf": 0.001,
-          "minimum": -999999999999.999,
-          "maximum": 999999999999.999,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_QUANT",
-              "required": true,
-              "type": "Decimal",
-              "length": "7,2",
-              "note": "Quantidade do Item",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ReserveExpiration": {
-          "description": "Data de Vencimento da Reserva",
-          "type": "string",
-          "format": "date-time",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_VALIDA",
-              "required": true,
-              "type": "Date",
-              "length": "8",
-              "note": "Data de Vencimento da Reserva",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "IssueDateReserve": {
-          "description": "Data de Emiss√£o da Reserva",
-          "type": "string",
-          "format": "date-time",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_EMISSAO",
-              "required": true,
-              "type": "DateTime",
-              "length": "8",
-              "note": "Data de Emiss√£o da Reserva",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "LotNumber": {
-          "description": "N√∫mero do Lote",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_LOTECTL",
-              "required": false,
-              "type": "char",
-              "length": "10",
-              "note": "N√∫mero do lote usado no Controle de Reservas",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "SubLotNumber": {
-          "description": "N√∫mero do SubLote",
-          "type": "string",
-          "maxLength": 6,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_NUMLOTE",
-              "required": false,
-              "type": "char",
-              "length": "6",
-              "note": "C√≥digo do Lote associado ao produto.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "SeriesItem": {
-          "description": "N√∫mero de Serie do Produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_NUMSERI",
-              "required": false,
-              "type": "VarChar",
-              "length": "20",
-              "note": "N√∫mero de S√©rie do produto, caso o produto fa√ßa o controle.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "AddressingItem": {
-          "description": "Endere√ßo do produto reservado.",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_LOCALIZ",
-              "required": false,
-              "type": "VarChar",
-              "length": "15",
-              "note": "Endere√ßo do produto reservado, utilizado nos casos que o estique di produto tem endere√ßos.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "NoteReserveItem": {
-          "description": "Observacao",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_OBS",
-              "required": false,
-              "type": "varchar",
-              "length": "80",
-              "note": "Observacao da Reserva",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ReserveBranch": {
-          "description": "Filial onde ser√° realizada a Reserva",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "C0_FILIAL",
-              "required": false,
-              "type": "VarChar",
-              "length": "12",
-              "note": "Filial onde ser√° realizada a reserva do item.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "IsCanceled": {
-          "description": "N√£o possui campo f√≠sico na tabela.",
-          "type": "boolean",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": true,
-              "type": "boolean",
-              "length": "1",
-              "note": "Indica se o Item dever√° ser exclu√≠do, apenas em casos de updade.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        }
-      }
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfInternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
-            "type": "object"
-          }
-        }
-      }
-    }
-  }
 }
+			
+			
