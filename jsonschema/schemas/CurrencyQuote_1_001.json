@@ -8,7 +8,7 @@
     "x-totvs": {
       "messageDocumentation": {
         "name": "CurrencyQuote",
-        "description": "Mensagem de integraÃ§Ã£o de cotaÃ§Ã£o da moeda.",
+        "description": "Mensagem de integração de cotação da moeda.",
         "segment": "Geral"
       },
       "productInformation": [
@@ -29,20 +29,70 @@
     }
   },
   "definitions": {
+    "PagedCurrencyQuote":{
+      "type":"object",
+      "allof":[
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "$ref":"#/definitions/CurrencyQuote"
+        }
+      ]
+    },
+    "CurrencyQuote":{
+      "type":"object",
+      "properties":{
+        "items":{
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/BusinessContentType"
+          }
+        }
+      }
+    },
     "BusinessContentType": {
       "type": "object",
       "properties": {
-        "CompanyId": {
-          "type": "string"
-        },
-        "BranchId": {
-          "type": "string"
-        },
-        "CompanyInternalId": {
-          "type": "string"
-        },
+        "CompanyId":{
+          "type":"string",
+          "description":"Código da Empresa",
+          "example": "T1 ",
+          "maxLength":3
+      },
+      "BranchId":{
+         "type":"string",
+         "description":"Código da Filial",
+         "example": "D MG 01 ",
+         "maxLength":12,
+         "x-totvs":[
+              {
+                  "product":"Protheus",
+                  "field":"SM2.M2_FILIAL",
+                  "required":false,                               
+                  "length":"8",
+                  "available":false,
+                  "canUpdate":false
+              }
+          ]
+      },
+      "CompanyInternalId":{
+         "type":"string",
+         "description":"Identificador da Empresa",
+         "x-totvs":[
+              {
+                  "product": "protheus",
+                  "field": "EMPRESA|SM2.M2_DATA",
+                  "required": true,
+                  "type": "varchar",
+                  "length": "16",
+                  "avialable": true,
+                  "canUpdate": false
+              }
+          ]                       
+      },
         "Date": {
-          "description": "Data da cotaÃ§Ã£o",
+          "description": "Data da cotação",
           "type": "string",
           "format": "date",
           "x-totvs": [
@@ -59,7 +109,7 @@
           ]
         },
         "ListOfCurrency": {
-          "description": "CotaÃ§Ãµes das moedas",
+          "description": "Cotações das moedas",
           "type": "array",
           "maxItems": 99,
           "items": {
@@ -79,7 +129,7 @@
       "type": "object",
       "properties": {
         "Code": {
-          "description": "CÃ³digo da moeda (nÃºmero de 1 a 99)",
+          "description": "Código da moeda (número de 1 a 99)",
           "type": "integer",
           "minimum": 1,
           "maximum": 99,
@@ -98,12 +148,12 @@
           ]
         },
         "Name": {
-          "description": "Nome da moeda (Real, DÃ³lar, Euro...)",
+          "description": "Nome da moeda (Real, Dólar, Euro...)",
           "type": "string",
           "x-totvs": [
             {
               "product": "PROTHEUS",
-              "field": "MV_MOEDA + cÃ³digo da moeda (ex: MV_MOEDA1, MV_MOEDA2... MV_MOEDA99)",
+              "field": "MV_MOEDA + código da moeda (ex: MV_MOEDA1, MV_MOEDA2... MV_MOEDA99)",
               "required": false,
               "type": "varchar",
               "length": "250",
@@ -114,12 +164,12 @@
           ]
         },
         "Symbol": {
-          "description": "SÃ­mbolo da moeda (R$, US$, â‚¬...)",
+          "description": "Símbolo da moeda (R$, US$, â‚¬...)",
           "type": "string",
           "x-totvs": [
             {
               "product": "PROTHEUS",
-              "field": "MV_SIMB + cÃ³digo da moeda (ex: MV_SIMB1, MV_SIMB2... MV_SIMB99)",
+              "field": "MV_SIMB + código da moeda (ex: MV_SIMB1, MV_SIMB2... MV_SIMB99)",
               "required": false,
               "type": "varchar",
               "length": "250",
@@ -130,15 +180,15 @@
           ]
         },
         "Quote": {
-          "description": "CotaÃ§Ã£o da moeda",
+          "description": "Cotação da moeda",
           "type": "number",
           "format": "double",
           "x-totvs": [
             {
               "product": "PROTHEUS",
-              "field": "M2_MOEDA + cÃ³digo da moeda (ex: M2_MOEDA1, M2_MOEDA2... M2_MOEDA99)",
+              "field": "M2_MOEDA + código da moeda (ex: M2_MOEDA1, M2_MOEDA2... M2_MOEDA99)",
               "required": true,
-              "type": "NumÃ©rico",
+              "type": "Numérico",
               "length": "11v4",
               "note": "",
               "available": true,

@@ -1,0 +1,606 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API para cadastro de Cambio TOTVS",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/fin/v1",
+            "variables": {
+                "serverUrl": {
+                    "default":"localhost"
+                },
+                "serverHttpPort": {
+                    "default":"8080"
+                }
+            }
+        }
+    ],
+    "info": {
+        "description": "API para a entidade Cambio (CurrencyQuote) para produtos TOTVS",
+        "version": "2.000",
+        "title": "CurrencyQuote",
+        "contact": {
+            "name": "SQUADFIN",
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation":{
+                "name": "CurrencyQuote",
+                "description": "Cadastro de Moedas",
+                "segment": "Services"
+            },
+            "productInformation":[
+                {
+                    "product":"PROTHEUS",
+                    "contact":"squad.fin@totvs.com.br",
+                    "description":"Cadastro de Moedas",
+                    "adapter":"MATS090.prw"
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/CurrencyQuotes": {
+            "get": {
+                "tags":[
+                    "CurrencyQuotes"
+                ],
+                "summary":"Retorna lista de Cotações de Moedas",
+                "x-totvs":{
+                    "productInformation":[
+                        {
+                            "product":"PROTHEUS",
+                            "avaliable":true,
+                            "note":"Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "description":"Retorna lista completa das Cotações de Moedas",
+                "operationId":"getCurrencyQuotes",
+                "parameters": [
+                    {                        
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },          
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description":"Operação realizada com sucesso!",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/PagedCurrencyQuote"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum registro encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "post": {
+                "tags": [
+                    "CurrencyQuotes"
+                ],
+                "summary": "Inclui Cotações de Moedas",
+                "description": "Inclui cotações de moedas conforme dados enviados na requisição.",
+                "operationId": "postCurrencyQuotes",
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"PROTHEUS",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {                                
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                            }
+                        }
+                    },
+                    "description": "Cotação a ser incluida"
+                },
+                "responses" : {
+                    "201": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/PagedCurrencyQuote"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/CurrencyQuotes/{Date}": {
+            "get": {
+                "tags":[
+                    "Date"
+                ],
+                "summary":"Retorna uma cotação de uma Data específica de acordo com a chave de pesquisa",
+                "description": "Retorna a cotação de uma Data de acordo com o ID de pesquisa",
+                "operationId":"getDate",
+                "x-totvs":{
+                    "productInformation": [                        
+                        {
+                            "product":"PROTHEUS",
+                            "avaliable":true,
+                            "note":"o Date é composto Data da Cotação",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/Date"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cotação não localizada na base",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Date"
+                ],
+                "summary": "Inclui Cotações de Moedas por Data",
+                "description": "Inclui cotações de moedas por Data conforme dados enviados na requisição.",
+                "operationId": "postDate",
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"PROTHEUS",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Date"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {                                
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                            }
+                        }
+                    },
+                    "description": "Cotação a ser incluida"
+                },
+                "responses" : {
+                    "201": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/PagedCurrencyQuote"
+                                }   
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "tags":[
+                    "Date"
+                ],
+                "summary":"Altera uma Cotação",
+                "description":"Atualiza as cotações por Data conforme dados enviados na requisição",
+                "operationId":"putDate",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"PROTHEUS",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization, Date e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Date"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                            }
+                        }
+                    },
+                    "description": "Cotação a ser alterada"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Cotação não localizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "tags":[
+                    "Date"
+                ],
+                "summary":"Exclui uma Cotação",
+                "description":"Exclui uma cotação por Data conforme dados enviados na requisição.",
+                "operationId":"deleteDate",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"PROTHEUS",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Date"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da exclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Cotação não localizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/CurrencyQuotes/{Date}/{Code}": {
+            "get": {
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Retorna uma cotação de uma Moeda específica de acordo com a chave de pesquisa",
+                "description": "Retorna a cotação de uma Moeda de acordo com o ID de pesquisa",
+                "operationId":"getCode",
+                "x-totvs":{
+                    "productInformation": [                        
+                        {
+                            "product":"PROTHEUS",
+                            "avaliable":true,
+                            "note":"o Date é composto Data da Cotação",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+						"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },  
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"						
+                    },
+                    {
+                        "$ref": "#/components/parameters/Date"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cotação não localizada na base",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "tags":[
+                    "Code"
+                ],
+                "summary":"Altera uma Cotação",
+                "description":"Atualiza cotação da Moeda conforme dados enviados na requisição",
+                "operationId":"putCode",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product":"PROTHEUS",
+                            "avaliable":true,
+                            "note": "Este verbo esta disponivel com os parametros Authorization, Date e Fields",
+                            "minimalVersion":"12.1.21"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },                    
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Date"
+                    },
+                    {
+                        "$ref": "#/components/parameters/Code"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                            }
+                        }
+                    },
+                    "description": "Cotação a ser alterada"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_001.json#/definitions/BusinessContentType"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }                        
+                      },
+                    "404": {
+                        "description": "Cotação não localizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "Date":{
+                "name": "Date",
+                "in": "path",
+                "description":"Identificador único da Cotação",
+                "required": true,
+                "example": "20181020",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"PROTHEUS",
+                            "avaliable":true,
+                            "note": "Informar o campo Data da cotação (SM2.M2_DATA)",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                }
+            },
+            "Code": {
+                "name": "Code",
+                "in": "path",
+                "description":"Moeda da Cotação",
+                "required": true,
+                "example": "2",
+                "schema":{
+                    "type": "string"
+                },
+                "x-totvs": {
+					"productInformation":[
+						{
+							"product":"PROTHEUS",
+                            "avaliable":true,
+                            "note": "Informar o codigo da moeda da cotação (Ex: M2_MOEDA1, M2_MOEDA2... M2_MOEDA99)",
+                            "minimalVersion":"12.1.21"
+						}
+					]
+                }
+            }
+        },
+        "schemas": {
+
+        }
+    }
+}
