@@ -2,131 +2,100 @@
   "openapi": "3.0.1",
   "servers": [
     {
-      "description": "API para produtos TOTVS",
-      "url": "http://{domain}:{port}/api/hcg/v1",
+      "description": "API para Responder o Topicos de Auditorias para TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/mat/v1",
       "variables": {
-        "domain": {
+        "serverUrl": {
           "default": "localhost"
         },
-        "port": {
+        "serverHttpPort": {
           "default": "8080"
         }
       }
     }
   ],
   "info": {
-    "description": "API para a entidade AccommodationType para produtos TOTVS",
+    "description": "API para a entidade objeto de Topicos de Auditorias da TOTVS",
     "version": "1.000",
-    "title": "AccommodationType",
+    "title": "AuditTopics",
     "contact": {
       "name": "T-Talk",
-      "url": "api.totvs.com.br",
+      "url": "API.Totvs.com.br",
       "email": "comiteintegracao@totvs.com.br"
     },
     "x-totvs": {
       "messageDocumentation": {
-        "name": "AccommodationType",
-        "description": "Classe Hospitalar",
-        "segment": "Healthcare"
+        "name": "AuditTopics",
+        "description": "Cadastro de Topicos de Auditorias",
+        "segment": "Manufatura"
       },
       "productInformation": [
         {
-          "product": "gps",
-          "contact": "TOTVS.SAUDE.GPS.SQUAD.CONTRATOSDOIS@totvs.com.br",
-          "description": "Manutenção de classe hospitalar",
-          "adapter": "accommodationTypes.p",
+          "product": "PROTHEUS",
+          "contact": "SUPPLY.ML.MAN.ESTOQUE@totvs.com.br",
+          "description": "Cadastro de Topicos de Auditorias",
+          "adapter": null,
           "helpUrl": ""
         }
       ]
     }
   },
+  "tags": [
+    {
+      "name": "AuditTopics",
+      "description": "Cadastro de Topicos de Auditorias"
+    }
+  ],
+  "externalDocs": {
+    "description": "Descubra mais",
+    "url": "http://api.totvs.com.br"
+  },
   "paths": {
-    "/accommodationType/{code}": {
+    "/auditTopic/{id}": {
       "get": {
         "tags": [
-          "AccommodationType"
+          "id"
         ],
-        "summary": "Retorna dados de classe hospitalar",
         "x-totvs": {
           "productInformation": [
             {
-              "product": "gps",
-              "avaliable": true,
-              "note": "Este verbo esta disponivel com todos parametros",
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parametros",
               "minimalVersion": "12.1.23"
             }
           ]
         },
-        "description": "Retorna dados de classe hospitalar",
-        "operationId": "getAccommodationTypeById",
+        "summary": "Retorna um único registro Topico de Auditoria",
+        "description": "Retorna um único registro Topico de Auditoria",
+        "operationId": "getauditTopicId",
         "parameters": [
           {
-            "in": "path",
-            "name": "code",
-            "description": "Código",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
           }
         ],
         "responses": {
           "200": {
-            "description": "Operação executada com sucesso",
+            "description": "Operação realizada com sucesso",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/definitions/AccommodationType"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AuditTopic/V1/1_000/jsonschema/schemas/AuditTopic_2_000.json#/definitions/auditTopicType"
                 }
               }
             }
           },
-          "500": {
-            "description": "Erro na execução da operação",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "AccommodationType"
-        ],
-        "summary": "Exclui classe hospitalar",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "gps",
-              "avaliable": true,
-              "note": "Este verbo esta disponivel com todos parametros",
-              "minimalVersion": "12.1.23"
-            }
-          ]
-        },
-        "description": "Exclui classe hospitalar",
-        "operationId": "removeAccommodationType",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "code",
-            "description": "Código",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação executada com sucesso"
-          },
-          "500": {
-            "description": "Erro na execução da operação",
+          "404": {
+            "description": "Registro não encontrado!",
             "content": {
               "application/json": {
                 "schema": {
@@ -139,48 +108,114 @@
       },
       "put": {
         "tags": [
-          "AccommodationType"
+          "id"
         ],
-        "summary": "Atualiza um registro existente de classe hospitalar",
         "x-totvs": {
           "productInformation": [
             {
-              "product": "gps",
-              "avaliable": true,
-              "note": "Este verbo esta disponivel com todos parametros",
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
               "minimalVersion": "12.1.23"
             }
           ]
         },
-        "description": "Atualiza um registro existente de classe hospitalar",
-        "operationId": "updateAccommodationType",
+        "summary": "Altera o cadastro de Topico de auditoria",
+        "description": "Altera o cadastro de Topico de auditoria",
+        "operationId": "putauditTopic",
         "parameters": [
           {
-            "in": "path",
-            "name": "code",
-            "description": "Código",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
+            "$ref": "#/components/parameters/id"
           }
         ],
         "requestBody": {
-          "description": "Objeto para atualizar o registro de classe hospitalar",
+          "description": "Altera o cadastro de Topico de auditoria",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/definitions/AccommodationType"
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AuditTopic/V1/1_000/jsonschema/schemas/AuditTopic_2_000.json#/definitions/auditTopicType"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Operação executada com sucesso"
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AuditTopic/V1/1_000/jsonschema/schemas/AuditTopic_2_000.json#/definitions/PagedTopic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Erro na execução da operação",
+            "description": "Erro durante a alteração do Cadastro de Topicos de auditoria!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "id"
+        ],
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "summary": "Deleta o Topico de auditoria",
+        "description": "Deleta",
+        "operationId": "putauditQuestionnarieId",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AuditTopic/V1/1_000/jsonschema/schemas/AuditTopic_2_000.json#/definitions/PagedTopic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro durante a alteração do Cadastro de Topico de auditoria!",
             "content": {
               "application/json": {
                 "schema": {
@@ -192,48 +227,30 @@
         }
       }
     },
-    "/accommodationType": {
-      "get": {
+    "/auditTopic": {
+      "post": {
         "tags": [
-          "AccommodationType"
+          "audit Topic"
         ],
-        "summary": "Busca dados de classe hospitalar existentes",
         "x-totvs": {
           "productInformation": [
             {
-              "product": "gps",
-              "avaliable": true,
-              "note": "Este verbo esta disponivel com todos parametros",
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parametros",
               "minimalVersion": "12.1.23"
             }
           ]
         },
-        "description": "Busca dados de classe hospitalar existentes",
-        "operationId": "getAccommodationTypeByFilter",
+        "summary": "Cadastra um único Topico de Auditoria",
+        "description": "Cadastra um Topico de Auditoria",
+        "operationId": "postauditTopic",
         "parameters": [
           {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/parameters/codeInitial"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/parameters/codeFinal"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/parameters/hierarchicalLevelInitial"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/parameters/hierarchicalLevelFinal"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/parameters/description"
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
           },
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
@@ -241,17 +258,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Operação executada com sucesso",
+            "description": "Operação realizada com sucesso",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/definitions/PagedAccommodationType"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AuditTopic/V1/1_000/jsonschema/schemas/AuditTopic_2_000.json#/definitions/auditTopicType"
                 }
               }
             }
           },
-          "500": {
-            "description": "Erro na execução da operação",
+          "400": {
+            "description": "Erro durante inclusão do Topico",
             "content": {
               "application/json": {
                 "schema": {
@@ -262,39 +279,50 @@
           }
         }
       },
-      "post": {
+      "get": {
         "tags": [
-          "AccommodationType"
+          "audit Topic"
         ],
-        "summary": "Inclui um novo registro de classe hospitalar",
         "x-totvs": {
           "productInformation": [
             {
-              "product": "gps",
-              "avaliable": true,
-              "note": "Este verbo esta disponivel com todos parametros",
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parametros",
               "minimalVersion": "12.1.23"
             }
           ]
         },
-        "description": "Inclui um novo registro de classe hospitalar",
-        "operationId": "createAccommodationType",
-        "requestBody": {
-          "description": "Objeto para atualizar o registro de classe hospitalar",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccommodationType_1_000.json#/definitions/AccommodationType"
-              }
-            }
+        "summary": "Retorna um único cadastro de topico de auditoria",
+        "description": "Retorna uma ficha de auditoria pelo Número",
+        "operationId": "getauditTopicId",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Operação executada com sucesso"
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AuditTopic/V1/1_000/jsonschema/schemas/AuditTopic_2_000.json#/definitions/auditTopicType"
+                }
+              }
+            }
           },
-          "500": {
-            "description": "Erro na execução da operação",
+          "404": {
+            "description": "Registro não encontrado!",
             "content": {
               "application/json": {
                 "schema": {
@@ -306,5 +334,19 @@
         }
       }
     }
+  },
+  "components": {
+    "parameters": {
+      "id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Número único do Topico de Auditoria",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "schemas": {}
   }
 }
