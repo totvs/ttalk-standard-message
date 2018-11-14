@@ -34,7 +34,7 @@
           "product": {
             "product": "HAT",
             "contact": "healthcare.autorizador@totvs.com.br",
-            "description": "Operações referente aos locais de atendimento dos prestadores de serviço das operadoras"
+            "description": "Plataforma de autorização de procedimentos e eventos em Saúde"
           }
         }
       ]
@@ -55,7 +55,7 @@
               "product": {
                 "product": "HAT",
                 "available": true,
-                "description": "Este verbo esta disponível com os parâmetros Authorization, ExpiresAt"
+                "description": "Este verbo esta disponível com os parâmetros Authorization, Expires_at"
               }
             }
           ]
@@ -65,7 +65,10 @@
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/ExpiresAt"
+            "$ref": "#/components/parameters/Expires_at"
+          },
+          {
+            "$ref": "#/components/parameters/HealthInsurerId"
           }
         ],
         "requestBody": {
@@ -80,11 +83,19 @@
         },
         "responses": {
           "202": {
-            "description": "Atualização adicionada na fila para processamento.",
+            "description": "Adicionou uma requisicao na fila de processamento",
+            "headers": {
+              "location": {
+                "description": "URL onde o recurso estará disponível",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AttendanceLocations/V1/1_100/jsonschema/schemas/AttendanceLocation_1_100.json#/definitions/AttendanceLocationsIntegratorResponse"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/TokenProcessResponse"
                 }
               }
             }
@@ -105,19 +116,19 @@
   },
   "components": {
     "parameters": {
-      "Authorization": {
-        "name": "Authorization",
+      "Expires_at": {
+        "name": "Expires_at",
         "in": "header",
-        "description": "Token de autorização",
+        "description": "Data e hora da expiração do token em segundos",
         "required": true,
         "schema": {
           "type": "string"
         }
       },
-      "ExpiresAt": {
-        "name": "Expires_at",
+      "HealthInsurerId": {
+        "name": "healthInsurerId",
         "in": "header",
-        "description": "Data e hora da expiração do token em segundos",
+        "description": "Codigo de identificacao da operadora",
         "required": true,
         "schema": {
           "type": "string"
