@@ -1,0 +1,458 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/FinancialManager_2_001.json#",
+  "info": {
+    "description": "",
+    "version": "2.001",
+    "title": "FinancialManager",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "FinancialManager",
+        "description": "Cadastro de Administradora Financeira",
+        "segment": "Varejo"
+      },
+      "productInformation": [
+        {
+          "product": "PROTHEUS",
+          "contact": "leandro.lima",
+          "note": "Rotina de cadastro de administradora",
+          "adapter": "LOJA070.PRX"
+        },
+        {
+          "product": "BEMATECH",
+          "contact": "Marcus.Borin",
+          "note": "Cadastro de Administradora e Bandeira no PDV Live",
+          "adapter": ""
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "$ref": "#/definitions/BusinessContentType",
+          "type": "object"
+        },
+        "returnContentType": {
+          "$ref": "#/definitions/ReturnContentType",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "CompanyId": {
+          "description": "Código da empresa.",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": true,
+              "type": "Char",
+              "length": "2",
+              "note": "pode ter tamanho variável até 4 com Gestão de Empresa ativado",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "BEMATECH",
+              "field": "",
+              "required": true,
+              "type": "Char",
+              "length": "",
+              "note": "codigo Master na tabela dominio.codigo",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "BranchId": {
+          "description": "ID Filial",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "Char",
+              "length": "2",
+              "note": "pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "BEMATECH",
+              "field": "",
+              "required": true,
+              "type": "Char",
+              "length": "",
+              "note": "Unidade de Negocio e a filial",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da chave completa de empresa do produto",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "",
+              "required": false,
+              "type": "",
+              "length": "",
+              "note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial, já pelo Framework                 estando no ambiente (Empresa x Filial) correto",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "InternalId": {
+          "description": "InternalId de Integração",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_FILIAL+SAE.AE_COD",
+              "required": false,
+              "type": "char",
+              "length": "",
+              "note": "Internal ID da administradora EMPRESA|AE_FILIAL|AE_COD",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Active": {
+          "description": "Administradora Ativa?",
+          "type": "boolean",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "não possui campo físico na tabela",
+              "required": false,
+              "type": "...",
+              "length": "...",
+              "note": "...",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinancialManager": {
+          "description": "Código da Administradora",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_COD",
+              "required": true,
+              "type": "char",
+              "length": "36",
+              "note": "codigo unico da adm financeira",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinancialDescription": {
+          "description": "Descrição",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_DESC",
+              "required": true,
+              "type": "char",
+              "length": "30",
+              "note": "Descrição da administradora ex: CIELO - VISA ELECTRON",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "FinancialInstitute": {
+          "description": "Financiamento Próprio",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_FINPRO",
+              "required": true,
+              "type": "char",
+              "length": "1",
+              "note": "1=Sim (a loja está financiando) 2=não ( um terceiro ex:CIELO está financiando)",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PaymentMethodCode": {
+          "description": "Forma de Pagamento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_TIPO",
+              "required": true,
+              "type": "char",
+              "length": "4",
+              "note": "Forma de pagamento no Protheus, exemplo: R$|CH|CC|CO|CD|FI|BO|VP|VA|CR",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Rate": {
+          "description": "Taxa",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_TAXA",
+              "required": true,
+              "type": "Decimal",
+              "length": "2,2",
+              "note": "Taxa cobrada pela a administradora que será descontando",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "DaysSum": {
+          "description": "Numero de dias",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_DIAS",
+              "required": true,
+              "type": "integer",
+              "length": "2",
+              "note": "Esta informação indica que a data de pagamento da operadora será a data da venda + quantidade de dias informados",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "PayDay": {
+          "description": "Dia de pagamento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "PROTHEUS",
+              "field": "SAE.AE_VENCTO",
+              "required": true,
+              "type": "integer",
+              "length": "2",
+              "note": "Indica em qual o dia do mês será realizado o pagamento pela operador",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "ListOfRatesParcel": {
+          "description": "Lista de percentuais de Taxas por parcelas",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ListOfRatesParcel": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/ListOfRatesParcelType",
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ListOfRatesParcelType": {
+      "description": "Amarracao percentuais de parcelas",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "RatesParcelItem": {
+            "description": "Item referente a taxa",
+            "type": "string",
+            "x-totvs": [
+              {
+                "product": "RM",
+                "field": "",
+                "required": false,
+                "type": "",
+                "length": "",
+                "note": "não utiliza.",
+                "available": true,
+                "canUpdate": false
+              },
+              {
+                "product": "PROTHEUS",
+                "field": "MEN.MEN_ITEM",
+                "required": true,
+                "type": "char",
+                "length": "3",
+                "note": "Sequencial da Taxa",
+                "available": true,
+                "canUpdate": false
+              }
+            ]
+          },
+          "RatesParcelDescription": {
+            "description": "Descricao das Taxas de Juros",
+            "type": "string",
+            "maxLength": 40,
+            "x-totvs": [
+              {
+                "product": "RM",
+                "field": "",
+                "required": false,
+                "type": "",
+                "length": "",
+                "note": "não utiliza.",
+                "available": true,
+                "canUpdate": false
+              },
+              {
+                "product": "PROTHEUS",
+                "field": "MEN.MEN_DESC",
+                "required": true,
+                "type": "char",
+                "length": "30",
+                "note": "Descricao das Taxas de Juros",
+                "available": true,
+                "canUpdate": false
+              }
+            ]
+          },
+          "RatesParcelParcelmin": {
+            "description": "Numero minimo de parcelas intervalo",
+            "type": "string",
+            "maxLength": 2,
+            "x-totvs": [
+              {
+                "product": "RM",
+                "field": "",
+                "required": false,
+                "type": "",
+                "length": "",
+                "note": "não utiliza.",
+                "available": true,
+                "canUpdate": false
+              },
+              {
+                "product": "PROTHEUS",
+                "field": "MEN.MEN_PARINI",
+                "required": true,
+                "type": "integer",
+                "length": "2",
+                "note": "Parcela Inicial do Intervalo",
+                "available": true,
+                "canUpdate": false
+              }
+            ]
+          },
+          "RatesParcelParcelmax": {
+            "description": "Numero maximo de parcelas no intervalo",
+            "type": "string",
+            "maxLength": 2,
+            "x-totvs": [
+              {
+                "product": "RM",
+                "field": "",
+                "required": false,
+                "type": "",
+                "length": "",
+                "note": "não utiliza.",
+                "available": true,
+                "canUpdate": false
+              },
+              {
+                "product": "PROTHEUS",
+                "field": "MEN.MEN_PARFIN",
+                "required": true,
+                "type": "integer",
+                "length": "2",
+                "note": "Parcela Final do Intervalo",
+                "available": true,
+                "canUpdate": false
+              }
+            ]
+          },
+          "RatesParceltax": {
+            "description": "Valor percentual a ser aplicado nas parcelas",
+            "type": "string",
+            "maxLength": 5,
+            "x-totvs": [
+              {
+                "product": "RM",
+                "field": "",
+                "required": false,
+                "type": "",
+                "length": "",
+                "note": "não utiliza.",
+                "available": true,
+                "canUpdate": false
+              },
+              {
+                "product": "PROTHEUS",
+                "field": "MEN.MEN_TAXJUR",
+                "required": true,
+                "type": "integer",
+                "length": "5",
+                "note": "Taxa de Juros",
+                "available": true,
+                "canUpdate": false
+              }
+            ]
+          },
+          "RatesParceltaxadm": {
+            "description": "Taxa da Administradora",
+            "type": "string",
+            "maxLength": 5,
+            "x-totvs": [
+              {
+                "product": "RM",
+                "field": "",
+                "required": false,
+                "type": "",
+                "length": "",
+                "note": "não utiliza.",
+                "available": true,
+                "canUpdate": false
+              },
+              {
+                "product": "PROTHEUS",
+                "field": "MEN.MEN_TAXADM",
+                "required": true,
+                "type": "integer",
+                "length": "5",
+                "note": "Taxa da Administradora",
+                "available": true,
+                "canUpdate": false
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
