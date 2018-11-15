@@ -62,22 +62,16 @@
         },
         "parameters": [
           {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-          },
-          {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/ExpiresAt"
+            "$ref": "#/components/parameters/Expires_at"
           },
           {
             "$ref": "#/components/parameters/HealthInsurerId"
+          },
+          {
+            "$ref": "#/components/parameters/AuthType"
           }
         ],
         "responses": {
@@ -86,7 +80,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthInsurer/V1/1_100/jsonschema/schemas/HealthInsurer_1_100.json#/definitions/FormFields"
+                  "$ref": "../schemas/HealthInsurer_1_100.json#/definitions/FormFields"
                 }
               }
             }
@@ -96,7 +90,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
                 }
               }
             }
@@ -105,7 +99,7 @@
       }
     },
     "/healthInsurers/{healthInsurerId}/generateProtocol": {
-      "get": {
+      "post": {
         "tags": [
           "healthInsurers"
         ],
@@ -116,26 +110,17 @@
             {
               "product": "HAT",
               "available": true,
-              "note": "Este verbo está disponível com os parâmetros Authorization, ExpiresAt, healthInsurerId"
+              "note": "Este verbo está disponível com os parâmetros Authorization, Expires_at, healthInsurerId"
             }
           ]
         },
         "description": "Gera um numero de protocolo de atendimento",
         "parameters": [
           {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-          },
-          {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/ExpiresAt"
+            "$ref": "#/components/parameters/Expires_at"
           },
           {
             "$ref": "#/components/parameters/HealthInsurerId"
@@ -144,18 +129,10 @@
         "responses": {
           "201": {
             "description": "Created",
-            "headers": {
-              "location": {
-                "description": "URL onde o recurso está disponível",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthInsurer/V1/1_100/jsonschema/schemas/HealthInsurer_1_100.json#/definitions/Protocol"
+                  "$ref": "../schemas/HealthInsurer_1_100.json#/definitions/Protocol"
                 }
               }
             }
@@ -165,7 +142,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
                 }
               }
             }
@@ -176,7 +153,7 @@
   },
   "components": {
     "parameters": {
-      "ExpiresAt": {
+      "Expires_at": {
         "name": "Expires_at",
         "in": "header",
         "description": "Data e hora da expiração do token em segundos",
@@ -190,6 +167,15 @@
         "in": "path",
         "description": "Codigo da Operadora",
         "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "AuthType": {
+        "name": "authType",
+        "in": "query",
+        "description": "Tipo do formulário",
+        "required": false,
         "schema": {
           "type": "integer"
         }
