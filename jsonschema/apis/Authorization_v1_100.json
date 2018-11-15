@@ -57,7 +57,7 @@
             }
           ]
         },
-        "description": "Retorna uma mensagem do tipo colecao com as guias de atendimento realizados no autorizador. <br>Os resultados podem ser filtrados através dos parametros <b>status</b>, <b>tipoGuia</b>, <b>emissionDateFrom</b> e <b>emissionDateTo</b>",
+        "description": "Retorna uma mensagem do tipo colecao com as guias de atendimento realizados no autorizador. <br>Os resultados podem ser filtrados através dos parametros <b>authStatus</b>, <b>authType</b>, <b>dateFrom</b>, <b>dateTo</b>, <b>healthProviderId</b>, <b>attendanceLocation</b> e <b>authorizationId</b>",
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
@@ -78,7 +78,7 @@
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/ExpiresAt"
+            "$ref": "#/components/parameters/Expires_at"
           },
           {
             "$ref": "#/components/parameters/Status"
@@ -87,10 +87,19 @@
             "$ref": "#/components/parameters/AuthType"
           },
           {
-            "$ref": "#/components/parameters/EmissionDateFrom"
+            "$ref": "#/components/parameters/DateFrom"
           },
           {
-            "$ref": "#/components/parameters/EmissionDateTo"
+            "$ref": "#/components/parameters/DateTo"
+          },
+          {
+            "$ref": "#/components/parameters/HealthProviderId"
+          },
+          {
+            "$ref": "#/components/parameters/AttendanceLocation"
+          },
+          {
+            "$ref": "#/components/parameters/AuthNumber"
           }
         ],
         "responses": {
@@ -128,7 +137,7 @@
             {
               "product": "HAT",
               "available": true,
-              "note": "Este verbo está disponível com os parâmetros Authorization, ExpiresAt, authorizationType, e tokenId"
+              "note": "Este verbo está disponível com os parâmetros Authorization, Expires_at, authorizationType, e tokenId"
             }
           ]
         },
@@ -137,7 +146,7 @@
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/ExpiresAt"
+            "$ref": "#/components/parameters/Expires_at"
           },
           {
             "$ref": "#/components/parameters/AuthType"
@@ -158,26 +167,8 @@
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "Created",
-            "headers": {
-              "location": {
-                "description": "URL onde o recurso está disponível",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/Authorization"
-                }
-              }
-            }
-          },
           "202": {
-            "description": "Adicionou uma requisicao na fila de processamento",
+            "description": "Accepted",
             "headers": {
               "location": {
                 "description": "URL onde o recurso estará disponível",
@@ -210,7 +201,7 @@
             {
               "product": "HAT",
               "available": true,
-              "note": "Este verbo está disponível com os parâmetros Authorization, ExpiresAt, authorizationId, expand e fields"
+              "note": "Este verbo está disponível com os parâmetros Authorization, Expires_at, authorizationId, expand e fields"
             }
           ]
         },
@@ -219,7 +210,7 @@
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/ExpiresAt"
+            "$ref": "#/components/parameters/Expires_at"
           },
           {
             "$ref": "#/components/parameters/AuthId"
@@ -304,7 +295,7 @@
   },
   "components": {
     "parameters": {
-      "ExpiresAt": {
+      "Expires_at": {
         "name": "Expires_at",
         "in": "header",
         "description": "Data e hora da expiração do token em segundos",
@@ -324,7 +315,7 @@
         }
       },
       "Status": {
-        "name": "status",
+        "name": "authStatus",
         "in": "query",
         "description": "Status da guia",
         "required": false,
@@ -340,10 +331,10 @@
         }
       },
       "AuthType": {
-        "name": "authorizationType",
+        "name": "authType",
         "in": "query",
         "description": "Tipo da guia",
-        "required": false,
+        "required": true,
         "schema": {
           "type": "string",
           "enum": [
@@ -356,14 +347,14 @@
       "TokenId": {
         "name": "tokenId",
         "in": "query",
-        "description": "Token com a identificação do item inserido na lista de processamento",
+        "description": "Token de resposta recebido com a identificação do item inserido na lista de processamento",
         "required": false,
         "schema": {
           "type": "string"
         }
       },
-      "EmissionDateFrom": {
-        "name": "emissionDateFrom",
+      "DateFrom": {
+        "name": "dateFrom",
         "in": "query",
         "description": "Data inicial de emissao",
         "required": false,
@@ -371,10 +362,37 @@
           "type": "string"
         }
       },
-      "EmissionDateTo": {
-        "name": "emissionDateTo",
+      "DateTo": {
+        "name": "dateTo",
         "in": "query",
         "description": "Data final de emissao",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "HealthProviderId": {
+        "name": "healthProviderId",
+        "in": "query",
+        "description": "Código do prestador",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "AttendanceLocation": {
+        "name": "attendanceLocation",
+        "in": "query",
+        "description": "Código do local de atendimento",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "AuthNumber": {
+        "name": "authorizationId",
+        "in": "query",
+        "description": "Número da guia",
         "required": false,
         "schema": {
           "type": "string"
