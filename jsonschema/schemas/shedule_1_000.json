@@ -1,5 +1,5 @@
 {
-    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/cash_1_000.json#",
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/JobExecution/v1/1_000/jsonschema/schemas/shedule_1_000.json#",
     "info": {
       "description": "",
       "version": "1.000",
@@ -21,7 +21,58 @@
       }
     },
     "definitions": {
+      "PagedExecutionShedule": {
+          "type": "object",
+          "allOf": [{
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+              }, {
+                  "type": "object",
+                  "properties": {
+                      "items": {
+                          "type": "array",
+                          "items": {
+                              "$ref": "#/definitions/JobExecution"
+                          }
+                      }
+                  }
+              }
+          ]
+      },
+      "PagedShedule": {
+          "type": "object",
+          "allOf": [{
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+              }, {
+                  "type": "object",
+                  "properties": {
+                      "items": {
+                          "type": "array",
+                          "items": {
+                              "$ref": "#/definitions/JobSchedule"
+                          }
+                      }
+                  }
+              }
+          ]
+      },
+
+
       "JobSchedule": {
+        "type": "object",
+        "properties": {
+            "single": {
+                "$ref": "#/definitions/JobSchedulePost"
+              },
+              "scheduleDate": {
+                "description": "Data da última alteração no agendamento",
+                "type": "date",
+                "maxLength": 10
+            }
+          }
+       },
+
+
+      "JobSchedulePost": {
         "type": "object",
         "properties": {
           "scheduleID": {
@@ -38,11 +89,7 @@
                 "completed"
               ]
             },
-          "scheduleDate": {
-              "description": "Data da última alteração no agendamento",
-              "type": "string",
-              "maxLength": 10
-          },
+
           "processID": {
               "description": "Identificador do processo (rotina) que será executado",
               "type": "string",
@@ -50,7 +97,7 @@
           },
           "executionDate": {
               "description": "Data prevista para início da execução do processo",
-              "type": "string",
+              "type": "date",
               "maxLength": 100
           },
           "user": {
@@ -94,31 +141,6 @@
           }             
         }
       },
-    "Single": {
-      "type": "object",
-      "properties": {
-        "year": {
-          "format": "int32",
-          "type": "integer"
-        },
-        "month": {
-          "format": "int32",
-          "type": "integer"
-        },
-        "day": {
-          "format": "int32",
-          "type": "integer"
-        },
-        "hour": {
-          "format": "int32",
-          "type": "integer"
-        },
-        "minute": {
-          "format": "int32",
-          "type": "integer"
-        }
-      }
-    },
     "Daily": {
       "type": "object",
       "properties": {
@@ -177,23 +199,7 @@
         }
       }
     },
-      "PagedShedule": {
-          "type": "object",
-          "allOf": [{
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-              }, {
-                  "type": "object",
-                  "properties": {
-                      "items": {
-                          "type": "array",
-                          "items": {
-                              "$ref": "#/definitions/JobSchedule"
-                          }
-                      }
-                  }
-              }
-          ]
-      },
+      
       "JobExecution": {
         "type": "object",
         "properties": {
@@ -209,47 +215,24 @@
                 "pending",
                 "failure",
                 "success",
-                "running "
+                "running ",
+                "canceled"
               ]
             },
           "scheduleDate": {
               "description": "Indica a data da última alteração do agendamento no momento da execução do processo",
-              "type": "string",
+              "type": "date",
               "maxLength": 10
           },
           "executedDate": {
               "description": "Indica a data de execução do processo",
-              "type": "string",
+              "type": "date",
               "maxLength": 100
           },
           "user": {
               "description": "Usuário responsável pelo agendamento",
               "type": "string",
               "maxLength": 100
-          },
-          "recurrent": {
-              "description": "Indica se a execução do job deve ocorrer mais de uma vez",
-              "type": "boolean"
-          },
-          "processID": {
-              "description": "Identificador do processo (rotina) que será executado",
-              "type": "string",
-              "maxLength": 100
-          },
-          "executionParameter": {
-            "type": "object",
-            "description": "Parâmetros para execução do processo",
-            "x-totvs": {
-              "-datasul": {
-                "multiValued": true,
-                "required": true,
-                "canonicalValues": null,
-                "caseExact": false,
-                "mutability": "readWrite",
-                "returned": "default",
-                "uniqueness": "none"
-              }
-            }
           },
           "return": {
             "type": "object",
