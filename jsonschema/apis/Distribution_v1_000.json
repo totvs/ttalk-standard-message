@@ -1,0 +1,396 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para a entidade Praça para produtos TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/log/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8181"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para a entidade Praça para produtos TOTVS",
+    "version": "1.000",
+    "title": "Praças",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Praças",
+        "description": "Praças do Sistema",
+        "segment": "Distribuição"
+      },
+      "productInformation": [
+        {
+          "product": "WinThor",
+          "contact": "winthor@totvs.com.br",
+          "description": "Cadastro de praças",
+          "adapter": "",
+          "helpUrl": ""
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/distributions": {
+      "get": {
+        "tags": [
+          "Distributions"
+        ],
+        "summary": "Retorna todas as praças disponíveis",
+        "description": "Retorna todas as praças disponíveis",
+        "operationId": "getDistributions",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "23.0.0"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista com as praças ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Distribution/v1/1_000/jsonschema/schemas/Distribution_1_000.json#/definitions/PagedDistributions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": [
+        "Distributions"
+      ],
+      "summary": "Insere a praça passada na requisição",
+      "description": "Insere a praça passada na requisição",
+      "operationId": "postDistribution",
+      "x-totvs": {
+        "productInformation": [
+          {
+            "product": "WinThor",
+            "available": true,
+            "note": "Este verbo esta disponivel com todos os parametros",
+            "minimalVersion": "23.0.0"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/DistributionId"
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Distribution/v1/1_000/jsonschema/schemas/Distribution_1_000.json#/definitions/Distribution"
+            }
+          }
+        },
+        "description": "Praça para ser incluida"
+      },
+      "responses": {
+        "201": {
+          "description": "Retorna praça que acabou de ser incluída",
+          "schema": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Distribution/v1/1_000/jsonschema/schemas/Distribution_1_000.json#/definitions/Distribution"
+          }
+        },
+        "400": {
+          "description": "Requisicao invalida",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Já existe praça com o código informado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro no servidor",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/distributions/{id}": {
+      "get": {
+        "tags": [
+          "Distributions"
+        ],
+        "summary": "Retorna uma praça a partir do código informado",
+        "description": "Retorna uma praça a partir do código informado",
+        "operationId": "getDistributionId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "23.0.0"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DistributionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A praça informada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Distribution/v1/1_000/jsonschema/schemas/Distribution_1_000.json#/definitions/Distribution"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada uma praça com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Distributions"
+        ],
+        "summary": "Altera a praça passada na requisição",
+        "description": "Altera a praça passada na requisição",
+        "operationId": "putDistributionId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "23.0.0"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DistributionId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Distribution/v1/1_000/jsonschema/schemas/Distribution_1_000.json#/definitions/Distribution"
+              }
+            }
+          },
+          "description": "Praça alterada"
+        },
+        "responses": {
+          "200": {
+            "description": "Retorna praça que acabou de ser alterada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Distribution/v1/1_000/jsonschema/schemas/Distribution_1_000.json#/definitions/Distribution"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada uma praça com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Distributions"
+        ],
+        "summary": "Remove uma praça a partir do código informado",
+        "description": "Remove uma praça a partir do código informado",
+        "operationId": "DeleteDistributionId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "23.0.0"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/codigo"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Operação realizada com sucesso"
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada uma praça com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "DistributionId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Identificador Único representando a praça",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
