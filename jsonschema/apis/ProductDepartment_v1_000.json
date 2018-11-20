@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "servers": [
     {
-      "description": "API para a entidade Praça para produtos TOTVS",
-      "url": "http://{serverUrl}:{serverHttpPort}/api/winthor/compras/v1",
+      "description": "API para a entidade Departamento para produtos TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/com/v1",
       "variables": {
         "serverUrl": {
           "default": "localhost"
@@ -33,7 +33,7 @@
         {
           "product": "WinThor",
           "contact": "WinThor@totvs.com.br",
-          "description": "Cadastro de praças",
+          "description": "Cadastro de Departamentos",
           "adapter": "",
           "helpUrl": "link aqui"
         }
@@ -44,7 +44,7 @@
     "/departments": {
       "get": {
         "tags": [
-          "Departamentos"
+          "Department"
         ],
         "summary": "Returns an list of all departments",
         "description": "Returns an list of all departments",
@@ -79,9 +79,13 @@
         "responses": {
           "200": {
             "description": "List of departments",
-            "schema": {
-              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ProductDepartment/v1/1_000/jsonschema/schemas/ProductDepartment_1_000.json#/definitions/PagedDepartments"
-            }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ProductDepartment/v1/1_000/jsonschema/schemas/ProductDepartment_1_000.json#/definitions/PagedDepartments"
+                  }
+                }
+              }
           },
           "400": {
             "description": "Informed Requisition is invalid",
@@ -116,10 +120,10 @@
         }
       }
     },
-    "/departments/{code}": {
+    "/departments/{id}": {
       "delete": {
         "tags": [
-          "code"
+          "Department"
         ],
         "summary": "Removes a department informed",
         "description": "Removes a department informed",
@@ -143,7 +147,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "Department is removed"
           },
           "400": {
@@ -180,7 +184,7 @@
       },
       "get": {
         "tags": [
-          "code"
+          "Department"
         ],
         "summary": "Returns an informed department",
         "description": "",
@@ -248,7 +252,7 @@
       },
       "post": {
         "tags": [
-          "Praça"
+          "Department"
         ],
         "summary": "Returns a department inserted",
         "description": "Returns a department inserted",
@@ -266,9 +270,6 @@
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/code"
           }
         ],
         "requestBody": {
@@ -284,8 +285,12 @@
         "responses": {
           "201": {
             "description": "Department inserted",
-            "schema": {
-              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ProductDepartment/v1/1_000/jsonschema/schemas/ProductDepartment_1_000.json#/definitions/Department"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ProductDepartment/v1/1_000/jsonschema/schemas/ProductDepartment_1_000.json#/definitions/Department"
+                }
+              }
             }
           },
           "400": {
@@ -322,7 +327,7 @@
       },
       "put": {
         "tags": [
-          "code"
+          "Department"
         ],
         "summary": "Returns a department updated",
         "description": "",
@@ -399,12 +404,13 @@
   "components": {
     "parameters": {
       "code": {
-        "name": "code",
+        "name": "id",
         "in": "path",
         "required": true,
-        "description": "Identificador único que representa a praça",
+        "description": "Identificador único que represente o departamento",
         "schema": {
-          "type": "Integer"
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
