@@ -1,0 +1,347 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RegionGroups_1_000.json",
+    "info": {
+        "description": "API para a entidade Grupo de Região (Region Group) para produtos TOTVS",
+        "version": "1.000",
+        "title": "RegionGroups",
+        "contact": {
+            "name": "T-Talk",
+            "url": "api.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "transactionDefinition": {
+                "subType": "event",
+                "businessContentType": {
+                    "type": "object",
+                    "$ref": "#/definitions/RegionGroupsInfo"
+                },
+                "returnContentType": {
+                    "type": "object",
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+                }
+            },
+            "messageDocumentation": {
+                "name": "RegionGroups",
+                "description": "Cadastro de Grupo de Região",
+                "segment": "TMS"
+            },
+            "productInformation": [
+                {
+                    "product":"protheus",
+                    "contact":"supply.ml.log.tms-operacional@totvs.com.br",
+                    "description":"Cadastro de Grupo de Regio",
+                    "adapter":"TMSA115I.prw"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "PagedRegionGroups":{
+            "type":"object",
+            "allOf":[
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref":"#/definitions/RegionGroups"
+                }
+            ]
+        },
+        "RegionGroups":{
+            "type":"object",
+            "properties":{
+                "items":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/RegionGroupsInfo"
+                    }
+                }
+            }
+        },
+        "RegionGroupsInfo":{
+            "description": "Descreve um Grupo de Região",
+            "type":"object",
+            "properties": {
+                "CompanyId":{
+                    "type":"string",
+                    "example": "T1",
+                    "description":"Código da empresa",
+                    "maxLength":3
+                },
+                "BranchId":{
+                   "type":"string",
+                   "description":"Código da Filial",
+                   "example": "D MG 01 ",
+                   "maxLength":12,
+                   "x-totvs":[
+                        {
+                            "product":"protheus",
+                            "field":"DUY.DUY_FILIAL",
+                            "required":true,
+                            "length":"8",
+                            "available":true,
+                            "canUpdate":false
+                        }
+                    ]
+                },
+                "CompanyInternalId":{
+                   "type":"string",
+                   "description":"Código da Empresa",
+                   "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "EMPRESA|DUY.DUY_FILIAL|DUY.DUY_GRVPEN",
+                            "required": true,
+                            "type": "varchar",
+                            "length": "16",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "Code":{
+                   "type":"string",
+                   "description":"Código do Grupo de Região.",
+                   "example": "Q50308",
+                   "maxLength":6,
+                   "x-totvs":[
+                       {
+                        "product": "protheus",
+                        "field":"DUY.DUY_GRPVEN",
+                        "type":"varchar",
+                        "length": "6",
+                        "required":true,
+                        "available":true,
+                        "canUpdate": false
+                       }
+                   ]
+                },
+                "InternalId":{
+                    "type":"string",
+                    "description":"InternalId do Grupo de Região no ERP",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "DUY.DUY_FILIAL|DUY.DUY_GRPVEN",
+                            "type": "varchar",
+                            "length": "14",
+                            "required": true,
+                            "available": true,
+                            "note":"O internalID do grupo de Região é formado por DUY.DUY_FILIAL|DUY.DUY_GRPVEN"
+                        }
+                    ]
+                },
+                "Description": {
+                    "type": "string",
+                    "example": "Sao Paulo",
+                    "description": "Descrição do Grupo de Região",
+                    "maxLength": 30,
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_DESCRI",
+                        "type": "varchar",
+                        "length": "30",
+                        "required": true,
+                        "available": true,
+                        "canUpdate": true
+                      }
+                    ]
+                  },
+                  "TopGroup": {
+                    "type": "string",
+                    "example": "SP",
+                    "description": "Código do Grupo Superior",
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_GRPSUP",
+                        "type": "varchar",
+                        "length": "6",
+                        "required" : false,
+                        "available": true,
+                        "canUpdate": false
+                      }
+                    ]
+                  },
+                  "State": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/State_1_000.json#/definitions/StateType"
+                  },
+                  "DestinationBranch": {
+                    "type": "string",
+                    "example": "M SP 01 ",
+                    "description": "Filial",
+                    "maxLength": 12,
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_FILDES",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "8",
+                        "available": true,
+                        "canUpdate": false
+                      }
+                    ]
+                  },
+                  "AssociatedCompanyRegionCode": {
+                    "type": "string",
+                    "example": "Q56453",
+                    "description": "Código da Região Coligada",
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_CDRCOL",
+                        "required": true,
+                        "type": "varchar",
+                        "length": "6",
+                        "available": true,
+                        "canUpdate": true
+                      }
+                    ]
+                  },
+                  "AssociatedCompanyRegionDescription": {
+                    "type": "string",
+                    "example": "VARGEM GRANDE PAULISTA",
+                    "description": "Descrição do Grupo de Região Coligada",
+                    "maxLength": 30,
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_REGCOL",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "30",
+                        "available": true,
+                        "canUpdate": false
+                      }
+                    ]
+                  },
+                  "RegionCategory": {
+                    "type": "string",
+                    "example": "1",
+                    "description": "Categoria da Região",
+                    "enum": [
+                      "1",
+                      "2"
+                    ],
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_CATREG",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "1",
+                        "available": true,
+                        "canUpdate": false,
+                        "note": "1- Praca a Praca, 2- Regiao Base para Taxa"
+                      }
+                    ]
+                  },
+                  "BaseTaxRegion": {
+                    "type": "string",
+                    "example": "Q50308",
+                    "description": "Código da Região Base para Taxa",
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_CDRTAX",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "6",
+                        "available": true,
+                        "canUpdate": false
+                      }
+                    ]
+                  },
+                  "GroupCategory": {
+                    "type": "string",
+                    "example": "3",
+                    "description": "Categoria do Grupo",
+                    "enum": [
+                      "1",
+                      "2",
+                      "3"
+                    ],
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_CATGRP",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "1",
+                        "available": true,
+                        "canUpdate": false,
+                        "note": "1- Estado, 2- Filial, 3- Regiao"
+                      }
+                    ]
+                  },
+                  "RegionExemptTaxes": {
+                    "type": "string",
+                    "example": "2",
+                    "description": "Região Isenta de Impostos",
+                    "enum": [
+                      "1",
+                      "2"
+                    ],
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_REGISE",
+                        "required": true,
+                        "type": "varchar",
+                        "length": "1",
+                        "available": true,
+                        "canUpdate": true,
+                        "note": "1- Sim, 2- Não"
+                      }
+                    ]
+                  },
+                  "ISSRate": {
+                    "type": "number",
+                    "example": "5,2",
+                    "description": "Aliquota do ISS",
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_ALQISS",
+                        "required": false,
+                        "type": "number",
+                        "length": "5,2",
+                        "available": true,
+                        "canUpdate": true
+                      }
+                    ]
+                  },
+                  "Country": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Country_1_000.json#/definitions/CountryType"
+                  },
+                  "City": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/City_1_000.json#/definitions/CityType"
+                  },
+                  "TMSPortal": {
+                    "type": "string",
+                    "example": "2",
+                    "description": "Utiliza no portal TMS",
+                    "enum": [
+                      "1",
+                      "2"
+                    ],
+                    "x-totvs": [
+                      {
+                        "product": "protheus",
+                        "field": "DUY.DUY_PORTMS",
+                        "required": false,
+                        "type": "varchar",
+                        "length": "1",
+                        "available": true,
+                        "canUpdate": true,
+                        "note": "1- Sim, 2- Não"
+                      }
+                    ]
+                  }
+              }
+        }
+    }
+}
