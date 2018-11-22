@@ -351,12 +351,14 @@ var verifyIfThisIsThePathParameter = function (parameter, pathkey, alreadyfoundp
                 }
             }
             if (!alreadyfoundpathid) {
-                alreadyfoundpathid = parameter.name == urlId && parameter.in == "path";
+                if (parameter) {
+                    alreadyfoundpathid = parameter.name == urlId && parameter.in == "path";
+                }
             }
         }
+        return alreadyfoundpathid;
     }
-    return alreadyfoundpathid;
-}
+};
 
 /**
  * This method checks if, when pathId was placed in URL, parameter was correctly defined
@@ -373,8 +375,8 @@ var checkIfParametersContainPathId = function (alreadyfoundpathid, pathkey, para
         }
         results.hasPathParamDefinedInParameters = alreadyfoundpathid;
 
-        if (!alreadyfoundpathid && !results.endpointsWihtoutPathParamDefinedInParameters) {
-            results.endpointsWihtoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive)";
+        if (!alreadyfoundpathid && !results.endpointsWithoutPathParamDefinedInParameters) {
+                results.endpointsWithoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive). (Was the parameter object - schema definition - correctly defined?)";
         }
     }
 }
