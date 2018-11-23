@@ -101,8 +101,8 @@ describe("Validating OpenAPI files...", function () {
                 expect(pathValidatorResult.foundSuccessResponse).to.be.true;
               });
 
-              it("should specify 'Id' for all PUT or DELETE operations", function () {
-                expect(pathValidatorResult.useIdInAllPutsAndDeletes).to.be.true;
+              it("should specify 'Id' for all PUT operations", function () {
+                expect(pathValidatorResult.useIdInAllPuts).to.be.true;
               });
 
               it("should have unique 'operationId'", function () {
@@ -143,7 +143,7 @@ describe("Validating OpenAPI files...", function () {
               it("should contain the same Id property name in URL and body", function () {
                 var errorMessage = "";
                 if (schemaReferenceFromApiResult.erroredPath)
-                  errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'. It may be a typo or canse sensitve difference";
+                  errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'. It may be a typo or case sensitve difference";
                 if (schemaReferenceFromApiResult.validObject)
                   expect(schemaReferenceFromApiResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
               });
@@ -179,7 +179,7 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should contain path param defined 'params' property", function () {
-                var errorMessage = pathValidatorResult.endpointsWihtoutPathParamDefinedInParameters;
+                var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
                 expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
               });
             });
