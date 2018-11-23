@@ -1,0 +1,381 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Annotation_2_000.json#",
+    "info": {
+        "description": "API para a entidade de Apontamentos da Visita (annotation) para produtos TOTVS",
+        "version": "2.000",
+        "title": "Annotation",
+        "contact": {
+            "name": "T-Talk",            
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "transactionDefinition": {
+                "subType": "event",
+                "businessContentType": {
+                    "type": "object",
+                    "$ref": "#/definitions/AnnotationInfo"
+                },
+                "returnContentType": {
+                    "type": "object",
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+                }
+            },
+            "messageDocumentation": {
+                "name": "annotation",
+                "description": "Cadastro de Apontamento da Visita",
+                "segment": "services"
+            },
+            "productInformation": [
+                {
+                    "product":"protheus",
+                    "contact":"squad.crm@totvs.com.br",
+                    "description":"Cadastro de Apontamento da Visita",
+                    "adapter":"FATS310.prw"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "PagedAnnotation":{
+            "type":"object",
+            "allOf":[
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref":"#/definitions/Annotations"
+                }
+            ]
+        },
+        "Annotations":{
+            "type":"object",
+            "properties":{
+                "items":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/AnnotationInfo"
+                    }
+                }
+            }
+        },
+        "AnnotationInfo":{
+            "description": "Descreve um Apontamento",
+            "type":"object",
+            "properties": {
+                "CompanyId":{
+                    "type":"string",
+                    "description":"Código da empresa",
+                    "example": "T1",
+                    "maxLength":3
+                },
+                "BranchId":{
+                   "type":"string",
+                   "description":"Código da Filial",
+                   "example": "D MG 01 ",
+                   "maxLength":12,
+                   "x-totvs":[
+                        {
+                            "product":"protheus",
+                            "field":"AD5.AD5_FILIAL",
+                            "required":true,                               
+                            "length":"8",
+                            "available":true,
+                            "canUpdate":false
+                        }
+                    ]
+                },
+                "CompanyInternalId":{
+                   "type":"string",
+                   "example": "T1D MG 01 0000001900010101",
+                   "description":"Código da Empresa",
+                   "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "EMPRESA|AD5.AD5_FILIAL|AD5.AD5_VEND|AD5.AD5_DATA|AD5.AD5_SEQUEN",
+                            "required": true,
+                            "type": "varchar",
+                            "length": "26",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Empresa, Filial, Codigo do vendedor, Data (AAAAMMDD) e Sequencia"
+                        }
+                    ]                       
+                },                
+                "InternalId":{
+                    "type":"string",
+                    "description":"InternalId da Anotação no ERP",
+                    "example": "D MG 01 0000001900010101",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_FILIAL|AD5.AD5_VEND|AD5.AD5_DATA|AD5.AD5_SEQUEN",
+                            "type": "varchar",
+                            "length": "24",
+                            "available": true,
+                            "note": "Este dado e formado pelos campos Filial, Codigo do vendedor, Data (AAAAMMDD) e Sequencia"
+                        }                         
+                    ]
+                },
+                "SellerId":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Codigo do Vendedor",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_VEND",
+                            "type": "varchar",
+                            "length": "6",
+                            "required": true,
+                            "available": true,
+                            "canUpdate": false
+                        }                         
+                    ]
+                },
+                "RegisterDate": {
+                    "type": "string",
+					"format": "date-time",
+                    "example": "1900-01-01T12:00:00Z",
+                    "description": "Data do Apontamento",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_DATA",
+                            "type": "date-time",
+                            "length": "08",
+                            "required": true,
+                            "available": true,
+                            "canUpdate": false
+                        }                         
+                    ]
+                },
+                "Sequence": {
+                    "type": "string",
+                    "example": "01",
+                    "description": "Sequência do Contato",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_SEQUEN",
+                            "type": "varchar",
+                            "length": "2",
+                            "required": true,
+                            "available": true,
+                            "canUpdate": false
+                        }                         
+                    ]
+                },
+                "CustomerId":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Código do Cliente",
+                    "x-totvs":[
+                        {
+                            "product":"protheus",
+                            "field": "AD5.AD5_CODCLI",                            
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CustomerUnit": {
+                    "type": "string",
+                    "example": "01",
+                    "description": "Loja do Cliente",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_LOJA",
+                            "type": "varchar",
+                            "length": "2",
+                            "required": false,
+                            "available": true,
+                            "canUpdate": true
+                        }                         
+                    ]
+                },
+                "EventId": {
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Codigo do Evento",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_EVENTO",
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "available": true,
+                            "canUpdate": true
+                        }                         
+                    ]
+                },
+                "OpportunityID":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Numero da Oportunidade",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_NROPOR",
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "available": true,
+                            "canUpdate": true
+                        }                         
+                    ]
+                },
+                "ProspectId":{
+                    "type": "string",
+                    "example": "000001",
+                    "description": "Código do Prospect",
+                    "x-totvs":[
+                        {
+                            "product":"protheus",
+                            "field": "AD5.AD5_PROSPE",                            
+                            "type": "varchar",
+                            "length": "6",
+                            "required": false,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "ProspectUnit":{
+                    "type": "string",
+                    "example": "01",
+                    "description": "Loja do Prospect",
+                    "x-totvs":[
+                        {
+                            "product": "protheus",
+                            "field": "AD5.AD5_LOJPRO",
+                            "type": "varchar",
+                            "length": "2",
+                            "required": false,
+                            "available": true,
+                            "canUpdate": true
+                        }                         
+                    ]
+                },                
+                "ListOfAnnotationCost":{
+                    "type":"object",
+                    "$ref":"#/definitions/AnnotationCost"
+                }
+            }
+        },
+        "AnnotationCost":{
+            "description": "Descreve os Custos dos apontamentos",
+            "type":"array",            
+            "items": {
+                "properties": {
+                    "InternalId": {
+                        "type":"string",  
+                        "examples": "D MG 01 000001190001010101",
+                        "description":"InternalId do item da Anotação no ERP",
+                        "x-totvs":[
+                            {
+                                "product": "protheus",
+                                "field": "AD6_FILIAL|AD6_VEND|AD6_DATA|AD6_SEQUEN|AD6_ITEM",
+                                "type": "varchar",
+                                "length": "24",
+                                "available": true,
+                                "note": "Este dado e formado pelos campos Filial, código do vendedor, data e sequencia e código do item"
+                            }
+                        ]
+                    },
+                    "ItemSequence":{
+                        "type": "string",
+                        "example": "01",
+                        "description": "Numero sequencial do item do Apontamento",
+                        "x-totvs":[
+                            {
+                                "product": "protheus",
+                                "field": "AD6.AD6_ITEM",
+                                "type": "varchar",
+                                "length": "2",
+                                "required": false,
+                                "available": true,
+                                "canUpdate": false
+                            }                         
+                        ]
+                    },
+                    "ProductId":{
+                        "description": "Código do Produto",
+                        "type": "string",
+                        "example": "000000000000001",                    
+                        "x-totvs":[
+                            {
+                                "product": "protheus",
+                                "field": "AD6.AD6_CODPRO",
+                                "type": "varchar",
+                                "length": "15",
+                                "required": false,
+                                "available": true,
+                                "canUpdate": true
+                            }                         
+                        ]         	
+                    },
+                    "Quantity":{                                        
+                        "description": "Quantidade",
+                        "example": 1,
+                        "type":"number",
+                        "minimum": 0.01,
+                        "maximum": 999999.99,
+                        "x-totvs":[
+                            {
+                                "product": "protheus",
+                                "field": "AD6.AD6_QUANT",
+                                "type": "integer",
+                                "length": "9",
+                                "required": false,
+                                "available": true,
+                                "canUpdate": true
+                            }                         
+                        ]
+                    },
+                    "UnitValue":{
+                        "description": "Valor Unitario do item",
+                        "example": 149.99,
+                        "type":"number",
+                        "minimum": 0.01,
+                        "maximum": 999999999.99,
+                        "x-totvs":[
+                            {
+                                "product": "protheus",
+                                "field": "AD6.AD6_VLUNIT",
+                                "type": "integer",
+                                "length": "12",
+                                "required": false,
+                                "available": true,
+                                "canUpdate": true
+                            }                         
+                        ]
+                    },
+                    "TotalValue":{
+                        "description": "Valor Total do item",
+                        "example": 149.99,
+                        "type":"number",
+                        "minimum": 0.01,
+                        "maximum": 999999999.99,
+                        "x-totvs":[
+                            {
+                                "product": "protheus",
+                                "field": "AD6.AD6_TOTAL",
+                                "type": "integer",
+                                "length": "12",
+                                "required": false,
+                                "available": true,
+                                "canUpdate": true
+                            }                         
+                        ]                    
+                    }
+                }
+            }            
+        }
+    }
+}
