@@ -1,23 +1,9 @@
 {
-  "openapi": "3.0.1",
-  "servers": [
-    {
-      "description": "API para produtos TOTVS",
-      "url": "http://{serverUrl}:{serverHttpPort}/api/sara/rfb/consultasEstruturadas/v2",
-      "variables": {
-        "serverUrl": {
-          "default": "localhost"
-        },
-        "serverHttpPort": {
-          "default": "8085"
-        }
-      }
-    }
-  ],
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Sequencial/v2/2_000/jsonschema/schemas/Sequencial_2_000.json#",
   "info": {
-    "description": "API para Consulta RFB - Consulta Estruturada -  2.2.14 - Consulta por Sequencial",
+    "description": "API para Consulta RFB",
     "version": "2.000",
-    "title": "Sequencial",
+    "title": "Consulta RFB",
     "contact": {
       "name": "T-Talk",
       "url": "API.Totvs.com.br",
@@ -25,115 +11,274 @@
     },
     "x-totvs": {
       "messageDocumentation": {
-        "name": "Sequencial",
-        "description": "ADE COANA/COTEC N°2 DE 26 de setembro de 2003 Anexo Único, seção 2.2. Consulta Estruturada, item 2.2.14 - Consulta por Sequencial.",
+        "name": "Consulta RFB",
+        "description": "Joinville",
         "segment": "Logística"
       },
       "productInformation": [
         {
-          "product": "sara",
+          "product": "SARA",
           "contact": "SUPPLY.ML.LOG.SARA-SIP@totvs.com.br",
-          "description": "SARA - Sistema de armazenagem para recintos alfandegados",
+          "description": "API para Consulta RFB - Consulta Estruturada 2.2.14",
           "adapter": "proc_rfb_2_2_14.sql",
           "helpUrl": "tdn.totvs.com/pages/viewpage.action?pageId=???"
         }
       ]
     }
   },
-  "paths": {
-    "/Sequencial": {
-      "get": {
-        "tags": [
-          "Sequencial"
-        ],
-        "summary": "Consulta por Sequencial",
-        "description": "Consulta por Sequencial",
-        "operationId": "RestSequencial.get",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "sara",
-              "available": true,
-              "note": "Este verbo esta disponivel com todos os parametros.",
-              "minimalVersion": "12.1.37"
-            }
-          ]
+  "definitions": {
+    "RegistroSequencial": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Paging"
         },
-        "parameters": [
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-          },
-          {
-            "$ref": "#/components/parameters/tabela"
-          },
-          {
-            "$ref": "#/components/parameters/seqIni"
-          },
-          {
-            "$ref": "#/components/parameters/seqFim"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/CaixaMensagensRFB/v2/2_000/jsonschema/schemas/CaixaMensagensRFB_2_000.json#/definitions/Sequencial"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Requisição Inválida",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
+        {
+          "$ref": "#/definitions/ListOfSequencial"
+        },
+        {
+          "$ref": "#/definitions/ListOfCollumns"
+        }
+      ]
+    },
+    "ListOfSequencial": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Sequencial"
           }
         }
       }
-    }
-  },
-  "components": {
-    "parameters": {
-      "Tabela": {
-        "name": "tabela",
-        "in": "query",
-        "description": "Tabela que será utilizada para extrair os dados alterados",
-        "required": false,
-        "schema": {
+    },
+    "Sequencial": {
+      "type": "object",
+      "properties": {
+        "tc_id": {
           "type": "string",
-          "format": "string"
+          "example": 1,
+          "description": "Identificador do relacionamento",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "tc_id",
+              "Required": true,
+              "type": "int",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Lote": {
+          "type": "string",
+          "example": 201200000076,
+          "description": "Número do lote",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "lote_id",
+              "Required": true,
+              "type": "char",
+              "length": 12,
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Registro de log": {
+          "type": "string",
+          "example": 20,
+          "description": "Registro de log",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "log_registro",
+              "Required": true,
+              "type": "int",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Log de operação": {
+          "type": "string",
+          "example": "I",
+          "description": "Tipo de operação, Inserção, Alteração ou Exclusão",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "log_operacao",
+              "Required": true,
+              "type": "char",
+              "length": 1,
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Log do usuário": {
+          "type": "string",
+          "example": "c30037544837",
+          "description": "Usuário da alteração",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "log_usuario",
+              "Required": true,
+              "type": "char",
+              "length": 12,
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Log data e hora": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2013-01-03T11:38:54.117Z",
+          "description": "Data e hora da alteração",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "log_datahora",
+              "Required": true,
+              "type": "datetime",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Log do host": {
+          "type": "string",
+          "example": "NOTE_ADM",
+          "description": "Host da alteração",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "log_host",
+              "Required": true,
+              "type": "char",
+              "length": 15,
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Log do programa": {
+          "type": "string",
+          "example": "Aduaneiro",
+          "description": "Programa da alteração",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "log_programa",
+              "Required": true,
+              "type": "varchar",
+              "length": 70,
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "Sequencial": {
+          "type": "string",
+          "example": 1,
+          "description": "Sequencial da alteração",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "rel_lote_sequencial",
+              "Required": true,
+              "type": "int",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
         }
-      },
-      "SeqIni": {
-        "name": "seqIni",
-        "in": "query",
-        "description": "Número inicial do intervalo que será mostrado",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "format": "string"
+      }
+    },
+    "ListOfCollumns": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Collumns"
+          }
         }
-      },
-      "SeqFim": {
-        "name": "seqFim",
-        "in": "query",
-        "description": "Número final do intervalo que será mostrado",
-        "required": false,
-        "schema": {
+      }
+    },
+    "columns": {
+      "type": "object",
+      "properties": {
+        "column": {
           "type": "string",
-          "format": "string"
+          "example": "cesv_id",
+          "description": "Coluna da tabela",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "column",
+              "Required": true,
+              "type": "varchar",
+              "length": "100",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "label": {
+          "type": "string",
+          "example": "cesv_id",
+          "description": "Descrição da Coluna da tabela",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "label",
+              "Required": true,
+              "type": "varchar",
+              "length": "100",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "width": {
+          "type": "string",
+          "example": "100px",
+          "description": "Largura da Coluna da Tabela",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "width",
+              "Required": true,
+              "type": "varchar",
+              "length": "12",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "Paging": {
+      "type": "object",
+      "properties": {
+        "hasNext": {
+          "type": "boolean",
+          "example": false,
+          "description": "Paginação",
+          "x-totvs": [
+            {
+              "product": "sara",
+              "Field": "page",
+              "Required": true,
+              "type": "int",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
         }
       }
     }
