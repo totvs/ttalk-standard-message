@@ -1,0 +1,340 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para a entidade de sangria de caixa para produtos TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/tes/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8090"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para a entidade de sangria de caixa (withdrawals) para produtos TOTVS",
+    "version": "1.000",
+    "title": "Withdrawals",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Withdrawals",
+        "description": "Sangria de Caixa",
+        "segment": "Retail"
+      },
+      "productInformation": [
+        {
+          "product": "rms",
+          "contact": "saulo.moura@totvs.com.br",
+          "description": "Sangria de Caixa"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/withdrawals": {
+      "get": {
+        "tags": [
+          "withdrawals"
+        ],
+        "summary": "Retorna todas as sangrias cadastradas",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "rms",
+              "available": true,
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "description": "Retorna todas as sangrias cadastradas",
+        "operationId": "getwithdrawals",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v1_000.json#/definitions/PagedItems"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro na requisição!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "withdrawals"
+        ],
+        "summary": "Inclui a sangria passada na requisição",
+        "description": "Inclui a entidade sangria passada na requisição",
+        "operationId": "postwithdrawal",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "rms",
+              "available": true
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "requestBody": {
+          "description": "Entidade para ser incluida",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v1_000.json#/definitions/BusinessContentType"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v1_000.json#/definitions/BusinessContentType"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro na Inclusão!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/withdrawals/{withdrawalId}": {
+      "get": {
+        "tags": [
+          "withdrawals"
+        ],
+        "summary": "Retorna  uma sangria",
+        "description": "Retorna  a sangria com base no identificador passado",
+        "operationId": "getwithdrawal",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "rms",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros EntityType, Authorization, Fields, Order, Page e PageSize",
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/WithdrawalId"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v1_000.json#/definitions/BusinessContentType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entidade não localizada na base!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "withdrawals"
+        ],
+        "summary": "Atualiza uma sangria",
+        "description": "Atualiza a sangria com base no identificador passado",
+        "operationId": "putwithdrawal",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "rms",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros EntityType, Authorization, Fields, Order, Page e PageSize",
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/WithdrawalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v1_000.json#/definitions/BusinessContentType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entidade não localizada na base!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "withdrawals"
+        ],
+        "summary": "Exclui uma sangria",
+        "description": "Exclui a sangria com base no identificador passado",
+        "operationId": "deletewithdrawal",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "rms",
+              "available": true,
+              "note": "Este verbo esta disponivel com os parâmetros Authorization e withdrawalId ",
+              "minimalVersion": "12.1.21"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/WithdrawalId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Operação realizada com sucesso"
+          },
+          "400": {
+            "description": "Erro no momento da exclusão!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entidade não localizada na base!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "WithdrawalId": {
+        "name": "withdrawalId",
+        "in": "path",
+        "required": true,
+        "description": "Identificador único representando a entidade",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
