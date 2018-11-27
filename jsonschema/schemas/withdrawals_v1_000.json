@@ -1,77 +1,65 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v2_000.json#",
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v1_000.json#",
   "info": {
     "description": "API para a entidade sangria de caixa (withdrawal) para produtos TOTVS",
-    "version": "2.000",
+    "version": "1.000",
     "title": "Withdrawals",
-    "contact": {
-      "name": "T-Talk",
-      "url": "api.Totvs.com.br",
-      "email": "comiteintegracao@totvs.com.br"
-    },
+    "contact": {},
     "x-totvs": {
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "type": "object",
-          "$ref": "#/definitions/withdrawalsInfo"
-        },
-        "returnContentType": {
-          "type": "object",
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
-        }
-      },
       "messageDocumentation": {
         "name": "Withdrawals",
         "description": "Sangria de Caixa",
-        "segment": "Retail"
+        "segment": "Varejo"
       },
       "productInformation": [
         {
           "product": "rms",
-          "contact": "saulo.moura@totvs.com.br",
+          "contact": "saulo.moura",
           "description": "Sangria de Caixa"
         }
-      ]
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "type": "object",
+          "$ref": "#/definitions/BusinessContentType"
+        },
+        "returnContentType": {
+          "type": "object",
+          "$ref": "#/definitions/ReturnContentType"
+        }
+      }
     }
   },
   "definitions": {
-    "PagedWithdrawals": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Paging"
-        },
-        {
-          "$ref": "#/definitions/Withdrawals"
-        }
-      ]
-    },
-    "Withdrawals": {
+    "PagedItems": {
       "type": "object",
       "allOf": [
         {
           "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
         },
         {
-          "type": "object",
-          "properties": {
-            "items": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/withdrawalsInfo"
-              }
-            }
-          }
+          "$ref": "#/definitions/WithdrawalInfo"
         }
       ]
     },
-    "withdrawalsInfo": {
+    "WithdrawalInfo": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessContentType"
+          }
+        }
+      }
+    },
+    "BusinessContentType": {
       "type": "object",
       "properties": {
         "internalId": {
           "description": "InternalId da entidade sangria",
-		  "example": "1|2018-11-27|2|3|4"
+          "example": "1|2018-11-27|2|3|4",
           "type": "string",
           "x-totvs": [
             {
@@ -298,61 +286,14 @@
         }
       }
     },
-    "Paging": {
+    "ReturnContentType": {
       "type": "object",
       "properties": {
-        "hasNext": {
-          "type": "boolean",
-          "example": false
-        }
-      }
-    },
-    "ErrorDetails": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/components/schemas/ErrorModel"
-        },
-        {
-          "$ref": "#/components/schemas/ErrorDetail"
-        }
-      ]
-    },
-    "ErrorModel": {
-      "type": "object",
-      "required": [
-        "code",
-        "message",
-        "detailedMessage"
-      ],
-      "properties": {
-        "code": {
-          "type": "string",
-          "description": "Código identificador do erro."
-        },
-        "message": {
-          "type": "string",
-          "description": "Literal no idioma da requisição descrevendo o erro para o usuário."
-        },
-        "detailedMessage": {
-          "type": "string",
-          "format": "uri",
-          "description": "Mensagem técnica e mais detalhada do erro."
-        },
-        "helpUrl": {
-          "type": "string",
-          "format": "uri",
-          "description": "URI para documentação do erro."
-        }
-      }
-    },
-    "ErrorDetail": {
-      "type": "object",
-      "properties": {
-        "details": {
+        "ListOfInternalId": {
           "type": "array",
           "items": {
-            "$ref": "#/components/schemas/ErrorModel"
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
           }
         }
       }
