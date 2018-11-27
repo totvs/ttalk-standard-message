@@ -179,7 +179,7 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should contain path param defined 'params' property", function () {
-                var errorMessage = pathValidatorResult.endpointsWihtoutPathParamDefinedInParameters;
+                var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
                 expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
               });
             });
