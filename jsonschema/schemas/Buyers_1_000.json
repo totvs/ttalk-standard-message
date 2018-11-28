@@ -1,0 +1,821 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/events/buyers_1_000.json#",
+  	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "Buyers",
+		"contact": {},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/BuyerInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "Compradores",
+				"description": "Cadastro de Compradores para produtos Totvs.",
+				"segment": "Manufatura"
+			},
+			"productInformation": [{
+					"product": "DATASUL",
+					"contact": "supply.ml.man.sup.comex.d@totvs.com.br",
+					"description": "Cadastro de Compradores.",
+					"adapter": ""
+				},
+                {
+					"product": "LOGIX",
+					"contact": "SUPPLY.ML.MAN.SUP_L@totvs.com.br",
+					"description": "Cadastro de Compradores.",
+					"adapter": ""
+				},
+                {
+					"product": "PROTHEUS",
+					"contact": "squad.compras@totvs.com.br",
+					"description": "Cadastro de Compradores.",
+					"adapter": "MATA087.prw"
+				},
+                {
+					"product": "RM",
+					"contact": "TribeCP.Squad.ComprasFaturamento@totvs.com.br",
+					"description": "Cadastro de Compradores.",
+					"adapter": "MovVenAction"
+				}
+			]
+		}
+	},
+	"definitions": {
+    "PagedBuyers": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/BuyerInfo"
+					}
+				}
+			}
+		}
+      ]
+    },
+	"PostBuyer": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuyerInfo"
+        }
+      ]
+    },
+    "BuyerInfo": {
+      "properties": {
+		"companyInternalId": {
+			"type": "string",
+			"description": "InternalId da chave completa de empresa do produto.",
+			"x-totvs": [
+				{
+					"product": "PROTHEUS",
+					"field": "EMPRESA|SY1.Y1_FILIAL|SY1.Y1_COD",
+					"available": false,
+					"canUpdate": false,
+					"note": "Para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto."
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "DATASUL",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"field": "TVEN.CODCOLIGADA",
+					"required": false,
+					"available": false,
+					"canUpdate": false
+				}
+			]
+		},
+		"branchId": {
+			"type": "string",
+			"example": "M SP 01",
+			"description": "ID Filial.",
+			"maxLength": 4,
+			"x-totvs": [
+				{
+					"product": "PROTHEUS",
+					"field": "SY1.Y1_FILIAL",
+					"required": true,
+					"type": "Char",
+					"length": "4",
+					"available": false,
+					"canUpdate": false,
+					"description": "Pode ter tamanho variável até 8 com Gestão de Empresa ativado."
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "DATASUL",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"field": "TVEN.CODFILIAL",					
+					"required": false,
+					"type": "smallint",
+					"available": false,
+					"canUpdate": true
+				}
+			]
+		},
+        "BuyerId": {
+          	"description": "Código do Comprador.",
+	   		"type": "string",
+	      	"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": true,
+					"field": "comprador.cod-usuario",
+					"available": true,
+					"note": "Código do Comprador",
+					"length": "12",
+					"type": "char",
+					"canUpdate": false
+					},
+				{
+					"product": "LOGIX",
+					"required": true,
+					"field": "comprador.cod_comprador",
+					"available": true,
+					"note": "Código do Comprador",
+					"length": "2",
+					"type": "char",
+					"canUpdate": false
+				},
+				{
+					"product": "PROTHEUS",
+					"required": true,
+					"field": "SY1.Y1_COD",					
+					"note": "Código do Comprador no Protheus.",
+					"length": "3",
+					"type": "char",
+					"available": false,
+					"canUpdate": false
+				},
+				{
+					"product": "RM",
+					"required": true,
+					"field": "TVEN.CODVEN",					
+					"note": "Código do Comprador.",
+					"length": "16",
+					"type": "char",
+					"available": false,
+					"canUpdate": false
+				}
+            ]
+        },
+        "Name": {
+           "description": "Nome do Comprador.",
+	   		"type": "string",
+	      	"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.nome-usuar",
+					"available": false,
+					"note": "Nome do Comprador. Atualizado conforme cadastro do Usuário no Foundation",
+					"length": "40",
+					"type": "char",
+					"canUpdate": false
+				},
+				{
+					"product": "LOGIX",
+					"required": true,
+					"field": "comprador.nom_comprador",
+					"available": true,
+					"note": "Nome do Comprador",
+					"length": "30",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "PROTHEUS",
+					"required": true,
+					"field": "SY1.Y1_NOME",					
+					"length": "40",
+					"type": "char",
+					"available": false,
+					"canUpdate": false,
+					"note": "Nome do usuário no Protheus."
+				},
+				{
+					"product": "RM",
+					"required": true,
+					"field": "TVEN.NOME",					
+					"length": "80",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "Nome do Comprador."
+				}		
+            ]
+		},
+        "userLogin": {
+           "description": "ID do Login do usuário no Protheus.",
+			"type": "string",			   
+	      	"x-totvs": [
+				{
+					"product": "PROTHEUS",
+					"required": true,
+					"field": "SY1.Y1_USER",					
+					"length": "6",
+					"type": "char",
+					"available": false,
+					"canUpdate": false,
+					"note": "ID do Login do usuário no Protheus."
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "DATASUL",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"field": "PPESSOA.CODUSUARIO",
+					"available": false,
+					"canUpdate": false,
+					"note": "O usuário é vinculado a pessoa associada ao Comprador."
+				}
+            ]
+        },
+		"Company": {
+			"description": "Estabelecimento Padrão.",
+			"type": "string",
+			"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": true,
+					"field": "usuar-mater.char-1,16,5",
+					"available": true,
+					"note": "",
+					"length": "5",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false,
+					"note": "Logix não controla código de estabelecimento."
+				},
+		 		{
+					"product": "PROTHEUS",
+					"required": false,
+					"available": false
+		 		},
+		 		{
+					"product": "RM",
+					"field": "TVEN.CODCOLIGADA",
+					"required": true,
+					"available": false,
+					"length": 2,
+					"type": "smallint",
+					"canUpdate": false
+		 		}		
+			]		
+		},
+		"CostCenter": {
+			"description": "Centro de Custo.",
+			"type": "string",
+			"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": true,
+					"field": "usuar-mater.sc-codigo",
+					"available": true,
+					"note": "",
+					"length": "15",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+				   "product": "PROTHEUS",
+				   "required": false,
+				   "available": false
+				},
+				{
+				   "product": "RM",
+				   "required": false,
+				   "available": false
+				}		
+			]
+		},
+        "isCorporative": {
+			"description": "Corporativo.",
+			"type": "boolean",
+	      	"x-totvs": [
+	        	{
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.corporativo",
+					"available": true,
+					"note": "Indica se o comprador é corporativo",
+					"length": "sim/não",
+					"type": "logical",
+					"canUpdate": true
+		 		},
+		 		{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				 },
+		 		{
+					"product": "PROTHEUS",
+					"required": false,
+					"available": false
+		 		},
+		 		{
+					"product": "RM",
+					"required": false,
+					"available": false,
+					"note": "RM não controla comprador corporativo."
+		 		}
+	      	]
+        },
+        "PurchasingGroup": {
+			"description": "Grupo de Compras do Comprador.",
+			"type": "string",
+			"x-totvs": [
+				{	
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.cod-grp-compra",
+					"available": true,
+					"note": "Esta informação somente é obrigatória se nos Parâmetros de Compras (CC0104) a geração de Ordens estiver configurada para 'Grupo de Compras'.",
+					"length": "12",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{ 
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_GRUPCOM",					
+					"length": "6",
+					"type": "char",
+					"canUpdate": true,
+					"available": true,
+					"note": "Grupo de Compras de compras padrão do comprador. Caso esta campo esteja preenchido, todos os compradores do grupo terao acesso aos pedidos incluidos por este Comprador."
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"available": false
+				}
+			]
+        },
+        "Email": {
+			"description": "E-mail do Comprador.",
+			"type": "string",
+			"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.e-mail",
+					"available": true,
+					"note": "",
+					"length": "120",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"field": "usuarios.e_mail",
+					"available": true,
+					"note": "",
+					"length": "150",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_EMAIL",				
+					"length": "30",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "Campo utilizado para armazenar E-mail do Comprador."
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"field": "PPESSOA.EMAIL",				
+					"length": "60",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "Campo recuperado a partir do código da pessoa vinculado ao Comprador."
+				}
+			]
+        },
+        "Homepage": {
+			"description": "Homepage do Comprador.",
+			"type": "string",
+				"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.home-page",
+					"available": true,
+					"note": "",
+					"length": "40",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "PROTHEUS",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"available": false,
+					"note": "RM não possui este campo no cadastro de Comprador."
+				}
+			]
+        },
+        "Telephone": {
+			"description": "Telefone do Comprador.",
+			"type": "string",
+				"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.telefone",
+					"available": true,
+					"note": "",
+					"length": "15",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"field": "usuarios.num_telefone",
+					"available": true,
+					"note": "",
+					"length": "20",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_TEL",				
+					"length": "30",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "Campo utilizado para armazenar o telefone do Comprador."
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"field": "PPESSOA.TELEFONE1",				
+					"length": "15",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "Campo recuperado a partir do código da pessoa vinculado ao Comprador."
+				}
+			]
+		},
+        "TelephoneLine": {
+			"description": "Ramal do Comprador.",
+			"type": "string",
+				"x-totvs": [
+					{
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.ramal",
+					"available": true,
+					"note": "",
+					"length": "5",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"field": "usuarios.num_ramal",
+					"available": true,
+					"note": "",
+					"length": "5",
+					"type": "char",
+					"canUpdate": true
+				},
+		 		{
+					"product": "PROTHEUS",
+					"required": false,
+					"available": false
+		 		},
+				{
+					"product": "RM",
+					"required": false,
+					"available": false,
+					"note": "RM não possui este campo no cadastro de Comprador."
+		 		}				
+			] 
+        },
+        "Fax": {
+			"description": "Fax do Comprador.",
+			"type": "string",
+				"x-totvs": [
+				{
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.telefax",
+					"available": true,
+					"note": "",
+					"length": "15",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"field": "usuarios.num_fax",
+					"available": true,
+					"note": "",
+					"length": "35",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_FAX",				
+					"length": "30",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "Campo utilizado para armazenar o Fax do Comprador."
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"field": "PPESSOA.FAX",				
+					"length": "15",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "Campo recuperado a partir do código da pessoa vinculado ao Comprador."
+				}		
+			] 
+        },
+		"FaxLine": {
+			"description": "Ramal do Fax do Comprador.",
+			"type": "string",
+			"x-totvs": [
+				{ 
+					"product": "DATASUL",
+					"required": false,
+					"field": "comprador.ramal-fax",
+					"available": true,
+					"note": "",
+					"length": "5",
+					"type": "char",
+					"canUpdate": true
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "PROTHEUS",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"field": "PPESSOA.TELEFONE1",				
+					"length": "15",
+					"type": "char",
+					"available": false,
+					"canUpdate": true,
+					"note": "RM não possui este campo no cadastro de Comprador."
+				}
+			] 
+		},
+		"approveGroup": {
+			"description": "Grupo de aprovação do Comprador no Protheus.",
+			"type": "string",
+			"x-totvs": [
+				{ 
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_GRAPROV",
+					"length": "6",
+					"type": "char",
+					"canUpdate": true,
+					"available": true,
+					"note": "Código do grupo de aprovadores no qual serão submetidos os pedidos de compras incluidos por este Comprador."
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "DATASUL",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"available": false,
+					"note": "RM não possui este campo no cadastro de Comprador."
+				}
+			]			
+		},	
+		"orderSC": {
+			"description": "Campo para informar se o Comprador pode aprovar SC (Solicitação de Compra) ou não.",
+			"type": "string",
+			"enum": [
+				"1 = SIM",
+				"2 = NÃO"
+			],
+			"x-totvs": [
+				{ 
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_PEDIDO",					
+					"length": "1",
+					"type": "char",
+					"canUpdate": true,
+					"available": true,
+					"note": "Campo para informar se o Comprador pode aprovar SC (Solicitação de Compra) ou não."
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "DATASUL",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"available": false
+				}
+			]			
+		},
+		"purchaseGroupContract": {
+			"description": "Grupo de Aprovação de Contratos que o Comprador pode ser vinculado.",
+			"type": "string",
+			"x-totvs": [
+				{ 
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_GRAPRCP",					
+					"length": "6",
+					"type": "char",
+					"canUpdate": true,
+					"available": true,
+					"note": "Código do grupo de aprovadores que serão submetidos aos (CPS)Contratos de Parceria, incluidos por este comprador."
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "DATASUL",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"available": false
+				}
+			]			
+		},
+		"buyerProfile": {
+			"description": "Perfil do Comprador usado no Portal de MarketPlace.",
+			"type": "string",
+			"x-totvs": [
+				{ 
+					"product": "PROTHEUS",
+					"required": false,
+					"field": "SY1.Y1_ACCID",					
+					"length": "6",
+					"type": "char",
+					"canUpdate": true,
+					"available": true,
+					"note": "Perfil do Comprador usado no Portal de MarketPlace."
+				},
+				{
+					"product": "LOGIX",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "DATASUL",
+					"required": false,
+					"available": false
+				},
+				{
+					"product": "RM",
+					"required": false,
+					"available": false
+				}
+			]			
+        },
+		"situation": {
+			"type": "string",
+			"description": "Situação do comprador",
+			"maxLength": 1,
+			"x-totvs": [{
+				"product": "logix",
+				"field": "sup_par_comprador.parametro_ativo",
+				"description": "Situação do comprador.",
+				"required": false,
+				"type": "string",
+				"length": 1,
+				"available": true,
+				"canUpdate": false,
+				"note": "Valores aceitos: S, N. S igual a Ativo e N igual a Não Ativo"
+			},
+			{
+				"product": "DATASUL",
+				"required": false,
+				"available": false
+			},
+			{
+				"product": "PROTHEUS",
+				"required": false,
+				"available": false
+			},
+			{
+				"product": "RM",
+				"field": "TVEN.INATIVO",
+				"description": "Situação do comprador.",
+				"required": false,
+				"type": "smallint",
+				"length": 2,
+				"available": true,
+				"canUpdate": true,
+				"note": "Valores aceitos: 0, 1. 0 igual a Ativo e 1 igual a Não Ativo"
+			}]
+		}
+      }
+    }
+  }
+}
