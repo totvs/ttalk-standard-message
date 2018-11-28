@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para procedimentos/eventos em saúde",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/hat/healthcare/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "4202"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para procedimentos/eventos em saúde",
+    "version": "1.100",
+    "title": "Procedure",
+    "contact": {
+      "name": "T-Talk",
+      "url": "http://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Procedure",
+        "description": "Procedimentos/Eventos em saúde",
+        "segment": "HealthCare"
+      },
+      "productInformation": [
+        {
+          "product": {
+            "product": "HAT",
+            "contact": "healthcare.autorizador@totvs.com.br",
+            "description": "Operacoes referente as guias de atendimento de planos de saude no formato TISS"
+          }
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/procedures/": {
+      "get": {
+        "tags": [
+          "procedures"
+        ],
+        "operationId": "getProcedures",
+        "summary": "Dados dos atendimentos realizados.",
+        "description": "Retorna uma mensagem do tipo cole com os procedimentos. Os resultados podem ser filtrados atraves dos parametros procedureId e tableCode",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parametros"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/Expires_at"
+          },
+          {
+            "$ref": "#/components/parameters/ProcedureId"
+          },
+          {
+            "$ref": "#/components/parameters/TableCode"
+          },
+          {
+            "$ref": "#/components/parameters/ProcedureCode"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Procedure_1_100.json#/definitions/PagedProcedures"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procedures/{procedureId}": {
+      "get": {
+        "tags": [
+          "procedures"
+        ],
+        "operationId": "getProcedure",
+        "summary": "Dados dos atendimentos realizados.",
+        "description": "Retorna uma mensagem com os dados de um procedimentos",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com o parâmetro procedureId"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProcId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Procedure_1_100.json#/definitions/Procedure"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procedures/{procedureId}/checkCoverage": {
+      "post": {
+        "tags": [
+          "procedures"
+        ],
+        "operationId": "postProcedure",
+        "summary": "Autorização de Procedimentos",
+        "description": "O processamento de autorização de procedimentos é controlado por uma fila de processamento. Ao realizar uma requisição, o endpoint irá responder com codigo 202 indicando que a requisição foi adicionada a fila de processamento retornando um token de identificação, em seguida esse token deve ser utilizado nos parâmetros de URL para retornar a resposta de codigo 200 assim que o processamento for concluido",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros formType e tokenId"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AuthType"
+          },
+          {
+            "$ref": "#/components/parameters/TokenId"
+          },
+          {
+            "$ref": "#/components/parameters/ProcId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Procedure_1_100.json#/definitions/ProcedureBody"
+              }
+            }
+          },
+          "description": "Informacoes do procedimento",
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Procedure_1_100.json#/definitions/TokenProcessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Expires_at": {
+        "name": "Expires_at",
+        "in": "header",
+        "description": "Data e hora da expiração do token em segundos",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "TableCode": {
+        "name": "tableCode",
+        "in": "query",
+        "description": "Codigo da tabela do procedimento",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ProcedureId": {
+        "name": "procedureId",
+        "in": "query",
+        "description": "Chave composta do procedimento",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ProcedureCode": {
+        "name": "procedureCode",
+        "in": "query",
+        "description": "Codigo do procedimento",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ProcId": {
+        "name": "procedureId",
+        "in": "path",
+        "description": "Codigo do procedimento",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "AuthType": {
+        "name": "authType",
+        "in": "query",
+        "description": "Identifica qual o tipo de atendimento que sera incluido",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "TokenId": {
+        "name": "tokenId",
+        "in": "header",
+        "description": "Token com a identificacao do item inserido na lista de processamento",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
