@@ -56,7 +56,7 @@
                         }
                     ]
                 },
-                "description": "Retorna uma mensagem do tipo coleção com todas as solicitações de reembolso. Os resultados podem ser filtrados através dos parâmetros <b>holderRegistration</b>, <b>nameServiceNetwork</b>, <b>cpfCnpj</b> e <b>status</b>.",
+                "description": "Retorna uma mensagem do tipo coleção com todas as solicitações de reembolso. Os resultados podem ser filtrados através dos parâmetros <b>holderSubscriberId</b>, <b>unrelatedHealthProvider</b>, <b>cpfCnpj</b> e <b>status</b>.",
                 "parameters": [
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
@@ -83,10 +83,10 @@
                         "$ref": "#/components/parameters/ExpiresAt"
                     },
                     {
-                        "$ref": "#/components/parameters/HolderRegistration"
+                        "$ref": "#/components/parameters/HolderSubscriberId"
                     },
                     {
-                        "$ref": "#/components/parameters/NameServiceNetwork"
+                        "$ref": "#/components/parameters/UnrelatedHealthProvider"
                     },
                     {
                         "$ref": "#/components/parameters/CpfCnpj"
@@ -169,7 +169,7 @@
                         "$ref": "#/components/parameters/ContentType"
                     },
                     {
-                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
                     },
                     {
                         "$ref": "#/components/parameters/ExpiresAt"
@@ -189,14 +189,6 @@
                 "responses": {
                     "201": {
                         "description": "Created",
-                        "headers": {
-                            "location": {
-                                "description": "URL onde o recurso está disponível",
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -244,25 +236,25 @@
                     "refunds"
                 ],
                 "operationId": "getRefund",
-                "summary": "Retorna as solicitações de reembolso do protocolo especificado",
+                "summary": "Retorna a solicitação de reembolso do protocolo especificado",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/ContentType"
                     },
                     {
-                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
                     },
                     {
                         "$ref": "#/components/parameters/ExpiresAt"
                     },
                     {
-                        "name": "protocolNumber",
-                        "in": "path",
-                        "description": "Protocolo da solicitação de reembolso",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ProtocolNumber"
                     }
                 ],
                 "responses": {
@@ -340,8 +332,8 @@
                     "type": "string"
                 }
             },
-            "HolderRegistration": {
-                "name": "holderRegistration",
+            "HolderSubscriberId": {
+                "name": "holderSubscriberId",
                 "in": "query",
                 "description": "Matrícula do beneficiário titular ou responsável financeiro do plano de saúde",
                 "required": false,
@@ -349,8 +341,8 @@
                     "type": "string"
                 }
             },
-            "NameServiceNetwork": {
-                "name": "nameServiceNetwork",
+            "UnrelatedHealthProvider": {
+                "name": "unrelatedHealthProvider",
                 "in": "query",
                 "description": "Nome da rede não referenciada",
                 "required": false,
@@ -372,6 +364,15 @@
                 "in": "query",
                 "description": "Status do protocolo",
                 "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "ProtocolNumber": {
+                "name": "protocolNumber",
+                "in": "path",
+                "description": "Protocolo da solicitação de reembolso",
+                "required": true,
                 "schema": {
                     "type": "string"
                 }
