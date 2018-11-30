@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "servers": [
     {
-      "description": "API para a entidade Checklist de Gestão de Auditorias para produtos TOTVS",
-      "url": "http://{serverUrl}:{serverHttpPort}/api/quality/audit/v1",
+      "description": "API para cadastro de Checklist de Auditoria, com interação com os produtos Totvs, nele é possível adicionar, deletar, editar e visualizar os Checklists.",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/quality/v1",
       "variables": {
         "serverUrl": {
           "default": "localhost"
@@ -15,7 +15,7 @@
     }
   ],
   "info": {
-    "description": "API para a entidade Checklist de Gestão de Auditorias para produtos TOTVS",
+    "description": "API para cadastro de Checklist de Auditoria, com interação com os produtos Totvs, nele é possível adicionar, deletar, editar e visualizar os Checklists.",
     "version": "1.000",
     "title": "AuditChecklist",
     "contact": {
@@ -51,17 +51,17 @@
     "url": "http://api.totvs.com.br"
   },
   "paths": {
-    "/auditChecklist/{internalId}": {
+    "/auditChecklist/{Id}": {
       "get": {
         "tags": [
-          "internalId"
+          "Id"
         ],
         "x-totvs": {
           "productInformation": [
             {
               "product": "PROTHEUS",
               "available": true,
-              "note": "Este verbo esta disponí­vel com todos os parâmetros",
+              "note": "Este verbo esta disponível com todos os parâmetros",
               "minimalVersion": "12.1.23"
             }
           ]
@@ -74,7 +74,7 @@
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/internalId"
+            "$ref": "#/components/parameters/Id"
           },
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
@@ -108,7 +108,7 @@
       },
       "put": {
         "tags": [
-          "audit Checklist"
+          "Id"
         ],
         "x-totvs": {
           "productInformation": [
@@ -125,7 +125,7 @@
         "operationId": "putAuditChecklistId",
         "parameters": [
           {
-            "$ref": "#/components/parameters/internalId"
+            "$ref": "#/components/parameters/Id"
           }
         ],
         "requestBody": {
@@ -173,7 +173,7 @@
       },
       "delete": {
         "tags": [
-          "audit Checklist"
+          "Id"
         ],
         "x-totvs": {
           "productInformation": [
@@ -193,7 +193,7 @@
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "#/components/parameters/internalId"
+            "$ref": "#/components/parameters/Id"
           },
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
@@ -236,10 +236,10 @@
         }
       }
     },
-    "/AuditChecklist/pending": {
+    "/AuditChecklist/": {
       "get": {
         "tags": [
-          "pending"
+          "audit Checklist"
         ],
         "x-totvs": {
           "productInformation": [
@@ -251,7 +251,7 @@
             }
           ]
         },
-        "summary": "Retorna uma lista com Checklist de auditorias pendentes",
+        "summary": "Retorna uma lista com Checklist de auditorias",
         "description": "Retorna uma lista com Checklist de auditorias pendentes",
         "operationId": "getPendingChecklist",
         "parameters": [
@@ -266,9 +266,6 @@
           },
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/pending"
           }
         ],
         "responses": {
@@ -293,25 +290,70 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "audit Checklist"
+        ],
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "PROTHEUS",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "summary": "Insere um checklist de auditoria",
+        "description": "insere",
+        "operationId": "getPendingChecklist",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AuditChecklist/V1/1_000/jsonschema/schemas/AuditChecklist_2_000.json#/definitions/PagedChecklist"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro durante inclusão do Checklist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "components": {
     "parameters": {
-      "internalId": {
-        "name": "internalId",
+      "Id": {
+        "name": "Id",
         "in": "path",
         "required": true,
         "description": "Código único Checklist de auditoria",
-        "schema": {
-          "type": "integer"
-        }
-      },
-      "pending": {
-        "name": "pending",
-        "in": "path",
-        "required": true,
-        "description": "Checklists pendentes",
         "schema": {
           "type": "integer"
         }
