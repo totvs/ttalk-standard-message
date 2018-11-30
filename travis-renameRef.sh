@@ -2,10 +2,10 @@ git config --global user.email "francardoso@outlook.com"
 git config --global user.name "Francisco Ferreira Cardoso"
 git config --global push.default simple
 
-git remote set-url origin francardoso93@github.com:25789t@T/totvs/ttalk-standard-message.git 
+echo git config -l
+git config remote.origin.url francardoso93:25789t@T@github.com/francardoso93:25789t@T/ttalk-standard-message.git 
 
-
-echo "Mudado Git Config e origin"
+echo "eee Git Config e origin"
 
 node validator/master/renameRef.js
 git add -A
