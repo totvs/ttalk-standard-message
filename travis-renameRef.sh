@@ -1,9 +1,9 @@
-echo $TRAVIS_BRANCH
-echo ${GIT_EMAIL}
-echo ${GIT_NAME}
+echo $1
+echo $2
+echo $3
 
-git config --global user.email "${GIT_EMAIL}"
-git config --global user.name "${GIT_NAME}"
+git config --global user.email "$2"
+git config --global user.name "$3"
 git config --global push.default simple
 
 node validator/master/renameRef.js
