@@ -13,7 +13,7 @@ var dirname = "./jsonschema/apis/";
             encoding: 'utf-8'
           });
           parsedOpenAPI = JSON.parse(file);
-          parsedOpenAPI.servers[0].url = "empty";
+          parsedOpenAPI.servers[0].url = "changedConditional";
           stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
           // for (var pathkey in parsedOpenAPI.paths) {
           // }
