@@ -17,7 +17,7 @@ var dirname = "./jsonschema/apis/";
           stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
           // for (var pathkey in parsedOpenAPI.paths) {
           // }
-          console.log(dirname + filename);
+          //console.log(dirname + filename);
           fs.writeFileSync(dirname + filename, stringOpenAPI);
         }
     })
