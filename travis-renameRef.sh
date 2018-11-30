@@ -2,7 +2,7 @@ git config --global user.email "francardoso@outlook.com"
 git config --global user.name "Francisco Ferreira Cardoso"
 git config --global push.default simple
 
-git remote set-url origin francardoso93@github.com:25789t@T/MDANSE.git
+git remote set-url origin francardoso93@github.com:25789t@T/totvs/ttalk-standard-message.git 
 
 
 echo "Definidos Git Config e origin"
