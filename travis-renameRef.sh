@@ -5,7 +5,7 @@ git config --global push.default simple
 git remote set-url origin francardoso93@github.com:25789t@T/totvs/ttalk-standard-message.git 
 
 
-echo "Definidos Git Config e origin"
+echo "Mudado Git Config e origin"
 
 node validator/master/renameRef.js
 git add -A
