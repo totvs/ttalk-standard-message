@@ -4,5 +4,6 @@ git config --global push.default simple
 
 node validator/master/renameRef.js
 git add -A
-git commit -m "Renaming schema references to branch 'master'"
+git commit -m "Renaming schema references to branch  'master'"
 git push origin $1
+
