@@ -1,4 +1,5 @@
 "use strict";
+
 /*
 This class contains MOCHA test cases for OpenAPI files
 @author Francisco F. Cardoso | T-TALK
