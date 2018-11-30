@@ -2,6 +2,9 @@ git config --global user.email "francardoso@outlook.com"
 git config --global user.name "Francisco Ferreira Cardoso"
 git config --global push.default simple
 
+git remote set-url origin francardoso93@github.com:25789t@T/MDANSE.git
+
+
 echo "Definidos Git Config"
 
 node validator/master/renameRef.js
