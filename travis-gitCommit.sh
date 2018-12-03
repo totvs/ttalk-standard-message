@@ -9,7 +9,7 @@ git pull
 git checkout ${TRAVIS_BRANCH}
 git add -A
 #git status
-git commit -m "TRAVISCI - Renaming schema references to branch  'master'"
+git commit -m "TRAVISCI - Renaming schema references to branch  'master'. Travis build: ${TRAVIS_BUILD_NUMBER}"
                  
 git push --set-upstream origin-pages ${TRAVIS_BRANCH}
 
