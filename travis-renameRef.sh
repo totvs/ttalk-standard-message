@@ -10,12 +10,12 @@ echo "Testando acessar variavel Travis dentro do SH"
 echo ${TRAVIS_BRANCH}
 echo "Secure Token"
 echo ${GH_TOKEN}
-echo "47305ecc2a6a3328babc281d999d6f6df4d04e0c"
+echo "c5e4ab472b812a0885a0805569d184048be32491"
 
 node validator/master/renameRef.js
 git add -A
 git commit -m "TRAVISCI - Renaming schema references to branch  'master'"
-git remote add origin-pages https://47305ecc2a6a3328babc281d999d6f6df4d04e0c@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
+git remote add origin-pages https://c5e4ab472b812a0885a0805569d184048be32491@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
 #Secure
 #git remote add origin-pages https://${GH_TOKEN}@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
 git push --set-upstream origin-pages ${TRAVIS_BRANCH}
