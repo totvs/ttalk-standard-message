@@ -6,6 +6,7 @@ fs.readdir(dirname, function (err, filenames) {
     console.log(err);
   }
 
+  console.log(filenames)
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let openAPIPath = path.join(dirname, filename);
@@ -13,7 +14,7 @@ fs.readdir(dirname, function (err, filenames) {
         encoding: 'utf-8'
       });
       parsedOpenAPI = JSON.parse(file);
-      parsedOpenAPI.servers[0].url = "AuthenticatedAccess";
+      parsedOpenAPI.servers[0].url = "AuthenticatedTest";
       stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
       // for (var pathkey in parsedOpenAPI.paths) {
       //   var httpVerbsList = parsedOpenAPI.paths[pathkey]

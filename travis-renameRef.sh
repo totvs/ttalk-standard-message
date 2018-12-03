@@ -6,6 +6,8 @@
 git config --global user.email "francardoso@outlook.com"
 git config --global user.name "francardoso93"
 
+echo "running travis-renameRef.sh"
+
 node validator/master/renameRef.js
 git add -A
 git commit -m "TRAVISCI - Renaming schema references to branch  'master'"
