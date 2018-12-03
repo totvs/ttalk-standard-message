@@ -1,117 +1,335 @@
 {
-  "openapi": "3.0.1",
-  "servers": [
-    {
+    "openapi": "3.0.1",
+    "servers": [
+      {
+        "description": "API para cancelamento de vendas do varejo no sistema Protheus.",
+        "url": "http://{serverUrl}:{serverHttpPort}/api/retail/v1",
+        "variables": {
+          "serverUrl": {
+            "default": "localhost"
+          },
+          "serverHttpPort": {
+            "default": "8080"
+          }
+        }
+      }
+    ],
+    "info": {
       "description": "API para cancelamento de vendas do varejo no sistema Protheus.",
-      "url": "http://{serverUrl}:{serverHttpPort}/api/retail/v1",
-      "variables": {
-        "serverUrl": {
-          "default": "localhost"
-        },
-        "serverHttpPort": {
-          "default": "8080"
-        }
-      }
-    }
-  ],
-  "info": {
-    "description": "API para cancelamento de vendas do varejo no sistema Protheus.",
-    "version": "1.002",
-    "title": "RetailSalesCancellation",
-    "contact": {
-      "name": "T-Talk",
-      "url": "api.Totvs.com.br",
-      "email": "comiteintegracao@totvs.com.br"
-    },
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "RetailSalesCancellation",
-        "description": "Exclusão de venda",
-        "segment": "retail"
+      "version": "1.000",
+      "title": "RetailSalesCancellation",
+      "contact": {
+        "name": "T-Talk",
+        "url": "api.Totvs.com.br",
+        "email": "comiteintegracao@totvs.com.br"
       },
-      "productInformation": [
-        {
-          "product": "protheus",
-          "contact": "ricardo.msousa@totvs.com.br",
-          "description": "Exclusão de vendas",
-          "adapter": "LOJI704O.prw"
-        }
-      ]
-    }
-  },
-  "paths": {       
-      "delete": {
-        "tags": [
-          "RetailSalesCancellation"
-        ],
-        "summary": "Deleta venda passada na requisição",
-        "description": "Deleta uma venda de acordo com os valores do parametro InternalId 'Filial|numero do cupom|numero autorizacão sat' ",
-        "operationId": "deleteInternalId",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "protheus",
-              "available": true,
-              "note": "Este verbo está disponível com os parâmetros Authorization",
-              "minimalVersion": "12.1.21"
-            }
-          ]
+      "x-totvs": {
+        "messageDocumentation": {
+          "name": "RetailSalesCancellation",
+          "description": "Exclusão de venda",
+          "segment": "retail"
         },
-        "parameters": [
+        "productInformation": [
           {
-              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/InternalId"
+            "product": "protheus",
+            "contact": "ricardo.msousa@totvs.com.br",
+            "description": "Exclusão de vendas",
+            "adapter": "LOJI140O.prw"
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/ricardomelosousa/ttalk-standard-message/retail_rsc_branch/jsonschema/schemas/RetailSalesCancellation_2_000.json#/definitions/RetailSalesCancellationType"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "erro ao deletar venda!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "venda não encontrada",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    
-  },
-  "components": {
-    "parameters": {
-      "InternalId": {
-        "name": "InternalId",
-        "in": "path",
-        "required": true,
-        "description": "Identificador único da venda 'Filial|numero cupom|numero autorização sat'",
-        "schema": {
-          "type": "string"
-        }
+        ]
       }
     },
-    "schemas": {}
+    "paths": {    
+        "/RetailSalesCancellations": {
+            "get": {
+              "tags": [
+                "RetailSalesCancellation"
+              ],
+              "summary": "Retorna todas as vendas canceladas do Protheus",
+              "x-totvs": {
+                "productInformation": [
+                  {
+                    "product": "protheus",
+                    "available": true,
+                    "note": "Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize, Fields",
+                    "minimalVersion": "12.1.21"
+                  }
+                ]
+              },
+              "description": "Retorna todas as vendas canceladas do Protheus",
+              "operationId": "getRetailSalesCancellation",
+              "parameters": [
+                {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                },
+                {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                },
+                {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                },
+                {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                },
+                {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Operação realizada com sucesso",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "https://raw.githubusercontent.com/ricardomelosousa/ttalk-standard-message/retail_rsc_branch/jsonschema/schemas/RetailSalesCancellation_2_000.json#/definitions/PagedRetailSalesCancellations"
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Erro na requisição!",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "post": {
+              "tags": [
+                "RetailSalesCancellation"
+              ],
+              "deprecated": true,
+              "summary": "Funcionalidade não disponível",
+              "description": "Não é permitido incluir uma venda por RetailSalesCancellation",
+              "operationId": "postRetailSalesCancellation",
+              "x-totvs": {
+                "productInformation": [{
+                    "product": "protheus",
+                    "available": true,
+                    "note": "Este verbo não está disponível pois não é permitido incluir uma venda usando RetailSalesCancellation",
+                    "minimalVersion": "12.1.21"
+                  }]
+              },
+              "parameters": [{
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                }],              
+              "responses": {
+                "200": {
+                  "description": "Não disponível",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "https://raw.githubusercontent.com/ricardomelosousa/ttalk-standard-message/itemReserveBranch/jsonschema/schemas/RetailSalesCancellation_2_000.json#/definitions/RetailSalesCancellationType"
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Não disponível",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                      }
+                    }
+                  }
+                }
+              }
+            }     
+        },
+        "/RetailSalesCancellations/{InternalId}": {
+            "get": {
+            "tags": [
+              "RetailSalesCancellation"
+            ],
+            "summary": "Buscar venda cancelada por InternalId que é constituido dos valores de filial e numero do cupom  D MG 01|0001",
+            "description": "Retorna os dados da venda cancelada de acordo com a filial e numero do cupom passados no parametro InternalId",
+            "operationId": "getInternalId",
+            "x-totvs": {
+              "productInformation": [
+                {
+                  "product": "protheus",
+                  "available": true,
+                  "note": "Este verbo está disponível com os parâmetros InternalId, Authorization",
+                  "minimalVersion": "12.1.21"
+                }
+              ]
+            },
+            "parameters": [
+              {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+              },      
+              {
+                "$ref": "#/components/parameters/InternalId"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operação realizada com sucesso!",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/ricardomelosousa/ttalk-standard-message/retail_rsc_branch/jsonschema/schemas/RetailSalesCancellation_2_000.json#/definitions/RetailSalesCancellationType"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Erro na requisição!",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Venda cancelada não localizada na base!",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                    }
+                  }
+                }
+              }
+            }
+            },
+            "put": {
+            "tags": [
+              "RetailSalesCancellation"
+            ],
+            "deprecated": true,
+            "summary": "Não disponível",
+            "description": "A venda uma vez cancelada não é possível reverter o cancelamento",
+            "operationId": "putretailSalesCancellation",
+            "x-totvs": {
+              "productInformation": [
+                {
+                  "product": "protheus",
+                  "available": true,
+                  "note": "Este verbo não está disponível",
+                  "minimalVersion": "12.1.21"
+                }
+              ]
+            },
+            "parameters": [
+            {
+              "$ref": "#/components/parameters/InternalId"
+            },
+            {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }],            
+            "responses": {
+              "200": {
+                "description": "Não disponível",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/ricardomelosousa/ttalk-standard-message/retail_rsc_branch/jsonschema/schemas/RetailSalesCancellation_2_000.json#/definitions/RetailSalesCancellationType"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Não disponível",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Não disponível",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                    }
+                  }
+                }
+              }
+            }
+            },
+            "delete": {
+            "tags": [
+              "RetailSalesCancellation"
+            ],
+            "summary": "Deleta venda passada na requisição",
+            "description": "Deleta uma venda de acordo com os valores do parametro InternalId 'Filial|numero do cupom|numero autorizacao sat' ",
+            "operationId": "deleteInternalId",
+            "x-totvs": {
+              "productInformation": [
+                {
+                  "product": "protheus",
+                  "available": true,
+                  "note": "Este verbo está disponível com os parâmetros Authorization",
+                  "minimalVersion": "12.1.21"
+                }
+              ]
+            },
+            "parameters": [
+              {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+              },
+              {
+                "$ref": "#/components/parameters/InternalId"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operação realizada com sucesso",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RetailSalesCancellation_1_002.json#/definitions/RequestType"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "erro ao deletar venda!",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "venda não encontrada",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                    }
+                  }
+                }
+              }
+            }
+            }
+        }      
+    },
+    "components": {
+      "parameters": {
+        "InternalId": {
+          "name": "InternalId",
+          "in": "path",
+          "required": true,
+          "description": "Identificador único da venda 'Filial|numero cupom|numero autorização sat'",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {}
+    }
   }
-}
