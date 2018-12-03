@@ -15,7 +15,7 @@ echo "c5e4ab472b812a0885a0805569d184048be32491"
 node validator/master/renameRef.js
 git add -A
 git commit -m "TRAVISCI - Renaming schema references to branch  'master'"
-git remote add origin-pages https://c5e4ab472b812a0885a0805569d184048be32491@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
+git remote add origin-pages https://francardoso93:f88b24655d7d793de53a@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
 #Secure
 #git remote add origin-pages https://${GH_TOKEN}@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
 git push --set-upstream origin-pages ${TRAVIS_BRANCH}
