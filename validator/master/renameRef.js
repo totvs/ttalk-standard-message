@@ -38,17 +38,17 @@ fs.readdir(dirname, function (err, filenames) {
     }
   })
 
-  console.log("Reading changed files")
-  filenames.forEach(function (filename) {
-    if (filename.includes(".json") && !filename.includes("package")) {
-      let openAPIPath = path.join(dirname, filename);
-      var file = fs.readFileSync(openAPIPath, {
-        encoding: 'utf-8'
-      });
-      parsedOpenAPI = JSON.parse(file);
-      console.log(parsedOpenAPI)
-    }
-  })
+  // console.log("Reading changed files")
+  // filenames.forEach(function (filename) {
+  //   if (filename.includes(".json") && !filename.includes("package")) {
+  //     let openAPIPath = path.join(dirname, filename);
+  //     var file = fs.readFileSync(openAPIPath, {
+  //       encoding: 'utf-8'
+  //     });
+  //     parsedOpenAPI = JSON.parse(file);
+  //     console.log(parsedOpenAPI)
+  //   }
+  // })
 });
 
 
