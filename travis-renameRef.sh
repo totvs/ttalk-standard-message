@@ -11,7 +11,6 @@ echo "running travis-renameRef.sh"
 git checkout ${TRAVIS_BRANCH}
 git pull                   
 
-
 node validator/master/renameRef.js
 sleep 30s 
 
