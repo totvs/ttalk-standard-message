@@ -8,7 +8,8 @@ echo git config -l
 #https://gist.github.com/willprice/e07efd73fb7f13f917ea
 #git config remote.origin.url 775ce10e820d83ced636f75ebe5b4842abf49179@github.com/totvs/ttalk-standard-message.git
 
-echo "eee Git Config e origin"
+echo "Acessando variavel de ambiente segura"
+echo ${TEST_SECURE}
 
 node validator/master/renameRef.js
 git add -A
