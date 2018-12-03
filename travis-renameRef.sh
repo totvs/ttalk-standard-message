@@ -10,10 +10,12 @@ echo git config -l
 
 echo "Acessando variavel de ambiente segura"
 echo ${TEST_SECURE}
+echo "Testando acessar variavel Travis dentro do SH"
+echo ${TRAVIS_BRANCH}
 
 node validator/master/renameRef.js
 git add -A
 git commit -m "TRAVISCI - Renaming schema references to branch  'master'"
-git remote add origin-pages 775ce10e820d83ced636f75ebe5b4842abf49179@github.com/totvs/ttalk-standard-message.git                            
+git remote add origin-pages 775ce10e820d83ced636f75ebe5b4842abf49179@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
 git push origin $1
 
