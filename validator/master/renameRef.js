@@ -14,7 +14,7 @@ fs.readdir(dirname, function (err, filenames) {
         encoding: 'utf-8'
       });
       parsedOpenAPI = JSON.parse(file);
-      parsedOpenAPI.servers[0].url = "AuthenticatedTest";
+      parsedOpenAPI.servers[0].url = "22local";
       stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
       // for (var pathkey in parsedOpenAPI.paths) {
       //   var httpVerbsList = parsedOpenAPI.paths[pathkey]
@@ -33,8 +33,7 @@ fs.readdir(dirname, function (err, filenames) {
       //     }
       //   }
       //   //console.log(dirname + filename);
-      console.log(stringOpenAPI)
-        fs.writeFileSync(dirname + filename, stringOpenAPI);
+      fs.writeFileSync(dirname + filename, stringOpenAPI);
       // }
     }
   })
