@@ -8,6 +8,8 @@ git config --global user.name "elvisbrito"
 
 echo "Testando acessar variavel Travis dentro do SH"
 echo ${TRAVIS_BRANCH}
+echo "Secure Token"
+echo ${GH_TOKEN}
 
 node validator/master/renameRef.js
 git add -A
