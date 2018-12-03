@@ -6,7 +6,7 @@ echo git config -l
 
 #https://stackoverflow.com/questions/10054318/how-to-provide-username-and-password-when-run-git-clone-gitremote-git
 #https://username:password@github.com/username/repository.git
-git config remote.origin.url francardoso93:25789t@T@github.com/francardoso93/ttalk-standard-message.git
+git config remote.origin.url francardoso93:25789t@T@github.com/totvs/ttalk-standard-message.git
 
 echo "eee Git Config e origin"
 
