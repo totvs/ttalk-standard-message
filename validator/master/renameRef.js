@@ -14,7 +14,7 @@ fs.readdir(dirname, function (err, filenames) {
         encoding: 'utf-8'
       });
       parsedOpenAPI = JSON.parse(file);
-      parsedOpenAPI.servers[0].url = "22local";
+      parsedOpenAPI.servers[0].url = "44remote";
       stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
       // for (var pathkey in parsedOpenAPI.paths) {
       //   var httpVerbsList = parsedOpenAPI.paths[pathkey]
