@@ -1,5 +1,5 @@
-git config --global user.email "francardoso@outlook.com"
-git config --global user.name "francardoso93"
+git config --global user.email "elvis.brito@totvs.com.br"
+git config --global user.name "elvisbrito"
 
 #https://stackoverflow.com/questions/10054318/how-to-provide-username-and-password-when-run-git-clone-gitremote-git
 #https://username:password@github.com/username/repository.git
