@@ -1,12 +1,5 @@
-#Elvis
-# git config --global user.email "elvis.brito@totvs.com.br"
-# git config --global user.name "elvisbrito"
-
-#Francisco
 git config --global user.email "francardoso@outlook.com"
 git config --global user.name "francardoso93"
-
-echo "running travis-renameRef.sh"
 
 git checkout ${TRAVIS_BRANCH}
 git pull                   
