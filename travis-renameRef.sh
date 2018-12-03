@@ -1,5 +1,5 @@
-git config --global user.email "travis@travis-ci.org"
-git config --global user.name "Travis CI"
+git config --global user.email "elvis.brito@totvs.com.br"
+git config --global user.name "elvisbrito"
 
 #https://stackoverflow.com/questions/10054318/how-to-provide-username-and-password-when-run-git-clone-gitremote-git
 #https://username:password@github.com/username/repository.git
@@ -16,7 +16,7 @@ git add -A
 git commit -m "TRAVISCI - Renaming schema references to branch  'master'"
 #git remote add origin-pages 89d850169e011bab02607657c590d01f0f3e519d@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
 git remote add origin-pages ${GH_TOKEN}@github.com/totvs/ttalk-standard-message.git > /dev/null 2>&1                        
-git push origin ${TRAVIS_BRANCH}
+git push --set-upstream origin-pages ${TRAVIS_BRANCH}
 #git push origin ${TRAVIS_BRANCH} --quiet
 
 
