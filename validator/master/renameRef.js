@@ -32,7 +32,7 @@ fs.readdir(dirname, function (err, filenames) {
       //     }
       //   }
       //   //console.log(dirname + filename);
-      //   fs.writeFileSync(dirname + filename, stringOpenAPI);
+        fs.writeFileSync(dirname + filename, stringOpenAPI);
       // }
     }
   })
