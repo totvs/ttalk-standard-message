@@ -1,245 +1,245 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/TaxGroup_1_000.json#",
-  "info": {
-    "description": "",
-    "version": "1.000",
-    "title": "TaxGroup",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "TaxGroup",
-        "description": "Impostos e Ações Fiscais",
-        "segment": ""
-      },
-      "productInformation": [
-        {
-          "product": "LOGIX",
-          "contact": "Roberta Patricio Postai Vieira",
-          "note": "Inovacao Logix",
-          "adapter": ""
-        },
-        {
-          "product": "PROTHEUS",
-          "contact": "Hanna Caroline Inglez",
-          "note": "Inovacao Protheus",
-          "adapter": ""
-        },
-        {
-          "product": "RM",
-          "contact": "Não se aplica",
-          "note": "",
-          "adapter": ""
-        },
-        {
-          "product": "DATASUL",
-          "contact": "Edgar Jose Gazzolla Junior",
-          "note": "",
-          "adapter": ""
-        }
-      ],
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "CompanyId": {
-          "description": "Empresa",
-          "type": "string",
-          "maxLength": 2
-        },
-        "BranchId": {
-          "description": "Filial",
-          "type": "string",
-          "maxLength": 8
-        },
-        "TaxGroupCode": {
-          "description": "Código do Grupo Fiscal",
-          "type": "string",
-          "maxLength": 6,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "F4_CODIGO",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "natur-oper.nat-operacao",
-              "required": true,
-              "type": "string",
-              "length": "6",
-              "note": "Descrição da Unidade de Medida",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "tabela.campo",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROXIMA-PIMS",
-              "field": "tabela.campo",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "FlowType": {
-          "description": "Fluxo do grupo fiscal (Entrada/Saída).              Protheus(F4_TIPO) / In - Entrada / Out - Saída",
-          "type": "string",
-          "enum": [
-            "In",
-            "Out"
-          ]
-        },
-        "Description": {
-          "description": "Descrição do Grupo Fiscal",
-          "type": "string",
-          "maxLength": 20,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "F4_TEXTO",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "natur-oper.denominacao",
-              "required": true,
-              "type": "string",
-              "length": "35",
-              "note": "Descrição da Natureza de Operação",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "tabela.campo",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROXIMA-PIMS",
-              "field": "tabela.campo",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "OperationTaxCode": {
-          "description": "Código Fiscal da Operação (CFOP).             Prothes(F4_CF)",
-          "type": "string",
-          "maxLength": 5
-        },
-        "TaxCredits": {
-          "$ref": "#/definitions/TaxCreditsAttribute",
-          "description": "Configuração dos impostos.",
-          "type": "object"
-        },
-        "BusinessRules": {
-          "$ref": "#/definitions/BusinessRulesAttribute",
-          "description": "Regras comerciais",
-          "type": "object"
-        }
-      }
-    },
-    "TaxCreditsAttribute": {
-      "description": "ComplexType com a configuração dos impostos.",
-      "type": "object",
-      "properties": {
-        "TaxDescription": {
-          "description": "Identificação.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "BusinessRulesAttribute": {
-      "description": "Regras comerciais para o grupo fiscal cujo conteúdo deve ser o valor que define o tratamento da regra.          Seu valor depende do parâmetro Name.",
-      "type": "object",
-      "properties": {
-        "Rule": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "Value": {
-          "type": "string",
-          "enum": [
-            "Yes",
-            "No",
-            "Shipping",
-            "Devolution",
-            "No Controls"
-          ]
-        }
-      },
-      "required": [
-        "Value"
-      ]
-    },
-    "ListRule": {
-      "type": "string",
-      "enum": [
-        "AtualizaEstoque",
-        "GeraDuplicata",
-        "PoderTerceiros"
-      ]
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfInternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
-            "type": "object"
-          }
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/TaxGroup_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "TaxGroup",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "TaxGroup",
+				"description": "Impostos e Ações Fiscais",
+				"segment": ""
+			},
+			"productInformation": [
+				{
+					"product": "LOGIX",
+					"contact": "Roberta Patricio Postai Vieira",
+					"note": "Inovacao Logix",
+					"adapter": ""
+				},
+				{
+					"product": "PROTHEUS",
+					"contact": "Hanna Caroline Inglez",
+					"note": "Inovacao Protheus",
+					"adapter": ""
+				},
+				{
+					"product": "RM",
+					"contact": "Não se aplica",
+					"note": "",
+					"adapter": ""
+				},
+				{
+					"product": "DATASUL",
+					"contact": "Edgar Jose Gazzolla Junior",
+					"note": "",
+					"adapter": ""
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"maxLength": 2
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"maxLength": 8
+				},
+				"TaxGroupCode": {
+					"description": "Código do Grupo Fiscal",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "F4_CODIGO",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "natur-oper.nat-operacao",
+							"required": true,
+							"type": "string",
+							"length": "6",
+							"note": "Descrição da Unidade de Medida",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROXIMA-PIMS",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FlowType": {
+					"description": "Fluxo do grupo fiscal (Entrada/Saída).              Protheus(F4_TIPO) / In - Entrada / Out - Saída",
+					"type": "string",
+					"enum": [
+						"In",
+						"Out"
+					]
+				},
+				"Description": {
+					"description": "Descrição do Grupo Fiscal",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "F4_TEXTO",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "natur-oper.denominacao",
+							"required": true,
+							"type": "string",
+							"length": "35",
+							"note": "Descrição da Natureza de Operação",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROXIMA-PIMS",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OperationTaxCode": {
+					"description": "Código Fiscal da Operação (CFOP).             Prothes(F4_CF)",
+					"type": "string",
+					"maxLength": 5
+				},
+				"TaxCredits": {
+					"$ref": "#/definitions/TaxCreditsAttribute",
+					"description": "Configuração dos impostos.",
+					"type": "object"
+				},
+				"BusinessRules": {
+					"$ref": "#/definitions/BusinessRulesAttribute",
+					"description": "Regras comerciais",
+					"type": "object"
+				}
+			}
+		},
+		"TaxCreditsAttribute": {
+			"description": "ComplexType com a configuração dos impostos.",
+			"type": "object",
+			"properties": {
+				"TaxDescription": {
+					"description": "Identificação.",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"BusinessRulesAttribute": {
+			"description": "Regras comerciais para o grupo fiscal cujo conteúdo deve ser o valor que define o tratamento da regra.          Seu valor depende do parâmetro Name.",
+			"type": "object",
+			"properties": {
+				"Rule": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"Value": {
+					"type": "string",
+					"enum": [
+						"Yes",
+						"No",
+						"Shipping",
+						"Devolution",
+						"No Controls"
+					]
+				}
+			},
+			"required": [
+				"Value"
+			]
+		},
+		"ListRule": {
+			"type": "string",
+			"enum": [
+				"AtualizaEstoque",
+				"GeraDuplicata",
+				"PoderTerceiros"
+			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
 }
