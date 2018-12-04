@@ -1,513 +1,513 @@
 {
-    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SellerActivity/v1/1_000/jsonschema/schemas/SellerActivity_1_000.json#",
-    "info": {
-        "description":"API para a entidade de Atividades do Vendedor (SellerActivity) para produtos TOTVS",
-        "version":"1.000",
-        "title":"SellerActivity",
-        "contact":{
-            "name": "T-Talk",
-            "url": "https://api.totvs.com.br",
-            "email": "comiteintegracao@totvs.com.br"
-        },
-        "x-totvs":{
-            "transactionDefinition":{
-                "subType": "event",
-                "businessContentType": {
-                    "type": "object",
-                    "$ref": "#/definitions/SellerActivityInfo"
-                },
-                "returnContentType": {
-                    "type": "object",
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"                         
-                }
-            },
-            "messageDocumentation":{
-                "name": "SellerActivity",
-                "description": "Cadastro de Atividades do Vendedor",
-                "segment": "services"
-            },
-            "productInformation":[
-                {
-                    "product":"protheus",
-                    "contact":"squad.crm@totvs.com.br",
-                    "description":"Cadastro de Atividades do Vendedor",
-                    "adapter":"CRMA180.prw"
-                }
-            ]
-        }
-    },
-    "definitions": {
-        "PagedSellerActivity": {
-            "type":"object",
-            "allOf":[
-                {
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-                },
-                {
-                    "$ref":"#/definitions/SellerActivity"
-                }
-            ]
-        },
-        "SellerActivity": {
-            "type":"object",
-            "properties":{
-                "items":{
-                    "type":"array",
-                    "items":{
-                        "$ref":"#/definitions/SellerActivityInfo"
-                    }
-                }
-            }
-        },
-        "SellerActivityInfo": {
-            "description": "Descreve um Atividade do Vendedor",
-            "type":"object",
-            "properties": {
-                "CompanyId": {
-                    "type":"string",
-                    "description":"Código da empresa",
-                    "example": "T1",
-                    "maxLength":3
-                },
-                "BranchId": {
-                    "type":"string",
-                    "description":"Código da Filial",
-                    "example": "D MG 01 ",
-                    "maxLength":12,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_FILIAL",
-                            "required":false,
-                            "type":"varchar",
-                            "length":"8",
-                            "available":true,
-                            "canUpdate":false
-                        }
-                    ]
-                },
-                "Code": {
-                    "type": "string",
-                    "description": "Código da Atividade",
-                    "example": "000001",
-                    "maxLenght": 6,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_CODIGO",
-                            "required":false,
-                            "length":"6",
-                            "available":true,
-                            "canUpdate":false,
-                            "note": "Este campo utiliza auto incremento, não necessario enviar no Post"
-                        }
-                    ]
-                },
-                "InternalId": {
-                    "type":"string",
-                    "description":"InternalId da Atividade do Vendedor no ERP",
-                    "example": "D MG 01 000001",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_FILIAL|AOF.AOF_CODIGO",
-                            "type": "varchar",
-                            "length": "14",
-                            "available": true,
-                            "note": "Este dado e formado pelos campos Filial e Código da Atividade"
-                        }                         
-                    ]
-                },
-                "Type": {
-                    "type":"String",
-                    "description":"Define o tipo de atividade cadastrada. 1 - Tarefa, 2 - Compromisso e 3 - Email.",
-                    "example":"1",
-                    "minimum":1,
-                    "maximum":3,
-                    "enum":[
-                        "1",
-                        "2",
-                        "3"
-                    ],
-                    "x-totvs": [
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_TIPO",
-                            "type": "varchar",
-                            "length": "1",
-                            "available": true,
-                            "note": "Utilizado apenas as opções 1 - Tarefa e 2 - Compromisso"  
-                        }
-                    ]
-                },
-                "Status": {
-                    "type":"String",
-                    "description":"Define o status da atividade cadastrada. 1 - Não Iniciado, 2 - Em Andamento , 3 - Concluída, 4 - Aguardando outros, 5 - Adiada, 6 - Pendente, 7 - Enviado, 8 - Lido e 9 - Cancelada",
-                    "example":"1",
-                    "minimum":1,
-                    "maximum":9,
-                    "enum":[
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9"
-                    ],
-                    "x-totvs": [
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_STATUS",
-                            "type": "varchar",
-                            "length": "1",
-                            "available": true,
-                            "note": "Utilizado apenas as opções 1 - Não Iniciado, 2 - Em Andamento , 3 - Concluída, 4 - Aguardando outros, 5 - Adiada e 9 - Cancelada"  
-                        }
-                    ]
-                },
-                "Participant": {
-                    "type": "string",
-                    "description": "E-Mail do Participante",
-                    "example": "contato@teste.com",
-                    "maxLenght": 250,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_PARTIC",
-                            "required":false,
-                            "length":"250",
-                            "available":true,
-                            "canUpdate":true,
-                            "note": "E-Mail do participante separado por Ponto e Virgula ';'. Este campo e utilizado apenas quando o type igual a 2 (Compromisso)."
-                        }
-                    ]
-                },
-                "LocalActivity": {
-                    "type": "string",
-                    "description": "Local da Atividade",
-                    "example": "SALA 01",
-                    "maxLenght": 100,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_LOCAL",
-                            "required":false,
-                            "length":"100",
-                            "available":true,
-                            "canUpdate":false,
-                            "note": "Este campo e utilizado apenas quando o type igual a 2 (Compromisso)."
-                        }
-                    ]
-                },
-                "Subject": {
-                    "type": "string",
-                    "description": "Assunto da atividade",
-                    "example": "Reunião diaria",
-                    "maxLenght": 60,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_ASSUNT",
-                            "required":true,
-                            "length":"60",
-                            "available":true,
-                            "canUpdate":true
-                        }
-                    ]
-                },
-                "RegisterDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "1900-01-01T12:00:00Z",
-                    "description": "Data de cadastro da atividade",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_DTCAD",
-                            "type": "date-time",
-                            "length": "08",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": false
-                        }                         
-                    ]
-                },
-                "Description": {
-                    "type": "string",
-                    "description": "Descrição da Atividade",
-                    "example": "Reunião de alinhamento diario",
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_DESCRI",
-                            "required":false,
-                            "length":"undefined",
-                            "available":true,
-                            "canUpdate":true
-                        }
-                    ]
-                },
-                "Owner": {
-                    "type": "string",
-                    "description": "Código do proprietario",
-                    "example": "000001",
-                    "maxLenght": 6,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_CODUSR",                        
-                            "length":"06",
-                            "required": true,
-                            "available": true,
-                            "canUpdate": true,
-                            "note": "Código do usuario proprietario da atividade"
-                        }
-                    ]
-                },
-                "Priority": {
-                    "type":"String",
-                    "description":"Define o tipo de atividade cadastrada. 1 - Alta, 2 - Normal e 3 - Baixa.",
-                    "example":"1",
-                    "minimum":1,
-                    "maximum":3,
-                    "enum":[
-                        "1",
-                        "2",
-                        "3"
-                    ],
-                    "x-totvs": [
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_PRIORI",
-                            "type": "varchar",
-                            "length": "1",
-                            "required": true,
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "StartDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "1900-01-01T12:00:00Z",
-                    "description": "Data Inicio",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_DTINIC",
-                            "type": "date-time",
-                            "length": "08",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "StartTime": {
-                    "type": "string",
-                    "example": "12:00",
-                    "maxLenght": 5,
-                    "description": "Hora Inicio",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_HRINIC",
-                            "type": "varchar",
-                            "length": "5",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "EndDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "1900-01-01T12:00:00Z",
-                    "description": "Data Fim",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_DTFIM",
-                            "type": "date-time",
-                            "length": "08",
-                            "required": true,
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "EndTime": {
-                    "type": "string",
-                    "example": "13:00",
-                    "maxLenght": 5,
-                    "description": "Hora Fim",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_HRINIC",
-                            "type": "varchar",
-                            "length": "5",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": true,
-                            "note": "Este campo e utilizado apenas quando o type igual a 2 (Compromisso)."
-                        }
-                    ]
-                },
-                "Duration": {
-                    "type": "string",
-                    "example":999.99,
-                    "minimum":-999.99,
-                    "maximum":999.99,
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_DURACA",
-                            "type": "float",
-                            "length": "6",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": false                        
-                        }
-                    ]
-                },
-                "EntityId": {
-                    "type": "string",
-                    "description": "Alias da Entidade",
-                    "example": "SA1",
-                    "maxLenght": 3,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_ENTIDA",                        
-                            "length":"3",
-                            "required":false,
-                            "available":true,
-                            "canUpdate":true
-                        }
-                    ]
-                },
-                "EntityKey": {
-                    "type": "string",
-                    "description": "Codigo da Entidade",
-                    "example": "00000101",
-                    "maxLenght": 30,
-                    "x-totvs":[
-                        {
-                            "product":"protheus",
-                            "field":"AOF.AOF_CHAVE",                        
-                            "length":"30",
-                            "required":false,
-                            "available":true,
-                            "canUpdate":true
-                        }
-                    ]
-                },
-                "RemindDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "1900-01-01T12:00:00Z",
-                    "description": "Data do Lembrete",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_DTLEMB",
-                            "type": "date-time",
-                            "length": "08",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": true,
-                            "note": "Este campo e utilizado apenas quando o type igual a 1 (Tarefa)."
-                        }
-                    ]
-                },
-                "RemindTime": {
-                    "type": "string",
-                    "example": "11:50",
-                    "maxLenght": 5,
-                    "description": "Hora do Lembrete",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_HRINIC",
-                            "type": "varchar",
-                            "length": "5",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": true,
-                            "note": "Este campo e utilizado apenas quando o type igual a 1 (Tarefa)."
-                        }
-                    ]
-                },
-                "CompletionPercentage": {
-                    "type":"String",
-                    "description":"Define o status da atividade cadastrada. 1 - 0%, 2 - 25%, 3 - 50%, 4 - 75% e 5 - 100%",
-                    "example": "1",
-                    "minimum":1,
-                    "maximum":5,                
-                    "enum":[
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5"
-                    ],
-                    "x-totvs": [
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_PERCEN",
-                            "type": "varchar",
-                            "length": "1",
-                            "available": true,
-                            "note": "1 - 0%, 2 - 25%, 3 - 50%, 4 - 75% e 5 - 100%"  
-                        }
-                    ]
-                },
-                "ConclusionDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "1900-01-01T12:00:00Z",
-                    "description": "Data de conclusão",
-                    "x-totvs":[
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_DTCONC",
-                            "type": "date-time",
-                            "length": "08",
-                            "required": false,
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "RegisterSituation": {
-                    "type":"String",
-                    "description":"Registro bloqueado. 1 - Invativo e 2 - Ativo",
-                    "example":"2",
-                    "minimum":1,
-                    "maximum":2,
-                    "enum":[
-                        "1",
-                        "2"
-                    ],
-                    "x-totvs": [
-                        {
-                            "product": "protheus",
-                            "field": "AOF.AOF_MSBLQL",
-                            "type": "varchar",
-                            "length": "1",
-                            "required": false,
-                            "available": true,
-                            "note": "1 - Invativo e 2 - Ativo"  
-                        }
-                    ]
-                }
-            }            
-        }
-    }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/SellerActivity_1_000.json#",
+	"info": {
+		"description": "API para a entidade de Atividades do Vendedor (SellerActivity) para produtos TOTVS",
+		"version": "1.000",
+		"title": "SellerActivity",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/SellerActivityInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "SellerActivity",
+				"description": "Cadastro de Atividades do Vendedor",
+				"segment": "services"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de Atividades do Vendedor",
+					"adapter": "CRMA180.prw"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedSellerActivity": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/SellerActivity"
+				}
+			]
+		},
+		"SellerActivity": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/SellerActivityInfo"
+					}
+				}
+			}
+		},
+		"SellerActivityInfo": {
+			"description": "Descreve um Atividade do Vendedor",
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"description": "Código da empresa",
+					"example": "T1",
+					"maxLength": 3
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"maxLength": 12,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_FILIAL",
+							"required": false,
+							"type": "varchar",
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"description": "Código da Atividade",
+					"example": "000001",
+					"maxLenght": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_CODIGO",
+							"required": false,
+							"length": "6",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este campo utiliza auto incremento, não necessario enviar no Post"
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId da Atividade do Vendedor no ERP",
+					"example": "D MG 01 000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_FILIAL|AOF.AOF_CODIGO",
+							"type": "varchar",
+							"length": "14",
+							"available": true,
+							"note": "Este dado e formado pelos campos Filial e Código da Atividade"
+						}
+					]
+				},
+				"Type": {
+					"type": "String",
+					"description": "Define o tipo de atividade cadastrada. 1 - Tarefa, 2 - Compromisso e 3 - Email.",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 3,
+					"enum": [
+						"1",
+						"2",
+						"3"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_TIPO",
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"note": "Utilizado apenas as opções 1 - Tarefa e 2 - Compromisso"
+						}
+					]
+				},
+				"Status": {
+					"type": "String",
+					"description": "Define o status da atividade cadastrada. 1 - Não Iniciado, 2 - Em Andamento , 3 - Concluída, 4 - Aguardando outros, 5 - Adiada, 6 - Pendente, 7 - Enviado, 8 - Lido e 9 - Cancelada",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 9,
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7",
+						"8",
+						"9"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_STATUS",
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"note": "Utilizado apenas as opções 1 - Não Iniciado, 2 - Em Andamento , 3 - Concluída, 4 - Aguardando outros, 5 - Adiada e 9 - Cancelada"
+						}
+					]
+				},
+				"Participant": {
+					"type": "string",
+					"description": "E-Mail do Participante",
+					"example": "contato@teste.com",
+					"maxLenght": 250,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_PARTIC",
+							"required": false,
+							"length": "250",
+							"available": true,
+							"canUpdate": true,
+							"note": "E-Mail do participante separado por Ponto e Virgula ';'. Este campo e utilizado apenas quando o type igual a 2 (Compromisso)."
+						}
+					]
+				},
+				"LocalActivity": {
+					"type": "string",
+					"description": "Local da Atividade",
+					"example": "SALA 01",
+					"maxLenght": 100,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_LOCAL",
+							"required": false,
+							"length": "100",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este campo e utilizado apenas quando o type igual a 2 (Compromisso)."
+						}
+					]
+				},
+				"Subject": {
+					"type": "string",
+					"description": "Assunto da atividade",
+					"example": "Reunião diaria",
+					"maxLenght": 60,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_ASSUNT",
+							"required": true,
+							"length": "60",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"RegisterDate": {
+					"type": "string",
+					"format": "date-time",
+					"example": "1900-01-01T12:00:00Z",
+					"description": "Data de cadastro da atividade",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_DTCAD",
+							"type": "date-time",
+							"length": "08",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Description": {
+					"type": "string",
+					"description": "Descrição da Atividade",
+					"example": "Reunião de alinhamento diario",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_DESCRI",
+							"required": false,
+							"length": "undefined",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Owner": {
+					"type": "string",
+					"description": "Código do proprietario",
+					"example": "000001",
+					"maxLenght": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_CODUSR",
+							"length": "06",
+							"required": true,
+							"available": true,
+							"canUpdate": true,
+							"note": "Código do usuario proprietario da atividade"
+						}
+					]
+				},
+				"Priority": {
+					"type": "String",
+					"description": "Define o tipo de atividade cadastrada. 1 - Alta, 2 - Normal e 3 - Baixa.",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 3,
+					"enum": [
+						"1",
+						"2",
+						"3"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_PRIORI",
+							"type": "varchar",
+							"length": "1",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"StartDate": {
+					"type": "string",
+					"format": "date-time",
+					"example": "1900-01-01T12:00:00Z",
+					"description": "Data Inicio",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_DTINIC",
+							"type": "date-time",
+							"length": "08",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"StartTime": {
+					"type": "string",
+					"example": "12:00",
+					"maxLenght": 5,
+					"description": "Hora Inicio",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_HRINIC",
+							"type": "varchar",
+							"length": "5",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EndDate": {
+					"type": "string",
+					"format": "date-time",
+					"example": "1900-01-01T12:00:00Z",
+					"description": "Data Fim",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_DTFIM",
+							"type": "date-time",
+							"length": "08",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EndTime": {
+					"type": "string",
+					"example": "13:00",
+					"maxLenght": 5,
+					"description": "Hora Fim",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_HRINIC",
+							"type": "varchar",
+							"length": "5",
+							"required": false,
+							"available": true,
+							"canUpdate": true,
+							"note": "Este campo e utilizado apenas quando o type igual a 2 (Compromisso)."
+						}
+					]
+				},
+				"Duration": {
+					"type": "string",
+					"example": 999.99,
+					"minimum": -999.99,
+					"maximum": 999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_DURACA",
+							"type": "float",
+							"length": "6",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EntityId": {
+					"type": "string",
+					"description": "Alias da Entidade",
+					"example": "SA1",
+					"maxLenght": 3,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_ENTIDA",
+							"length": "3",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EntityKey": {
+					"type": "string",
+					"description": "Codigo da Entidade",
+					"example": "00000101",
+					"maxLenght": 30,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_CHAVE",
+							"length": "30",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"RemindDate": {
+					"type": "string",
+					"format": "date-time",
+					"example": "1900-01-01T12:00:00Z",
+					"description": "Data do Lembrete",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_DTLEMB",
+							"type": "date-time",
+							"length": "08",
+							"required": false,
+							"available": true,
+							"canUpdate": true,
+							"note": "Este campo e utilizado apenas quando o type igual a 1 (Tarefa)."
+						}
+					]
+				},
+				"RemindTime": {
+					"type": "string",
+					"example": "11:50",
+					"maxLenght": 5,
+					"description": "Hora do Lembrete",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_HRINIC",
+							"type": "varchar",
+							"length": "5",
+							"required": false,
+							"available": true,
+							"canUpdate": true,
+							"note": "Este campo e utilizado apenas quando o type igual a 1 (Tarefa)."
+						}
+					]
+				},
+				"CompletionPercentage": {
+					"type": "String",
+					"description": "Define o status da atividade cadastrada. 1 - 0%, 2 - 25%, 3 - 50%, 4 - 75% e 5 - 100%",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 5,
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_PERCEN",
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"note": "1 - 0%, 2 - 25%, 3 - 50%, 4 - 75% e 5 - 100%"
+						}
+					]
+				},
+				"ConclusionDate": {
+					"type": "string",
+					"format": "date-time",
+					"example": "1900-01-01T12:00:00Z",
+					"description": "Data de conclusão",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_DTCONC",
+							"type": "date-time",
+							"length": "08",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RegisterSituation": {
+					"type": "String",
+					"description": "Registro bloqueado. 1 - Invativo e 2 - Ativo",
+					"example": "2",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOF.AOF_MSBLQL",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"note": "1 - Invativo e 2 - Ativo"
+						}
+					]
+				}
+			}
+		}
+	}
 }
