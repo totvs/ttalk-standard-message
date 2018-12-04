@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.1",
+  "servers": [{
+		"description": "API para a entidade filial (Branch) para produtos TOTVS",
+		"url": "http://{serverUrl}:{serverHttpPort}/api/framework/v1",
+		"variables":{			
+        "serverUrl":{
+          "default":"localhost"
+        },
+        "serverHttpPort":{
+          "default":"8051"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para informações de histórico de dependentes do funcionário de produtos TOTVS",
+    "version": "1.000",
+    "title": "EmployeeHistoryDependents",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "EmployeeHistoryDependents",
+        "description": "Histórico de Dependentes do Funcionário",
+        "segment": "RH"
+      },
+      "productInformation": [
+        {
+          "product": "RM",
+          "contact": "fernanda.dias@totvs.com.br",
+          "description": "Histórico de Dependentes do Funcionário",
+          "adapter": "",
+          "helpUrl": "link aqui"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/employeehistorydependents": {
+      "get": {
+        "tags": [
+          "EmployeeHistoryDependents"
+        ],
+        "summary": "Retorna os históricos de dependentes dos funcionários cadastrados no sistema",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "description": "Retorna os históricos de dependentes dos funcionários cadastrados no sistema",
+        "operationId": "getEmployeeHistoryDependents",
+        "parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}, {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					}, {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					}, {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },          
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/EmployeeDependentsIds"
+          }
+				],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/EmployeeHistoryDependents_1_000.json#/definitions/PagedEmployeeHistoryDependents"
+                }
+              }
+            }
+          }
+        }
+      }
+	  },
+    "/employeehistorydependents/{id}": {
+      "get": {
+        "tags": [
+          "EmployeeHistoryDependents"
+        ],
+        "summary": "Retorna o histórico de dependentes indicado para o funcionário",
+        "description": "Retorna o histórico de dependentes indicado para o funcionário",
+        "operationId": "getEmployeeHistoryDependentsId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EmployeeDependentsId"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/EmployeeHistoryDependents_1_000.json#/definitions/EmployeeHistoryDependentsInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Histórico de Dependentes não localizado na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "EmployeeDependentsId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Identificador único representando o histórico de dependentes do funcionário",
+        "example": "1|03822|14-08-2004 13:52:07",
+        "schema": {
+          "type": "string"
+        }
+      },           
+      "EmployeeDependentsIds": {
+        "name": "employeeDependentsIds",
+        "in": "query",
+        "description": "Identificador único representando o histórico de dependentes do funcionário retornados pelo get separado por vírgula (,) ",
+        "required": false,
+        "example": "param1,param2",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {}
+		}
+}
