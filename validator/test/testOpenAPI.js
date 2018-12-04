@@ -11,7 +11,8 @@ var pathValidator = require('../libOpenAPI/pathValidator.js');
 var jsonHandler = require('../libOpenAPI/jsonHandler.js');
 var fileGetter = require('../libOpenAPI/fileGetter.js');
 var schemaReferenceFromApi = require('../libOpenAPI/schemaReferenceFromApiValidator.js');
-
+var derefScript = require('../libOpenAPI/deref.js');
+var $RefParser = require('json-schema-ref-parser');
 var expect = require('chai').expect;
 
 var segmentDictionary = {};
@@ -39,10 +40,12 @@ describe("Validating OpenAPI files...", function () {
             var pathValidatorResult
             var fileGetterResult;
             var schemaReferenceFromApiResult;
+            var derefResult;
 
             before(function (done) {
               this.timeout(60000);
               parsedOpenAPI = JSON.parse(file);
+              //derefResult = derefScript.derefScript(parsedOpenAPI);
               pathValidator.clear();
               pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
               fileGetter.clear();
@@ -135,6 +138,34 @@ describe("Validating OpenAPI files...", function () {
                 expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
               });
 
+              it("should be dereferenced", function (done) {
+                var parser = new $RefParser();
+                var resultEvaluation = true;
+                parser.dereference(parsedOpenAPI, { // (.dereference could be .bundle) doc: https://apidevtools.org/json-schema-ref-parser/docs/ref-parser.html#bundleschema-options-callback
+                    dereference: { //these are options
+                        dereference: true
+                    },
+                    resolve: {
+                        external: true,
+                        http: {
+                            redirects: 0,
+                            timeout: 20000
+                        }
+                    }
+                },  function (err, newSchema) {
+                    if (err) {
+                        resultEvaluation = false;
+                    } else {
+                        resultEvaluation = true;
+                    }
+                    expect(resultEvaluation, err).to.be.true;
+                    done();
+                });
+                 
+                 
+              });
+             
+
               it("should reference valid objects inside schema file", function () {
                 var errorMessage = "";
                 if (schemaReferenceFromApiResult.erroredObjectName)
@@ -203,7 +234,7 @@ describe("Validating OpenAPI files...", function () {
                 it("should contain xtotvs/productinformation as an array on 'info'", function () {
                   expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
                 });
-                it("segment name should be standard", function () {
+                it("segment name should be standardized", function () {
                   const keyName = parsedOpenAPI.info["x-totvs"].messageDocumentation.segment.toLowerCase().replace(" ", "").normalize('NFD').replace(/[\u0300-\u036f]/g, "");
                   //Verificar se ja existe a propriedade com este nome
                   if (!(keyName in segmentDictionary)) {
