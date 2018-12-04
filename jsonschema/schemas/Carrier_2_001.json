@@ -1,0 +1,240 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Carrier_2_001.json#",
+	"info": {
+		"description": "API para a entidade Transportadora (carrier) para produtos TOTVS",
+		"version": "2.001",
+		"title": "Carrier",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/CarrierInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "carrier",
+				"description": "Entidade Transportadora (carrier) para produtos TOTVS",
+				"segment": "services"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de Transportadoras",
+					"adapter": "mats050.prw"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedCarriers": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Carrier"
+				}
+			]
+		},
+		"Carrier": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CarrierInfo"
+					}
+				}
+			}
+		},
+		"CarrierInfo": {
+			"description": "Descreve uma Transportadora",
+			"type": "object",
+			"properties": {
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA4.A4_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"lenght": "8",
+							"available": false,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "Código da Empresa",
+					"example": "T1D MG 01 000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|SA4.A4_FILIAL|SA4.A4_COD",
+							"required": true,
+							"type": "varchar",
+							"length": "18",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este dado é formado pelos campos Empresa, Filial e Código da Transportadora"
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId da Anotação no ERP",
+					"example": "D MG 01 000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA4.A4_FILIAL|SA4.A4_COD",
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"note": "Este dado e formado pelos campos Filial e Código da Transportadora"
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"example": "000001",
+					"description": "Código da Transportadora",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA4.A4_COD",
+							"description": "Código",
+							"required": true,
+							"type": "varchar",
+							"lenght": "6",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Name": {
+					"type": "string",
+					"example": "Transportadora Ex CO",
+					"description": "Nome da Transportadora",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA4.A4_NOME",
+							"description": "Nome",
+							"required": true,
+							"type": "varchar",
+							"lenght": "40",
+							"available": true
+						}
+					]
+				},
+				"ShortName": {
+					"type": "string",
+					"example": "Transportadora Ex",
+					"description": "Nome reduzido da transportadora",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA4.A4_NREDUZ",
+							"description": "Nome Reduzido",
+							"required": false,
+							"type": "varchar",
+							"lenght": "15",
+							"available": true
+						}
+					]
+				},
+				"RegisterSituation": {
+					"type": "string",
+					"example": "1",
+					"description": "Registro bloqueado: 1=Sim;2=Não",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA4.A4_MSBLQL",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": false,
+							"canUpdate": true
+						}
+					]
+				},
+				"governamentalInformation": {
+					"type": "array",
+					"description": "Informações Governamentais",
+					"items": {
+						"type": "object",
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformation"
+					}
+				},
+				"address": {
+					"type": "array",
+					"description": "Informações de endereço",
+					"items": {
+						"type": "object",
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_2_000.json#/definitions/Address"
+					}
+				},
+				"listofComunicationInformation": {
+					"type": "array",
+					"description": "Informações de comunicação",
+					"items": {
+						"type": "object",
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/CommunicationInformation_1_002.json#/definitions/CommunicationInformationType",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"description": "Address = A4_END Complement = A4_COMPLEM City Code = A4_COD_MUN Description = A4_MUN State Code = A4_EST ZIPCode = A4_CEP",
+								"available": true
+							}
+						]
+					}
+				},
+				"CarrierType": {
+					"type": "string",
+					"example": "1",
+					"description": "Indica o tipo de transportador 1=Inscrito; 2=Não inscrito; 3=Autônomo",
+					"maxlength": 1,
+					"enum": [
+						"1",
+						"2",
+						"3"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA4.A4_TPTRANS",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}

@@ -14,6 +14,8 @@ var schemaReferenceFromApi = require('../libOpenAPI/schemaReferenceFromApiValida
 
 var expect = require('chai').expect;
 
+var segmentDictionary = {};
+
 describe("Validating OpenAPI files...", function () {
   it("test suite started", function (done) {
     //OPENAPIS //
@@ -49,7 +51,7 @@ describe("Validating OpenAPI files...", function () {
               schemaReferenceFromApi.clear();
               schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult, done);
             })
-           
+
             describe(" - Filename: ", function () {
               it("should start with uppercase letter", function () {
                 expect(filename[0]).to.equal(filename[0].toUpperCase());
@@ -179,7 +181,7 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should contain path param defined 'params' property", function () {
-                var errorMessage = pathValidatorResult.endpointsWihtoutPathParamDefinedInParameters;
+                var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
                 expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
               });
             });
@@ -191,16 +193,30 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - xtotvs: ", function () {
-              it("should contain xtotvs/productinformation as an array on 'info'", function () {
-                expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
-              });
-
-              it("should contain xtotvs/productinformation as an array on 'paths'", function () {
-                var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
-                expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
+              describe(" - path", function () {
+                it("should contain xtotvs/productinformation as an array on 'paths'", function () {
+                  var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
+                  expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
+                });
+              })
+              describe(" - info", function () {
+                it("should contain xtotvs/productinformation as an array on 'info'", function () {
+                  expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
+                });
+                it("segment name should be standard", function () {
+                  const keyName = parsedOpenAPI.info["x-totvs"].messageDocumentation.segment.toLowerCase().replace(" ", "").normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+                  //Verificar se ja existe a propriedade com este nome
+                  if (!(keyName in segmentDictionary)) {
+                    //Se nao existe, adiciona
+                    segmentDictionary[keyName] = parsedOpenAPI.info["x-totvs"].messageDocumentation.segment;
+                  } else {
+                    //Verificar se o valor do dictionary é igual ao valor do OpenApi
+                    var wrongSegment = "You passed '" + parsedOpenAPI.info["x-totvs"].messageDocumentation.segment + "' as x-totvs segment, but we already got '" + segmentDictionary[keyName] + "'.";
+                    expect(parsedOpenAPI.info["x-totvs"].messageDocumentation.segment, wrongSegment).to.be.equal(segmentDictionary[keyName]);
+                  }
+                })
               });
             });
-            
           });
         };
       });
