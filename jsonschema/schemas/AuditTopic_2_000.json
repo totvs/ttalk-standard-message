@@ -1,0 +1,204 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditTopic_2_000.json",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para Cadastro de Topico de Auditorias para os produtos TOTVS",
+		"version": "2.000",
+		"title": "Audit Topic",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "AuditTopic",
+				"description": "Cadastro de Topicos de Auditoria",
+				"segment": "Manufatura"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "SUPPLY.ML.MAN.ESTOQUE@totvs.com.br",
+					"description": "Contrato de Mensagem Padronizada para Cadastro de Topico de Auditoria",
+					"adapter": "",
+					"helpUrl": ""
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedTopic": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/auditTopicType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"auditTopicType": {
+			"type": "object",
+			"properties": {
+				"companyId": {
+					"type": "string",
+					"description": "Empresa",
+					"maxLength": 3
+				},
+				"branchId": {
+					"description": "Filial",
+					"type": "string",
+					"example": "D MG 01",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "QU3.QU3_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"checkList": {
+					"description": "Número do Check List",
+					"type": "string",
+					"maximum": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "QU3.QU3_CHKLST",
+							"type": "varchar",
+							"note": "Auditoria",
+							"length": 6,
+							"available": true
+						}
+					]
+				},
+				"internalId": {
+					"type": "string",
+					"description": "InternalId do Questionário de Auditoria",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"note": "O internalId do CheckList são formado pelas tabelas QU3_FILIAL|QU3_CHKLST|QU3_REVIS|QU3_CHKITE",
+							"type": "varchar",
+							"available": true
+						}
+					]
+				},
+				"revision": {
+					"type": "string",
+					"description": "Revisão do Topico",
+					"maximum": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "QU3.QU3_REVIS",
+							"type": "varchar",
+							"note": "Revisão",
+							"length": 2,
+							"available": true
+						}
+					]
+				},
+				"itensTableTopic": {
+					"type": "object",
+					"$ref": "#/definitions/itensTableTopicInfo"
+				}
+			}
+		},
+		"itensTableTopicInfo": {
+			"type": "array",
+			"items": {
+				"properties": {
+					"topic": {
+						"type": "string",
+						"description": "Topico",
+						"maxLength": 10,
+						"x-totvs": [
+							{
+								"product": "PROTHEUS",
+								"field": "QU3.QU3_CHKITE",
+								"type": "varchar",
+								"note": "Topico do Check List",
+								"length": 10,
+								"available": true
+							}
+						]
+					},
+					"ruleCode": {
+						"type": "string",
+						"description": "Código da Norma",
+						"maxLength": 10,
+						"x-totvs": [
+							{
+								"product": "PROTHEUS",
+								"field": "QU3.QU3_NORMA",
+								"type": "varchar",
+								"length": 10,
+								"available": true
+							}
+						]
+					},
+					"description": {
+						"type": "string",
+						"description": "Descrição",
+						"maxLength": 50,
+						"x-totvs": [
+							{
+								"product": "PROTHEUS",
+								"field": "QU3.QU3_NORMA",
+								"type": "varchar",
+								"note": "Descrição do Topico",
+								"length": 50,
+								"available": true
+							}
+						]
+					},
+					"notes": {
+						"type": "string",
+						"description": "Observações",
+						"maxLength": 50,
+						"x-totvs": [
+							{
+								"product": "PROTHEUS",
+								"field": "QU3.QU3_OBSERV",
+								"type": "varchar",
+								"note": "Observações",
+								"length": 50,
+								"available": true
+							}
+						]
+					},
+					"lastRevision": {
+						"type": "string",
+						"description": "Última Revisão",
+						"format": "date",
+						"example": "01-01-2019",
+						"maxLength": 8,
+						"x-totvs": [
+							{
+								"product": "PROTHEUS",
+								"field": "QU3.QU3_ULTREV",
+								"type": "varchar",
+								"note": "Última Revisão",
+								"length": 8,
+								"available": true
+							}
+						]
+					}
+				}
+			}
+		}
+	}
+}

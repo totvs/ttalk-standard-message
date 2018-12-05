@@ -1,252 +1,252 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Financing_1_000.json#",
-  "info": {
-    "description": "",
-    "version": "1.000",
-    "title": "Financing",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "Financing",
-        "description": "Geração dos lançamentos do plano de financiamento",
-        "segment": ""
-      },
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "ContractHeader": {
-          "type": "object",
-          "properties": {
-            "CompanyId": {
-              "description": "Empresa",
-              "type": "string"
-            },
-            "BranchId": {
-              "description": "Filial",
-              "type": "string"
-            },
-            "ContractNumber": {
-              "description": "Numero do Contrato",
-              "type": "string"
-            },
-            "DocumentTypeCode": {
-              "description": "O tipo de documento. Conforme a mensagem DocumentType",
-              "type": "string",
-              "maxLength": 3
-            }
-          }
-        },
-        "ListOfContractParcel": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/ListOfContractParcelType",
-            "type": "object"
-          }
-        }
-      },
-      "required": [
-        "ContractHeader",
-        "ListOfContractParcel"
-      ]
-    },
-    "ApportDistributionType": {
-      "type": "object",
-      "properties": {
-        "Apport": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ApportType",
-            "type": "object"
-          }
-        }
-      }
-    },
-    "ApportType": {
-      "type": "object",
-      "properties": {
-        "CostCenterCode": {
-          "description": "Centro de Custo (linha de produto + linha de receita + segmento de mercado + classe de uso)",
-          "type": "string"
-        },
-        "Value": {
-          "description": "Valor do Rateio para o Centro de Custo ou outro",
-          "type": "number",
-          "format": "double"
-        },
-        "FinancialCode": {
-          "description": "Natureza (Protheus) Tipo de Fluxo (DataSul)",
-          "type": "string"
-        }
-      }
-    },
-    "ListOfComponentType": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ComponentType",
-        "type": "object"
-      }
-    },
-    "ComponentType": {
-      "type": "object",
-      "properties": {
-        "Code": {
-          "description": "Código do Componente da parcela",
-          "type": "integer",
-          "format": "int32"
-        },
-        "Name": {
-          "description": "Nome do Componente da parcela",
-          "type": "string"
-        },
-        "Value": {
-          "description": "Valor do Componente",
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "ListOfContractParcelType": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ContractParcelType",
-        "type": "object"
-      }
-    },
-    "ContractParcelType": {
-      "type": "object",
-      "properties": {
-        "InternalId": {
-          "description": "Identificador Interno de cada parcela (título)",
-          "type": "string"
-        },
-        "FlagAccount": {
-          "description": "Gerar título para esta parcela? 0 = Não / 1 = Sim",
-          "type": "integer",
-          "format": "int32"
-        },
-        "Type": {
-          "description": "Tipo da Parcela (Título) / Receivable - A receber / Payable - A pagar",
-          "type": "string",
-          "enum": [
-            "Receivable",
-            "Payable"
-          ]
-        },
-        "CustomerVendorId": {
-          "description": "Código do Cliente/Fornecedor",
-          "type": "string",
-          "maxLength": 15
-        },
-        "DocumentPrefix": {
-          "description": "Prefixo do Título/Provisão (Série)",
-          "type": "string",
-          "maxLength": 3
-        },
-        "DocNumber": {
-          "description": "Número do Título/Provisão",
-          "type": "string",
-          "maxLength": 9
-        },
-        "DocParcel": {
-          "description": "Número da Parcela",
-          "type": "string",
-          "maxLength": 1
-        },
-        "Event": {
-          "description": "1-Upsert; 2-Delete",
-          "type": "string",
-          "maxLength": 3
-        },
-        "IssueDate": {
-          "description": "Data de Emissão",
-          "type": "string",
-          "format": "date"
-        },
-        "DueDate": {
-          "description": "Data de Vencimento",
-          "type": "string",
-          "format": "date"
-        },
-        "NetValue": {
-          "description": "Valor Líquido",
-          "type": "number",
-          "format": "double"
-        },
-        "CurrencyCode": {
-          "description": "Código da Moeda",
-          "type": "string"
-        },
-        "ApportDistribution": {
-          "$ref": "#/definitions/ApportDistributionType",
-          "description": "Distribuição de rateio",
-          "type": "object"
-        },
-        "ListOfComponent": {
-          "description": "Lista de componentes da parcela",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ListOfComponentType",
-            "type": "object"
-          }
-        },
-        "FinancialCode": {
-          "description": "Natureza (Protheus) Tipo de Despesa (LOGIX) Tipo de Fluxo (DataSul)",
-          "type": "string"
-        }
-      },
-      "required": [
-        "InternalId"
-      ]
-    },
-    "ListInternalIdType": {
-      "type": "object",
-      "properties": {
-        "InternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InternalIdType",
-            "type": "object"
-          }
-        }
-      }
-    },
-    "InternalIdType": {
-      "type": "object",
-      "properties": {
-        "OriginInternalId": {
-          "description": "Identificador de quem enviou a mensagem",
-          "type": "string"
-        },
-        "DestinationInternalId": {
-          "description": "Identificador de quem recebeu a mensagem",
-          "type": "string"
-        }
-      }
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ListInternalId": {
-          "$ref": "#/definitions/ListInternalIdType",
-          "description": "Identificador",
-          "type": "object"
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Financing_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "Financing",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Financing",
+				"description": "Geração dos lançamentos do plano de financiamento",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"ContractHeader": {
+					"type": "object",
+					"properties": {
+						"CompanyId": {
+							"description": "Empresa",
+							"type": "string"
+						},
+						"BranchId": {
+							"description": "Filial",
+							"type": "string"
+						},
+						"ContractNumber": {
+							"description": "Numero do Contrato",
+							"type": "string"
+						},
+						"DocumentTypeCode": {
+							"description": "O tipo de documento. Conforme a mensagem DocumentType",
+							"type": "string",
+							"maxLength": 3
+						}
+					}
+				},
+				"ListOfContractParcel": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/definitions/ListOfContractParcelType",
+						"type": "object"
+					}
+				}
+			},
+			"required": [
+				"ContractHeader",
+				"ListOfContractParcel"
+			]
+		},
+		"ApportDistributionType": {
+			"type": "object",
+			"properties": {
+				"Apport": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ApportType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"ApportType": {
+			"type": "object",
+			"properties": {
+				"CostCenterCode": {
+					"description": "Centro de Custo (linha de produto + linha de receita + segmento de mercado + classe de uso)",
+					"type": "string"
+				},
+				"Value": {
+					"description": "Valor do Rateio para o Centro de Custo ou outro",
+					"type": "number",
+					"format": "double"
+				},
+				"FinancialCode": {
+					"description": "Natureza (Protheus) Tipo de Fluxo (DataSul)",
+					"type": "string"
+				}
+			}
+		},
+		"ListOfComponentType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/ComponentType",
+				"type": "object"
+			}
+		},
+		"ComponentType": {
+			"type": "object",
+			"properties": {
+				"Code": {
+					"description": "Código do Componente da parcela",
+					"type": "integer",
+					"format": "int32"
+				},
+				"Name": {
+					"description": "Nome do Componente da parcela",
+					"type": "string"
+				},
+				"Value": {
+					"description": "Valor do Componente",
+					"type": "number",
+					"format": "double"
+				}
+			}
+		},
+		"ListOfContractParcelType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/ContractParcelType",
+				"type": "object"
+			}
+		},
+		"ContractParcelType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"description": "Identificador Interno de cada parcela (título)",
+					"type": "string"
+				},
+				"FlagAccount": {
+					"description": "Gerar título para esta parcela? 0 = Não / 1 = Sim",
+					"type": "integer",
+					"format": "int32"
+				},
+				"Type": {
+					"description": "Tipo da Parcela (Título) / Receivable - A receber / Payable - A pagar",
+					"type": "string",
+					"enum": [
+						"Receivable",
+						"Payable"
+					]
+				},
+				"CustomerVendorId": {
+					"description": "Código do Cliente/Fornecedor",
+					"type": "string",
+					"maxLength": 15
+				},
+				"DocumentPrefix": {
+					"description": "Prefixo do Título/Provisão (Série)",
+					"type": "string",
+					"maxLength": 3
+				},
+				"DocNumber": {
+					"description": "Número do Título/Provisão",
+					"type": "string",
+					"maxLength": 9
+				},
+				"DocParcel": {
+					"description": "Número da Parcela",
+					"type": "string",
+					"maxLength": 1
+				},
+				"Event": {
+					"description": "1-Upsert; 2-Delete",
+					"type": "string",
+					"maxLength": 3
+				},
+				"IssueDate": {
+					"description": "Data de Emissão",
+					"type": "string",
+					"format": "date"
+				},
+				"DueDate": {
+					"description": "Data de Vencimento",
+					"type": "string",
+					"format": "date"
+				},
+				"NetValue": {
+					"description": "Valor Líquido",
+					"type": "number",
+					"format": "double"
+				},
+				"CurrencyCode": {
+					"description": "Código da Moeda",
+					"type": "string"
+				},
+				"ApportDistribution": {
+					"$ref": "#/definitions/ApportDistributionType",
+					"description": "Distribuição de rateio",
+					"type": "object"
+				},
+				"ListOfComponent": {
+					"description": "Lista de componentes da parcela",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfComponentType",
+						"type": "object"
+					}
+				},
+				"FinancialCode": {
+					"description": "Natureza (Protheus) Tipo de Despesa (LOGIX) Tipo de Fluxo (DataSul)",
+					"type": "string"
+				}
+			},
+			"required": [
+				"InternalId"
+			]
+		},
+		"ListInternalIdType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/InternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"InternalIdType": {
+			"type": "object",
+			"properties": {
+				"OriginInternalId": {
+					"description": "Identificador de quem enviou a mensagem",
+					"type": "string"
+				},
+				"DestinationInternalId": {
+					"description": "Identificador de quem recebeu a mensagem",
+					"type": "string"
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListInternalId": {
+					"$ref": "#/definitions/ListInternalIdType",
+					"description": "Identificador",
+					"type": "object"
+				}
+			}
+		}
+	}
 }

@@ -1,328 +1,328 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/FinancialNature_2_001.json#",
-  "info": {
-    "description": "",
-    "version": "2.001",
-    "title": "FinancialNature",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "FinancialNature",
-        "description": "Cadastro de naturezas financeiras",
-        "segment": "ERP base"
-      },
-      "productInformation": [
-        {
-          "product": "PROTHEUS",
-          "contact": "Rogerio Nagy",
-          "note": "",
-          "adapter": "FINI010I.prw"
-        },
-        {
-          "product": "RM",
-          "contact": "Alaim Alvarenga",
-          "note": "",
-          "adapter": "MovTbOrcamentoData"
-        }
-      ],
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "CompanyId": {
-          "description": "Empresa",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "cEmpAnt",
-              "required": false,
-              "type": "char",
-              "length": "02",
-              "note": "Será enviado o valor da variável cEmpAnt (Empresa)",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.CODCOLIGADA",
-              "required": true,
-              "type": "integer",
-              "length": "",
-              "note": "Código da empresa",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "BranchId": {
-          "description": "Filial",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "cFilAnt",
-              "required": false,
-              "type": "char",
-              "length": "02",
-              "note": "Será enviado o valor da variável cFilAnt (Filial)",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "description": "InternalId Empresa",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "cEmpAnt|cFilAnt",
-              "required": true,
-              "type": "char",
-              "length": "",
-              "note": "Valores de Empresa + Filial (cEmpAnt|cFilAnt)",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.CODCOLIGADA",
-              "required": true,
-              "type": "integer",
-              "length": "",
-              "note": "Chave da empresa",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "InternalId": {
-          "description": "InternalId da natureza",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "cEmpAnt|xFilial(\"SED\")|SED.SED_CODIGO",
-              "required": true,
-              "type": "char",
-              "length": "",
-              "note": "Código que irá identificar a natureza financeira no sistema externo: cEmpAnt + xfilial(\"SED\") + SED.SED_CODIGO",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.CODCOLIGADA|TTBORCAMENTO.CODTBORCAMENTO",
-              "required": true,
-              "type": "integer|string",
-              "length": "|40",
-              "note": "Chave da natureza financeira",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Code": {
-          "description": "Código da natureza financeira",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SED.SED_CODIGO",
-              "required": true,
-              "type": "char",
-              "length": "10",
-              "note": "Código da natureza financeira",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.CODTBORCAMENTO",
-              "required": true,
-              "type": "string",
-              "length": "40",
-              "note": "Codigo da natureza financeira",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Description": {
-          "description": "Descrição da natureza financeira",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SED.SED_DESCRIC",
-              "required": true,
-              "type": "char",
-              "length": "30",
-              "note": "Descrição da natureza financeira",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.DESCRICAO",
-              "required": false,
-              "type": "string",
-              "length": "100",
-              "note": "Descrição da Natureza financeira",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "NatureType": {
-          "description": "Tipo da Natureza [DataSul]. Neste item podem haver mais níveis que podem ser totalizadores. Esta prática foi mencionada pelo Kleber Rocha. Em consensos futuros poderá ser analisado. / Synthetic - Sintético / Analytical - Analítico",
-          "type": "string",
-          "enum": [
-            "Synthetic",
-            "Analytical"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SED.SED_TIPO",
-              "required": true,
-              "type": "char",
-              "length": "01",
-              "note": "Tipo da natureza financeira",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.SINTETICOANALITICO",
-              "required": true,
-              "type": "integer",
-              "length": "",
-              "note": "Tipo da natureza financeira",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "UseCategory": {
-          "description": "Categoria de uso / Free - Livre / Receivable - A receber / Payable - A pagar / Banking - Banco",
-          "type": "string",
-          "enum": [
-            "Free",
-            "Receivable",
-            "Payable",
-            "Banking"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SED.SED_COND",
-              "required": true,
-              "type": "char",
-              "length": "01",
-              "note": "Categoria de uso",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.NATUREZA",
-              "required": true,
-              "type": "integer",
-              "length": "",
-              "note": "Categoria de uso",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Blocked": {
-          "description": "Bloqueado? / 0 - Não bloqueado / 1 - Bloqueado",
-          "type": "string",
-          "enum": [
-            "0",
-            "1"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SED.ED_MSBLQL",
-              "required": false,
-              "type": "char",
-              "length": "01",
-              "note": "Bloqueado",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.INATIVO",
-              "required": false,
-              "type": "integer",
-              "length": "",
-              "note": "Bloqueado",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "TopCodeInternalId": {
-          "description": "InternalId da natureza pai",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "cEmpAnt|cFilAnt|SED.ED_PAI",
-              "required": false,
-              "type": "char",
-              "length": "10",
-              "note": "Código que irá identificar a natureza financeira no sistema externo:cEmpAnt + xFilial(\"SED\") + SED.ED_PAI",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TTBORCAMENTO.CODCOLIGADA|TTBORCAMENTO.CODTBORCAMENTO",
-              "required": true,
-              "type": "integer|string",
-              "length": "|40",
-              "note": "Chave da natureza financeira",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        }
-      },
-      "required": [
-        "CompanyInternalId",
-        "InternalId"
-      ]
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfInternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
-            "type": "object"
-          }
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/FinancialNature_2_001.json#",
+	"info": {
+		"description": "",
+		"version": "2.001",
+		"title": "FinancialNature",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "FinancialNature",
+				"description": "Cadastro de naturezas financeiras",
+				"segment": "ERP base"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Rogerio Nagy",
+					"note": "",
+					"adapter": "FINI010I.prw"
+				},
+				{
+					"product": "RM",
+					"contact": "Alaim Alvarenga",
+					"note": "",
+					"adapter": "MovTbOrcamentoData"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt",
+							"required": false,
+							"type": "char",
+							"length": "02",
+							"note": "Será enviado o valor da variável cEmpAnt (Empresa)",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Código da empresa",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cFilAnt",
+							"required": false,
+							"type": "char",
+							"length": "02",
+							"note": "Será enviado o valor da variável cFilAnt (Filial)",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt|cFilAnt",
+							"required": true,
+							"type": "char",
+							"length": "",
+							"note": "Valores de Empresa + Filial (cEmpAnt|cFilAnt)",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Chave da empresa",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId da natureza",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt|xFilial(\"SED\")|SED.SED_CODIGO",
+							"required": true,
+							"type": "char",
+							"length": "",
+							"note": "Código que irá identificar a natureza financeira no sistema externo: cEmpAnt + xfilial(\"SED\") + SED.SED_CODIGO",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.CODCOLIGADA|TTBORCAMENTO.CODTBORCAMENTO",
+							"required": true,
+							"type": "integer|string",
+							"length": "|40",
+							"note": "Chave da natureza financeira",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Code": {
+					"description": "Código da natureza financeira",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SED.SED_CODIGO",
+							"required": true,
+							"type": "char",
+							"length": "10",
+							"note": "Código da natureza financeira",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.CODTBORCAMENTO",
+							"required": true,
+							"type": "string",
+							"length": "40",
+							"note": "Codigo da natureza financeira",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Description": {
+					"description": "Descrição da natureza financeira",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SED.SED_DESCRIC",
+							"required": true,
+							"type": "char",
+							"length": "30",
+							"note": "Descrição da natureza financeira",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.DESCRICAO",
+							"required": false,
+							"type": "string",
+							"length": "100",
+							"note": "Descrição da Natureza financeira",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"NatureType": {
+					"description": "Tipo da Natureza [DataSul]. Neste item podem haver mais níveis que podem ser totalizadores. Esta prática foi mencionada pelo Kleber Rocha. Em consensos futuros poderá ser analisado. / Synthetic - Sintético / Analytical - Analítico",
+					"type": "string",
+					"enum": [
+						"Synthetic",
+						"Analytical"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SED.SED_TIPO",
+							"required": true,
+							"type": "char",
+							"length": "01",
+							"note": "Tipo da natureza financeira",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.SINTETICOANALITICO",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Tipo da natureza financeira",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UseCategory": {
+					"description": "Categoria de uso / Free - Livre / Receivable - A receber / Payable - A pagar / Banking - Banco",
+					"type": "string",
+					"enum": [
+						"Free",
+						"Receivable",
+						"Payable",
+						"Banking"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SED.SED_COND",
+							"required": true,
+							"type": "char",
+							"length": "01",
+							"note": "Categoria de uso",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.NATUREZA",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Categoria de uso",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Blocked": {
+					"description": "Bloqueado? / 0 - Não bloqueado / 1 - Bloqueado",
+					"type": "string",
+					"enum": [
+						"0",
+						"1"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SED.ED_MSBLQL",
+							"required": false,
+							"type": "char",
+							"length": "01",
+							"note": "Bloqueado",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.INATIVO",
+							"required": false,
+							"type": "integer",
+							"length": "",
+							"note": "Bloqueado",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TopCodeInternalId": {
+					"description": "InternalId da natureza pai",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt|cFilAnt|SED.ED_PAI",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "Código que irá identificar a natureza financeira no sistema externo:cEmpAnt + xFilial(\"SED\") + SED.ED_PAI",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TTBORCAMENTO.CODCOLIGADA|TTBORCAMENTO.CODTBORCAMENTO",
+							"required": true,
+							"type": "integer|string",
+							"length": "|40",
+							"note": "Chave da natureza financeira",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			},
+			"required": [
+				"CompanyInternalId",
+				"InternalId"
+			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
 }
