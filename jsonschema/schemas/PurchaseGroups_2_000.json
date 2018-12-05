@@ -7,8 +7,8 @@
 		"contact": {},
 		"x-totvs": {
 			"transactionDefinition": {
-					"subType": "event",
-					"businessContentType": {
+				"subType": "event",
+				"businessContentType": {
 					"$ref": "#/definitions/purchasesGroups",
 					"type": "object"
 				},
@@ -16,10 +16,9 @@
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType",
 					"type": "object"
 				}
-			},		  
+			},
 			"messageDocumentation": {
 				"name": "T-Talk",
-
 				"url": "api.Totvs.com.br",
 				"email": "comiteintegracao@totvs.com.br"
 			},
@@ -31,85 +30,81 @@
 					"adapter": "MATA086.prw",
 					"helpUrl": ""
 				}
-			]	
+			]
 		}
 	},
-  "definitions": {
-		"PagedPurchasesGroups":{
-			"type":"object",
-			"allOf":[
+	"definitions": {
+		"PagedPurchasesGroups": {
+			"type": "object",
+			"allOf": [
 				{
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
 				},
 				{
-					"$ref":"#/definitions/purchasesGroups"
+					"$ref": "#/definitions/purchasesGroups"
 				}
 			]
 		},
-		"purchasesGroups":{
-			"type":"object",
-			"properties":{
-				"items":{
-					"type":"array",
-					"items":{
-						"$ref":"#/definitions/purchaseGroupsInfo"
+		"purchasesGroups": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/purchaseGroupsInfo"
 					}
 				}
 			}
 		},
-		"purchaseGroupsInfo":{
+		"purchaseGroupsInfo": {
 			"description": "Descreve o Grupo de Compras (purchaseGroups).",
-			"type":"object",
+			"type": "object",
 			"properties": {
 				"companyInternalId": {
 					"type": "string",
 					"description": "InternalId da chave completa de empresa do produto.",
-					"x-totvs": 
-						[
-							{							
-								"product": "protheus",
-								"field": "EMPRESA|SAJ.AJ_FILIAL|SAJ.AJ_GRCOM|SAJ.AJ_ITEM",
-								"available": false,
-								"canUpdate": false,
-								"note": "Para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto."
-							}
-						]
-					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|SAJ.AJ_FILIAL|SAJ.AJ_GRCOM|SAJ.AJ_ITEM",
+							"available": false,
+							"canUpdate": false,
+							"note": "Para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto."
+						}
+					]
 				},
-				"InternalId":{
-						"type":"string",
-						"description":"InternalId do (purchaseGroups) no ERP",
-						"example": "D MG 01 0000001900010101",
-						"x-totvs": [
-							{
-								"product": "protheus",
-								"field": "SAJ.AJ_FILIAL|SAJ.AJ_GRCOM|SAJ.AJ_ITEM",
-								"type": "varchar",
-								"available": true,
-								"length": "24",
-								"note": "Este dado e formado pelos campos Filial,"
-                        				}                         
-						]
-					
-                		},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId do (purchaseGroups) no ERP",
+					"example": "D MG 01 0000001900010101",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SAJ.AJ_FILIAL|SAJ.AJ_GRCOM|SAJ.AJ_ITEM",
+							"type": "varchar",
+							"available": true,
+							"length": "24",
+							"note": "Este dado e formado pelos campos Filial,"
+						}
+					]
+				},
 				"branchId": {
 					"type": "string",
 					"example": "M SP 01",
 					"description": "ID Filial",
 					"maxLength": 8,
-					"x-totvs":  [
-							{	
-								"product": "protheus",
-								"field": "SAJ.AJ_FILIAL",
-								"required": true,
-								"type": "Char",
-								"length": "8",
-								"available": false,
-								"canUpdate": false,
-								"description": "Pode ter tamanho variável até 8 com Gestão de Empresa ativado."
-							}
-						]
-					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SAJ.AJ_FILIAL",
+							"required": true,
+							"type": "Char",
+							"length": "8",
+							"available": false,
+							"canUpdate": false,
+							"description": "Pode ter tamanho variável até 8 com Gestão de Empresa ativado."
+						}
+					]
 				},
 				"code": {
 					"type": "string",
@@ -117,50 +112,46 @@
 					"example": "000001, AP-001, SP0001.",
 					"description": "Código do Grupo de Compras.",
 					"maxLength": 6,
-					"x-totvs": 
-						 [
-							{	
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SAJ.AJ_GRCOM",
+							"description": "Codigo do Grupo de Compras.",
+							"required": true,
+							"type": "char",
+							"length": "6",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfUserList": {
+					"type": "object",
+					"$ref": "#/definitions/purchaseGroupListBuyers"
+				}
+			}
+		},
+		"purchaseGroupListBuyers": {
+			"description": "Cadastra os usuários que fazem parte do Grupo de Compras.",
+			"type": "array",
+			"items": {
+				"properties": {
+					"ItemSequence": {
+						"type": "string",
+						"example": "01",
+						"description": "Numero sequencial dos compradores que fazem parte do Grupo.",
+						"x-totvs": [
+							{
 								"product": "protheus",
-								"field": "SAJ.AJ_GRCOM",
-								"description": "Codigo do Grupo de Compras.",
-								"required": true,
+								"field": "SAJ.AJ_ITEM",
+								"description": "Numero sequencial dos compradores que fazem parte do Grupo.",
+								"required": false,
 								"type": "char",
-								"length": "6",
+								"length": "2",
 								"available": true,
 								"canUpdate": false
 							}
 						]
-					
-				},                
-                "ListOfUserList":{
-                    "type":"object",
-                    "$ref":"#/definitions/purchaseGroupListBuyers"
-                }
-			}
-		},
-		"purchaseGroupListBuyers":{
-			"description": "Cadastra os usuários que fazem parte do Grupo de Compras.",
-			"type":"array",            
-			"items": {
-			"properties": {
-					"ItemSequence":{
-						"type": "string",
-						"example": "01",
-						"description": "Numero sequencial dos compradores que fazem parte do Grupo.",
-						"x-totvs": 
-							 [
-								{
-									"product": "protheus",
-									"field": "SAJ.AJ_ITEM",
-									"description": "Numero sequencial dos compradores que fazem parte do Grupo.",
-									"required": false,
-									"type": "char",
-									"length": "2",
-									"available": true,
-									"canUpdate": false
-								}                         
-							]	
-						
 					},
 					"userCode": {
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_4_003.json#/definitions/BusinessContentType/properties/Code",
@@ -169,21 +160,20 @@
 						"description": "Código do usuário.",
 						"maxLength": 6,
 						"type": "object",
-						"x-totvs":  [
-								{
-									"product": "protheus",
-									"field": "SAJ.AJ_USER",
-									"description": "Armazena o ID do Usuário Logado no Protheus.",
-									"required": true,
-									"type": "char",
-									"length": "6",
-									"available": true,
-									"canUpdate": false,
-									"note": "ID do Usuário (Login de acesso cadastrado no Protheus)."
-								}
-							]
-						
-					},		
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SAJ.AJ_USER",
+								"description": "Armazena o ID do Usuário Logado no Protheus.",
+								"required": true,
+								"type": "char",
+								"length": "6",
+								"available": true,
+								"canUpdate": false,
+								"note": "ID do Usuário (Login de acesso cadastrado no Protheus)."
+							}
+						]
+					},
 					"userName": {
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_4_003.json#/definitions/BusinessContentType/properties/Name",
 						"format": "string",
@@ -191,20 +181,19 @@
 						"description": "Nome do usuário no Protheus.",
 						"maxLength": 15,
 						"type": "object",
-						"x-totvs":  [
-								{
-									"product": "protheus",
-									"field": "SAJ.AJ_US2NAME",
-									"description": "Armazena o nome do usuário no Protheus.",
-									"required": true,
-									"type": "char",
-									"length": "15",
-									"available": true,
-									"canUpdate": false,
-									"note": "Armazena o nome do usuário no Protheus, dado apenas para exibição/ReadOnly."
-								}
-							]
-						
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SAJ.AJ_US2NAME",
+								"description": "Armazena o nome do usuário no Protheus.",
+								"required": true,
+								"type": "char",
+								"length": "15",
+								"available": true,
+								"canUpdate": false,
+								"note": "Armazena o nome do usuário no Protheus, dado apenas para exibição/ReadOnly."
+							}
+						]
 					},
 					"quoteAnalyzes": {
 						"type": "string",
@@ -216,26 +205,22 @@
 							"S",
 							"N"
 						],
-						"x-totvs":  [
-								{
-									"product": "protheus",
-									"field": "SAJ.AJ_COTACAO",
-									"description": "Se o Comprador pode analisar a cotação (S=SIM, N=NAO).",
-									"required": true,
-									"type": "char",
-									"length": "1",
-									"available": true,
-									"canUpdate": false,
-									"note": "Se o Comprador pode analisar a cotação (S=SIM, N=NAO)."
-								}
-							]
-						
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SAJ.AJ_COTACAO",
+								"description": "Se o Comprador pode analisar a cotação (S=SIM, N=NAO).",
+								"required": true,
+								"type": "char",
+								"length": "1",
+								"available": true,
+								"canUpdate": false,
+								"note": "Se o Comprador pode analisar a cotação (S=SIM, N=NAO)."
+							}
+						]
 					}
 				}
 			}
 		}
 	}
 }
-
-  
-
