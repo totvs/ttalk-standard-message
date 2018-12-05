@@ -114,14 +114,18 @@ var checkCommonErrorSchema = function (response, responseKey) {
  * @param {*} pathkey String (/endpoint)
  */
 var checkHttpVerbInUrl = function (pathkey) {
+    var listOfWords = pathkey.split('/');
     if (results.useHttpVerbInEndpointUrl != true) {
-        results.useHttpVerbInEndpointUrl = (pathkey.includes("get") ||
-            pathkey.includes("put") ||
-            pathkey.includes("post") ||
-            pathkey.includes("delete"))
+        for (var i = 0; i < listOfWords.length; i++) {
+            var word = listOfWords[i].toLowerCase();
+            results.useHttpVerbInEndpointUrl = (word.startsWith("get") ||
+                pathkey.startsWith("put") ||
+                pathkey.startsWith("post") ||
+                pathkey.startsWith("delete"));
+        }
     }
     results.useHttpVerbInEndpointUrl;
-}
+};
 
 /**
  * This method checks if all parameters which reference the OpenAPI itself exist
@@ -347,12 +351,14 @@ var verifyIfThisIsThePathParameter = function (parameter, pathkey, alreadyfoundp
                 }
             }
             if (!alreadyfoundpathid) {
-                alreadyfoundpathid = parameter.name == urlId && parameter.in == "path";
+                if (parameter) {
+                    alreadyfoundpathid = parameter.name == urlId && parameter.in == "path";
+                }
             }
         }
+        return alreadyfoundpathid;
     }
-    return alreadyfoundpathid;
-}
+};
 
 /**
  * This method checks if, when pathId was placed in URL, parameter was correctly defined
@@ -369,8 +375,8 @@ var checkIfParametersContainPathId = function (alreadyfoundpathid, pathkey, para
         }
         results.hasPathParamDefinedInParameters = alreadyfoundpathid;
 
-        if (!alreadyfoundpathid && !results.endpointsWihtoutPathParamDefinedInParameters) {
-            results.endpointsWihtoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive)";
+        if (!alreadyfoundpathid && !results.endpointsWithoutPathParamDefinedInParameters) {
+                results.endpointsWithoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive). (Was the parameter object - schema definition - correctly defined?)";
         }
     }
 }

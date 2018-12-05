@@ -1,0 +1,815 @@
+{
+	"openapi": "3.0.0",
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#",
+	"info": {
+		"description": "",
+		"version": "2.000",
+		"title": "Locality",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Locality",
+				"description": "Localidade",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event"
+			},
+			"productInformation": [
+				{
+					"product": "Totvs Checklist",
+					"contact": "SUPPLY.ML.LOG.HUB@totvs.com.br",
+					"description": "Localidade",
+					"helpUrl": ""
+				}
+			]
+		}
+	},
+	"definitions": {
+		"createLocality": {
+			"title": "CreateLocality",
+			"description": "Informações necessárias para criar uma localidade",
+			"type": "object",
+			"properties": {
+				"name": {
+					"description": "O nome da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "name",
+							"required": true,
+							"type": "string",
+							"note": "nome da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"description": {
+					"description": "A descrição da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "description",
+							"required": true,
+							"type": "string",
+							"note": "descrição da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"locations": {
+					"description": "As localizações da localidade",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/setLocation"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "locations",
+							"required": true,
+							"type": "array",
+							"note": "Localidades",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"limitedToUsers": {
+					"description": "Usuários em que a localidade está limitada",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/setUser"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "limitedToUsers",
+							"required": true,
+							"type": "array",
+							"note": "Limita usuários a uma localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"setLocation": {
+			"title": "setLocation",
+			"description": "Informações de uma localização",
+			"type": "object",
+			"properties": {
+				"geoPosition": {
+					"$ref": "#/definitions/geoPosition",
+					"description": "Informações de Geo Posição da localização"
+				}
+			}
+		},
+		"setUser": {
+			"title": "SetUser",
+			"description": "Representa o usuário externo controlado pelo RAC",
+			"type": "object",
+			"properties": {
+				"userId": {
+					"format": "int64",
+					"description": "Representa o id de um usuário externo ao sistema, controlado pelo RAC",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "userId",
+							"required": true,
+							"type": "string",
+							"note": "identificador do usuário",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"geoPosition": {
+			"title": "GeoPosition",
+			"description": "Informações de uma Geo Posição",
+			"type": "object",
+			"properties": {
+				"latitude": {
+					"format": "double",
+					"description": "Coordenada de latitude",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "latitude",
+							"required": true,
+							"type": "number",
+							"note": "latitude da localização",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"longitude": {
+					"format": "double",
+					"description": "Coordenada de longitude",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "longitude",
+							"required": true,
+							"type": "number",
+							"note": "longitude da localização",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"localityCreatedResponse": {
+			"title": "LocalityCreated",
+			"description": "Identificadores da localidade criada com sucesso",
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "int32",
+					"description": "Identificador da entidade criada",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "id",
+							"required": true,
+							"type": "number",
+							"note": "identificador da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"limitedToUsers": {
+					"description": "Limitação da localidade aos usuários",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/userResponse"
+					}
+				},
+				"locations": {
+					"description": "Localizações da localidade",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/locationResponse"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "locations",
+							"required": true,
+							"type": "array",
+							"note": "Localidades",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"userResponse": {
+			"title": "User",
+			"description": "Resposta para o usuário criado",
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "int32",
+					"description": "Identificador do usuário criado",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "id",
+							"required": true,
+							"type": "number",
+							"note": "identificador da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"userId": {
+					"format": "int64",
+					"description": "Representa o id de um usuário externo ao sistema, controlado pelo RAC",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "id",
+							"required": true,
+							"type": "number",
+							"note": "identificador da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"locationResponse": {
+			"title": "Location",
+			"description": "Localização criada",
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "int32",
+					"description": "Identificador da localização",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "id",
+							"required": true,
+							"type": "number",
+							"note": "identificador da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"geoPosition": {
+					"$ref": "#/definitions/geoPosition",
+					"description": "Coordenadas da localização"
+				}
+			}
+		},
+		"ErrorResponse": {
+			"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+		},
+		"NotificationEvent": {
+			"title": "ErrorDetail",
+			"type": "object",
+			"properties": {
+				"guid": {
+					"format": "uuid",
+					"type": "string",
+					"readOnly": true
+				},
+				"code": {
+					"type": "string",
+					"readOnly": true
+				},
+				"message": {
+					"type": "string",
+					"readOnly": true
+				},
+				"detailedMessage": {
+					"type": "string",
+					"readOnly": true
+				}
+			}
+		},
+		"localityPaginatedList": {
+			"description": "Lista paginada de localidades",
+			"type": "object",
+			"properties": {
+				"hasNext": {
+					"description": "Indica se há mais registros na próxima página",
+					"type": "boolean"
+				},
+				"items": {
+					"description": "Lista das localidades",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/getAllLocalityItemResponse"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "localityPaginatedList",
+							"required": true,
+							"type": "array",
+							"note": "Localidades",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"getAllLocalityItemResponse": {
+			"title": "GetAllLocalityItem",
+			"description": "Informações para listagem de uma localidade",
+			"type": "object",
+			"properties": {
+				"idLocality": {
+					"format": "int32",
+					"description": "Identificador interno no sistema",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "id",
+							"required": true,
+							"type": "number",
+							"note": "identificador da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"name": {
+					"description": "O nome da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "name",
+							"required": true,
+							"type": "number",
+							"note": "nome da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"description": {
+					"description": "A descrição da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "description",
+							"required": true,
+							"type": "number",
+							"note": "descrição da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"locations": {
+					"description": "As localizações da localidade",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/getLocation"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "locations",
+							"required": true,
+							"type": "array",
+							"note": "Localidades",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"getLocation": {
+			"title": "GetLocation",
+			"description": "Informações de uma localização",
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "int32",
+					"description": "Identificador interno no sistema",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "id",
+							"required": true,
+							"type": "number",
+							"note": "identificador da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"geoPosition": {
+					"$ref": "#/definitions/geoPosition",
+					"description": "Informações de Geo posição da localização"
+				}
+			}
+		},
+		"updateLocality": {
+			"title": "UpdateLocality",
+			"description": "Informações permitidas na alteração da localidade",
+			"type": "object",
+			"properties": {
+				"name": {
+					"description": "O nome da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "name",
+							"required": false,
+							"type": "string",
+							"note": "nome da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"description": {
+					"description": "A descrição da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "description",
+							"required": false,
+							"type": "string",
+							"note": "descrição da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"localityId": {
+					"format": "int32",
+					"description": "Identificador interno no sistema",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "localityId",
+							"required": true,
+							"type": "integer",
+							"note": "Identificador da localidade",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"locations": {
+					"description": "As localizações da localidade",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/setLocation"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "locations",
+							"required": true,
+							"type": "array",
+							"note": "Localidades",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"localityUpdatedResponse": {
+			"title": "LocalityUpdated",
+			"description": "Identificadores da localidade atualizada com sucesso",
+			"type": "object",
+			"properties": {
+				"localityId": {
+					"format": "int32",
+					"description": "Identificador da entidade atualizada",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "localityId",
+							"required": true,
+							"type": "integer",
+							"note": "Identificador da localidade",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"locations": {
+					"description": "localizações da localidade",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/locationResponse"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "locations",
+							"required": true,
+							"type": "array",
+							"note": "Localidades",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"setLocalityLimitedToUsers": {
+			"title": "SetLocalityLimitedToUsers",
+			"description": "Informações necessárias limitar a localidade a usuários",
+			"type": "object",
+			"properties": {
+				"localityId": {
+					"format": "int32",
+					"description": "Identificador da entidade atualizada",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "localityId",
+							"required": true,
+							"type": "integer",
+							"note": "Identificador da localidade",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"limitedToUsers": {
+					"description": "usuários em que a localidade está limitada",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/setUser"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "limitedToUsers",
+							"required": true,
+							"type": "array",
+							"note": "Usuários limitados a localidadea",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"setLimitedUsersToLocalityResponse": {
+			"title": "SetLimitedUsersToLocality",
+			"description": "Identificadores da localidade atualizada com sucesso",
+			"type": "object",
+			"properties": {
+				"localityId": {
+					"format": "int32",
+					"description": "Identificador da entidade atualizada",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "localityId",
+							"required": true,
+							"type": "integer",
+							"note": "Identificador da localidade",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"limitedToUsers": {
+					"description": "Limitação da localidade aos usuários atualizado",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/userResponse"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "limitedToUsers",
+							"required": true,
+							"type": "array",
+							"note": "Usuários limitados a localidadea",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"getLocalityResponse": {
+			"title": "GetLocality",
+			"description": "Informações contidas em uma localidade, para edição",
+			"type": "object",
+			"properties": {
+				"localityId": {
+					"format": "int32",
+					"description": "Identificador interno no sistema",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "localityId",
+							"required": true,
+							"type": "integer",
+							"note": "Identificador da localidade",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"name": {
+					"description": "O nome da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "name",
+							"required": true,
+							"type": "string",
+							"note": "Nome da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"description": {
+					"description": "A descrição da localidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "description",
+							"required": true,
+							"type": "string",
+							"note": "Descrição da localidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"locations": {
+					"description": "As localizações da localidade",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/getLocation"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "locations",
+							"required": true,
+							"type": "array",
+							"note": "Localidades",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"limitedToUsers": {
+					"description": "Usuários em que a localidade está limitada",
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/getUser"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "limitedToUsers",
+							"required": true,
+							"type": "array",
+							"note": "Usuários",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"_expandables": {
+					"uniqueItems": false,
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "totvschecklist",
+							"required": true,
+							"type": "array",
+							"note": "Usuários",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"internalId": {
+					"description": "InternalId da entidade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "internalId",
+							"required": true,
+							"type": "array",
+							"note": "identificação interna da entidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"getUser": {
+			"title": "GetUser",
+			"description": "Dados do usuário em que a localidade foi limitada",
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "int32",
+					"description": "Identificador interno no sistema",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "id",
+							"required": true,
+							"type": "array",
+							"note": "identificação interna da entidade",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"userId": {
+					"format": "int64",
+					"description": "Representa o id de um usuário externo ao sistema, controlado pelo RAC",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Totvs Checklist",
+							"field": "userId",
+							"required": true,
+							"type": "array",
+							"note": "identificação do usuário",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"description": "",
+			"url": "api.totvs.com.br/"
+		}
+	]
+}

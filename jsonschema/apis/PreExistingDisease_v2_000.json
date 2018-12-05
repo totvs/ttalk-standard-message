@@ -1,0 +1,127 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para as doenças pré-existentes do segmento HealthCare para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/hat/healthcare/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "4202"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para as doenças pré-existentes do segmento HealthCare para produtos TOTVS",
+		"version": "2.000",
+		"title": "Pre-existing Disease",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "PreExistingDiseases",
+				"description": "Doenças pré-existentes",
+				"segment": "HealthCare"
+			},
+			"productInformation": [
+				{
+					"product": {
+						"product": "HAT",
+						"contact": "healthcare.autorizador@totvs.com.br",
+						"description": "Operacoes referente ao histórico de bloqueio e desbloqueio dos beneficiario de Planos de Saude"
+					}
+				}
+			]
+		}
+	},
+	"paths": {
+		"/preExistingDisease": {
+			"post": {
+				"tags": [
+					"preExistingDisease"
+				],
+				"operationId": "postPreExistingDisease",
+				"summary": "Inclusão de doenças pré-existentes",
+				"description": "Permite a inclusao de doencas pre-existentes para o beneficiario informado no cabecalho da integração.",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": {
+								"product": "HAT",
+								"available": true,
+								"description": "Este verbo esta disponível com os parâmetros Authorization, Expires_at"
+							}
+						},
+						{
+							"product": {
+								"product": "central-obrigacoes",
+								"avaliable": true,
+								"note": ""
+							}
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/Expires_at"
+					}
+				],
+				"requestBody": {
+					"description": "Doença pré-existente a ser incluída/alterada na integração.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PreExistingDisease_2_000.json#/definitions/PreExistingDisease"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"202": {
+						"description": "Accepted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PreExistingDisease_2_000.json#/definitions/TokenProcessResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"Expires_at": {
+				"name": "Expires_at",
+				"in": "header",
+				"description": "Data e hora da expiração do token em segundos",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
