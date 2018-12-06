@@ -1,0 +1,178 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade ocorrência, perfil aluno (StudentWarning) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade ocorrências do aluno educacional",
+		"version": "1.000",
+		"title": "StudentWarning",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "StudentWarning",
+				"description": "Ocorrência do aluno educacional",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Entidade de ocorrência educacional, perfil aluno"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/Students/{StudentInternalId}/studentwarnings": {
+			"get": {
+				"tags": [
+					"StudentWarning"
+				],
+				"summary": "Retorna todas as ocorrências do aluno do Educacional",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"description": "Retorna todas as ocorrências do aluno do Educacional",
+				"operationId": "getAll",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/StudentInternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/StudentWarning/v1/1_000/jsonschema/schemas/StudentWarning_1_000.json#/definitions/PagedStudentWarning"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da listagem das ocorrências do aluno",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Students/{StudentInternalId}/studentwarning/{InternalId}": {
+			"get": {
+				"tags": [
+					"StudentWarning"
+				],
+				"summary": "Retorna detalhes da ocorrência do aluno educacional",
+				"description": "Retorna a ocorrência do aluno do educacional",
+				"operationId": "getId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/StudentInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/StudentWarning/v1/1_000/jsonschema/schemas/StudentWarning_1_000.json#/definitions/StudentWarning"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Ocorrência não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"StudentInternalId": {
+				"name": "StudenteInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do aluno",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da ocorrência do aluno",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
