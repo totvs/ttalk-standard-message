@@ -1,0 +1,194 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para operadoras de planos de saúde",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/hat/healthcare/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "4202"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para operadoras de planos de saúde",
+		"version": "1.100",
+		"title": "Health Insurer",
+		"contact": {
+			"name": "T-Talk",
+			"url": "http://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Health Insurer",
+				"description": "Operadoras de Plano de Saude",
+				"segment": "HealthCare"
+			},
+			"productInformation": [
+				{
+					"product": {
+						"product": "HAT",
+						"contact": "healthcare.autorizador@totvs.com.br",
+						"description": "Plataforma de autorização de procedimentos e eventos em Saúde"
+					}
+				}
+			]
+		}
+	},
+	"paths": {
+		"/healthInsurers/{healthInsurerId}/formFields": {
+			"get": {
+				"tags": [
+					"healthInsurers"
+				],
+				"operationId": "getHealthInsurers",
+				"summary": "Campos obrigatorios da Operadora",
+				"description": "Retorna os campos obrigatorios de um formulario de acordo com o tipo de atendimento",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": {
+								"product": "HAT",
+								"contact": "healthcare.autorizador@totvs.com.br",
+								"description": "Plataforma de autorização de procedimentos e eventos em Saúde"
+							}
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/Expires_at"
+					},
+					{
+						"$ref": "#/components/parameters/HealthInsurerId"
+					},
+					{
+						"$ref": "#/components/parameters/FormType"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/HealthInsurer_1_100.json#/definitions/PagedHealthInsurer"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/healthInsurers/{healthInsurerId}/generateProtocol": {
+			"post": {
+				"tags": [
+					"healthInsurers"
+				],
+				"operationId": "getHealthInsurersProtocol",
+				"summary": "Protocolo de atendimento",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "HAT",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Authorization, Expires_at, healthInsurerId"
+						}
+					]
+				},
+				"description": "Gera um numero de protocolo de atendimento",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/Expires_at"
+					},
+					{
+						"$ref": "#/components/parameters/HealthInsurerId"
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/HealthInsurer_1_100.json#/definitions/Protocol"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"Expires_at": {
+				"name": "Expires_at",
+				"in": "header",
+				"description": "Data e hora da expiração do token em segundos",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"HealthInsurerId": {
+				"name": "healthInsurerId",
+				"in": "path",
+				"description": "Codigo da Operadora",
+				"required": true,
+				"schema": {
+					"type": "integer"
+				}
+			},
+			"FormType": {
+				"name": "formType",
+				"in": "query",
+				"description": "Tipo do formulário",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

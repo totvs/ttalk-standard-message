@@ -1,0 +1,415 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para autorização das guias de atendimento de planos de saude",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/hat/healthcare/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "4202"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para autorização das guias de atendimento de planos de saude",
+    "version": "1.100",
+    "title": "Authorization",
+    "contact": {
+      "name": "T-Talk",
+      "url": "http://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Authorization",
+        "description": "Autorização das guias de atendimento",
+        "segment": "HealthCare"
+      },
+      "productInformation": [
+        {
+          "product": {
+            "product": "HAT",
+            "contact": "healthcare.autorizador@totvs.com.br",
+            "description": "Operacoes referente as guias de atendimento de planos de saude no formato TISS"
+          }
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/authorizations": {
+      "get": {
+        "tags": [
+          "authorizations"
+        ],
+        "operationId": "getAuthorizationList",
+        "summary": "Dados dos atendimentos realizados.",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parametros"
+            }
+          ]
+        },
+        "description": "Retorna uma mensagem do tipo colecao com as guias de atendimento realizados no autorizador. <br>Os resultados podem ser filtrados através dos parametros <b>authStatus</b>, <b>authType</b>, <b>dateFrom</b>, <b>dateTo</b>, <b>healthProviderId</b>, <b>attendanceLocation</b> e <b>idOnHealthInsurer</b>",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/Expires_at"
+          },
+          {
+            "$ref": "#/components/parameters/Status"
+          },
+          {
+            "$ref": "#/components/parameters/AuthType"
+          },
+          {
+            "$ref": "#/components/parameters/DateFrom"
+          },
+          {
+            "$ref": "#/components/parameters/DateTo"
+          },
+          {
+            "$ref": "#/components/parameters/HealthProviderId"
+          },
+          {
+            "$ref": "#/components/parameters/AttendanceLocation"
+          },
+          {
+            "$ref": "#/components/parameters/AuthNumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/PagedAuthorizations"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "authorizations"
+        ],
+        "operationId": "postAuthorization",
+        "summary": "Dados dos atendimentos realizados.",
+        "description": "Insere uma guia na fila de processamento. Ao realizar uma requisicão, o endpoint irá responder com codigo 202 indicando que a requisicao foi adicionada a fila de processamento retornando um token de identificação, em seguida esse token deve ser utilizado nos parâmetros de URL para retornar a resposta de codigo 200 assim que o processamento for concluído",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros Authorization, Expires_at, authorizationType, e tokenId"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/Expires_at"
+          },
+          {
+            "$ref": "#/components/parameters/AuthType"
+          },
+          {
+            "$ref": "#/components/parameters/TokenId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/AuthorizationBody"
+              }
+            }
+          },
+          "description": "Informacoes do beneficiario utilizadas para verificacao de elegibilidade",
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "location": {
+                "description": "URL onde o recurso estará disponível",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/TokenProcessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizations/{idOnHealthInsurer}": {
+      "get": {
+        "tags": [
+          "authorizations"
+        ],
+        "operationId": "getAuthorization",
+        "summary": "Dados de um atendimento realizado.",
+        "description": "Retorna uma mensagem com a guia de atendimento informada no parametro idOnHealthInsurer",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros Authorization, Expires_at, idOnHealthInsurer, expand e fields"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/Expires_at"
+          },
+          {
+            "$ref": "#/components/parameters/AuthId"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/Authorization"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizations/{idOnHealthInsurer}/cancel": {
+      "post": {
+        "tags": [
+          "authorizations"
+        ],
+        "operationId": "getAuthorizationCancelled",
+        "summary": "Recibo de cancelamento de guia",
+        "description": "Efetua o cancelamento de uma guia incluída pelo prestador.",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "HAT",
+              "available": true,
+              "note": "Este verbo está disponível com o parâmetro idOnHealthInsurer"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AuthId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/CancelBody"
+              }
+            }
+          },
+          "description": "Informacoes do beneficiario utilizadas para verificacao de elegibilidade",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Authorization/V1/1_100/jsonschema/schemas/Authorization_1_100.json#/definitions/CancelformResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Expires_at": {
+        "name": "Expires_at",
+        "in": "header",
+        "description": "Data e hora da expiração do token em segundos",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "AuthId": {
+        "name": "idOnHealthInsurer",
+        "in": "path",
+        "description": "Numero da guia",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "Status": {
+        "name": "authStatus",
+        "in": "query",
+        "description": "Status da guia",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1 - Autorizado",
+            "2 - Autorizado Parcialmente",
+            "3 - Negado",
+            "6 - Pendente",
+            "9 - Cancelado"
+          ]
+        }
+      },
+      "AuthType": {
+        "name": "authType",
+        "in": "query",
+        "description": "Tipo da guia",
+        "required": true,
+        "schema": {
+          "type": "number",
+          "enum": [
+            "1 - Consulta",
+            "2 - Exame",
+            "3 - Execucao",
+            "10 - Pronto Socorro"
+          ]
+        }
+      },
+      "TokenId": {
+        "name": "tokenId",
+        "in": "query",
+        "description": "Token de resposta recebido com a identificação do item inserido na lista de processamento",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "DateFrom": {
+        "name": "dateFrom",
+        "in": "query",
+        "description": "Data inicial de emissao",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "DateTo": {
+        "name": "dateTo",
+        "in": "query",
+        "description": "Data final de emissao",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "HealthProviderId": {
+        "name": "healthProviderId",
+        "in": "query",
+        "description": "Código do prestador",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "AttendanceLocation": {
+        "name": "attendanceLocation",
+        "in": "query",
+        "description": "Código do local de atendimento",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "AuthNumber": {
+        "name": "authNumber",
+        "in": "query",
+        "description": "Número da guia",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

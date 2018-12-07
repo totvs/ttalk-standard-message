@@ -1,0 +1,418 @@
+{
+	"openapi": "3.0.0",
+	"servers": [
+		{
+			"description": "API para a entidade de localidade (Locality) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/planning/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8040"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade de localidade (locality) para produtos TOTVS",
+		"version": "1.000",
+		"title": "locality",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "locality",
+				"description": "Localidade",
+				"segment": "Logística"
+			},
+			"productInformation": [
+				{
+					"product": "totvsChecklist",
+					"contact": "SUPPLY.ML.LOG.HUB@totvs.com.br",
+					"description": "Localidade"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/localities": {
+			"get": {
+				"tags": [
+					"LocalityQuery"
+				],
+				"summary": "Listagem das localidades",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "totvsChecklist",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Name, Description, Authorization,Fields, Order, Page, PageSize, Expand"
+						}
+					]
+				},
+				"description": "Método responsável por retornar todas as localidades respeitando os filtros da requisição",
+				"operationId": "LocalitiesGet",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/localityPaginatedList"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Locality"
+				],
+				"summary": "Cria uma localidade",
+				"description": "Método responsável por criar uma localidade com suas localizações e limitada ao usuário",
+				"operationId": "LocalitiesPost",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "totvsChecklist",
+							"available": true,
+							"note": ""
+						}
+					]
+				},
+				"requestBody": {
+					"description": "Informações da localidade a ser incluída.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/createLocality"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Localidade criada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/localityCreatedResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Requisição não aceita. Informações enviadas estão inválidas.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/localities/{localityId}": {
+			"put": {
+				"tags": [
+					"Locality"
+				],
+				"summary": "Atualiza uma localidade",
+				"description": "Método responsável por atualizar uma localidade com suas localizações",
+				"operationId": "LocalityIdPut",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "totvsChecklist",
+							"available": true,
+							"note": "Este verbo está disponivel com os parâmetros Authorization e localityId"
+						}
+					]
+				},
+				"requestBody": {
+					"description": "Informações para alteração da localidade com suas localizações",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/updateLocality"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Localidade atualizada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/localityUpdatedResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Requisição não aceita. Informações enviadas estão inválidas.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Requisição não aceita. Localidade não encontrada.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/localityId"
+					}
+				]
+			},
+			"delete": {
+				"tags": [
+					"Locality"
+				],
+				"summary": "Remove uma localidade",
+				"description": "Método responsável por eliminar uma localidade",
+				"operationId": "LocalityIdDelete",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "totvsChecklist",
+							"available": true,
+							"note": "Este verbo está disponivel com todos os parâmetros Authorization e localityId"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/localityId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Localidade removida com sucesso!"
+					},
+					"400": {
+						"description": "A localidade não pode ser eliminada.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Localidade não pode ser localizada.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"LocalityQuery"
+				],
+				"summary": "Recupera uma localidade",
+				"description": "Método responsável por retornar a localidade que possui o id passado como parâmetro",
+				"operationId": "LocalitiesByIdGet",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "totvsChecklist",
+							"available": true,
+							"note": "Este verbo está disponivel com todos parâmetros id, Fields, Expand, Authorization"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/localityId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Localidade retornada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/getLocalityResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Requisição não aceita. Id deve ser um inteiro e maior que zero.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Requisição não aceita. Localidade não encontrada.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/localities/{localityId}/limitToUsers": {
+			"post": {
+				"tags": [
+					"Locality"
+				],
+				"summary": "Limita a localidade à usuários.",
+				"description": "Método responsável por atualizar os usuários limitados à localidade",
+				"operationId": "LocalityIdLimitToUsersPut",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "totvsChecklist",
+							"available": true,
+							"note": "Este verbo está disponivel com os parâmetro Authorization e localityId"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/localityId"
+					}
+				],
+				"requestBody": {
+					"description": "Informações para atualizar os usuários limitados a localidade",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/setLocalityLimitedToUsers"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Localidade atualizada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Locality_2_000.json#/definitions/setLimitedUsersToLocalityResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Requisição não aceita. Informações enviadas estão inválidas.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Requisição não aceita. Localidade não encontrada.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"security": [
+		{
+			"oauth2": [
+				"authorization_api",
+				"offline_access"
+			]
+		}
+	],
+	"tags": [],
+	"components": {
+		"parameters": {
+			"localityId": {
+				"name": "localityId",
+				"in": "path",
+				"description": "Identificador da localidade",
+				"required": true,
+				"schema": {
+					"type": "integer",
+					"maxLength": 8,
+					"format": "int32"
+				}
+			}
+		}
+	}
+}
