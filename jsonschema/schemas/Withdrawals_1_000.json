@@ -1,0 +1,303 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/withdrawals_v1_000.json#",
+  "info": {
+    "description": "A mensagem deve ser utilizada pelo PDV para gerenciar as retiradas de dinheiro em excesso de um determinado caixa antes do seu fechamento ao final do expediente",
+    "version": "1.000",
+    "title": "Withdrawals",
+    "contact": {},
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Withdrawals",
+        "description": "Sangria de Caixa",
+        "segment": "Varejo"
+      },
+      "productInformation": [
+        {
+          "product": "rms",
+          "contact": "saulo.moura",
+          "description": "Sangria de Caixa"
+        }
+      ],
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "type": "object",
+          "$ref": "#/definitions/BusinessContentType"
+        },
+        "returnContentType": {
+          "type": "object",
+          "$ref": "#/definitions/ReturnContentType"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "PagedItems": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "$ref": "#/definitions/WithdrawalInfo"
+        }
+      ]
+    },
+    "WithdrawalInfo": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessContentType"
+          }
+        }
+      }
+    },
+    "BusinessContentType": {
+      "type": "object",
+      "properties": {
+        "internalId": {
+          "description": "InternalId da entidade sangria",
+          "example": "1|2018-11-27|2|3|4",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_LOJA|SANG_DATA|SANG_ECF|SANG_TIPO|SANG_SEQUENCIA",
+              "required": false,
+              "type": "String",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "storeId": {
+          "type": "string",
+          "example": "1",
+          "description": "Loja onde foi realizada a sangria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_LOJA",
+              "required": true,
+              "type": "Integer",
+              "length": "8",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "movementDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-11-27T09:40:30-03:00",
+          "description": "Data e hora da realização da sangria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_DATA + SANG_HORA",
+              "required": true,
+              "type": "Datetime",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "stationSalePointCode": {
+          "type": "string",
+          "example": "1",
+          "description": "Código do caixa (PDV) onde foi realizada a sangria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_ECF",
+              "required": true,
+              "type": "Integer",
+              "length": "7",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "movementType": {
+          "type": "string",
+          "example": "1",
+          "description": "1 - Sangria de caixa, 2 - Fundo de troco, 3 - Sangria de fundo, 4 - Reforço de caixa",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_TIPO",
+              "required": true,
+              "type": "Integer",
+              "length": "5",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "movementNumber": {
+          "type": "string",
+          "example": "1",
+          "description": "Número sequencial da sangria do caixa",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_SEQUENCIA",
+              "required": true,
+              "type": "Integer",
+              "length": "7",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "paymentMethodCode": {
+          "type": "string",
+          "example": "1",
+          "description": "Código da forma de retirada da sangria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_FINALIZA",
+              "required": false,
+              "type": "Integer",
+              "length": "5",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "coupon": {
+          "type": "string",
+          "example": "1",
+          "description": "Código do cupom da sangria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_CUPOM",
+              "required": false,
+              "type": "Integer",
+              "length": "7",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "cashierCode": {
+          "type": "string",
+          "example": "1",
+          "description": "Código do operador de caixa no momento da sagnria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_OPERADOR",
+              "required": true,
+              "type": "Integer",
+              "length": "8",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "shift": {
+          "type": "string",
+          "example": "1",
+          "description": "Turno em que foi realizada a sangria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_TURNO",
+              "required": false,
+              "type": "Integer",
+              "length": "3",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "inspector": {
+          "type": "string",
+          "example": "1",
+          "description": "Código do fiscal",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_FISCAL",
+              "required": false,
+              "type": "Integer",
+              "length": "8",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "withdrawalValue": {
+          "type": "number",
+          "example": 500.5,
+          "description": "Quantia retirada na sangria",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_VALORI / SANG_VALATU",
+              "required": false,
+              "type": "decimal",
+              "length": "17,2",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "updateUser": {
+          "type": "string",
+          "example": "JOHN DOE",
+          "description": "Identificação do usuário que está mandado o registro",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_USUA_ALT",
+              "required": false,
+              "type": "String",
+              "length": "12",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "updateDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-11-27T09:40:30-03:00",
+          "x-totvs": [
+            {
+              "product": "rms",
+              "field": "SANG_DATA_ALT",
+              "required": false,
+              "type": "Datetime",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    },
+    "ReturnContentType": {
+      "type": "object",
+      "properties": {
+        "ListOfInternalId": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
