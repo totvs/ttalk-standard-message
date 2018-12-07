@@ -1,1061 +1,1061 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/GetHarvestOrder_1_001.json#",
-  "info": {
-    "description": "",
-    "version": "1.001",
-    "title": "GetHarvestOrder",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "PIMS",
-        "description": "Consulta de Ordem de Colheita",
-        "segment": "Agro"
-      },
-      "productInformation": [
-        {
-          "product": "PIMS",
-          "contact": "José Albero da Silva",
-          "note": "Consulta de Ordem de Colheit",
-          "adapter": "ConsultaOrdemColheita.java"
-        },
-        {
-          "product": "PROTHEUS",
-          "contact": "...",
-          "note": "Consulta de Ordem de Colheita",
-          "adapter": "OGXI014X"
-        },
-        {
-          "product": "DATASUL",
-          "contact": "...",
-          "note": "Consulta de Ordem de Colheita",
-          "adapter": "GetHarvestOrder"
-        }
-      ],
-      "transactionDefinition": {
-        "subType": "request",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContent",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "CompanyId": {
-          "description": "Código da empresa.",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_EMPRESA_ERP",
-              "required": true,
-              "type": "Char",
-              "length": "20",
-              "note": "Código da Empresa ERP",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "Não possui campo físico na tabela",
-              "required": true,
-              "type": "varchar",
-              "length": "2",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "gg-mov.ep-codigo",
-              "required": true,
-              "type": "varchar",
-              "length": "3",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "BranchId": {
-          "description": "ID Filial",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_FILIAL_ERP",
-              "required": true,
-              "type": "Char",
-              "length": "20",
-              "note": "Código da Filial ERP",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cFilAnt",
-              "required": true,
-              "type": "varchar",
-              "length": "2",
-              "note": "Pode ter tamanho alterado dependendo da configuração do Protheus",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "gg-mov.cod-estabel",
-              "required": true,
-              "type": "varchar",
-              "length": "5",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "description": "InternalId da chave completa de empresa do produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "NJJXX0.NJJ_FILIAL",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework  estando no ambiente (Empresa x Filial) correto",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "gg-mov.ep-codigo+gg-mov.cod-estabel",
-              "required": false,
-              "type": "...",
-              "length": "...",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "WeighingDate": {
-          "description": "Data da Pesagem",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DT_PESAGEM",
-              "required": true,
-              "type": "date",
-              "length": "8",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "NJJXX0.NJJ_DATA",
-              "required": true,
-              "type": "date",
-              "length": "8",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "gg-mov.dat-mov",
-              "required": true,
-              "type": "date",
-              "length": "8",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "HarvestOrderCode": {
-          "description": "Número da Ordem e Colheita",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "NO_ORDCOLHEITA",
-              "required": false,
-              "type": "char",
-              "length": "10",
-              "note": "Número da Ordem e Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "NJJXX0.NJJ_ORDCLT",
-              "required": false,
-              "type": "char",
-              "length": "10",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "substr(gg-mov.cod-livre-5,26,13)",
-              "required": false,
-              "type": "char",
-              "length": "13",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ItemCode": {
-          "description": "Código do Produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_PRODUTO_ERP",
-              "required": false,
-              "type": "Char",
-              "length": "20",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "NJJXX0.NJJ_CODPRO",
-              "required": false,
-              "type": "char",
-              "length": "15",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "gg-mov.it-codigo",
-              "required": false,
-              "type": "Char",
-              "length": "16",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ItemInternalId": {
-          "description": "Id de integração do Produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "ID_PRODUTO",
-              "required": false,
-              "type": "char",
-              "length": "38",
-              "note": "Id Produto",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "SB1XX0.B1_FILIAL+SB1XX0.B1_CODIGO",
-              "required": false,
-              "type": "Char",
-              "length": "..",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "item.it-codigo",
-              "required": false,
-              "type": "Char",
-              "length": "..",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        }
-      }
-    },
-    "HarvestOrderType": {
-      "type": "object",
-      "properties": {
-        "HarvestOrderCode": {
-          "description": "Número da Ordem e Colheita",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "NO_ORDCOLHEITA",
-              "required": false,
-              "type": "char",
-              "length": "10",
-              "note": "Número da Ordem e Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "NJJXX0.NJJ_ORDCLT",
-              "required": false,
-              "type": "char",
-              "length": "10",
-              "note": "Número da Ordem e Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "overlay(gg-mov.cod-livre-5,26,13)",
-              "required": false,
-              "type": "char",
-              "length": "13",
-              "note": "Número da Ordem e Colheita",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "HarvestOrderDate": {
-          "description": "Data da Ordem de Colheita",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DT_ORDEM",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Data da Ordem de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "dtOrdClt",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Data da Ordem de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.HarvestOrderDate",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Data da Ordem de Colheita",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "StartHarvestForecast": {
-          "description": "Previsão de Início de Colheita",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DT_COLH_INI_PREV",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Previsão de Início de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "dtPvOrdClt",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Previsão de Início de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.StartHarvestForecast",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Previsão de Início de Colheita",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ClosingHarvestForecast": {
-          "description": "Previsão de Encerramento da Colheita",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DT_COLH_ENC_PREV",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Previsão de Encerramento da Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "dtEnOrdClt",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Previsão de Encerramento da Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.ClosingHarvestForecast",
-              "required": false,
-              "type": "date",
-              "length": "8",
-              "note": "Previsão de Encerramento da Colheita",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "VarietyCode": {
-          "description": "Código da Variedade",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_VARIEDADE",
-              "required": false,
-              "type": "Numerico",
-              "length": "20",
-              "note": "Código da Variedade",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cVarOdCl",
-              "required": false,
-              "type": "Numerico",
-              "length": "20",
-              "note": "Código da Variedade",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.VarietyCode",
-              "required": false,
-              "type": "Numerico",
-              "length": "20",
-              "note": "Código da Variedade",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "VarietyDescription": {
-          "description": "Descrição da Variedade",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DE_VARIEADE",
-              "required": false,
-              "type": "Numerico",
-              "length": "30",
-              "note": "Descrição da Variedade",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cDeVarOdCl",
-              "required": false,
-              "type": "Numerico",
-              "length": "30",
-              "note": "Descrição da Variedade",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.VarietyDescription",
-              "required": false,
-              "type": "Numerico",
-              "length": "30",
-              "note": "Descrição da Variedade",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ItemCode": {
-          "description": "Código do Produto Matéria Prima",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_PRODUTO_ERP",
-              "required": false,
-              "type": "Char",
-              "length": "20",
-              "note": "Código do Produto Matéria Prima",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "NJJXX0.NJJ_CODPRO",
-              "required": false,
-              "type": "char",
-              "length": "15",
-              "note": "Código do Produto Matéria Prima",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "gg-mov.it-codigo",
-              "required": false,
-              "type": "Char",
-              "length": "16",
-              "note": "Código do Produto Matéria Prima",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ItemInternalId": {
-          "description": "Id de integração do Produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "ID_PRODUTO",
-              "required": false,
-              "type": "char",
-              "length": "38",
-              "note": "Id Produto",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "SB1XX0.B1_FILIAL+SB1XX0.B1_CODIGO",
-              "required": false,
-              "type": "...",
-              "length": "..",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "item.it-codigo",
-              "required": false,
-              "type": "...",
-              "length": "..",
-              "note": "...",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "HarvestSystemCode": {
-          "description": "Código do Sistema de Colheita",
-          "type": "integer",
-          "format": "int32",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_SIST_COLH",
-              "required": false,
-              "type": "Char",
-              "length": "10",
-              "note": "Código do Sistema de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cSisOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "10",
-              "note": "Código do Sistema de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.HarvestSystemCode",
-              "required": false,
-              "type": "Char",
-              "length": "10",
-              "note": "Código do Sistema de Colheita",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "HarvestSystemDescription": {
-          "description": "Descrição do Sistema de Colheita",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DE_SIST_COLH",
-              "required": false,
-              "type": "Char",
-              "length": "10",
-              "note": "Descrição do Sistema de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cDeSisOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "10",
-              "note": "Descrição do Sistema de Colheita",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.HarvestSystemDescription",
-              "required": false,
-              "type": "Char",
-              "length": "10",
-              "note": "Descrição do Sistema de Colheita",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "FarmCode": {
-          "description": "Código da [Fazenda]",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_UPNIVEL1",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código da [Fazenda]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cFazOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código da [Fazenda]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.FarmCode",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código da [Fazenda]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "FarmDescription": {
-          "description": "Descrição da [Fazenda]",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DE_UPNIVEL1",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição da [Fazenda]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cDeFazOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição da [Fazenda]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.FarmDescription",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição da [Fazenda]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "SectorCode": {
-          "description": "Código do [Setor]",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_UPNIVEL2",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código do [Setor]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cSetOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código do [Setor]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.SectorCode",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código do [Setor]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "SectorDescription": {
-          "description": "Descrição do [Setor]",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DE_UPNIVEL2",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição do [Setor]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cDeSetOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição do [Setor]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.SectorDescription",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição do [Setor]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "PartOfLandCode": {
-          "description": "Código do [Talhão]",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_UPNIVEL3",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cTalOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.PartOfLandCode",
-              "required": false,
-              "type": "Char",
-              "length": "6",
-              "note": "Código do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "PartOfLandDescription": {
-          "description": "Descrição do Talhão",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DE_UPNIVEL3",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cDeTalOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.PartOfLandDescription",
-              "required": false,
-              "type": "Char",
-              "length": "50",
-              "note": "Descrição do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "OccupationCode": {
-          "description": "Código da Ocupação do [Talhão]",
-          "type": "integer",
-          "format": "int32",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "CD_OCUPACAO",
-              "required": false,
-              "type": "Numerico",
-              "length": "10",
-              "note": "Código da Ocupação do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cOcpOdCl",
-              "required": false,
-              "type": "Numerico",
-              "length": "10",
-              "note": "Código da Ocupação do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.OccupationCode",
-              "required": false,
-              "type": "Numerico",
-              "length": "10",
-              "note": "Código da Ocupação do [Talhão]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "OccupationDescription": {
-          "description": "Descrição da Ocupação",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "DE_OCUPACAO",
-              "required": false,
-              "type": "Char",
-              "length": "30",
-              "note": "Descrição da Ocupação",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "cDeOcpOdCl",
-              "required": false,
-              "type": "Char",
-              "length": "30",
-              "note": "Descrição da Ocupação",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.OccupationDescription",
-              "required": false,
-              "type": "Char",
-              "length": "30",
-              "note": "Descrição da Ocupação",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "HarvestedArea": {
-          "description": "Área do [Talhão] a ser colhida",
-          "type": "number",
-          "multipleOf": 0.01,
-          "minimum": -99999.99,
-          "maximum": 99999.99,
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "QT_AREA_COLH",
-              "required": false,
-              "type": "decimal",
-              "length": "7,2",
-              "note": "Área do [Talhão] a ser colhida",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "qtdAraOdCl",
-              "required": false,
-              "type": "decimal",
-              "length": "7,2",
-              "note": "Área do [Talhão] a ser colhida",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.HarvestedArea",
-              "required": false,
-              "type": "decimal",
-              "length": "7,2",
-              "note": "Área do [Talhão] a ser colhida",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "HarvestEstimate": {
-          "description": "Estimativa (kg) de colheita para o [Talhão]",
-          "type": "number",
-          "multipleOf": 0.01,
-          "minimum": -99999.99,
-          "maximum": 99999.99,
-          "x-totvs": [
-            {
-              "product": "PIMS",
-              "field": "QT_KG_COLH",
-              "required": false,
-              "type": "decimal",
-              "length": "7,2",
-              "note": "Estimativa (kg) de colheita para o [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "estColOdCl",
-              "required": false,
-              "type": "decimal",
-              "length": "7,2",
-              "note": "Estimativa (kg) de colheita para o [Talhão]",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "tt-list-colheita-pims.HarvestEstimate",
-              "required": false,
-              "type": "decimal",
-              "length": "7,2",
-              "note": "Estimativa (kg) de colheita para o [Talhão]",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "MainOrderCode": {
-          "description": "Código da ordem (OP ou OS) presente na ordem de colheita",
-          "type": "string"
-        },
-        "MainOrderInternalId": {
-          "description": "InternalId da ordem (OP ou OS) presente na ordem de colheita",
-          "type": "string"
-        }
-      }
-    },
-    "ListOfHarvestOrderType": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/HarvestOrderType",
-        "type": "object"
-      }
-    },
-    "ReturnContent": {
-      "type": "object",
-      "properties": {
-        "ListOfHarvestOrders": {
-          "description": "Lista das ordens de Colheita",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ListOfHarvestOrderType",
-            "type": "object"
-          }
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/GetHarvestOrder_1_001.json#",
+	"info": {
+		"description": "",
+		"version": "1.001",
+		"title": "GetHarvestOrder",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "PIMS",
+				"description": "Consulta de Ordem de Colheita",
+				"segment": "Agro"
+			},
+			"productInformation": [
+				{
+					"product": "PIMS",
+					"contact": "José Albero da Silva",
+					"note": "Consulta de Ordem de Colheit",
+					"adapter": "ConsultaOrdemColheita.java"
+				},
+				{
+					"product": "PROTHEUS",
+					"contact": "...",
+					"note": "Consulta de Ordem de Colheita",
+					"adapter": "OGXI014X"
+				},
+				{
+					"product": "DATASUL",
+					"contact": "...",
+					"note": "Consulta de Ordem de Colheita",
+					"adapter": "GetHarvestOrder"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "request",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Código da empresa.",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_EMPRESA_ERP",
+							"required": true,
+							"type": "Char",
+							"length": "20",
+							"note": "Código da Empresa ERP",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "gg-mov.ep-codigo",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "ID Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_FILIAL_ERP",
+							"required": true,
+							"type": "Char",
+							"length": "20",
+							"note": "Código da Filial ERP",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cFilAnt",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "Pode ter tamanho alterado dependendo da configuração do Protheus",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "gg-mov.cod-estabel",
+							"required": true,
+							"type": "varchar",
+							"length": "5",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa de empresa do produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "NJJXX0.NJJ_FILIAL",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework  estando no ambiente (Empresa x Filial) correto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "gg-mov.ep-codigo+gg-mov.cod-estabel",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WeighingDate": {
+					"description": "Data da Pesagem",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DT_PESAGEM",
+							"required": true,
+							"type": "date",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "NJJXX0.NJJ_DATA",
+							"required": true,
+							"type": "date",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "gg-mov.dat-mov",
+							"required": true,
+							"type": "date",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HarvestOrderCode": {
+					"description": "Número da Ordem e Colheita",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "NO_ORDCOLHEITA",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "Número da Ordem e Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "NJJXX0.NJJ_ORDCLT",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "substr(gg-mov.cod-livre-5,26,13)",
+							"required": false,
+							"type": "char",
+							"length": "13",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemCode": {
+					"description": "Código do Produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_PRODUTO_ERP",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "NJJXX0.NJJ_CODPRO",
+							"required": false,
+							"type": "char",
+							"length": "15",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "gg-mov.it-codigo",
+							"required": false,
+							"type": "Char",
+							"length": "16",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemInternalId": {
+					"description": "Id de integração do Produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "ID_PRODUTO",
+							"required": false,
+							"type": "char",
+							"length": "38",
+							"note": "Id Produto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SB1XX0.B1_FILIAL+SB1XX0.B1_CODIGO",
+							"required": false,
+							"type": "Char",
+							"length": "..",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "item.it-codigo",
+							"required": false,
+							"type": "Char",
+							"length": "..",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"HarvestOrderType": {
+			"type": "object",
+			"properties": {
+				"HarvestOrderCode": {
+					"description": "Número da Ordem e Colheita",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "NO_ORDCOLHEITA",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "Número da Ordem e Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "NJJXX0.NJJ_ORDCLT",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "Número da Ordem e Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "overlay(gg-mov.cod-livre-5,26,13)",
+							"required": false,
+							"type": "char",
+							"length": "13",
+							"note": "Número da Ordem e Colheita",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HarvestOrderDate": {
+					"description": "Data da Ordem de Colheita",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DT_ORDEM",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Data da Ordem de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "dtOrdClt",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Data da Ordem de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.HarvestOrderDate",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Data da Ordem de Colheita",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StartHarvestForecast": {
+					"description": "Previsão de Início de Colheita",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DT_COLH_INI_PREV",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Previsão de Início de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "dtPvOrdClt",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Previsão de Início de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.StartHarvestForecast",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Previsão de Início de Colheita",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ClosingHarvestForecast": {
+					"description": "Previsão de Encerramento da Colheita",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DT_COLH_ENC_PREV",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Previsão de Encerramento da Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "dtEnOrdClt",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Previsão de Encerramento da Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.ClosingHarvestForecast",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "Previsão de Encerramento da Colheita",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"VarietyCode": {
+					"description": "Código da Variedade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_VARIEDADE",
+							"required": false,
+							"type": "Numerico",
+							"length": "20",
+							"note": "Código da Variedade",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cVarOdCl",
+							"required": false,
+							"type": "Numerico",
+							"length": "20",
+							"note": "Código da Variedade",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.VarietyCode",
+							"required": false,
+							"type": "Numerico",
+							"length": "20",
+							"note": "Código da Variedade",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"VarietyDescription": {
+					"description": "Descrição da Variedade",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DE_VARIEADE",
+							"required": false,
+							"type": "Numerico",
+							"length": "30",
+							"note": "Descrição da Variedade",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cDeVarOdCl",
+							"required": false,
+							"type": "Numerico",
+							"length": "30",
+							"note": "Descrição da Variedade",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.VarietyDescription",
+							"required": false,
+							"type": "Numerico",
+							"length": "30",
+							"note": "Descrição da Variedade",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemCode": {
+					"description": "Código do Produto Matéria Prima",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_PRODUTO_ERP",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"note": "Código do Produto Matéria Prima",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "NJJXX0.NJJ_CODPRO",
+							"required": false,
+							"type": "char",
+							"length": "15",
+							"note": "Código do Produto Matéria Prima",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "gg-mov.it-codigo",
+							"required": false,
+							"type": "Char",
+							"length": "16",
+							"note": "Código do Produto Matéria Prima",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemInternalId": {
+					"description": "Id de integração do Produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "ID_PRODUTO",
+							"required": false,
+							"type": "char",
+							"length": "38",
+							"note": "Id Produto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SB1XX0.B1_FILIAL+SB1XX0.B1_CODIGO",
+							"required": false,
+							"type": "...",
+							"length": "..",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "item.it-codigo",
+							"required": false,
+							"type": "...",
+							"length": "..",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HarvestSystemCode": {
+					"description": "Código do Sistema de Colheita",
+					"type": "integer",
+					"format": "int32",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_SIST_COLH",
+							"required": false,
+							"type": "Char",
+							"length": "10",
+							"note": "Código do Sistema de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cSisOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "10",
+							"note": "Código do Sistema de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.HarvestSystemCode",
+							"required": false,
+							"type": "Char",
+							"length": "10",
+							"note": "Código do Sistema de Colheita",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HarvestSystemDescription": {
+					"description": "Descrição do Sistema de Colheita",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DE_SIST_COLH",
+							"required": false,
+							"type": "Char",
+							"length": "10",
+							"note": "Descrição do Sistema de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cDeSisOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "10",
+							"note": "Descrição do Sistema de Colheita",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.HarvestSystemDescription",
+							"required": false,
+							"type": "Char",
+							"length": "10",
+							"note": "Descrição do Sistema de Colheita",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FarmCode": {
+					"description": "Código da [Fazenda]",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_UPNIVEL1",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código da [Fazenda]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cFazOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código da [Fazenda]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.FarmCode",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código da [Fazenda]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FarmDescription": {
+					"description": "Descrição da [Fazenda]",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DE_UPNIVEL1",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição da [Fazenda]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cDeFazOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição da [Fazenda]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.FarmDescription",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição da [Fazenda]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SectorCode": {
+					"description": "Código do [Setor]",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_UPNIVEL2",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código do [Setor]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cSetOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código do [Setor]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.SectorCode",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código do [Setor]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SectorDescription": {
+					"description": "Descrição do [Setor]",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DE_UPNIVEL2",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição do [Setor]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cDeSetOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição do [Setor]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.SectorDescription",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição do [Setor]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PartOfLandCode": {
+					"description": "Código do [Talhão]",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_UPNIVEL3",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cTalOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.PartOfLandCode",
+							"required": false,
+							"type": "Char",
+							"length": "6",
+							"note": "Código do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PartOfLandDescription": {
+					"description": "Descrição do Talhão",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DE_UPNIVEL3",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cDeTalOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.PartOfLandDescription",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"note": "Descrição do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OccupationCode": {
+					"description": "Código da Ocupação do [Talhão]",
+					"type": "integer",
+					"format": "int32",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "CD_OCUPACAO",
+							"required": false,
+							"type": "Numerico",
+							"length": "10",
+							"note": "Código da Ocupação do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cOcpOdCl",
+							"required": false,
+							"type": "Numerico",
+							"length": "10",
+							"note": "Código da Ocupação do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.OccupationCode",
+							"required": false,
+							"type": "Numerico",
+							"length": "10",
+							"note": "Código da Ocupação do [Talhão]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OccupationDescription": {
+					"description": "Descrição da Ocupação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "DE_OCUPACAO",
+							"required": false,
+							"type": "Char",
+							"length": "30",
+							"note": "Descrição da Ocupação",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cDeOcpOdCl",
+							"required": false,
+							"type": "Char",
+							"length": "30",
+							"note": "Descrição da Ocupação",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.OccupationDescription",
+							"required": false,
+							"type": "Char",
+							"length": "30",
+							"note": "Descrição da Ocupação",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HarvestedArea": {
+					"description": "Área do [Talhão] a ser colhida",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -99999.99,
+					"maximum": 99999.99,
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "QT_AREA_COLH",
+							"required": false,
+							"type": "decimal",
+							"length": "7,2",
+							"note": "Área do [Talhão] a ser colhida",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "qtdAraOdCl",
+							"required": false,
+							"type": "decimal",
+							"length": "7,2",
+							"note": "Área do [Talhão] a ser colhida",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.HarvestedArea",
+							"required": false,
+							"type": "decimal",
+							"length": "7,2",
+							"note": "Área do [Talhão] a ser colhida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HarvestEstimate": {
+					"description": "Estimativa (kg) de colheita para o [Talhão]",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -99999.99,
+					"maximum": 99999.99,
+					"x-totvs": [
+						{
+							"product": "PIMS",
+							"field": "QT_KG_COLH",
+							"required": false,
+							"type": "decimal",
+							"length": "7,2",
+							"note": "Estimativa (kg) de colheita para o [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "estColOdCl",
+							"required": false,
+							"type": "decimal",
+							"length": "7,2",
+							"note": "Estimativa (kg) de colheita para o [Talhão]",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "tt-list-colheita-pims.HarvestEstimate",
+							"required": false,
+							"type": "decimal",
+							"length": "7,2",
+							"note": "Estimativa (kg) de colheita para o [Talhão]",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"MainOrderCode": {
+					"description": "Código da ordem (OP ou OS) presente na ordem de colheita",
+					"type": "string"
+				},
+				"MainOrderInternalId": {
+					"description": "InternalId da ordem (OP ou OS) presente na ordem de colheita",
+					"type": "string"
+				}
+			}
+		},
+		"ListOfHarvestOrderType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/HarvestOrderType",
+				"type": "object"
+			}
+		},
+		"ReturnContent": {
+			"type": "object",
+			"properties": {
+				"ListOfHarvestOrders": {
+					"description": "Lista das ordens de Colheita",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfHarvestOrderType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
 }

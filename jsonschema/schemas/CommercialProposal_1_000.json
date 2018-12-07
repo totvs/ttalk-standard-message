@@ -1,0 +1,689 @@
+{
+	"info": {
+		"description": "API para a entidade de Proposta Comercial (CommercialProposal) para produtos TOTVS",
+		"version": "1.000",
+		"title": "CommercialProposal",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/CommercialProposalInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "CommercialProposal",
+				"description": "Cadastro de Proposta Comercial",
+				"segment": "Services"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"note": "Cadastro de Proposta comercial",
+					"adapter": "FATS600.PRW"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedCommercialProposal": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/CommercialProposal"
+				}
+			]
+		},
+		"CommercialProposal": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CommercialProposalInfo"
+					}
+				}
+			}
+		},
+		"CommercialProposalInfo": {
+			"description": "Descreve as Propriedades da Proposta Comercial",
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"example": "T1",
+					"description": "C�digo da empresa",
+					"maxLength": 3
+				},
+				"InternalId": {
+					"type": "string",
+					"example": "D MG 01 000001",
+					"description": "C�digo interno da Proposta comercial no ERP",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_FILIAL|ADY.ADY_PROPOS",
+							"type": "varchar",
+							"length": "14",
+							"available": true,
+							"canUpdate": false,
+							"note": "Formado pelos campos Filial (ADY_FILIAL) e N�mero da proposta (ADY_PROPOS)"
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"example": "T1D MG 01 000001",
+					"description": "C�digo interno da Proposta comercial composto pelo c�digo da empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|ADY.ADY_FILIAL|ADY.ADY_PROPOS",
+							"type": "varchar",
+							"length": "17",
+							"required": true,
+							"available": true,
+							"canUpdate": false,
+							"note": "Formado pelos campos Empresa, filial (ADY_FILIAL) e n�mero da proposta (ADY_PROPOS)"
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "C�digo da Filial",
+					"example": "D MG 01",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_FILIAL",
+							"type": "varchar",
+							"length": "8",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ProposalNumber": {
+					"type": "string",
+					"description": "N�mero da Proposta",
+					"example": "000001",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_PROPOS",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este campo � preenchido automaticamete pelo ERP"
+						}
+					]
+				},
+				"ProposalReview": {
+					"type": "string",
+					"description": "Revis�o da Proposta",
+					"example": "01",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_PREVIS",
+							"required": false,
+							"type": "varchar",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OpportunityId": {
+					"type": "string",
+					"description": "C�digo da Oportunidade de Venda",
+					"example": "000001",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_OPORTU",
+							"type": "varchar",
+							"length": "6",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OpportunityReview": {
+					"type": "string",
+					"description": "Revis�o da Oportunidade",
+					"example": "01",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_REVISA",
+							"type": "varchar",
+							"length": "2",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OpportunityDescription": {
+					"type": "string",
+					"description": "Descri��o da Oportunidade",
+					"example": "Venda de Software",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AD1.AD1_DESCRI",
+							"type": "varchar",
+							"length": "30",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Utiliza a descri��o da Oportunidade de Venda"
+						}
+					]
+				},
+				"EntityType": {
+					"type": "string",
+					"description": "Entidade da Proposta: 1 - Cliente;2 - Prospect",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_ENTIDA",
+							"type": "varchar",
+							"length": "1",
+							"required": true,
+							"available": true,
+							"canUpdate": false,
+							"note": "Entidade da Proposta: 1 - Cliente;2 - Prospect"
+						}
+					]
+				},
+				"EntityCode": {
+					"type": "string",
+					"description": "C�digo da entidade",
+					"example": "000001",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_CODIGO",
+							"type": "varchar",
+							"length": "6",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EntityUnit": {
+					"type": "string",
+					"description": "Loja da entidade",
+					"example": "01",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_LOJA",
+							"type": "varchar",
+							"length": "2",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EntityDescription": {
+					"type": "string",
+					"description": "Descri��o da Entidade",
+					"example": "Cliente Padr�o",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA1.A1_NOME|SUS.US_NOME",
+							"type": "varchar",
+							"length": "40",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Se tipo da entidade igual a 1 retorna Nome do Cliente, se tipo igual a 2 retorna Nome do Prospect"
+						}
+					]
+				},
+				"SellerId": {
+					"type": "string",
+					"description": "C�digo do Vendedor",
+					"example": "000000",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_VEND",
+							"type": "varchar",
+							"length": "06",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RegisterDate": {
+					"type": "string",
+					"description": "Data de Emiss�o",
+					"format": "date-time",
+					"example": "1900-01-01T12:00:00Z",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_VEND",
+							"type": "date-time",
+							"length": "08",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"PriceListId": {
+					"type": "string",
+					"description": "C�digo da Tabela de Pre�o",
+					"example": "001",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_TABELA",
+							"type": "varchar",
+							"length": "03",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"DiscountPercentage": {
+					"description": "Percentual de Desconto",
+					"example": 10.95,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 99.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_TABELA",
+							"type": "number",
+							"length": "5",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"SynchronizeProposal": {
+					"type": "string",
+					"description": "Sincronizar Proposta",
+					"example": "T",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_SINCPR",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"canUpdate": true,
+							"note": "Campo de tipo l�gico"
+						}
+					]
+				},
+				"RegisterSituation": {
+					"type": "string",
+					"description": "Status do registro: 1 - Inativo;2 - Ativo",
+					"example": "2",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADY_MSBLQL",
+							"type": "varchar",
+							"length": "1",
+							"required": true,
+							"available": true,
+							"canUpdate": false,
+							"note": "Status do registro: 1 - Inativo; 2 - Ativo"
+						}
+					]
+				},
+				"ListofProducts": {
+					"type": "array",
+					"$ref": "#/definitions/ListofProducts"
+				}
+			}
+		},
+		"PagedListofProducts": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ListofProducts"
+				}
+			]
+		},
+		"ListofProducts": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListofProductsInfo"
+					}
+				}
+			}
+		},
+		"ListofProductsInfo": {
+			"description": "Descreve a Lista de Produtos da Proposta Comercial",
+			"type": "object",
+			"properties": {
+				"ItemInternalId": {
+					"type": "string",
+					"example": "D MG 01 00000101101",
+					"description": "C�digo interno dos Item da proposta comercial no ERP",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_FILIAL|ADY.ADZ_PROPOS|ADZ.ADZ_REVISA|ADZ.ADZ_FOLDER|ADZ.ADZ_ITEM",
+							"type": "varchar",
+							"length": "19",
+							"available": true,
+							"canUpdate": false,
+							"note": "Formado pelos campos filial (ADZ_FILIAL), n�mero da proposta (ADZ_PROPOS), Revis�o (ADY_REVISA), Folder (ADZ_FOLDER) e Item (ADZ_ITEM)"
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "C�digo da Filial",
+					"example": "D MG 01",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_FILIAL",
+							"type": "varchar",
+							"length": "8",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemId": {
+					"type": "string",
+					"description": "C�digo do item",
+					"example": "01",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_ITEM",
+							"type": "varchar",
+							"length": "2",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Este campo � preenchido automaticamete pelo ERP"
+						}
+					]
+				},
+				"ProductId": {
+					"type": "string",
+					"description": "C�digo do Produto",
+					"example": "000000000000001",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_PRODUT",
+							"type": "varchar",
+							"length": "15",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ProductDescription": {
+					"type": "string",
+					"description": "Descri��o do Produto",
+					"example": "PRODUTO 01",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_DESCRI",
+							"type": "varchar",
+							"length": "30",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UnitOfMeasurement": {
+					"type": "string",
+					"description": "Unidade de Medida",
+					"example": "PA",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_UM",
+							"type": "varchar",
+							"length": "02",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Currency": {
+					"type": "string",
+					"description": "Moeda",
+					"example": "1",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_MOEDA",
+							"type": "varchar",
+							"length": "1",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"PaymentModeId": {
+					"type": "string",
+					"description": "C�digo da Codi��o de pagamento",
+					"example": "001",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_CONDPG",
+							"type": "varchar",
+							"length": "03",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"TypeOut": {
+					"type": "string",
+					"description": "Tipo de Entrada/Sa�da (TES)",
+					"example": "001",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_CONDPG",
+							"type": "varchar",
+							"length": "03",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Quantity": {
+					"description": "Quantidade",
+					"example": 1,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 99999999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADZ_QTDVEN",
+							"type": "number",
+							"length": "11",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"UnitPrice": {
+					"description": "Pre�o unit�rio",
+					"example": 1,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 99999999999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADZ_PRCVEN",
+							"type": "number",
+							"length": "14",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"UnitPriceList": {
+					"description": "Pre�o unit�rio da Tabela de pre�o",
+					"example": 1,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 99999999999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADZ_PRCTAB",
+							"type": "number",
+							"length": "14",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"TotalValue": {
+					"description": "Valor Total",
+					"example": 1,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 99999999999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADY.ADZ_TOTAL",
+							"type": "number",
+							"length": "14",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemDiscountPercentage": {
+					"description": "Percentual de Desconto do Item",
+					"example": 1,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 99.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_DESCON",
+							"type": "number",
+							"length": "5",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ItemDiscountValue": {
+					"description": "Valor do Desconto do Item",
+					"example": 0.01,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 99999999999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ADZ.ADZ_DESCON",
+							"type": "number",
+							"length": "5",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
