@@ -1,243 +1,243 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/BalanceBaselineEntry_1_000.json#",
-  "info": {
-    "description": "",
-    "version": "1.000",
-    "title": "BalanceBaselineEntry",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "Lançamentos Linha Base e Saldo",
-        "description": "Integração dos lançamentos de Linha Base e Saldo",
-        "segment": "Serviços e Jurídico"
-      },
-      "productInformation": [
-        {
-          "product": "RM",
-          "contact": "Totvs",
-          "note": "",
-          "adapter": "FinLanDataBR"
-        },
-        {
-          "product": "PROTHEUS",
-          "contact": "Totvs",
-          "note": "",
-          "adapter": "FINI024a.PRW"
-        }
-      ],
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfBalanceBaselineEntry": {
-          "description": "Lançamento de Linha Base e Saldo",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BalanceBaselineEntryType",
-            "type": "object"
-          }
-        }
-      }
-    },
-    "BalanceBaselineEntryType": {
-      "type": "object",
-      "properties": {
-        "InternalId": {
-          "description": "Identificação do lançamento",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "RM",
-              "field": "FLAN.CODCOLIGADA|FLAN.IDLAN",
-              "required": true,
-              "type": "integer|integer",
-              "length": "",
-              "note": "Chave do lançamento",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "XX1.XX1_CODIGO",
-              "required": true,
-              "type": "char",
-              "length": "12",
-              "note": "Código que identificara o lançamento no sistema externo",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyId": {
-          "description": "Identificação da empresa do lançamento",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "RM",
-              "field": "FLAN.CODCOLIGADA",
-              "required": true,
-              "type": "integer",
-              "length": "",
-              "note": "Código da empresa",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "tabela.campo",
-              "required": false,
-              "type": "char",
-              "length": "02",
-              "note": "será enviado o valor da variável cEmpAnt( empresa)",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "BranchId": {
-          "description": "Identificação da filial do lançamento",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "RM",
-              "field": "FLAN.CODFILIAL",
-              "required": true,
-              "type": "integer",
-              "length": "",
-              "note": "Código da Filial",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "tabela.campo",
-              "required": false,
-              "type": "char",
-              "length": "02",
-              "note": "Será enviado o valor da variável cFilAnt",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "description": "InternalId da Empresa",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "RM",
-              "field": "FLAN.CODCOLIGADA|FLAN.CODFILIAL",
-              "required": true,
-              "type": "integer|integer",
-              "length": "",
-              "note": "Chave da empresa",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": true,
-              "type": "",
-              "length": "",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Classification": {
-          "description": "Tipo de movimento: 1-Linha Base, 2-Saldo / 1 - Linha Base / 2 - Saldo",
-          "type": "string",
-          "maxLength": 1,
-          "enum": [
-            "1",
-            "2"
-          ],
-          "x-totvs": [
-            {
-              "product": "RM",
-              "field": "FLAN.CLASSIFICACAO",
-              "required": true,
-              "type": "integer",
-              "length": "",
-              "note": "Código Classificação (Linha Base/Saldo)",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "XX1.XX1_CLASSI",
-              "required": true,
-              "type": "char",
-              "length": "1",
-              "note": "Código que identificara o tipo de movimento no sistema externo",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Date": {
-          "description": "Data do lançamento",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "RM",
-              "field": "FLAN.DATAVENCIMENTO",
-              "required": false,
-              "type": "date",
-              "length": "",
-              "note": "Data do lançamento",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "XX1.XX1_DATA",
-              "required": true,
-              "type": "date",
-              "length": "8",
-              "note": "Data do lançamento",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ListOfApportionBalanceBaselineEntry": {
-          "description": "Rateio por natureza e centro de custo",
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ApportionType_2_002.json#/definitions/ApportionType",
-            "type": "object"
-          }
-        }
-      }
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfInternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
-            "type": "object"
-          }
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/BalanceBaselineEntry_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "BalanceBaselineEntry",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Lançamentos Linha Base e Saldo",
+				"description": "Integração dos lançamentos de Linha Base e Saldo",
+				"segment": "Serviços e Jurídico"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "Totvs",
+					"note": "",
+					"adapter": "FinLanDataBR"
+				},
+				{
+					"product": "PROTHEUS",
+					"contact": "Totvs",
+					"note": "",
+					"adapter": "FINI024a.PRW"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfBalanceBaselineEntry": {
+					"description": "Lançamento de Linha Base e Saldo",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/BalanceBaselineEntryType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"BalanceBaselineEntryType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"description": "Identificação do lançamento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODCOLIGADA|FLAN.IDLAN",
+							"required": true,
+							"type": "integer|integer",
+							"length": "",
+							"note": "Chave do lançamento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XX1.XX1_CODIGO",
+							"required": true,
+							"type": "char",
+							"length": "12",
+							"note": "Código que identificara o lançamento no sistema externo",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyId": {
+					"description": "Identificação da empresa do lançamento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Código da empresa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "char",
+							"length": "02",
+							"note": "será enviado o valor da variável cEmpAnt( empresa)",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Identificação da filial do lançamento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODFILIAL",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Código da Filial",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "char",
+							"length": "02",
+							"note": "Será enviado o valor da variável cFilAnt",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODCOLIGADA|FLAN.CODFILIAL",
+							"required": true,
+							"type": "integer|integer",
+							"length": "",
+							"note": "Chave da empresa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Classification": {
+					"description": "Tipo de movimento: 1-Linha Base, 2-Saldo / 1 - Linha Base / 2 - Saldo",
+					"type": "string",
+					"maxLength": 1,
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CLASSIFICACAO",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Código Classificação (Linha Base/Saldo)",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XX1.XX1_CLASSI",
+							"required": true,
+							"type": "char",
+							"length": "1",
+							"note": "Código que identificara o tipo de movimento no sistema externo",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Date": {
+					"description": "Data do lançamento",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.DATAVENCIMENTO",
+							"required": false,
+							"type": "date",
+							"length": "",
+							"note": "Data do lançamento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XX1.XX1_DATA",
+							"required": true,
+							"type": "date",
+							"length": "8",
+							"note": "Data do lançamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfApportionBalanceBaselineEntry": {
+					"description": "Rateio por natureza e centro de custo",
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ApportionType_2_002.json#/definitions/ApportionType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
 }
