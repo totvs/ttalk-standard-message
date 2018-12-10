@@ -7,6 +7,7 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var schemaDefinitionsValidator = require('../libSchema/schemaDefinitionsValidator.js');
+var schemaDereferencer = require('../libSchema/schemaDereferencer.js');
 
 var expect = require('chai').expect;
 
@@ -30,8 +31,11 @@ describe("Validating Schema files...", function () {
               encoding: 'utf-8'
             });
 
-            before(function () {
+            before(async function () {
               parsedSchema = JSON.parse(file);
+              dereferencedSchema = await schemaDereferencer.getDereferenced(parsedSchema);
+              if(JSON.stringify(dereferencedSchema)); //to check if it has circular reference
+              parsedSchema = dereferencedSchema;
               schemaDefinitionsValidator.clear();
               schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema);
             })
@@ -70,6 +74,10 @@ describe("Validating Schema files...", function () {
                 }
               });
 
+              it("should be available=true in x-totvs, because it is required", function () {
+                var inconsistentAvailable = schemaDefinitionsValidatorResult.inconsistentAvailable;
+                expect(schemaDefinitionsValidatorResult.hasAcceptableAvailable, inconsistentAvailable).not.to.be.false;
+              });
 
               it("should be an array in properties inside 'definitions'", function () {
                 var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvs;
