@@ -1,0 +1,450 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CalendarEvent_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para listagem de eventos educacionais do aluno",
+		"version": "1.000",
+		"title": "CalendarEvent",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "CalendarEvent",
+				"description": "Dados dos eventos educacionais do aluno",
+				"segment": "Educational"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Eventos educacionais do aluno"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedCalendarEvent": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/CalendarEvent"
+							}
+						}
+					}
+				}
+			]
+		},
+		"CalendarEvent": {
+			"description": "Descreve um evento Educacional do aluno",
+			"properties": {
+				"CompanyCode": {
+					"description": "Código da empresa",
+					"type": "string",
+					"example": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": true,
+							"note": "Código da empresa",
+							"field": "CODCOLIGADA",
+							"type": "integer"
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da empresa",
+					"type": "string",
+					"example": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Código da empresa",
+							"field": "CODCOLIGADA",
+							"type": "string",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"BranchCode": {
+					"description": "Código da filial",
+					"type": "string",
+					"example": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": true,
+							"note": "Código da filial",
+							"field": "CODFILIAL",
+							"type": "integer"
+						}
+					]
+				},
+				"BranchInternalId": {
+					"description": "InternalId da filial",
+					"type": "string",
+					"example": "1|1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "GFILIAL.CODCOLIGADA|GFILIAL.CODFILIAL",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"LevelEducationCode": {
+					"type": "integer",
+					"example": 1,
+					"description": "Nível de ensino",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"Field": "STURMADISC.CODTIPOCURSO",
+							"required": true,
+							"Type": "integer",
+							"Format": "int32",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"LevelEducationInternalId": {
+					"type": "string",
+					"description": "InternalId Level Education",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "STIPOCURSO.CODCOLIGADA|STIPOCURSO.CODTIPOCURSO",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId do plano de aula",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SPLANOAULA.CODCOLIGADA|SPLANOAULA.IDTURMADISC|SPLANOAULA.IDPLANOAULA",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"StudentCode": {
+					"type": "string",
+					"example": "ES-0001",
+					"description": "Registro acadêmico",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SALUNO.RA",
+							"required": true,
+							"type": "varchar",
+							"length": 20,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StudentInternalId": {
+					"type": "string",
+					"example": "1|ES-0001",
+					"description": "InternalId do aluno",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SALUNO.CODCOLIGADA|SALUNO.RA",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"EventType": {
+					"type": "string",
+					"example": "0",
+					"description": "Tipo de evento",
+					"enum": [
+						"0",
+						"1",
+						"2",
+						"3",
+						"4"
+					],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "0 - Normal | 1 - Pattern | 2 - Occurrence | 3 - ChangedOccurrence | 4 - DeletedOccurrence",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StartTime": {
+					"type": "string",
+					"format": "date",
+					"example": "1983-10-30",
+					"description": "Data de início do evento",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Campo calculado",
+							"required": false,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EndTime": {
+					"type": "string",
+					"format": "date",
+					"example": "1983-10-30",
+					"description": "Data de fim do evento",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Campo calculado",
+							"required": false,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"RecurrenceInfo": {
+					"type": "string",
+					"description": "Informações sobre recorrência do evento",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"noe": "Mais informações sobre eventos recorrentes. Campo calculado.",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Subject": {
+					"type": "string",
+					"description": "Assunto do evento",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"noe": "Assunto tratado no evento. Campo calculado.",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Description": {
+					"type": "string",
+					"description": "Descrição do evento",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"noe": "Descrição do evento. Campo calculado.",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AllDay": {
+					"type": "boolean",
+					"example": "true",
+					"description": "Evento dia inteiro",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"required": false,
+							"type": "boolean",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Label": {
+					"type": "string",
+					"example": "0",
+					"description": "Título do evento",
+					"enum": [
+						"0",
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7"
+					],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "0 - Periodo Matricula Presencial | 1 - Periodo Matricula Portal | 2 - Data Limite Trancamento | 3 - Datas Provas | 4 - Atividades Inscritas | 5 - Aulas | 6 - Data Limite Entrega Trabalho | 7 - Datas Lição Casa",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DisciplineClassCode": {
+					"type": "integer",
+					"example": 1,
+					"description": "Identificador da turma disciplina",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "STURMADISC.IDTURMADISC",
+							"required": false,
+							"Type": "integer",
+							"Format": "int32",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DisciplineClassInternalId": {
+					"type": "string",
+					"description": "InternalId da turma disciplina",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "STURMADISC.CODCOLIGADA|STURMADISC.IDTURMADISC",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"LessonPlanCode": {
+					"type": "integer",
+					"example": 1,
+					"description": "Identificador do plano de aula",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPLANOAULA.IDPLANOAULA",
+							"required": false,
+							"Type": "integer",
+							"Format": "int32",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"LessonPlanInternalId": {
+					"type": "string",
+					"description": "InternalId do plano de aula",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SPLANOAULA.CODCOLIGADA|SPLANOAULA.IDTURMADISC|SPLANOAULA.IDPLANOAULA",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StepCode": {
+					"type": "integer",
+					"example": 1,
+					"description": "Identificador da etapa",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPROVAS.CODETAPA",
+							"required": false,
+							"Type": "integer",
+							"Format": "int32",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StepInternalId": {
+					"type": "string",
+					"description": "InternalId da etapa",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SETAPAS.CODCOLIGADA|SETAPAS.IDTURMADISC|SETAPAS.CODETAPA|SETAPAS.TIPOETAPA",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AssignmentCode": {
+					"type": "integer",
+					"example": 1,
+					"description": "Identificador da prova",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPROVAS.CODPROVA",
+							"required": false,
+							"Type": "integer",
+							"Format": "int32",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AssignmentInternalId": {
+					"type": "string",
+					"description": "InternalId da prova",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPROVAS.CODCOLIGADA|SPROVAS.IDTURMADISC|SPROVAS.CODETAPA|SPROVAS.TIPOETAPA|SPROVAS.CODPROVA",
+							"required": false,							
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OfferedActitivyCode": {
+					"type": "string",
+					"example": "1",
+					"description": "Identificador da atividade ofertada",
+					"x-totvs": [{
+						"product": "RM",
+						"field": "SATIVIDADE.IDOFERTA",
+						"required": false,
+						"type": "integer",
+						"length": 4,
+						"available": true,
+						"canUpdate": false
+					}]
+                },
+                "OfferedActitivyInternalId": {
+                    "type": "string",
+                    "description": "InternalId da atividade ofertada",
+                    "x-totvs": [{
+                        "product": "RM", 
+                        "field": "SATIVIDADE.CODCOLIGADA|SATIVIDADE.IDOFERTA",
+                        "required": false,
+                        "available": true,
+						"canUpdate": false
+                    }]
+                }
+			}
+		}
+	}
+}
