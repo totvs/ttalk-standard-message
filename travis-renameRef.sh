@@ -1,8 +1,6 @@
 git config --global user.email "TOTVS.TECNOLOGIA.INTEGRACOES@totvs.com.br"
 git config --global user.name "TTalkIntegracoes"
 
-echo "Running travisRenameRef.SH"
-
 git checkout ${TRAVIS_BRANCH}
 git pull                   
 
