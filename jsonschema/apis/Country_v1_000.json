@@ -2,8 +2,8 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para a entidade sangria de caixa. Deve ser utilizada pelo PDV para gerenciar as retiradas de dinheiro em excesso de um determinado caixa antes do seu fechamento ao final do expediente.",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/trs/v1",
+			"description": "API para a entidade País (Country) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/cad/v1",
 			"variables": {
 				"serverUrl": {
 					"default": "localhost"
@@ -15,67 +15,73 @@
 		}
 	],
 	"info": {
-		"description": "API para a entidade sangria de caixa. Deve ser utilizada pelo PDV para gerenciar as retiradas de dinheiro em excesso de um determinado caixa antes do seu fechamento ao final do expediente.",
+		"description": "API para a entidade País (Country) para produtos TOTVS",
 		"version": "1.000",
-		"title": "Withdrawals",
-		"contact": {},
+		"title": "Country",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "Withdrawals",
-				"description": "Sangria de Caixa",
-				"segment": "Services"
+				"name": "Country",
+				"description": "API para a entidade País (Country) para produtos TOTVS",
+				"segment": "Geral"
 			},
 			"productInformation": [
 				{
-					"product": "RMS",
-					"contact": "saulo.moura@totvs.com.br",
-					"description": "Sangria de Caixa"
+					"product": "logix",
+					"contact": "supply.ml.bck.vendas-l@totvs.com.br",
+					"description": "Cadastro de Países",
+					"adapter": "VDP10024.4gl"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/withdrawals": {
+		"/countries": {
 			"get": {
 				"tags": [
-					"withdrawals"
+					"countries"
 				],
-				"summary": "Retorna todas as sangrias cadastradas",
+				"summary": "Retorna lista completa de países",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "RMS",
+							"product": "logix",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization, Page, PageSize, Order e Fields"
+							"note": "Este verbo está disponível com os parâmetros Authorization, Fields, Order, Page e PageSize",
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
-				"description": "Retorna todas as sangrias cadastradas",
-				"operationId": "getwithdrawals",
+				"description": "Retorna lista completa de países",
+				"operationId": "getCountries",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
 					}
 				],
 				"responses": {
 					"200": {
-						"description": "Operação realizada com sucesso",
+						"description": "Operação realizada com sucesso!",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Withdrawals_1_000.json#/definitions/PagedItems"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Country_2_000.json#/definitions/PagedCountries"
 								}
 							}
 						}
@@ -90,26 +96,22 @@
 							}
 						}
 					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
+				}
 			},
 			"post": {
 				"tags": [
-					"withdrawals"
+					"countries"
 				],
-				"summary": "Inclui a sangria passada na requisição",
-				"description": "Inclui a entidade sangria passada na requisição",
-				"operationId": "postwithdrawal",
+				"summary": "Inclui um novo País",
+				"description": "Inclui um novo País conforme dados enviados na requisição.",
+				"operationId": "postCountry",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "RMS",
+							"product": "logix",
 							"available": true,
-							"note": "Este verbo está disponível com o parâmetro Authorization"
+							"note": "Este verbo está disponível com o parâmetro Authorization.",
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
@@ -119,28 +121,28 @@
 					}
 				],
 				"requestBody": {
-					"description": "Entidade para ser incluida",
+					"description": "País a ser incluído.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Withdrawals_1_000.json#/definitions/BusinessContentType"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Country_2_000.json#/definitions/CountryType"
 							}
 						}
 					}
 				},
 				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
+					"201": {
+						"description": "Operação realizada com sucesso!",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Withdrawals_1_000.json#/definitions/BusinessContentType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Country_2_000.json#/definitions/CountryType"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro na Inclusão!",
+						"description": "Erro durante a inclusão do País!",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -149,40 +151,36 @@
 							}
 						}
 					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
+				}
 			}
 		},
-		"/withdrawals/{internalId}": {
+		"/countries/{InternalId}": {
 			"get": {
 				"tags": [
-					"withdrawals"
+					"InternalId"
 				],
-				"summary": "Retorna  uma sangria",
-				"description": "Retorna  a sangria com base no identificador passado",
-				"operationId": "getwithdrawal",
+				"summary": "Retorna o País pelo código informado",
+				"description": "Retorna os dados do País conforme o código informado na requisição",
+				"operationId": "getInternalId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "RMS",
+							"product": "logix",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization, internalId e Fields"
+							"note": "Este verbo está disponível com os parâmetros Authorization, Fields e InternalId",
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					},
-					{
-						"$ref": "#/components/parameters/internalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					}
 				],
 				"responses": {
@@ -191,13 +189,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Withdrawals_1_000.json#/definitions/BusinessContentType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Country_2_000.json#/definitions/CountryType"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro no momento da busca!",
+						"description": "Erro na requisição!",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -207,7 +205,7 @@
 						}
 					},
 					"404": {
-						"description": "Entidade não localizada na base!",
+						"description": "País não localizado!",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -216,26 +214,22 @@
 							}
 						}
 					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
+				}
 			},
 			"put": {
 				"tags": [
-					"withdrawals"
+					"InternalId"
 				],
-				"summary": "Atualiza uma sangria",
-				"description": "Atualiza a sangria com base no identificador passado",
-				"operationId": "putwithdrawal",
+				"summary": "Altera um País",
+				"description": "Atualiza cadastro do País conforme dados enviados na requisição",
+				"operationId": "putInternalId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "RMS",
+							"product": "logix",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization e internalId"
+							"note": "Este verbo esta disponível com os parâmetros Authorization e InternalId",
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
@@ -244,15 +238,15 @@
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
 					{
-						"$ref": "#/components/parameters/internalId"
+						"$ref": "#/components/parameters/InternalId"
 					}
 				],
 				"requestBody": {
-					"description": "Entidade para ser alterada",
+					"description": "Dados do País a ser atualizado.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Withdrawals_1_000.json#/definitions/BusinessContentType"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Country_2_000.json#/definitions/CountryType"
 							}
 						}
 					}
@@ -263,13 +257,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Withdrawals_1_000.json#/definitions/BusinessContentType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Country_2_000.json#/definitions/CountryType"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro no momento da alteração!",
+						"description": "Erro durante a alteração do País!",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -279,7 +273,7 @@
 						}
 					},
 					"404": {
-						"description": "Entidade não localizada na base!",
+						"description": "País não localizado!",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -288,26 +282,22 @@
 							}
 						}
 					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
+				}
 			},
 			"delete": {
 				"tags": [
-					"withdrawals"
+					"InternalId"
 				],
-				"summary": "Exclui uma sangria",
-				"description": "Exclui a sangria com base no identificador passado",
-				"operationId": "deletewithdrawal",
+				"summary": "Exclui um País cadstrado",
+				"description": "Exclui cadastro do País conforme dados enviados na requisição.",
+				"operationId": "deleteInternalId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "RMS",
+							"product": "logix",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization e internalId"
+							"note": "Este verbo esta disponível com os parâmetros Authorization e InternalId",
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
@@ -316,15 +306,15 @@
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
 					{
-						"$ref": "#/components/parameters/internalId"
+						"$ref": "#/components/parameters/InternalId"
 					}
 				],
 				"responses": {
 					"204": {
-						"description": "Operação realizada com sucesso"
+						"description": "Operação realizada com sucesso!"
 					},
 					"400": {
-						"description": "Erro no momento da exclusão!",
+						"description": "Erro durante a exclusão do País!",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -334,7 +324,7 @@
 						}
 					},
 					"404": {
-						"description": "Entidade não localizada na base!",
+						"description": "País não localizado!",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -343,26 +333,22 @@
 							}
 						}
 					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
+				}
 			}
 		}
 	},
 	"components": {
 		"parameters": {
-			"internalId": {
-				"name": "internalId",
+			"InternalId": {
+				"name": "InternalId",
 				"in": "path",
 				"required": true,
-				"description": "Identificador único representando a entidade",
+				"description": "Identificador único do País",
 				"schema": {
 					"type": "string"
 				}
 			}
-		}
+		},
+		"schemas": {}
 	}
 }

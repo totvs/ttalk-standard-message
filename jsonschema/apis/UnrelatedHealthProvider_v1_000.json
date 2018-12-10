@@ -2,7 +2,7 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para reembolso de serviços de saúde para o aplicativo de beneficiários de plano de saúde",
+			"description": "API para os prestadores de serviços de saúde não referenciados da operadora",
 			"url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1",
 			"variables": {
 				"serverUrl": {
@@ -17,7 +17,7 @@
 	"info": {
 		"description": "",
 		"version": "1.000",
-		"title": "Refunds",
+		"title": "Unrelated Health Provider",
 		"contact": {
 			"name": "T-Talk",
 			"url": "http://api.totvs.com.br",
@@ -25,27 +25,27 @@
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "Refunds",
-				"description": "Reembolso de serviços de Saúde",
+				"name": "UnrelatedHealthProvider",
+				"description": "Prestadores de serviços em saúde não referenciados da operadora",
 				"segment": "HealthCare"
 			},
 			"productInformation": [
 				{
 					"product": "ProSaude",
 					"contact": "healthcare.mobile@totvs.com.br",
-					"description": "Aplicativo para os beneficiários de plano de saúde"
+					"description": "Prestadores de serviços em saúde não referenciados da operadora"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/refunds": {
+		"/unrelatedHealthProviders/": {
 			"get": {
 				"tags": [
-					"refunds"
+					"unrelatedHealthProviders"
 				],
-				"operationId": "getRefundsList",
-				"summary": "Retorna todas as solicitações de reembolso dos beneficiários de planos de saúde",
+				"operationId": "getUnrelatedHealthProviderList",
+				"summary": "Prestador de serviço de saúde não referenciado",
 				"x-totvs": {
 					"productInformation": [
 						{
@@ -56,7 +56,7 @@
 						}
 					]
 				},
-				"description": "Retorna uma mensagem do tipo coleção com todas as solicitações de reembolso. Os resultados podem ser filtrados através dos parâmetros <b>holderSubscriberId</b>, <b>unrelatedHealthProvider</b>, <b>cpfCnpj</b> e <b>status</b>.",
+				"description": "Retorna uma mensagem do tipo coleção com todos os prestadores de serviços de saúde não referenciados da operadora. Os resultados podem ser filtrados através dos parâmetros <b>cpfCnpj</b>, <b>state</b> e <b>city</b>.",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
@@ -66,9 +66,6 @@
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
@@ -83,16 +80,13 @@
 						"$ref": "#/components/parameters/ExpiresAt"
 					},
 					{
-						"$ref": "#/components/parameters/HolderSubscriberId"
-					},
-					{
-						"$ref": "#/components/parameters/UnrelatedHealthProvider"
-					},
-					{
 						"$ref": "#/components/parameters/CpfCnpj"
 					},
 					{
-						"$ref": "#/components/parameters/Status"
+						"$ref": "#/components/parameters/State"
+					},
+					{
+						"$ref": "#/components/parameters/City"
 					}
 				],
 				"responses": {
@@ -101,7 +95,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/PagedRefunds"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/UnrelatedHealthProvider_1_000.json#/definitions/PagedUnrelatedHealthProvider"
 								}
 							}
 						}
@@ -150,18 +144,16 @@
 			},
 			"post": {
 				"tags": [
-					"refunds"
+					"unrelatedHealthProviders"
 				],
-				"operationId": "postRefund",
-				"summary": "Faz a solicitação de reembolso",
-				"description": "Realiza solicitação de reembolso de um serviço médico prestado por uma rede não referenciada",
+				"operationId": "postUnrelatedHealthProvider",
+				"summary": "Cadastra prestador de serviço de saúde não referenciado",
+				"description": "Cadastra um prestador de serviço de saúde não referenciado.",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "ProSaude",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": ""
+							"available": true
 						}
 					]
 				},
@@ -180,11 +172,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/RefundBody"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/UnrelatedHealthProvider_1_000.json#/definitions/UnrelatedHealthProviderBody"
 							}
 						}
 					},
-					"description": "Solicitação de reembolso a ser incluída",
+					"description": "Informações do prestador de serviço de saúde não referenciado",
 					"required": true
 				},
 				"responses": {
@@ -193,7 +185,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/UnrelatedHealthProvider_1_000.json#/definitions/UnrelatedHealthProvider"
 								}
 							}
 						}
@@ -231,13 +223,14 @@
 				}
 			}
 		},
-		"/refunds/{protocolNumber}": {
+		"/unrelatedHealthProviders/{unrelatedHealthProviderCode}": {
 			"get": {
 				"tags": [
-					"refunds"
+					"unrelatedHealthProviders"
 				],
-				"operationId": "getRefund",
-				"summary": "Retorna a solicitação de reembolso do protocolo especificado",
+				"operationId": "getUnrelatedHealthProvider",
+				"summary": "Prestador de serviço de saúde não referenciado",
+				"description": "Retorna um prestador de serviço de saúde não referenciado.",
 				"parameters": [
 					{
 						"$ref": "#/components/parameters/ContentType"
@@ -249,13 +242,7 @@
 						"$ref": "#/components/parameters/ExpiresAt"
 					},
 					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
-					},
-					{
-						"$ref": "#/components/parameters/ProtocolNumber"
+						"$ref": "#/components/parameters/UnrelatedHealthProviderCode"
 					}
 				],
 				"responses": {
@@ -264,7 +251,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#/definitions/Refund"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/UnrelatedHealthProvider_1_000.json#/definitions/UnrelatedHealthProvider"
 								}
 							}
 						}
@@ -333,19 +320,19 @@
 					"type": "string"
 				}
 			},
-			"HolderSubscriberId": {
-				"name": "holderSubscriberId",
+			"State": {
+				"name": "state",
 				"in": "query",
-				"description": "Matrícula do beneficiário titular ou responsável financeiro do plano de saúde",
+				"description": "Estado do prestador de serviço de saúde não referenciado",
 				"required": false,
 				"schema": {
 					"type": "string"
 				}
 			},
-			"UnrelatedHealthProvider": {
-				"name": "unrelatedHealthProvider",
+			"City": {
+				"name": "city",
 				"in": "query",
-				"description": "Nome da rede não referenciada",
+				"description": "Cidade do prestador de serviço de saúde não referenciado",
 				"required": false,
 				"schema": {
 					"type": "string"
@@ -360,19 +347,10 @@
 					"type": "string"
 				}
 			},
-			"Status": {
-				"name": "status",
-				"in": "query",
-				"description": "Status do protocolo",
-				"required": false,
-				"schema": {
-					"type": "string"
-				}
-			},
-			"ProtocolNumber": {
-				"name": "protocolNumber",
+			"UnrelatedHealthProviderCode": {
+				"name": "unrelatedHealthProviderCode",
 				"in": "path",
-				"description": "Protocolo da solicitação de reembolso",
+				"description": "Código da rede não referenciada",
 				"required": true,
 				"schema": {
 					"type": "string"
