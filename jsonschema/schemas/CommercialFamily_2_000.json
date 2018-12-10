@@ -1,352 +1,352 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#",
-  "info": {
-    "description": "API para a Entidade Família Comercial ou Categoria (CommercialFamily) para produtos TOTVS",
-    "version": "2.000",
-    "title": "CommercialFamily",
-    "contact": {
-      "name": "T-Talk",
-      "url": "api.Totvs.com.br",
-      "email": "comiteintegracao@totvs.com.br"
-    },
-    "x-totvs": {
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/CommercialFamilyInfo",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType",
-          "type": "object"
-        }
-      },
-      "messageDocumentation": {
-        "name": "CommercialFamily",
-        "description": "Família Comercial ",
-        "segment": "Distribuição "
-      },
-      "productInformation": [
-        {
-          "product": "Datasul",
-          "contact": "ieda.soares@totvs.com.br",
-          "description": "Cadastro de Família Comerciaç ",
-          "adapter": "CommercialFamily"
-        },
-        {
-          "product": "PROTHEUS",
-          "contact": "",
-          "note": "",
-          "adapter": "FATI140.PRW"
-        }
-      ]
-    }
-  },
-  "definitions": {
-    "PagedCommercialFamily":{
-      "type": "object",
-      "allOf":[
-        {
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-        },
-        {
-          "$ref": "#/definitions/CommercialFamilies"
-        }
-      ]
-    },
-    "CommercialFamilies": {
-      "type": "object",
-      "properties":{
-         "items":{
-            "type": "array",
-            "items":{
-              "$ref": "#/definitions/CommercialFamilyInfo"
-            }
-         }
-      }
-    },
-    "CommercialFamilyInfo": {
-      "description": "Descreve uma família comercial ou categoria",
-      "type": "object",
-      "properties": {
-        "CompanyId": {
-          "description": "Codigo da Empresa",
-          "type": "string",
-          "maxLength": 3,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "Char",
-              "length": "2",
-              "note": "pode ter tamanho variável até 4 com Gestão de Empresa ativado",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        },
-        "BranchId": {
-          "description": "ID Filial",
-          "type": "string",
-          "maxLength": 12,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "Char",
-              "length": "2",
-              "note": "pode ter tamanho variável até 8 com Gestão de Empresa ativado",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "description": "InternalId da chave completa de empresa do produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "",
-              "length": "",
-              "note": "Para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        },
-        "Code": {
-          "description": "Código da Família Comercial",
-          "type": "string",
-          "maxLength": 8,
-          "x-totvs": [
-            {
-              "product": "DATASUL",
-              "field": "fam-comerc.fm-cod-com",
-              "required": true,
-              "type": "string",
-              "length": "8",
-              "note": "Código da Família Comercial",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "ACU_COD",
-              "required": true,
-              "type": "String",
-              "length": "6",
-              "note": "Código da Categoria",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "InternalId": {
-          "description": "InternalId de Integração",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "EMPRESA|FILIAL|CATEGORIA",
-              "required": true,
-              "type": "char",
-              "length": "50",
-              "note": "O InternalID do Codigo da Categoria é formado por EMPRESA|ACU_FILIAL|ACU_COD",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "field": "fam-comerc.fm-cod-com",
-              "required": true,
-              "type": "String",
-              "length": "8",
-              "note": "O InternalID é formado apenas pelo Código da Família Comercial",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Description": {
-          "description": "Descrição da Família Comercial",
-          "type": "string",
-          "maxLength": 30,
-          "x-totvs": [
-            {
-              "product": "DATASUL",
-              "field": "fam-comerc.descricao",
-              "required": true,
-              "type": "String",
-              "length": "30",
-              "note": "Descrição da Família Comercial",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "ACU_DESC",
-              "required": true,
-              "type": "String",
-              "length": "30",
-              "note": "Descrição da categoria",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "UnitOfMeasureCode": {
-          "description": "Unidade de Medida",
-          "type": "string",
-          "maxLength": 6,
-          "x-totvs": [
-            {
-              "product": "DATASUL",
-              "field": "fam-comerc.un",
-              "required": true,
-              "type": "String",
-              "length": "2",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "",
-              "length": "",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "SuperiorCode": {
-          "description": "Código da Categoria Superior",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "ACU_CODPAI",
-              "required": false,
-              "type": "String",
-              "length": "6",
-              "note": "Código da Categoria Pai",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        },
-        "CompleteDescription": {
-          "description": "Descrição completa",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "String",
-              "length": "50",
-              "note": "Descrição completa da categoria (Descrição complementar). Se no cadastro esse campo existir, será enviado a TAG",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        },
-        "SortOrder": {
-          "description": "Ordem da Categoria",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "Int",
-              "length": "2",
-              "note": "Ordem de apresentação da categoria. Se no cadastro esse campo existir, será enviado a TAG",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        },
-        "Situation": {
-          "description": "Situação? (\"1-Inativo / 2-Ativo\")",
-          "type": "string",
-          "enum": [
-            "1",
-            "2"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "String",
-              "length": "1",
-              "note": "Categoria bloqueada?",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        },
-        "HideSection": {
-          "description": "Exibe a categoria? (\"1-Ativo / 2-Inativo\")",
-          "type": "string",
-          "enum": [
-            "1",
-            "2"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "String",
-              "length": "1",
-              "note": "Apresenta a categoria?",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "DATASUL",
-              "available": false
-            }
-          ]
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialFamily_2_000.json#",
+	"info": {
+		"description": "API para a Entidade Família Comercial ou Categoria (CommercialFamily) para produtos TOTVS",
+		"version": "2.000",
+		"title": "CommercialFamily",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/CommercialFamilyInfo",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType",
+					"type": "object"
+				}
+			},
+			"messageDocumentation": {
+				"name": "CommercialFamily",
+				"description": "Família Comercial ",
+				"segment": "Distribuição "
+			},
+			"productInformation": [
+				{
+					"product": "Datasul",
+					"contact": "ieda.soares@totvs.com.br",
+					"description": "Cadastro de Família Comerciaç ",
+					"adapter": "CommercialFamily"
+				},
+				{
+					"product": "PROTHEUS",
+					"contact": "",
+					"note": "",
+					"adapter": "FATI140.PRW"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedCommercialFamily": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/CommercialFamilies"
+				}
+			]
+		},
+		"CommercialFamilies": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CommercialFamilyInfo"
+					}
+				}
+			}
+		},
+		"CommercialFamilyInfo": {
+			"description": "Descreve uma família comercial ou categoria",
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Codigo da Empresa",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "Char",
+							"length": "2",
+							"note": "pode ter tamanho variável até 4 com Gestão de Empresa ativado",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "ID Filial",
+					"type": "string",
+					"maxLength": 12,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "Char",
+							"length": "2",
+							"note": "pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa de empresa do produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				},
+				"Code": {
+					"description": "Código da Família Comercial",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "fam-comerc.fm-cod-com",
+							"required": true,
+							"type": "string",
+							"length": "8",
+							"note": "Código da Família Comercial",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "ACU_COD",
+							"required": true,
+							"type": "String",
+							"length": "6",
+							"note": "Código da Categoria",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId de Integração",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "EMPRESA|FILIAL|CATEGORIA",
+							"required": true,
+							"type": "char",
+							"length": "50",
+							"note": "O InternalID do Codigo da Categoria é formado por EMPRESA|ACU_FILIAL|ACU_COD",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "fam-comerc.fm-cod-com",
+							"required": true,
+							"type": "String",
+							"length": "8",
+							"note": "O InternalID é formado apenas pelo Código da Família Comercial",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Description": {
+					"description": "Descrição da Família Comercial",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "fam-comerc.descricao",
+							"required": true,
+							"type": "String",
+							"length": "30",
+							"note": "Descrição da Família Comercial",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "ACU_DESC",
+							"required": true,
+							"type": "String",
+							"length": "30",
+							"note": "Descrição da categoria",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UnitOfMeasureCode": {
+					"description": "Unidade de Medida",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "fam-comerc.un",
+							"required": true,
+							"type": "String",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SuperiorCode": {
+					"description": "Código da Categoria Superior",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "ACU_CODPAI",
+							"required": false,
+							"type": "String",
+							"length": "6",
+							"note": "Código da Categoria Pai",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				},
+				"CompleteDescription": {
+					"description": "Descrição completa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "50",
+							"note": "Descrição completa da categoria (Descrição complementar). Se no cadastro esse campo existir, será enviado a TAG",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				},
+				"SortOrder": {
+					"description": "Ordem da Categoria",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "Int",
+							"length": "2",
+							"note": "Ordem de apresentação da categoria. Se no cadastro esse campo existir, será enviado a TAG",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				},
+				"Situation": {
+					"description": "Situação? (\"1-Inativo / 2-Ativo\")",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "1",
+							"note": "Categoria bloqueada?",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				},
+				"HideSection": {
+					"description": "Exibe a categoria? (\"1-Ativo / 2-Inativo\")",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "1",
+							"note": "Apresenta a categoria?",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						}
+					]
+				}
+			}
+		}
+	}
 }
