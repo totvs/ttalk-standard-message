@@ -1,5 +1,6 @@
 exports.renameRefInternals = function (refObj, refprop) {
-    console.log("renameRefInternals - commons.js")
+    console.log(refObj[refprop].substring(0, refObj[refprop].lastIndexOf("/jsonschema")))
+
     if (refObj[refprop]) {
         if (refObj[refprop].includes("http") && refObj[refprop].includes("/jsonschema")) {
             refObj[refprop] = refObj[refprop].replace(
