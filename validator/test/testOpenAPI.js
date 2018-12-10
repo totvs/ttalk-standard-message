@@ -155,8 +155,12 @@ describe("Validating OpenAPI files...", function () {
                 },  function (err, newSchema) {
                     if (err) {
                         resultEvaluation = false;
+                        
                     } else {
                         resultEvaluation = true;
+                        
+                        console.log(JSON.stringify(newSchema));
+                        console.log('\n\nFilename: '+filename);
                     }
                     expect(resultEvaluation, err).to.be.true;
                     done();

@@ -15,13 +15,45 @@ var checkIfObjectIsValid = function (theObject, prop) {
     }
 }
 
-var checkXtotvs = function (theObject, prop, currentObjectName) {
+var checkXtotvs = function (theObject, prop, currentObjectName, parent) {
     if (currentObjectName != "info") { //Skip INFO x-totvs
         var xTotvs = theObject[prop];
+        CheckIfXTotvsIsAvailableWhileParentHasRequired(xTotvs, currentObjectName, parent);
         CheckIfXTotvsIsArray(xTotvs, currentObjectName);
         CheckIfXTotvsContainRequiredProperties(xTotvs, currentObjectName);
     }
 };
+
+var CheckIfXTotvsIsAvailableWhileParentHasRequired = function (xTotvs, currentObjectName, parent) {
+    if (results.hasAcceptableAvailable != false) {
+        for (var i in xTotvs) {
+            if ((i != 'parent') && (i != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+                if (xTotvs[i].hasOwnProperty('available')) {
+                    if (xTotvs[i].available) { //if is available
+                        results.hasAcceptableAvailable = true; //no problem
+                    } else { //if it's not available, we have to check if it is required in the parent
+                        if (parent) {
+                            if (parent.hasOwnProperty('required')) {
+                                for (j in parent.required) {
+                                    if ((j != 'parent') && (j != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+                                        if (parent.required[j] == currentObjectName) { //if the object name is inside the required array
+                                            results.hasAcceptableAvailable = false; //we have a problem
+                                            results.inconsistentAvailable = "Object '" + currentObjectName + "' is 'available:false', but is required at the same time.\n" +
+                                                "Please, change available to true or remove the object from the required array.\n";
+                                            return;
+                                        } else {
+                                            results.hasAcceptableAvailable = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
     if (results.useXTotvsAsArray != false) {
@@ -37,13 +69,15 @@ var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
 var CheckIfXTotvsContainRequiredProperties = function (xTotvs, currentObjectName) {
     if (results.XTotvsContainProduct != false && results.XTotvsContainAvailable != false) {
         for (var i in xTotvs) {
-            if (!xTotvs[i].hasOwnProperty("product")) {
-                results.XTotvsContainProduct = false;
-                results.wrongXTotvsProduct = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'product'. If the property is there, please check if it's correclty spelled"
-            }
-            if (!xTotvs[i].hasOwnProperty("available")) {
-                results.XTotvsContainAvailable = false;
-                results.wrongXTotvsAvailable = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'available'. If the property is there, please check if it's correclty spelled"
+            if ((i != 'parent') && (i != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+                if (!xTotvs[i].hasOwnProperty("product")) {
+                    results.XTotvsContainProduct = false;
+                    results.wrongXTotvsProduct = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'product'. If the property is there, please check if it's correclty spelled"
+                }
+                if (!xTotvs[i].hasOwnProperty("available")) {
+                    results.XTotvsContainAvailable = false;
+                    results.wrongXTotvsAvailable = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'available'. If the property is there, please check if it's correclty spelled"
+                }
             }
         }
     }
@@ -52,37 +86,60 @@ var CheckIfXTotvsContainRequiredProperties = function (xTotvs, currentObjectName
 var checkIfEnumIsString = function (theObject, currentObjectName) {
     if (results.enumIsString != false) {
         if (theObject.hasOwnProperty("enum") && theObject.type) {
-            if (theObject.type.toLowerCase() != "string") {
-                results.enumIsString = false;
-                results.wrongEnumAsString = "Object with invalid enum: '" + currentObjectName + "'. Object type must be 'string'"
+            for (var i in theObject.enum) {
+                if (i != 'parent') {
+                    if (typeof (theObject.enum[i]) != "string") {
+                        results.enumIsString = false;
+                        results.wrongEnumAsString = "Object with invalid enum: '" + currentObjectName + "'. Enum must be a 'string'."
+                    }
+                }
             }
         }
     }
 }
 
 //This function will go through all objects existing in the json, recursively for nested objects 
-var getObjectRecursive = function (theObject, currentObjectName) {
+var getObjectRecursive = function (theObject, currentObjectName, parent) {
     var result = null;
-    if (theObject instanceof Array) {
-        for (var i = 0; i < theObject.length; i++) {
-            result = getObjectRecursive(theObject[i], prop);
-            if (result) {
-                break;
+    if (parent) theObject.parent = parent;
+    if (theObject instanceof Array) { //if the current object is an Array
+        for (var i = 0; i < theObject.length; i++) { //walk through this array
+            if ((i != 'parent') && (i != 'isAParent') && theObject[i] != null) {
+                result = getObjectRecursive(theObject[i], prop, theObject.parent); //enter until it's not an array anymore
+                if (result) { //if it's the deepest element'
+                    break;
+                }
             }
         }
-    } else {
-        for (var prop in theObject) {
-            checkIfEnumIsString(theObject, currentObjectName)
-            if (prop == '$ref') {
-                checkIfObjectIsValid(theObject, prop);
-            }
-            if (prop == 'x-totvs') {
-                checkXtotvs(theObject, prop, currentObjectName);
-            }
-            if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) {
-                result = getObjectRecursive(theObject[prop], prop);
-                if (result) {
-                    break;
+
+    } else { //if the current object is not an array
+        for (var prop in theObject) { //for each prop inside the object
+            if ((prop != 'parent') && (prop != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+                if (prop == 'enum') {
+                    checkIfEnumIsString(theObject, currentObjectName);
+                }
+                if (prop == '$ref') {
+                    checkIfObjectIsValid(theObject, prop);
+                }
+                if (prop == 'x-totvs') {
+                    checkXtotvs(theObject, prop, currentObjectName, theObject.parent);
+                }
+
+                if (theObject.hasOwnProperty("type") && (theObject.hasOwnProperty("properties")) || (theObject.hasOwnProperty("allOf"))) { //I'll have to check if it's also allof anyof etc
+                    theObject.isAParent = true;
+                }
+
+                if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) { //if theObject[prop] has elements
+                    if (theObject != null) {
+                        if (theObject.isAParent) {
+                            result = getObjectRecursive(theObject[prop], prop, theObject); //enter that guy passing this object as the parent
+                        } else {
+                            result = getObjectRecursive(theObject[prop], prop, theObject.parent); //enter that guy passing the parent of this object as the parent
+                        }
+                        if (result) { //if we got any result, that's because all the elements got walked through
+                            break;
+                        }
+                    }
                 }
             }
         }
