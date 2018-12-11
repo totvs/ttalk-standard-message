@@ -27,7 +27,7 @@ var checkXtotvs = function (theObject, prop, currentObjectName, parent) {
 var CheckIfXTotvsIsAvailableWhileParentHasRequired = function (xTotvs, currentObjectName, parent) {
     if (results.hasAcceptableAvailable != false) {
         for (var i in xTotvs) {
-            if ((i != 'parent') && (i != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+            if (checkIsControlProperty(i)) { //makes it not to walk through .parent or theObject.isAParent
                 if (xTotvs[i].hasOwnProperty('available')) {
                     if (xTotvs[i].available) { //if is available
                         results.hasAcceptableAvailable = true; //no problem
@@ -35,7 +35,7 @@ var CheckIfXTotvsIsAvailableWhileParentHasRequired = function (xTotvs, currentOb
                         if (parent) {
                             if (parent.hasOwnProperty('required')) {
                                 for (j in parent.required) {
-                                    if ((j != 'parent') && (j != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+                                    if (checkIsControlProperty(j)) { //makes it not to walk through .parent or theObject.isAParent
                                         if (parent.required[j] == currentObjectName) { //if the object name is inside the required array
                                             results.hasAcceptableAvailable = false; //we have a problem
                                             results.inconsistentAvailable = "Object '" + currentObjectName + "' is 'available:false', but is required at the same time.\n" +
@@ -69,7 +69,7 @@ var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
 var CheckIfXTotvsContainRequiredProperties = function (xTotvs, currentObjectName) {
     if (results.XTotvsContainProduct != false && results.XTotvsContainAvailable != false) {
         for (var i in xTotvs) {
-            if ((i != 'parent') && (i != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+            if (checkIsControlProperty(i)) { //makes it not to walk through .parent or theObject.isAParent
                 if (!xTotvs[i].hasOwnProperty("product")) {
                     results.XTotvsContainProduct = false;
                     results.wrongXTotvsProduct = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'product'. If the property is there, please check if it's correclty spelled"
@@ -87,7 +87,7 @@ var checkIfEnumIsString = function (theObject, currentObjectName) {
     if (results.enumIsString != false) {
         if (theObject.hasOwnProperty("enum") && theObject.type) {
             for (var i in theObject.enum) {
-                if (i != 'parent') {
+                if (checkIsControlProperty(i)) {
                     if (typeof (theObject.enum[i]) != "string") {
                         results.enumIsString = false;
                         results.wrongEnumAsString = "Object with invalid enum: '" + currentObjectName + "'. Enum must be a 'string'."
@@ -98,23 +98,47 @@ var checkIfEnumIsString = function (theObject, currentObjectName) {
     }
 }
 
+var $refCache = {};
+function guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+var checkRecursive = function (theObject, currentObjectName, parent){
+    if(!theObject.$idCache)
+        theObject.$idCache = guid();
+
+    if ($refCache[theObject.$idCache] !== true) {
+        $refCache[theObject.$idCache] = true;
+        result = getObjectRecursive(theObject, currentObjectName, parent);
+        $refCache[theObject.$idCache] = false;
+    }
+}
+
+var checkIsControlProperty = function(propertyName){
+    return ((propertyName != 'parent') && (propertyName != 'isAParent') && (propertyName != '$idCache'));
+}
+
 //This function will go through all objects existing in the json, recursively for nested objects 
 var getObjectRecursive = function (theObject, currentObjectName, parent) {
-    var result = null;
+    if(!theObject.$idCache)
+        theObject.$idCache = guid();
+
     if (parent) theObject.parent = parent;
     if (theObject instanceof Array) { //if the current object is an Array
         for (var i = 0; i < theObject.length; i++) { //walk through this array
-            if ((i != 'parent') && (i != 'isAParent') && theObject[i] != null) {
-                result = getObjectRecursive(theObject[i], prop, theObject.parent); //enter until it's not an array anymore
-                if (result) { //if it's the deepest element'
-                    break;
-                }
+            if (checkIsControlProperty(i) && theObject[i] != null) {
+                checkRecursive(theObject[i], prop, theObject.parent); //enter until it's not an array anymore                
             }
         }
 
     } else { //if the current object is not an array
         for (var prop in theObject) { //for each prop inside the object
-            if ((prop != 'parent') && (prop != 'isAParent')) { //makes it not to walk through .parent or theObject.isAParent
+            if (checkIsControlProperty(prop)) { //makes it not to walk through .parent or theObject.isAParent
                 if (prop == 'enum') {
                     checkIfEnumIsString(theObject, currentObjectName);
                 }
@@ -132,12 +156,9 @@ var getObjectRecursive = function (theObject, currentObjectName, parent) {
                 if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) { //if theObject[prop] has elements
                     if (theObject != null) {
                         if (theObject.isAParent) {
-                            result = getObjectRecursive(theObject[prop], prop, theObject); //enter that guy passing this object as the parent
+                            checkRecursive(theObject[prop], prop, theObject); //enter that guy passing this object as the parent
                         } else {
-                            result = getObjectRecursive(theObject[prop], prop, theObject.parent); //enter that guy passing the parent of this object as the parent
-                        }
-                        if (result) { //if we got any result, that's because all the elements got walked through
-                            break;
+                            checkRecursive(theObject[prop], prop, theObject.parent); //enter that guy passing the parent of this object as the parent
                         }
                     }
                 }

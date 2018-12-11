@@ -34,7 +34,6 @@ describe("Validating Schema files...", function () {
             before(async function () {
               parsedSchema = JSON.parse(file);
               dereferencedSchema = await schemaDereferencer.getDereferenced(parsedSchema);
-              if(JSON.stringify(dereferencedSchema)); //to check if it has circular reference
               parsedSchema = dereferencedSchema;
               schemaDefinitionsValidator.clear();
               schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema);
