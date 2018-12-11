@@ -167,9 +167,10 @@ var getObjectRecursive = function (theObject, currentObjectName, parent) {
     }
 }
 
-exports.validateSchema = function (_parsedSchema) {
+exports.validateSchema = function (_parsedSchema, done) {
     parsedSchema = _parsedSchema;
     getObjectRecursive(parsedSchema);
+    done();
     return results;
 }
 

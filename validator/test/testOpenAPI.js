@@ -139,6 +139,7 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should be dereferenced", function (done) {
+                this.timeout(60000);
                 var parser = new $RefParser();
                 var resultEvaluation = true;
                 parser.dereference(parsedOpenAPI, { // (.dereference could be .bundle) doc: https://apidevtools.org/json-schema-ref-parser/docs/ref-parser.html#bundleschema-options-callback
@@ -149,7 +150,7 @@ describe("Validating OpenAPI files...", function () {
                         external: true,
                         http: {
                             redirects: 0,
-                            timeout: 20000
+                            timeout: 50000
                         }
                     }
                 },  function (err, newSchema) {
@@ -158,15 +159,10 @@ describe("Validating OpenAPI files...", function () {
                         
                     } else {
                         resultEvaluation = true;
-                        
-                        console.log(JSON.stringify(newSchema));
-                        console.log('\n\nFilename: '+filename);
                     }
                     expect(resultEvaluation, err).to.be.true;
                     done();
                 });
-                 
-                 
               });
              
 

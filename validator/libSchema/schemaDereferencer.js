@@ -11,7 +11,7 @@ exports.getDereferenced = async function (parsedSchema) {
             external: true,
             http: {
                 redirects: 0,
-                timeout: 20000
+                timeout: 50000
             }
         }
     }, await function (err, newSchema) {
