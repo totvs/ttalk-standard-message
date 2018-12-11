@@ -149,7 +149,7 @@ var getObjectRecursive = function (theObject, currentObjectName, parent) {
                     checkXtotvs(theObject, prop, currentObjectName, theObject.parent);
                 }
 
-                if (theObject.hasOwnProperty("type") && (theObject.hasOwnProperty("properties")) || (theObject.hasOwnProperty("allOf"))) { //I'll have to check if it's also allof anyof etc
+                if (theObject.hasOwnProperty("type") && (theObject.hasOwnProperty("properties")) || (theObject.hasOwnProperty("allOf")) || (theObject.hasOwnProperty("anyOf") || (theObject.hasOwnProperty("oneOf")))) { //I'll have to check if it's also allof anyof etc
                     theObject.isAParent = true;
                 }
 
