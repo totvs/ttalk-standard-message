@@ -1,0 +1,215 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/BookLoans/v1/1_000/jsonschema/schemas/BookLoans_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para listagem de empréstimos dos produtos TOTVS",
+		"version": "1.000",
+		"title": "BookLoans",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "BookLoans",
+				"description": "Dados dos empréstimos do usuário",
+				"segment": "Educational"
+			},
+			"productInformation": [{
+                "product": "RM",
+                "contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+                "description": "Empréstimos da Biblioteca"
+            }]
+		}
+	},
+	"definitions": {
+    "PagedBookLoans": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BookLoans"
+                    }
+                }
+            }
+        }
+      ]
+    },
+    "BookLoans": {
+      "description": "Descreve um empréstimo da biblioteca",
+      "properties": {
+        "BookLoansInternalId": {
+          "description": "internalid de Empréstimos",
+          "type": "string",
+          "example": "1|1",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Código da empresa|Código empréstimo",
+              "field": "LEMPRESTIMOS.CODCOLIGADA|LEMPRESTIMOS.CODIGO",              
+              "type": "string"
+            }]
+        },
+        "CompanyCode": {
+          "description": "Código da empresa",
+          "type": "string",
+          "example": 1,
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Código da empresa",
+              "field": "LEMPRESTIMOS.CODCOLIGADA",              
+              "type": "integer"
+            }]
+        },
+        "CompanyInternalId": {
+          "description": "InternalId da empresa",
+          "type": "string",
+          "example": 1,
+          "x-totvs": [
+            {
+              "product": "RM",              
+              "note": "Código da empresa",
+              "field": "GCOLIGADA.CODCOLIGADA",              
+              "type": "string",
+              "required": false,
+              "available": true
+            }]
+        },
+        "BookLoanCode": {
+          "type": "integer",
+          "example": 1,
+          "description": "Identificador do empréstimo pendente do livro",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "LEMPRESTIMOS.CODIGO",
+              "required": true,
+              "type": "integer",
+              "format": "int32",
+              "available": true
+            }]
+        },
+        "PublicationCode": {
+          "description": "Código da publicação",
+          "type": "integer",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Código da publicação",
+              "field": "LPUBLIC.CODIGO",
+              "type": "integer"
+            }]
+        },
+        "PublicationDescription": {
+          "description": "Título da publicação",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Título da publicação",
+              "field": "LPUBLIC.TITULO",
+              "type": "VARCHAR",
+              "size": 350
+            }]
+        },
+        "PublicationInternalId": {
+          "description": "InternalId Publicação",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "LPUBLIC.CODCOLIGADA|LPUBLIC.CODIGO"
+            }]
+        },
+        "LoanDate": {
+          "type": "string",
+          "example": "12/11/2018",
+          "description": "Data do empréstimo",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "SATIVIDADE.DTHREMPRESTIMO",
+              "required": false,
+              "Type": "datetime",           
+              "length": 8,   
+              "available": true,
+              "canUpdate": true
+            }]
+        },
+        "ExpectedReturnDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data prevista de devolução",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "note": "Data prevista de devolução",
+              "field": "LEMPRESTIMOS.DTHRDEVPREVISTA",
+              "type": "Datetime",
+              "required": true,
+              "available": true
+            }]
+        },
+        "StatusLoan": {
+          "description": "Status do empréstimo",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Título da publicação",
+              "field": "LEMPRESTIMOS.STATUSEMP",
+              "type": "VARCHAR",
+              "size": 1
+            }]
+        },
+        "PublicationType": {
+          "type": "string",
+          "example": "Periódico",
+          "description": "Tipo da publicação",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "field": "LTIPOPUBLIC.DESCRICAO",
+              "required": false,
+              "Type": "string",           
+              "length": 50,   
+              "available": true,
+              "canUpdate": false
+            }]
+        },
+        "TypePublicationInternalId": {
+          "description": "InternalId do tipo de publicação",
+          "type": "string",
+          "example": "1",
+          "x-totvs": [
+            {
+              "product": "RM",              
+              "note": "Código do tipo de publicação",
+              "field": "LTIPOPUBLIC.CODIGO",              
+              "type": "string",
+              "required": false,
+              "available": true
+            }]
+        }
+      }
+    }
+  }
+}
