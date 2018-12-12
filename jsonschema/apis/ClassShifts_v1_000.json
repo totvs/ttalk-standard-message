@@ -1,0 +1,181 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+      {
+        "description": "API para a entidade turnos, perfil professor (classShifts) para produtos TOTVS",
+        "url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
+        "variables": {
+          "serverUrl": {
+            "default": "localhost"
+          },
+          "serverHttpPort": {
+            "default": "8051"
+          }
+        }
+      }
+    ],
+    "info": {
+      "description": "API para a entidade turnos educacionais",
+      "version": "1.000",
+      "title": "classShifts",
+      "contact": {
+        "name": "T-Talk",
+        "url": "API.Totvs.com.br",
+        "email": "comiteintegracao@totvs.com.br"
+      },
+      "x-totvs": {
+        "messageDocumentation": {
+          "name": "classShifts",
+          "description": "Turnos educacionais",
+          "segment": "Educacional"
+        },
+        "productInformation": [
+          {
+            "product": "RM",
+            "contact": "rm_FW@totvs.com.br",
+            "description": "Entidade de turno educacional, perfil professor"
+          }
+        ]
+      }
+    },
+    "paths": {
+      "/Professors/{ProfessorInternalId}/classShifts": {
+        "get": {
+          "tags": [
+            "classShifts"
+          ],
+          "summary": "Retorna todos os turnos do Educacional",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true,
+                "note": "Este verbo esta disponível com todos os parâmetros",
+                "minimalVersion": "12.1.23"
+              }
+            ]
+          },
+          "description": "Retorna todos os turnos educacionais",
+          "operationId": "getAll",
+          "parameters": [
+            {
+                "$ref": "#/components/parameters/ProfessorInternalId"
+            },
+            {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            },
+            {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+            },
+            {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+            },
+            {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+            },          
+            {
+                "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ClassShifts/v1/1_000/jsonschema/schemas/ClassShifts_1_000.json#/definitions/PagedClassShifts"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "erro no momento da listagem dos relatórios",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/Professors/{ProfessorInternalId}/ClassShifts/{ClassShiftInternalId}": {
+        "get": {
+          "tags": [
+            "classShifts"
+          ],
+          "summary": "Retorna detalhes do turno educacional",
+          "description": "Retorna o turno educacional",
+          "operationId": "getId",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true,
+                "note": "Este verbo esta disponível com todos os parâmetros",
+                "minimalVersion": "12.1.23"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ProfessorInternalId"
+            },
+            {
+              "$ref": "#/components/parameters/ClassShiftInternalId"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ClassShifts/v1/1_000/jsonschema/schemas/ClassShifts_1_000.json#/definitions/classShifts"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Usuário não localizado na base",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "parameters": {
+        "ProfessorInternalId": {
+          "name": "ProfessorInternalId",
+          "in": "path",
+          "required": true,
+          "description": "InternalId do professor",
+          "schema": {
+            "type": "string"
+          }
+        },
+        "ClassShiftInternalId": {
+          "name": "ClassShiftInternalId",
+          "in": "path",
+          "required": true,
+          "description": "InternalId do turno educacional",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {}
+    }
+  }
