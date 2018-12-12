@@ -2,63 +2,65 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para consulta, cadastro, atualização e exclusão de operador de caixa do varejo no sistema Protheus",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/retail/v1",
+			"description": "API para a entidade período, perfil acadêmico (Period) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
 			"variables": {
 				"serverUrl": {
 					"default": "localhost"
 				},
 				"serverHttpPort": {
-					"default": "8080"
+					"default": "8051"
 				}
 			}
 		}
 	],
 	"info": {
-		"description": "API para consulta, cadastro, atualização e exclusão de operador de caixa do varejo no sistema Protheus",
+		"description": "API para a entidade período",
 		"version": "1.000",
-		"title": "CashierOperator",
+		"title": "Periods",
 		"contact": {
 			"name": "T-Talk",
-			"url": "api.Totvs.com.br",
+			"url": "API.Totvs.com.br",
 			"email": "comiteintegracao@totvs.com.br"
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "CashierOperator",
-				"description": "Api de operador de caixa",
-				"segment": "retail"
+				"name": "Periods",
+				"description": "Período",
+				"segment": "Educacional"
 			},
 			"productInformation": [
 				{
-					"product": "protheus",
-					"contact": "ricardo.msousa@totvs.com.br",
-					"description": "Api operador de caixa",
-					"adapter": "LOJI120O.prw"
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Entidade de período, perfil acadêmico"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/CashierOperators": {
+		"/Academic/{GradeInternalID}/Periods ": {
 			"get": {
 				"tags": [
-					"CashierOperator"
+					"Periods"
 				],
-				"summary": "Retorna todos os operadores de caixa do sistema Protheus",
+				"summary": "Retorna todos os períodos de uma matriz curricular",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "protheus",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize, Fields",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
-				"description": "Retorna todos os operadores de caixa do sistema Protheus",
-				"operationId": "getCashierOperator",
+				"description": "Retorna todos os períodos de uma matriz curricular",
+				"operationId": "getAll",
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/GradeInternalID"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
@@ -81,13 +83,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CashierOperator_3_000.json#/definitions/PagedCashierOperators"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/PagedPeriod"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro na requisição!",
+						"description": "erro no momento da listagem dos relatórios",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -100,22 +102,25 @@
 			},
 			"post": {
 				"tags": [
-					"CashierOperator"
+					"Periods"
 				],
-				"summary": "Inclui operador de caixa passado na requisição",
-				"description": "Inclui operador de caixa passado na requisição",
-				"operationId": "postCashierOperator",
+				"summary": "Inclui o período passado na requisição",
+				"description": "Inclui o período passado na requisição",
+				"operationId": "postPeriod",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "protheus",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization e Fields",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/GradeInternalID"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
@@ -124,11 +129,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CashierOperator_3_000.json#/definitions/CashierOperatorType"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
 							}
 						}
 					},
-					"description": "Operador de caixa para ser incluido"
+					"description": "Período para ser incluído"
 				},
 				"responses": {
 					"200": {
@@ -136,13 +141,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CashierOperator_3_000.json#/definitions/CashierOperatorType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro na Inclusão!",
+						"description": "erro no momento da inclusão",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -154,55 +159,48 @@
 				}
 			}
 		},
-		"/CashierOperators/{InternalId}": {
+		"/Academic/{GradeInternalID}/Periods/{InternalId}": {
 			"get": {
 				"tags": [
-					"CashierOperator"
+					"Periods"
 				],
-				"summary": "Buscar operador de caixa por InternalId que é constituido dos valores de filial e codigo do operador  D MG 01|01",
-				"description": "Retorna os dados do operador de caixa de acordo com a filial e código do operador passados por parametro",
-				"operationId": "getInternalId",
+				"summary": "Retorna detalhes do período",
+				"description": "Retorna o período",
+				"operationId": "getId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "protheus",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros InternalId, Authorization",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+						"$ref": "#/components/parameters/GradeInternalID"
 					},
 					{
 						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
 					"200": {
-						"description": "Operação realizada com sucesso!",
+						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CashierOperator_3_000.json#/definitions/CashierOperatorType"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Erro na requisição!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Operador de caixa não localizada na base!",
+						"description": "Usuário não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -215,22 +213,25 @@
 			},
 			"put": {
 				"tags": [
-					"CashierOperator"
+					"Periods"
 				],
-				"summary": "Atualiza uma reserva passada na requisição",
-				"description": "Atualiza a entidade operador de caixa passado na requisição",
-				"operationId": "putcashierOperator",
+				"summary": "Altera o período passado na requisição",
+				"description": "Altera o período passado na requisição",
+				"operationId": "postPeriodId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "protheus",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization ",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/GradeInternalID"
+					},
 					{
 						"$ref": "#/components/parameters/InternalId"
 					},
@@ -239,14 +240,14 @@
 					}
 				],
 				"requestBody": {
-					"description": "Operador de caixa para ser atualizado",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CashierOperator_3_000.json#/definitions/CashierOperatorType"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
 							}
 						}
-					}
+					},
+					"description": "Período para ser incluído"
 				},
 				"responses": {
 					"200": {
@@ -254,13 +255,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CashierOperator_3_000.json#/definitions/CashierOperatorType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro na Inclusão!",
+						"description": "Erro no momento da alteração",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -270,7 +271,7 @@
 						}
 					},
 					"404": {
-						"description": "Reserva não encontrada",
+						"description": "Usuário não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -283,49 +284,38 @@
 			},
 			"delete": {
 				"tags": [
-					"CashierOperator"
+					"Periods"
 				],
-				"summary": "Deleta operador de caixa passado na requisição",
-				"description": "Deleta a entidade CashierOperator passado na requisição",
-				"operationId": "deleteInternalId",
+				"summary": "Exclusão de período da base",
+				"description": "Exclusão de período da base",
+				"operationId": "DeletePeriod",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "protheus",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
+						"$ref": "#/components/parameters/GradeInternalID"
+					},
+					{
 						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CashierOperator_3_000.json#/definitions/CashierOperatorType"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Erro ao deletar operador de caixa!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
+					"204": {
+						"description": "Período removido com sucesso"
 					},
 					"404": {
-						"description": "Operador de caixa não encontrado",
+						"description": "Período não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -340,11 +330,20 @@
 	},
 	"components": {
 		"parameters": {
+			"GradeInternalID": {
+				"name": "GradeInternalID",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da matriz curricular",
+				"schema": {
+					"type": "string"
+				}
+			},
 			"InternalId": {
 				"name": "InternalId",
 				"in": "path",
 				"required": true,
-				"description": "Identificador único do operador de caixa",
+				"description": "InternalId do período",
 				"schema": {
 					"type": "string"
 				}

@@ -2,68 +2,70 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para cancelamento de vendas do varejo no sistema Protheus.",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/retail/v1",
+			"description": "API para a entidade de resultados do candidato do processo seletivo",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
 			"variables": {
 				"serverUrl": {
 					"default": "localhost"
 				},
 				"serverHttpPort": {
-					"default": "8080"
+					"default": "8051"
 				}
 			}
 		}
 	],
 	"info": {
-		"description": "API para cancelamento de vendas do varejo no sistema Protheus.",
+		"description": "API para a entidade de resultados do candidato do processo seletivo",
 		"version": "1.000",
-		"title": "RetailSalesCancellation",
+		"title": "ApplicantResults",
 		"contact": {
 			"name": "T-Talk",
-			"url": "api.Totvs.com.br",
+			"url": "API.Totvs.com.br",
 			"email": "comiteintegracao@totvs.com.br"
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "RetailSalesCancellation",
-				"description": "Exclusão de venda",
-				"segment": "retail"
+				"name": "ApplicantResults",
+				"description": "Resultados do candidato do processo seletivo",
+				"segment": "Educacional"
 			},
 			"productInformation": [
 				{
-					"product": "protheus",
-					"contact": "ricardo.msousa@totvs.com.br",
-					"description": "Exclusão de vendas",
-					"adapter": "LOJI140O.prw"
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Resultados do candidato do processo seletivo"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/RetailSalesCancellations/{InternalId}": {
-			"delete": {
+		"/ApplicantResults/{Id}": {
+			"get": {
 				"tags": [
-					"RetailSalesCancellation"
+					"ApplicantResults"
 				],
-				"summary": "Deleta venda passada na requisição",
-				"description": "Deleta uma venda de acordo com os valores do parametro InternalId 'Filial|numero do cupom|numero autorizacao sat' ",
-				"operationId": "deleteInternalId",
+				"summary": "Retorna detalhes do resultado do candidato do processo seletivo",
+				"description": "Retorna detalhes do resultado do candidato do processo seletivo",
+				"operationId": "getOne",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "protheus",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
+						"$ref": "#/components/parameters/Id"
+					},
+					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
 					{
-						"$ref": "#/components/parameters/InternalId"
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
 					}
 				],
 				"responses": {
@@ -72,13 +74,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RetailSalesCancellation_2_000.json#/definitions/RetailSalesCancellationType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ApplicantResults_1_000.json#/definitions/ApplicantResults"
 								}
 							}
 						}
 					},
-					"400": {
-						"description": "erro ao deletar venda!",
+					"403": {
+						"description": "Usuário não autenticado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -88,7 +90,7 @@
 						}
 					},
 					"404": {
-						"description": " venda não encontrada ",
+						"description": "Resultado do candidato não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -103,11 +105,11 @@
 	},
 	"components": {
 		"parameters": {
-			"InternalId": {
-				"name": "InternalId",
+			"Id": {
+				"name": "Id",
 				"in": "path",
 				"required": true,
-				"description": "Identificador único da venda 'Filial|numero cupom|numero autorização sat'",
+				"description": "InternalId do resultado do candidato no processo seletivo",
 				"schema": {
 					"type": "string"
 				}
