@@ -8,6 +8,8 @@ fs.readdir(dirname, function (err, filenames) {
     console.log(err);
   }
 
+//TODO: Run Through components/parameters looking for schema/$ref
+
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
       let openAPIPath = path.join(dirname, filename);
@@ -72,6 +74,14 @@ var renameRequestResponseHref = function (responseRequest) {
           if (responseRequest.content["application/json"].schema.items) {
             refObj = responseRequest.content["application/json"].schema.items;
             commons.renameRefInternals(refObj, "$ref");
+          }
+          else {
+            let oneOfAllOfList = responseRequest.content["application/json"].schema.oneOf ? responseRequest.content["application/json"].schema.oneOf :
+             (responseRequest.content["application/json"].schema.allOf? 
+             responseRequest.content["application/json"].schema.allOf : []); 
+            for(var i in oneOfAllOfList){
+              commons.renameRefInternals(oneOfAllOfList[i], "$ref");
+            }
           }
         }
       }
