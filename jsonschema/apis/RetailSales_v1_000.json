@@ -1,0 +1,74 @@
+openapi: 3.0.1
+servers:
+  - description: API para a entidade vendas do varejo no sistema Protheus.
+    url: "http://{serverUrl}:{serverHttpPort}/api/retail/v1"
+    variables:
+      serverUrl:
+        default: localhost
+      serverHttpPort:
+        default: "8080"
+info:
+  description: API para a entidade vendas do varejo no sistema Protheus.
+  version: "1.000"
+  title: RetailSales
+  contact:
+    name: T-Talk
+    url: api.Totvs.com.br
+    email: comiteintegracao@totvs.com.br
+  x-totvs:
+    messageDocumentation:
+      name: RetailSales
+      description: Cancelamento de venda
+      segment: retail
+    productInformation:
+      - product: protheus
+        contact: ricardo.msousa@totvs.com.br
+        description: Cancelamento de vendas
+        adapter: LOJI140O.prw
+paths:
+  "/RetailSales/{InternalId}/Cancelation":
+    post:
+      tags:
+        - RetailSales
+      summary: Cancela venda passada na requisição
+      description: "Cancela uma venda de acordo com os valores do parametro InternalId ''Filial|número da venda|operador|número cancelamento SAT'' *envie o número cancelamento SAT caso exista"
+      operationId: deleteInternalId
+      x-totvs:
+        productInformation:
+          - product: protheus
+            available: true
+            note: Este verbo está disponível com os parâmetros Authorization
+            minimalVersion: 12.1.21
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+        - $ref: "#/components/parameters/InternalId"
+      responses:
+        "200":
+          description: Operação realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RetailSalesCancelation_2_000.json#/definitions/RetailSalesCancelationType"
+        "400":
+          description: erro ao cancelar a venda!
+          content:
+            application/json:
+              schema:
+                $ref: "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+        "404":
+          description: " venda não encontrada "
+          content:
+            application/json:
+              schema:
+                $ref: "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+components:
+  parameters:
+    InternalId:
+      name: InternalId
+      in: path
+      required: true
+      description: Identificador único da venda "Filial|número da venda|operador|número cancelamento SAT" *envie o número cancelamento SAT caso exista
+      schema:
+        type: string
+  schemas: {}
+  
