@@ -8,7 +8,7 @@ fs.readdir(dirname, function (err, filenames) {
     console.log(err);
   }
 
-//TODO: Run Through components/parameters looking for schema/$ref
+  //TODO: Run Through components/parameters looking for schema/$ref
 
   filenames.forEach(function (filename) {
     if (filename.includes(".json") && !filename.includes("package")) {
@@ -41,12 +41,16 @@ fs.readdir(dirname, function (err, filenames) {
             }
           }
         }
+        if (parsedOpenAPI.components) {
+          renameComponentParameters();
+        }
         stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
         fs.writeFileSync(dirname + filename, stringOpenAPI);
       }
+      
     }
   })
-});
+})
 
 var runThroughGeneralParams = function (parameters) {
   runThroughParamsInternal(parameters);
@@ -71,20 +75,45 @@ var renameRequestResponseHref = function (responseRequest) {
         if (refObj.$ref) {
           commons.renameRefInternals(refObj, "$ref");
         } else {
-          if (responseRequest.content["application/json"].schema.items) {
-            refObj = responseRequest.content["application/json"].schema.items;
-            commons.renameRefInternals(refObj, "$ref");
-          }
-          else {
-            let oneOfAllOfList = responseRequest.content["application/json"].schema.oneOf ? responseRequest.content["application/json"].schema.oneOf :
-             (responseRequest.content["application/json"].schema.allOf? 
-             responseRequest.content["application/json"].schema.allOf : []); 
-            for(var i in oneOfAllOfList){
-              commons.renameRefInternals(oneOfAllOfList[i], "$ref");
-            }
-          }
+          lookForRefLevel(responseRequest, refObj);
         }
       }
     }
   }
-};
+}
+
+function renameComponentParameters() {
+  let parameters = parsedOpenAPI.components.parameters;
+  for (var parameterKey in parameters) {
+    if (parameters[parameterKey].schema) {
+      let schema = parameters[parameterKey].schema;
+      if (schema) {
+        if (schema.$ref) {
+          commons.renameRefInternals(schema, "$ref");
+        }
+      }
+    }
+  }
+}
+
+function lookForRefLevel(responseRequest, refObj) {
+  if (responseRequest.content["application/json"].schema.items) {
+    renameSchemaItemsRef(refObj, responseRequest);
+  } else {
+    lookForAllOfAndOneOf(responseRequest);
+  }
+}
+
+function renameSchemaItemsRef(refObj, responseRequest) {
+  refObj = responseRequest.content["application/json"].schema.items;
+  commons.renameRefInternals(refObj, "$ref");
+}
+
+function lookForAllOfAndOneOf(responseRequest) {
+  let oneOfAllOfList = responseRequest.content["application/json"].schema.oneOf ? responseRequest.content["application/json"].schema.oneOf :
+    (responseRequest.content["application/json"].schema.allOf ?
+      responseRequest.content["application/json"].schema.allOf : []);
+  for (var i in oneOfAllOfList) {
+    commons.renameRefInternals(oneOfAllOfList[i], "$ref");
+  }
+}
