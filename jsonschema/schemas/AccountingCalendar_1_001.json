@@ -1,348 +1,370 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingCalendar_1_001.json#",
-  "info": {
-    "description": "",
-    "version": "1.001",
-    "title": "AccountingCalendar",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "AccountingCalendar",
-        "description": "Calendário Contábil",
-        "segment": "Controladoria"
-      },
-      "productInformation": [
-        {
-          "product": "PROTHEUS",
-          "contact": "Rogerio Nagy",
-          "note": "",
-          "adapter": "CTBI010.prw"
-        }
-      ],
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "CompanyId": {
-          "description": "Código da Empresa",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "char",
-              "length": "02",
-              "note": "será enviado o valor da variável cEmpAnt (empresa)",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "BranchId": {
-          "description": "Código da Filial",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "char",
-              "length": "12",
-              "note": "Será enviado o valor da variável cFilAnt",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "description": "InternalId da chave completa de empresa do produto",
-          "type": "string"
-        },
-        "CalendarCode": {
-          "description": "Código do Calendário",
-          "type": "string",
-          "maxLength": 3,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CTG_CALEND",
-              "required": false,
-              "type": "char",
-              "length": "03",
-              "note": "Código do calendário contábil",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "InternalId": {
-          "description": "InternalId do CalendarCode",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "char",
-              "length": "10",
-              "note": "Código que irá identificar o calendario contabil no sistema externo: xfilial(\"CTG\") + CTG.CTG_CALEND + CTG.CTG_EXERC",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "FinancialYear": {
-          "description": "Exercicio Contábil",
-          "type": "string",
-          "maxLength": 4,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CTG_EXERC",
-              "required": true,
-              "type": "char",
-              "length": "04",
-              "note": "Ano do exercicio contábil. Exemplo 2013",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ListOfAccountingPeriods": {
-          "description": "Periodos Contábeis",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PeriodOfAccountType",
-            "type": "object"
-          }
-        }
-      },
-      "required": [
-        "FinancialYear"
-      ]
-    },
-    "PeriodOfAccountType": {
-      "type": "object",
-      "properties": {
-        "PeriodCode": {
-          "description": "Código Periodo Contabil",
-          "type": "string",
-          "maxLength": 2,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CTG_PERIOD",
-              "required": false,
-              "type": "char",
-              "length": "02",
-              "note": "Código alfanumerico do periodo contábil. Caso não seja passado a rotina irá pesquisar pela data inicial e final do periodo",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "InitialDate": {
-          "description": "Data Inicial do Período",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CTG_DTINI",
-              "required": true,
-              "type": "Data",
-              "length": "08",
-              "note": "Data Inicial do Período",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "FinalDate": {
-          "description": "Data Final do Período",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CTG_DTFIM",
-              "required": true,
-              "type": "Data",
-              "length": "08",
-              "note": "Data Final do Período",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "PeriodStatus": {
-          "description": "Status do Período PROTHEUS: ( 1.Aberto 4.Bloqueado) / 1 - Aberto / 4 - Bloqueado",
-          "type": "string",
-          "enum": [
-            "1",
-            "4"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CTG_STATUS",
-              "required": true,
-              "type": "char",
-              "length": "01",
-              "note": "Status do Período. 1- Aberto - Permite o lançamento contábil no período. 4 - Bloqueado - Não permite o lançamento.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ListOfProcess": {
-          "description": "Lista de processos",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ProcessType",
-            "type": "object"
-          }
-        }
-      },
-      "required": [
-        "PeriodCode",
-        "InitialDate",
-        "FinalDate",
-        "PeriodStatus"
-      ]
-    },
-    "ProcessType": {
-      "type": "object",
-      "properties": {
-        "Code": {
-          "description": "Bloqueio de Processo / ATF001 - Ativo fixo / COM001 - Compras / CTB001 - Contábil / EST001 - Estoque / FIN001 - Financeiro (contas a pagar) / FIN002 - Financeiro (contas a receber) / FIS001 - Livros fiscais / GCT001 - Gestão de contratos / GPE001 - Gestão pessoal / PLS000 - Planos de saúde (geral) / PLS001 - Planos de saúde (liberação para pagamento) / PLS002 - Planos de saúde (recurso de glosa) / PLS003 - Planos de saúde (cancelamento de protocolo) / PLS004 - Planos de saúde (consolidação de coparticipação) / PLS005 - Planos de saúde (recálculo da coparticipação) / PLS006 - Planos de saúde (estorno de pagamento) / PLS007 - Planos de saúde (clone de guias) / PLS008 - Planos de saúde (liberação para pagamento da autorização) / PLS009 - Planos de saúde (acerto de reembolso) / PLS010 - Planos de saúde (cancelamento de reembolso) / PLS011 - Planos de saúde (digitação de contas) / PLS012 - Planos de saúde (reconsolidação individual) / TUR001 - Gestão de viagens e turismo",
-          "type": "string",
-          "enum": [
-            "ATF001",
-            "COM001",
-            "CTB001",
-            "EST001",
-            "FIN001",
-            "FIN002",
-            "FIS001",
-            "GCT001",
-            "GPE001",
-            "PLS000",
-            "PLS001",
-            "PLS002",
-            "PLS003",
-            "PLS004",
-            "PLS005",
-            "PLS006",
-            "PLS007",
-            "PLS008",
-            "PLS009",
-            "PLS010",
-            "PLS011",
-            "PLS012",
-            "TUR001"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CQD_PROC",
-              "required": true,
-              "type": "Varchar",
-              "length": "6",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Status": {
-          "description": "Status do Processo / 1 - Aberto / 2 - Fechado / 3 - Transportado / 4 - Bloqueado / 5 - Período",
-          "type": "string",
-          "enum": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CQD_STATUS",
-              "required": true,
-              "type": "Varchar",
-              "length": "1",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "StartDate": {
-          "description": "Data Inicial do Período Bloqueio",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CQD_DTINI",
-              "required": false,
-              "type": "Data",
-              "length": "08",
-              "note": "Data Inicial do Período Bloqueio",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "EndDate": {
-          "description": "Data Final do Período Bloqueio",
-          "type": "string",
-          "format": "date",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "CQD_DTFIM",
-              "required": false,
-              "type": "Data",
-              "length": "08",
-              "note": "Data Final do Período Bloqueio",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        }
-      },
-      "required": [
-        "Code",
-        "Status"
-      ]
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfInternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
-            "type": "object"
-          }
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingCalendar_1_001.json#",
+	"info": {
+		"description": "",
+		"version": "1.001",
+		"title": "AccountingCalendar",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "AccountingCalendar",
+				"description": "Calendário Contábil",
+				"segment": "Controladoria"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Felipe Cunha",
+					"note": "",
+					"adapter": "CTBI010.prw"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedItems": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/AccountingCalendarInfo"
+				}
+			]
+		},
+		"AccountingCalendarInfo": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/BusinessContentType"
+					}
+				}
+			}
+		},
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Código da Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "char",
+							"length": "02",
+							"note": "será enviado o valor da variável cEmpAnt (empresa)",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Código da Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "char",
+							"length": "12",
+							"note": "Será enviado o valor da variável cFilAnt",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa de empresa do produto",
+					"type": "string"
+				},
+				"CalendarCode": {
+					"description": "Código do Calendário",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CTG_CALEND",
+							"required": false,
+							"type": "char",
+							"length": "03",
+							"note": "Código do calendário contábil",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId do CalendarCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "Código que irá identificar o calendario contabil no sistema externo: xfilial(\"CTG\") + CTG.CTG_CALEND + CTG.CTG_EXERC",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinancialYear": {
+					"description": "Exercicio Contábil",
+					"type": "string",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CTG_EXERC",
+							"required": true,
+							"type": "char",
+							"length": "04",
+							"note": "Ano do exercicio contábil. Exemplo 2013",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfAccountingPeriods": {
+					"description": "Periodos Contábeis",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/PeriodOfAccountType",
+						"type": "object"
+					}
+				}
+			},
+			"required": [
+				"FinancialYear"
+			]
+		},
+		"PeriodOfAccountType": {
+			"type": "object",
+			"properties": {
+				"PeriodCode": {
+					"description": "Código Periodo Contabil",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CTG_PERIOD",
+							"required": false,
+							"type": "char",
+							"length": "02",
+							"note": "Código alfanumerico do periodo contábil. Caso não seja passado a rotina irá pesquisar pela data inicial e final do periodo",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InitialDate": {
+					"description": "Data Inicial do Período",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CTG_DTINI",
+							"required": true,
+							"type": "Data",
+							"length": "08",
+							"note": "Data Inicial do Período",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinalDate": {
+					"description": "Data Final do Período",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CTG_DTFIM",
+							"required": true,
+							"type": "Data",
+							"length": "08",
+							"note": "Data Final do Período",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PeriodStatus": {
+					"description": "Status do Período PROTHEUS: ( 1.Aberto 4.Bloqueado) / 1 - Aberto / 4 - Bloqueado",
+					"type": "string",
+					"enum": [
+						"1",
+						"4"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CTG_STATUS",
+							"required": true,
+							"type": "char",
+							"length": "01",
+							"note": "Status do Período. 1- Aberto - Permite o lançamento contábil no período. 4 - Bloqueado - Não permite o lançamento.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfProcess": {
+					"description": "Lista de processos",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ProcessType",
+						"type": "object"
+					}
+				}
+			},
+			"required": [
+				"PeriodCode",
+				"InitialDate",
+				"FinalDate",
+				"PeriodStatus"
+			]
+		},
+		"ProcessType": {
+			"type": "object",
+			"properties": {
+				"Code": {
+					"description": "Bloqueio de Processo / ATF001 - Ativo fixo / COM001 - Compras / CTB001 - Contábil / EST001 - Estoque / FIN001 - Financeiro (contas a pagar) / FIN002 - Financeiro (contas a receber) / FIS001 - Livros fiscais / GCT001 - Gestão de contratos / GPE001 - Gestão pessoal / PLS000 - Planos de saúde (geral) / PLS001 - Planos de saúde (liberação para pagamento) / PLS002 - Planos de saúde (recurso de glosa) / PLS003 - Planos de saúde (cancelamento de protocolo) / PLS004 - Planos de saúde (consolidação de coparticipação) / PLS005 - Planos de saúde (recálculo da coparticipação) / PLS006 - Planos de saúde (estorno de pagamento) / PLS007 - Planos de saúde (clone de guias) / PLS008 - Planos de saúde (liberação para pagamento da autorização) / PLS009 - Planos de saúde (acerto de reembolso) / PLS010 - Planos de saúde (cancelamento de reembolso) / PLS011 - Planos de saúde (digitação de contas) / PLS012 - Planos de saúde (reconsolidação individual) / TUR001 - Gestão de viagens e turismo",
+					"type": "string",
+					"enum": [
+						"ATF001",
+						"COM001",
+						"CTB001",
+						"EST001",
+						"FIN001",
+						"FIN002",
+						"FIS001",
+						"GCT001",
+						"GPE001",
+						"PLS000",
+						"PLS001",
+						"PLS002",
+						"PLS003",
+						"PLS004",
+						"PLS005",
+						"PLS006",
+						"PLS007",
+						"PLS008",
+						"PLS009",
+						"PLS010",
+						"PLS011",
+						"PLS012",
+						"TUR001"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CQD_PROC",
+							"required": true,
+							"type": "Varchar",
+							"length": "6",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Status": {
+					"description": "Status do Processo / 1 - Aberto / 2 - Fechado / 3 - Transportado / 4 - Bloqueado / 5 - Período",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CQD_STATUS",
+							"required": true,
+							"type": "Varchar",
+							"length": "1",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StartDate": {
+					"description": "Data Inicial do Período Bloqueio",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CQD_DTINI",
+							"required": false,
+							"type": "Data",
+							"length": "08",
+							"note": "Data Inicial do Período Bloqueio",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EndDate": {
+					"description": "Data Final do Período Bloqueio",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "CQD_DTFIM",
+							"required": false,
+							"type": "Data",
+							"length": "08",
+							"note": "Data Final do Período Bloqueio",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			},
+			"required": [
+				"Code",
+				"Status"
+			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
 }
