@@ -43,7 +43,7 @@ describe("Validating OpenAPI files...", function () {
               derefResult = JSON.parse(file); //Need to have other obj reference than the previous one          
               derefResult = await deref.getDereferenced(derefResult);
               pathValidator.clear();
-              pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI, derefResult);
+              pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI, derefResult.payload);
               done();
             })
 
@@ -123,7 +123,7 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should be dereferenced. This means all external references are correct (FilePaths and Object property names)", function () {
-                expect(derefResult, derefErroDetail).to.be.ok;
+                expect(derefResult.payload, derefResult.derefErroDetail).to.be.ok;
               });
 
               it("should contain the same Id property name in URL and body", function () {

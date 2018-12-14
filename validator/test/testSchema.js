@@ -34,8 +34,8 @@ describe("Validating Schema files...", function () {
             before(async function (done) { //only used done here to be able to use the timeout (next line);
               this.timeout(60000);
               parsedSchema = JSON.parse(file);
-              dereferencedSchema = await deref.getDereferenced(parsedSchema);
-              parsedSchema = dereferencedSchema;
+              // dereferencedSchema = await deref.getDereferenced(parsedSchema);
+              // parsedSchema = dereferencedSchema;
               schemaDefinitionsValidator.clear();
               schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema, done);
             })

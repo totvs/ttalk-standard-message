@@ -252,14 +252,16 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
-        var dereferencedResponse = dereferencedResponses[responseKey];
+        if(dereferencedResponses) var dereferencedResponse = dereferencedResponses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
             checkIfSchemaIsSettedToExternaFile(response, true);
             if (responseKey < 400) { //Only success response 
-                if (dereferencedResponse.content['application/json'].schema) {
-                    checkIfHasNextAndItems(dereferencedResponse, pathkey);
-                    containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
+                if (dereferencedResponse) {
+                    if (dereferencedResponse.content['application/json'].schema) {
+                        checkIfHasNextAndItems(dereferencedResponse, pathkey);
+                        containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
+                    }
                 }
             }
         }
@@ -432,17 +434,17 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
             } else {
                 verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
-                var dereferenceHttpVerbInfo = derefOpenAPI.paths[pathkey][httpVerbkey];
+                if (derefOpenAPI) var dereferenceHttpVerbInfo = derefOpenAPI.paths[pathkey][httpVerbkey];
                 checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
                 checkIfOperationIdIsUnique(httpVerbInfo.operationId);
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid);
                 var request = httpVerbInfo.requestBody;
-                var dereferencedRequest = dereferenceHttpVerbInfo.requestBody;
+                if (dereferenceHttpVerbInfo) var dereferencedRequest = dereferenceHttpVerbInfo.requestBody;
                 checkIfSchemaIsSettedToExternaFile(request);
                 // addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
                 var responses = httpVerbInfo.responses;
-                var dereferencedResponses = dereferenceHttpVerbInfo.responses;
+                if (dereferenceHttpVerbInfo) var dereferencedResponses = dereferenceHttpVerbInfo.responses;
                 runThroughResponses(responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
             }
         }

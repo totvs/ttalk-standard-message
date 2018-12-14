@@ -21,9 +21,10 @@ exports.getDereferenced = async function (parsedSchema) {
             var resultEvaluation = true;
         }
         if (resultEvaluation) {
-            dereferencedSchema = newSchema;
+            dereferencedSchema.payload = newSchema;
         } else {
-            dereferencedSchema = resultEvaluation;
+            dereferencedSchema.payload = false;
+            dereferencedSchema.derefErroDetail = err;
         }
     });
     return dereferencedSchema;
