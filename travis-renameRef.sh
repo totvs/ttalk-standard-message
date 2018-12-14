@@ -1,5 +1,5 @@
-git config --global user.email "francardoso@outlook.com"
-git config --global user.name "francardoso93"
+git config --global user.email "TOTVS.TECNOLOGIA.INTEGRACOES@totvs.com.br"
+git config --global user.name "TTalkIntegracoes"
 
 git checkout ${TRAVIS_BRANCH}
 git pull                   

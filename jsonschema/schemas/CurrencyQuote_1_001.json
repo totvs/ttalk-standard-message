@@ -8,7 +8,7 @@
 		"x-totvs": {
 			"messageDocumentation": {
 				"name": "CurrencyQuote",
-				"description": "Mensagem de integração de cotação da moeda.",
+				"description": "Mensagem de integração de cotação de moedas.",
 				"segment": "Geral"
 			},
 			"productInformation": [
@@ -22,24 +22,78 @@
 			"transactionDefinition": {
 				"subType": "event",
 				"businessContentType": {
-					"$ref": "#/definitions/BusinessContentType",
+					"$ref": "#/definitions/CurrencyQuoteInfo",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
 					"type": "object"
 				}
 			}
 		}
 	},
 	"definitions": {
-		"BusinessContentType": {
+		"PagedCurrencyQuote": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/CurrencyQuotes"
+				}
+			]
+		},
+		"CurrencyQuotes": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CurrencyQuoteInfo"
+					}
+				}
+			}
+		},
+		"CurrencyQuoteInfo": {
 			"type": "object",
 			"properties": {
 				"CompanyId": {
-					"type": "string"
+					"type": "string",
+					"description": "Código da Empresa",
+					"example": "T1 ",
+					"maxLength": 3
 				},
 				"BranchId": {
-					"type": "string"
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"maxLength": 12,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "SM2.M2_FILIAL",
+							"required": false,
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
 				},
 				"CompanyInternalId": {
-					"type": "string"
+					"type": "string",
+					"description": "Identificador da Empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|SM2.M2_DATA",
+							"required": true,
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
 				},
 				"Date": {
 					"description": "Data da cotação",
@@ -72,7 +126,8 @@
 				"CompanyId",
 				"BranchId",
 				"CompanyInternalId",
-				"Date"
+				"Date",
+				"ListOfCurrency"
 			]
 		},
 		"CurrencyType": {
@@ -108,13 +163,13 @@
 							"type": "varchar",
 							"length": "250",
 							"note": "",
-							"available": true,
+							"available": false,
 							"canUpdate": false
 						}
 					]
 				},
 				"Symbol": {
-					"description": "Símbolo da moeda (R$, US$, €...)",
+					"description": "Súmbolo da moeda (R$, US$, €...)",
 					"type": "string",
 					"x-totvs": [
 						{
@@ -124,7 +179,7 @@
 							"type": "varchar",
 							"length": "250",
 							"note": "",
-							"available": true,
+							"available": false,
 							"canUpdate": false
 						}
 					]
@@ -142,7 +197,7 @@
 							"length": "11v4",
 							"note": "",
 							"available": true,
-							"canUpdate": false
+							"canUpdate": true
 						}
 					]
 				}
@@ -151,6 +206,18 @@
 				"Code",
 				"Quote"
 			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
 		}
 	}
 }
