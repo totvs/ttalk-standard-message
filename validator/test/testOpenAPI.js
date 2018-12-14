@@ -9,7 +9,7 @@ var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../libOpenAPI/pathValidator.js');
 var expect = require('chai').expect;
-var deref = require('../libCommons/deref.js')
+var $RefParser = require('json-schema-ref-parser');
 
 var segmentDictionary = {};
 
@@ -41,10 +41,32 @@ describe("Validating OpenAPI files...", function () {
               this.timeout(60000);
               parsedOpenAPI = JSON.parse(file);
               derefResult = JSON.parse(file); //Need to have other obj reference than the previous one          
-              derefResult = await deref.getDereferenced(derefResult);
-              pathValidator.clear();
-              pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI, derefResult.payload);
-              done();
+
+              var parser = new $RefParser();
+              await parser.dereference(derefResult, { // (.dereference could be .bundle) doc: https://apidevtools.org/json-schema-ref-parser/docs/ref-parser.html#bundleschema-options-callback
+                  dereference: { //these are options
+                    dereference: true
+                  },
+                  resolve: {
+                    external: true,
+                    http: {
+                      redirects: 0,
+                      timeout: 50000
+                    }
+                  }
+                }, await
+                function (err, newSchema) {
+                  if (err) {
+                    derefResult = false;
+                    derefErroDetail = err;
+
+                  } else {
+                    derefResult = newSchema;
+                  }
+                  pathValidator.clear();
+                  pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI, derefResult);
+                  done();
+                });
             })
 
             describe(" - Filename: ", function () {
@@ -123,7 +145,7 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should be dereferenced. This means all external references are correct (FilePaths and Object property names)", function () {
-                expect(derefResult.payload, derefResult.derefErroDetail).to.be.ok;
+                expect(derefResult, derefErroDetail).to.be.ok;
               });
 
               it("should contain the same Id property name in URL and body", function () {
