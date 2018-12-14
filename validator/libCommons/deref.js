@@ -23,7 +23,7 @@ exports.getDereferenced = async function (parsedSchema) {
         if (resultEvaluation) {
             dereferencedSchema = newSchema;
         } else {
-            dereferencedSchema = parsedSchema;
+            dereferencedSchema = resultEvaluation;
         }
     });
     return dereferencedSchema;
