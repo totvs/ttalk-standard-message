@@ -1,0 +1,2741 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Order_4_008.json#",
+	"info": {
+		"description": "",
+		"version": "4.008",
+		"title": "Order",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Order",
+				"description": "Pedido de venda",
+				"segment": "Construção e Projetos"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "Alaim Porto Alvarenga",
+					"note": "GDP Inovação Const. e Proj.",
+					"adapter": "MovMovimentoData"
+				},
+				{
+					"product": "PROTHEUS",
+					"contact": "Hanna Caroline Inglez",
+					"note": "GDP de Serviços",
+					"adapter": "MATA410"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		},
+		"_warningConversorAuto": "A tag MessageDocumentation está duplicada no XML. O valor de 'info' pode ter sido gerado incorretamente"
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCOLIGADA|TMOV.CODFILIAL",
+							"required": true,
+							"type": "integer|integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "o InternalID da empresa é formado por EMPRESA|F1_FILIAL. Tamanho entre 05 e 15",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODFILIAL",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"funcmsgorder": {
+					"$ref": "#/definitions/tsfuncmsgorder",
+					"type": "object"
+				},
+				"OrderPurpose": {
+					"description": "Objetivo do pedido / 1 - Compra / 2 - Venda",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					]
+				},
+				"ordertypecode": {
+					"$ref": "#/definitions/tsordertypecode",
+					"type": "object"
+				},
+				"CustomerOrderId": {
+					"description": "Número do Pedido do Cliente (no LOGIX esta informação fica na capa do pedido)",
+					"type": "string"
+				},
+				"InternalId": {
+					"description": "InternalId do Pedido",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCOLIGADA|TMOV.IDMOV",
+							"required": true,
+							"type": "integer|integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId é formado por FILIAL|C7_NUM",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RegisterDate": {
+					"description": "Data de Emissao",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.DATAEMISSAO",
+							"required": true,
+							"type": "DateTime",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_EMISSAO",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OrderId": {
+					"description": "No.do Pedido (Deve ser enviado somente para alteracao e exclusao)",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_NUM",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Version": {
+					"description": "Versão do Pedido de Compra",
+					"type": "string"
+				},
+				"RegisterHour": {
+					"description": "Hora de Emissao",
+					"type": "string",
+					"pattern": "(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"
+				},
+				"dhinidelivery": {
+					"$ref": "#/definitions/tsDataTempo",
+					"type": "object"
+				},
+				"dhfindelivery": {
+					"$ref": "#/definitions/tsDataTempo",
+					"type": "object"
+				},
+				"RequestDate": {
+					"description": "Data da solicitação do pedido Cliente/Representante",
+					"type": "string",
+					"format": "date"
+				},
+				"FreightType": {
+					"description": "Tipo de Frete / 1 - CIF / 2 - FOB / 3 - SFT",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3"
+					]
+				},
+				"FreightValue": {
+					"description": "Frete",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_VALFRE",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RedeliveryCarrierCode": {
+					"description": "Redespacho",
+					"type": "string",
+					"maxLength": 15
+				},
+				"InvoiceMessages": {
+					"$ref": "#/definitions/InvoiceMessageType",
+					"description": "Mensagem da Nota Fiscal",
+					"type": "object"
+				},
+				"NetWeight": {
+					"description": "Peso Líquido",
+					"type": "number",
+					"format": "double"
+				},
+				"GrossWeight": {
+					"description": "Peso Bruto",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_PESO_B",
+							"required": false,
+							"type": "decimal",
+							"length": "13,3",
+							"note": "Contém a máscara numérica @E 999,999,999.999",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TareWeight": {
+					"description": "Peso Tara",
+					"type": "number",
+					"format": "double"
+				},
+				"CubicVolume": {
+					"description": "Volume Cúbico",
+					"type": "number",
+					"format": "double"
+				},
+				"NumberOfVolumes": {
+					"description": "Número de volumes",
+					"type": "number",
+					"format": "double"
+				},
+				"Finality": {
+					"description": "Finalidade / 1 - Contribuinte ICMS (Indústria/Comércio) / 2 - Não-contribuinte ICMS",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					]
+				},
+				"InsuranceValue": {
+					"description": "Valor do Seguro (Conta e Ordem)",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_SEGURO",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ExpenseValue": {
+					"description": "Valor da despesa acessoria",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC5XX0.C5_DESPESA",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AdditionValue": {
+					"description": "Acrescimo Financeiro",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC5XX0.C5_ACRSFIN",
+							"required": false,
+							"type": "decimal",
+							"length": "6,2",
+							"note": "Contém a máscara numérica @E 999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CurrencyCode": {
+					"description": "LOGIX: Moeda do Pedido",
+					"type": "string"
+				},
+				"CurrencyId": {
+					"$ref": "#/definitions/tscurrency",
+					"type": "object"
+				},
+				"currencydesc": {
+					"$ref": "#/definitions/tscurrencydesc",
+					"type": "object"
+				},
+				"SalesChannel": {
+					"description": "Canal de venda",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Datasul",
+							"field": "ped-venda.cod-canal-venda",
+							"required": true,
+							"type": "integer",
+							"length": ">>9",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SalesChannelInternalId": {
+					"description": "InternalId Canal de venda",
+					"type": "string"
+				},
+				"Status": {
+					"description": "Status do Pedido / 1 - Normal / 2 - Bloqueado / 3 - Liberado / 4 - Liberado Financeiro / 5 - Liberado Financeiro e Comercial / 6 - Suspenso / 7 - Cancelado",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7"
+					]
+				},
+				"contractnumber": {
+					"$ref": "#/definitions/tscontractnumber",
+					"type": "object"
+				},
+				"pricetablenumber": {
+					"$ref": "#/definitions/tspricetablenumber",
+					"type": "object"
+				},
+				"VendorGovInfo": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
+					"description": "Inscrição Estadual do fornecedor que será utilizada para gerar o pedido",
+					"type": "object"
+				},
+				"CustomerCode": {
+					"description": "Código do cliente/fornecedor",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCFO",
+							"required": true,
+							"type": "string",
+							"length": "25",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_FORNECE",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CustomerInternalId": {
+					"description": "InternalId do cliente/fornecedor",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCOLCFO|TMOV.CODCFO",
+							"required": true,
+							"type": "integer|string",
+							"length": "|25",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId do fornecedor é formado por EMPRESA|A2_FILIAL|A2_COD|A2_LOJA",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CustomerGovInfo": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
+					"description": "Documentos do cliente/comprador",
+					"type": "object"
+				},
+				"DeliveryCustomerCode": {
+					"description": "Código do Cliente de Entrega",
+					"type": "string",
+					"maxLength": 15
+				},
+				"DeliveryCustomerGovernmentalInformation": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
+					"description": "Documentos do cliente/comprador para o qual será feita a entrega",
+					"type": "object"
+				},
+				"DeliveryAddress": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_1_000.json#/definitions/AddressType",
+					"description": "Endereço de Entrega",
+					"type": "object"
+				},
+				"BillingLocationGovInfo": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
+					"description": "Documentos do cliente/comprador para o qual será feita a entrega",
+					"type": "object"
+				},
+				"CarrierGovInfo": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
+					"description": "Documentos do transportador",
+					"type": "object"
+				},
+				"CarrierCode": {
+					"description": "Código da Transportadora",
+					"type": "string",
+					"maxLength": 15
+				},
+				"carriername": {
+					"$ref": "#/definitions/tscarriername",
+					"type": "object"
+				},
+				"comment": {
+					"$ref": "#/definitions/tscomment",
+					"type": "object"
+				},
+				"natureoperation": {
+					"$ref": "#/definitions/tsnatureoperation",
+					"type": "object"
+				},
+				"OrderItemAmount": {
+					"description": "Valor total liquido dos itens do pedido",
+					"type": "number",
+					"multipleOf": 0.0001,
+					"minimum": -99999999999.9999,
+					"maximum": 99999999999.9999
+				},
+				"TotalPercentageOfOrderDiscount": {
+					"description": "Percentual de desconto total do pedido",
+					"type": "number",
+					"multipleOf": 0.0001,
+					"minimum": -99999999999.9999,
+					"maximum": 99999999999.9999
+				},
+				"IsDiscountTableUsedInThisOrder": {
+					"description": "Usa a tabela de descontos no tratamento deste pedido?",
+					"type": "boolean"
+				},
+				"ValuePackaging": {
+					"description": "Valor total da Embalagem do Pedido.",
+					"type": "number",
+					"multipleOf": 0.0001,
+					"minimum": -99999999999.9999,
+					"maximum": 99999999999.9999
+				},
+				"priority": {
+					"description": "A prioridade pode variar de 0 a 99. 0 maior prioridade",
+					"type": "integer",
+					"format": "int32"
+				},
+				"UserInternalId": {
+					"description": "InternalId do Usuario",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "Comprador.Login",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"conditionpay": {
+					"$ref": "#/definitions/tsconditionpay",
+					"type": "object"
+				},
+				"PaymentTermCode": {
+					"description": "Condição de Pagamento",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCPG",
+							"required": true,
+							"type": "string",
+							"length": "5",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_COND",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentConditionInternalId": {
+					"description": "InternalId da condição de pagamento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "CODCOLIGADA|TMOV.CODCPG",
+							"required": true,
+							"type": "integer|string",
+							"length": "|5",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId da Condição de Pagamento é formado por EMPRESA|E4_FILIAL|E4_CODIGO",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"descconditionpay": {
+					"$ref": "#/definitions/tsdesccondition",
+					"type": "object"
+				},
+				"Discounts": {
+					"$ref": "#/definitions/DiscountType",
+					"description": "Descontos",
+					"type": "object"
+				},
+				"FinancialDiscount": {
+					"description": "Desconto Financeiro",
+					"type": "number",
+					"format": "double"
+				},
+				"TotalDiscount": {
+					"type": "number",
+					"format": "double"
+				},
+				"orderpricetype": {
+					"$ref": "#/definitions/tsorderpricetype",
+					"type": "object"
+				},
+				"OrderNumberRepres": {
+					"$ref": "#/definitions/tsnumpedidorepres",
+					"type": "object"
+				},
+				"PAYMENTPLAN": {
+					"$ref": "#/definitions/tcPayment",
+					"type": "object"
+				},
+				"LISTOFTAXESDOCUMENT": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/tcListoftaxes",
+						"type": "object"
+					}
+				},
+				"WorkCode": {
+					"description": "Número do CNO",
+					"type": "string",
+					"maxLength": 14
+				},
+				"SalesOrderItens": {
+					"$ref": "#/definitions/SalesOrderItensType",
+					"description": "Itens do Pedido",
+					"type": "object"
+				},
+				"Observation": {
+					"description": "Observações do Pedido",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SalesOperationTypeCode": {
+					"description": "Tipo de operação de venda",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "",
+							"note": "Tipo de operação de venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SalesOperationTypeInternalId": {
+					"description": "InternalId para o tipo de operação de venda",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "",
+							"note": "Tipo de operação de venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CollectionTypeCode": {
+					"description": "Tipo de cobrança",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "",
+							"note": "Tipo de cobrança - Método de pagamento do Ciashop",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CollectionTypeInternalId": {
+					"description": "InternalId para o tipo de cobrança",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "",
+							"note": "Tipo de cobrança - Método de pagamento do Ciashop",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OTHER": {
+					"$ref": "#/definitions/tcother",
+					"type": "object"
+				},
+				"SUMMARY": {
+					"$ref": "#/definitions/tcSummary",
+					"type": "object"
+				},
+				"SellerCode": {
+					"description": "Código do vendedor",
+					"type": "string"
+				},
+				"ListOfCreditDocument": {
+					"description": "Lista de créditos referentes a título a pagar",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CreditDocumentType",
+						"type": "object"
+					}
+				},
+				"TaskCostAssignmentDocument": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/AssignmentTypeEnum_1_000.json#/definitions/AssignmentTypeEnum",
+					"description": "Tipo de documento onde o custo Pedido de Compras deve ser apropriado. Ex.: Nota Fiscal",
+					"type": "object",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Este campo será identificado com base na origem do Pedido de Compra e parâmetros de projeto e do contrato.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemReserveInternalId": {
+					"description": "Id da Reserva do item",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId da Reserva do item é formado por EMPRESA|C0_FILIAL|C0_NUM não existe campo fisico, mas o número da reserva é gravado no C6_RESERVA",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"LotNumber": {
+					"description": "Número do Lote do Produto",
+					"type": "string",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC6.C6_LOTECTL",
+							"required": false,
+							"type": "varchar",
+							"length": "10",
+							"note": "Numero do lote do produto cadastrado no estoque.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SubLotNumber": {
+					"description": "Número do SubLote do Produto",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC6.C6_NUMLOTE",
+							"required": false,
+							"type": "varchar",
+							"length": "6",
+							"note": "Numero do Sublote do produto cadastrado no estoque",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AddressItem": {
+					"description": "Endereço do produto no estoque",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC6.C6_LOCALIZ",
+							"required": false,
+							"type": "varchar",
+							"length": "15",
+							"note": "Código do endereço de estoque cadastrado para produtos que possuem endereçamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SeriesItem": {
+					"description": "Número de Série do Produto",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_NSERIE",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"note": "Número de série do produto, para produtos que possuem endereçamento e série.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"SalesOrderItensType": {
+			"type": "object",
+			"properties": {
+				"Item": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/tcOrderItem",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"tcPayment": {
+			"type": "object",
+			"properties": {
+				"TERM": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/tcTerm",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"tcTerm": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"description": "InternalId da Parcela",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TPAGTO.CODCOLIGADA|TPAGTO.IDSEQPAGTO",
+							"required": true,
+							"type": "integer|integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"conditionpay": {
+					"$ref": "#/definitions/tsconditionpay",
+					"type": "object"
+				},
+				"datereference": {
+					"$ref": "#/definitions/tsdatereference",
+					"type": "object"
+				},
+				"timereference": {
+					"$ref": "#/definitions/tstimereference",
+					"type": "object"
+				},
+				"typeperiod": {
+					"$ref": "#/definitions/tstypeperiod",
+					"type": "object"
+				},
+				"periodnum": {
+					"$ref": "#/definitions/tsperiodnum",
+					"type": "object"
+				},
+				"termduedate": {
+					"$ref": "#/definitions/tsData",
+					"type": "object"
+				},
+				"termamount": {
+					"$ref": "#/definitions/tstam17dec3",
+					"type": "object"
+				},
+				"termpaymentpercentage": {
+					"$ref": "#/definitions/tstam06dec3",
+					"type": "object"
+				}
+			}
+		},
+		"tcListoftaxes": {
+			"type": "object",
+			"properties": {
+				"VALUESANDTAXES": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/tcValuesandtaxes",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"tcaddfields": {
+			"type": "array",
+			"maxItems": 20,
+			"items": {
+				"type": "object",
+				"properties": {
+					"ADDFIELD": {
+						"$ref": "#/definitions/tcAddField",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"tcother": {
+			"type": "object",
+			"properties": {
+				"ADDFIELDS": {
+					"$ref": "#/definitions/tcaddfields",
+					"type": "object"
+				}
+			}
+		},
+		"tcValuesandtaxes": {
+			"type": "object",
+			"properties": {
+				"tpvalue": {
+					"$ref": "#/definitions/tstpvalue",
+					"type": "object"
+				},
+				"tpreasondescandtax": {
+					"$ref": "#/definitions/tstpreasondescandtax",
+					"type": "object"
+				},
+				"percdescandtaxes": {
+					"$ref": "#/definitions/tstam06dec2",
+					"type": "object"
+				},
+				"valuedescandtaxes": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				}
+			}
+		},
+		"tcOrderItem": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OrderId": {
+					"type": "string",
+					"maxLength": 6
+				},
+				"OrderItem": {
+					"description": "Item",
+					"type": "string",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.NSEQITMMOV",
+							"required": true,
+							"type": "number",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_ITEM",
+							"required": true,
+							"type": "varchar",
+							"length": "4",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId do item do Pedido",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.CODCOLIGADA|TITMMOV.IDMOV|TITMMOV.NSEQITMMOV",
+							"required": true,
+							"type": "integer|integer|integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "sim",
+							"length": "50",
+							"note": "O InternalId do item do Pedido é formado por EMPRESA|FILIAL|C7_ITEM",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"numitemrequest": {
+					"$ref": "#/definitions/tsnumitemrequest",
+					"type": "object"
+				},
+				"typecodprod": {
+					"$ref": "#/definitions/tstypecodprod",
+					"type": "object"
+				},
+				"ItemCode": {
+					"description": "Produto",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.IDPRD",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_PRODUTO",
+							"required": true,
+							"type": "varchar",
+							"length": "15",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemInternalId": {
+					"description": "InternalId do Produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.IDPRD",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId do produto é formado por EMPRESA|B1_FILIAL|B1_COD",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"prodcoderpbuy": {
+					"$ref": "#/definitions/tsprodcoderpbuy",
+					"type": "object"
+				},
+				"ItemDescription": {
+					"description": "Descrição do Produto",
+					"type": "string",
+					"maxLength": 80,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_DESCRI",
+							"required": false,
+							"type": "varchar",
+							"length": "30",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"itemreferencecode": {
+					"$ref": "#/definitions/tsitemreferencecode",
+					"type": "object"
+				},
+				"itemunitofmeasure": {
+					"$ref": "#/definitions/tsunitofmeasure",
+					"description": "Unidade de Medida do Item",
+					"type": "object",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_UM",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"descunitmensure": {
+					"$ref": "#/definitions/tsdescunitmeasure",
+					"type": "object"
+				},
+				"numunitconsembped": {
+					"$ref": "#/definitions/tsnumunitconsembped",
+					"type": "object"
+				},
+				"Quantity": {
+					"description": "Quantidade",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.QUANTIDADE",
+							"required": true,
+							"type": "decimal",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_QUANT",
+							"required": true,
+							"type": "decimal",
+							"length": "12,2",
+							"note": "Contém a máscara numérica @E 999999999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"amountsubsid": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"quantexchange": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"typepacking": {
+					"$ref": "#/definitions/tstypepacking",
+					"type": "object"
+				},
+				"numpacking": {
+					"$ref": "#/definitions/tsnumpacking",
+					"type": "object"
+				},
+				"UnityPrice": {
+					"description": "Preço Unitario",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.PRECOUNITARIO",
+							"required": true,
+							"type": "decimal",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_PRECO",
+							"required": true,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"netunitaryprice": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				},
+				"baseunitprice": {
+					"$ref": "#/definitions/tsbaseunitprice",
+					"type": "object"
+				},
+				"unitmeasubonusprice": {
+					"$ref": "#/definitions/tsunitmeasubonusprice",
+					"type": "object"
+				},
+				"TotalPrice": {
+					"description": "Valor Total",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.VALORLIQUIDO",
+							"required": true,
+							"type": "decimal",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_TOTAL",
+							"required": true,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TypeOperation": {
+					"description": "Tipo da Operacao ??em discussao??",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "C6_TES OU C6_OPER",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "Caso receba o campo menor igual a duas posições, caso contrário considera como TES do Protheus",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TaxOpCode": {
+					"description": "Codigo da Fiscal da Operacao - CFOP",
+					"type": "string",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC6XX0.C6_CF",
+							"required": true,
+							"type": "varchar",
+							"length": "4",
+							"note": "Contém a máscara @E 9999",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CustomerOrderNumber": {
+					"description": "Numero Pedido do Cliente",
+					"type": "string",
+					"maxLength": 9
+				},
+				"DiscountPercentage": {
+					"description": "Percentual de desconto do item",
+					"type": "number",
+					"format": "double"
+				},
+				"valnetlineitem": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				},
+				"unitvaltradedisc": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"perccommdiscount": {
+					"$ref": "#/definitions/tstam06dec2",
+					"type": "object"
+				},
+				"bonusdiscountvalue": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				},
+				"bonuspercentage": {
+					"$ref": "#/definitions/tstam06dec2",
+					"type": "object"
+				},
+				"valipi": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				},
+				"industrializedproducttaxpercentage": {
+					"$ref": "#/definitions/tstam06dec3",
+					"type": "object"
+				},
+				"servicesandproductscirculationtaxpercentage": {
+					"$ref": "#/definitions/tstam16dec3",
+					"type": "object"
+				},
+				"precenticmssubst": {
+					"$ref": "#/definitions/tstam06dec3",
+					"type": "object"
+				},
+				"unitvalacesscost": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"unitvalnotacesscost": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"ItemDiscounts": {
+					"$ref": "#/definitions/ItemDiscountType",
+					"description": "Valor de desconto do item",
+					"type": "object",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_VLDESC",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FreightValue": {
+					"description": "Valor do frete unitário",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_VALFRE",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InsuranceValue": {
+					"description": "Valor do Seguro Unitário",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_SEGURO",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UnitWeight": {
+					"description": "Peso Unitário (necessário no TradeEasy)",
+					"type": "number",
+					"format": "double"
+				},
+				"ItemMessages": {
+					"$ref": "#/definitions/ItemMessageType",
+					"description": "Texto do item",
+					"type": "object"
+				},
+				"contractnumber": {
+					"$ref": "#/definitions/tscontractnumber",
+					"type": "object"
+				},
+				"itemcodeprovider": {
+					"$ref": "#/definitions/tsitemcodeprovider",
+					"type": "object"
+				},
+				"convumprovider": {
+					"$ref": "#/definitions/tstam15dec7",
+					"type": "object"
+				},
+				"umprovider": {
+					"$ref": "#/definitions/tsumprovider",
+					"type": "object"
+				},
+				"pricetablenumber": {
+					"$ref": "#/definitions/tspricetablenumber",
+					"type": "object"
+				},
+				"ListOfReturnedInputDocuments": {
+					"description": "Notas fiscais de entrada retornadas",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfReturnedInputDocumentType",
+						"type": "object"
+					}
+				},
+				"OTHER": {
+					"$ref": "#/definitions/tcother",
+					"type": "object"
+				},
+				"CROSSDOCKING": {
+					"$ref": "#/definitions/tcCrossdocking",
+					"type": "object"
+				},
+				"LISTOFTAXESITEM": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/tcListoftaxesitem",
+						"type": "object"
+					}
+				},
+				"PriceOfPriceTable": {
+					"description": "Preço unitário da tabela de preço",
+					"type": "number",
+					"format": "double"
+				},
+				"CostCenterCode": {
+					"description": "Código do Centro de Custo",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_CC",
+							"required": true,
+							"type": "varchar",
+							"length": "9",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Retirement15Years": {
+					"description": "Aposentadoria Especial 15 anos",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_15ANOS",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Retirement20Years": {
+					"description": "Aposentadoria Especial 20 anos",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_20ANOS",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Retirement25Years": {
+					"description": "Aposentadoria Especial 25 anos",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SC7XX0.C7_25ANOS",
+							"required": false,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Contém a máscara numérica @E 999,999,999.99",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CostCenterInternalId": {
+					"description": "InternalId do CostCenterCode",
+					"type": "string"
+				},
+				"UnitOfMeasureInternalId": {
+					"description": "InternalId da Unidade de Medida",
+					"type": "string"
+				},
+				"WarehouseInternalId": {
+					"description": "InternalId do Local de Estoque",
+					"type": "string"
+				},
+				"Event": {
+					"description": "Operação a ser executada no registro. / delete - Quando este registro for exclusão",
+					"type": "string",
+					"enum": [
+						"delete"
+					]
+				},
+				"Observation": {
+					"description": "Observações Item do Pedido",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfApportionOrderItem": {
+					"description": "Rateio dos Itens do Pedido",
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ApportionType_2_001.json#/definitions/ApportionType",
+						"type": "object"
+					}
+				},
+				"RetentionValue": {
+					"description": "Valor das Retenção",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.VALORRETENCAO",
+							"required": false,
+							"type": "Decimal",
+							"length": "",
+							"note": "Este campo é utilizado para destacar o valor RETIDO do pedido.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DeductionValue": {
+					"description": "Valor das Deduções",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TITMMOV.VALORDEDUCAO",
+							"required": false,
+							"type": "Decimal",
+							"length": "",
+							"note": "Este campo é utilizado para destacar o valor DEDUZIDO do pedido.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DirectDeductionValue": {
+					"description": "Valor das Deduções de fatuamento direto",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "Decimal",
+							"length": "",
+							"note": "Este campo é utilizado para destacar o valor DEDUZIDO de faturamento direto no pedido.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AmountBilled": {
+					"description": "Quantidade na UM utilizada para faturamento do item",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "Double",
+							"length": "",
+							"note": "Quantidade UM Fatur.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AmountRequested": {
+					"description": "Quantidade Pedida",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "Double",
+							"length": "",
+							"note": "Quantidade solicitada do item no pedido de compra ou venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AmountAttended": {
+					"description": "Quantidade Atendida",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "Double",
+							"length": "",
+							"note": "Quantidade faturada para o item no pedido",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountTotalValue": {
+					"description": "Valor desconto total",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "Double",
+							"length": "",
+							"note": "Valor desconto total",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemSituationCode": {
+					"description": "Código da situação do Item",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "",
+							"note": "Código da situação do Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemSituationInternalId": {
+					"description": "InternalId para o código da situação do item",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "String",
+							"length": "",
+							"note": "Código da situação do Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"tcListoftaxesitem": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"VALUESANDTAXES": {
+						"type": "array",
+						"items": {
+							"$ref": "#/definitions/tcValuesandtaxes",
+							"type": "object"
+						}
+					}
+				}
+			}
+		},
+		"tcCrossdocking": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"CROSSDOCKING_ITEM": {
+						"type": "array",
+						"items": {
+							"$ref": "#/definitions/tcCrossDocking_Item",
+							"type": "object"
+						}
+					}
+				}
+			}
+		},
+		"tcCrossDocking_Item": {
+			"type": "object",
+			"properties": {
+				"deliveryean": {
+					"$ref": "#/definitions/tsdeliveryean",
+					"type": "object"
+				},
+				"deliverycnpj": {
+					"$ref": "#/definitions/tsdeliverycnpj",
+					"type": "object"
+				},
+				"dhinidelivery": {
+					"$ref": "#/definitions/tsDataTempo",
+					"type": "object"
+				},
+				"dhfindelivery": {
+					"$ref": "#/definitions/tsDataTempo",
+					"type": "object"
+				},
+				"quantdelivery": {
+					"$ref": "#/definitions/tstam16dec6",
+					"type": "object"
+				},
+				"mensuunit": {
+					"$ref": "#/definitions/tsmensuunit",
+					"type": "object"
+				},
+				"orderline": {
+					"$ref": "#/definitions/tsorderline",
+					"type": "object"
+				},
+				"customernumber": {
+					"$ref": "#/definitions/tscustomernumber",
+					"type": "object"
+				}
+			}
+		},
+		"tcSummary": {
+			"type": "object",
+			"properties": {
+				"ordertotalnetamount": {
+					"$ref": "#/definitions/tstam17dec2",
+					"type": "object"
+				},
+				"valtotipimerchan": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				},
+				"discountamount": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				},
+				"valtottaxes": {
+					"$ref": "#/definitions/tstam17dec6",
+					"type": "object"
+				},
+				"valtotdesccomm": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"valtotaacesscost": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"valtotacessnottaxes": {
+					"$ref": "#/definitions/tstam16dec2",
+					"type": "object"
+				},
+				"ordertotalamount": {
+					"$ref": "#/definitions/tstam17dec2",
+					"type": "object"
+				},
+				"valtotbonus": {
+					"$ref": "#/definitions/tstam17dec2",
+					"type": "object"
+				},
+				"numtotpacking": {
+					"$ref": "#/definitions/tsnumtotpacking",
+					"type": "object"
+				},
+				"OTHER": {
+					"$ref": "#/definitions/tcother",
+					"type": "object"
+				}
+			}
+		},
+		"tcAddField": {
+			"type": "object",
+			"properties": {
+				"field": {
+					"$ref": "#/definitions/tsfield",
+					"type": "object"
+				},
+				"value": {
+					"$ref": "#/definitions/tsvalue",
+					"type": "object"
+				}
+			}
+		},
+		"CreditDocumentType": {
+			"type": "object",
+			"properties": {
+				"CreditDocumentInternalId": {
+					"description": "InternalId do título de origem do crédito",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Concatenação da chave da tabela TMOV do movimento gerado no adiantamento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Value": {
+					"description": "Valor",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Valor total das deduções sobre o adiantamento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"tsData": {
+			"description": "Tipo data AAAA-MM-DD",
+			"type": "string",
+			"format": "date"
+		},
+		"tsDataTempo": {
+			"description": "Tipo data AAAA-MM-DDThh:mm:ss",
+			"type": "string",
+			"format": "date-time"
+		},
+		"tsfuncmsgorder": {
+			"description": "Tipo de integração do pedido",
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"9",
+				"10",
+				"16",
+				"31",
+				"42",
+				"43",
+				"46"
+			],
+			"x-totvs": [
+				{
+					"product": "LOGIX",
+					"field": "N/A",
+					"required": true,
+					"type": "char",
+					"length": "3",
+					"note": "Opções: \"9\"- Original (Utilizada no Totvs Colaboração) \"10\"-Alteração (Utilizada no Paradigma) \"16\"-Proposta  \"31\"-Cópia  \"42\"-Confirmação (Utilizada no Paradigma) \"43\"-Recusa (Utilizada no Paradigma) \"46\"-Provisória",
+					"available": true,
+					"canUpdate": false
+				}
+			]
+		},
+		"tsordertypecode": {
+			"type": "string",
+			"minLength": 3,
+			"maxLength": 3,
+			"enum": [
+				"000",
+				"001",
+				"002",
+				"003",
+				"004",
+				"005",
+				"006",
+				"007",
+				"008"
+			]
+		},
+		"tsponumber": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tscustomernumber": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tscontractnumber": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tspricetablenumber": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tssupplierean": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999999999999
+		},
+		"tsbuyerean": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999999999999
+		},
+		"tsinvoicrecean": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999999999999
+		},
+		"tsdeliveryean": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999999999999
+		},
+		"tsvendortaxid": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999999999999
+		},
+		"tsbuyercnpj": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999999999999
+		},
+		"tsbillinglocationtaxid": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999999999999
+		},
+		"tsdeliverylocationtaxid": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999999999999
+		},
+		"tscodtypetransp": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"9",
+				"251"
+			]
+		},
+		"tscarrierid": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999999999999
+		},
+		"tscarriername": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 30
+		},
+		"tsconditiondelivery": {
+			"type": "string",
+			"pattern": "CIF|FOB"
+		},
+		"tscomment": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 60
+		},
+		"tscurrency": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 2,
+			"enum": [
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6"
+			]
+		},
+		"tsnatureoperation": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tscondpay": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"1",
+				"3",
+				"20",
+				"21",
+				"22",
+				"B01",
+				"JRM"
+			]
+		},
+		"tscondition": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 4
+		},
+		"tsdesccondition": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 40
+		},
+		"tsdatereference": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"1",
+				"3",
+				"5",
+				"9",
+				"21",
+				"66",
+				"81"
+			]
+		},
+		"tstimereference": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"1",
+				"3",
+				"4",
+				"5",
+				"6",
+				"10",
+				"10E"
+			]
+		},
+		"tstypeperiod": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"3M",
+				"6M",
+				"CD",
+				"D",
+				"H",
+				"M",
+				"W",
+				"WD",
+				"Y"
+			]
+		},
+		"tsperiodnum": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 999
+		},
+		"tstam17dec3": {
+			"type": "number",
+			"multipleOf": 0.001,
+			"minimum": 0,
+			"maximum": 999999999999.999
+		},
+		"tstam06dec3": {
+			"type": "number",
+			"multipleOf": 0.001,
+			"minimum": 0,
+			"maximum": 999.999
+		},
+		"tstam06dec2": {
+			"type": "number",
+			"multipleOf": 0.01,
+			"minimum": 0,
+			"maximum": 9999.99
+		},
+		"tstam17dec6": {
+			"type": "number",
+			"multipleOf": 0.000001,
+			"minimum": 0,
+			"maximum": 999999999.999999
+		},
+		"tstam16dec3": {
+			"type": "number",
+			"multipleOf": 0.001,
+			"minimum": 0,
+			"maximum": 999999999999.999
+		},
+		"tstam16dec2": {
+			"type": "number",
+			"multipleOf": 0.01,
+			"minimum": 0,
+			"maximum": 9999999999999.99
+		},
+		"tstam15dec7": {
+			"type": "number",
+			"multipleOf": 1e-7,
+			"minimum": 0,
+			"maximum": 99999999.9999999
+		},
+		"tstam15dec3": {
+			"type": "number",
+			"multipleOf": 0.001,
+			"minimum": 0,
+			"maximum": 999999999999.999
+		},
+		"tstam17dec2": {
+			"type": "number",
+			"multipleOf": 0.01,
+			"minimum": 0,
+			"maximum": 9999999999999.99
+		},
+		"tstam09dec6": {
+			"type": "number",
+			"multipleOf": 0.000001,
+			"minimum": 0,
+			"maximum": 999.999999
+		},
+		"tstam16dec6": {
+			"type": "number",
+			"multipleOf": 0.000001,
+			"minimum": 0,
+			"maximum": 999999999.999999
+		},
+		"tsorderline": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999
+		},
+		"tsnumitemrequest": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 999999999
+		},
+		"tstypecodprod": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"EN",
+				"UP",
+				"BP"
+			]
+		},
+		"tsitemcode": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tsprodcoderpbuy": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tsitemdescription": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 80
+		},
+		"tsitemreferencecode": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tsunitofmeasure": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3
+		},
+		"tsdescunitmeasure": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 30
+		},
+		"tsnumunitconsembped": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999
+		},
+		"tstypepacking": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"AE",
+				"BJ",
+				"PU",
+				"BA",
+				"RL",
+				"BX",
+				"STE",
+				"PK",
+				"APE",
+				"MPE",
+				"CR",
+				"CS",
+				"BN",
+				"BL",
+				"BO",
+				"CA",
+				"PC",
+				"JR",
+				"RO",
+				"SA",
+				"SH",
+				"BG",
+				"DR",
+				"BU",
+				"TAE",
+				"TU"
+			]
+		},
+		"tsnumpacking": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999
+		},
+		"tsbaseunitprice": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999
+		},
+		"tsunitmeasubonusprice": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3
+		},
+		"tsitemcodeprovider": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tsumprovider": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3
+		},
+		"tstypecodprodgrid": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"EN",
+				"UP",
+				"BP"
+			]
+		},
+		"tsproductcodegrid": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tsmensuunitgrid": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3
+		},
+		"tssizeitemgrid": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 5
+		},
+		"tscoloritemgrid": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 30
+		},
+		"tsnumpackgrid": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999
+		},
+		"tsaddress": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tsnumbervolume": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999999999
+		},
+		"tsdateproduction": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999999
+		},
+		"tspartnumber": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tsserialnumber": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 25
+		},
+		"tsdeliverycnpj": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999999999999
+		},
+		"tsmensuunit": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3
+		},
+		"tsnumtotpacking": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 99999
+		},
+		"tsfield": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 12
+		},
+		"tsvalue": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 60
+		},
+		"tscurrencydesc": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tstpvalue": {
+			"type": "string",
+			"pattern": "1|2"
+		},
+		"tstpreasondescandtax": {
+			"type": "string",
+			"enum": [
+				"01",
+				"02",
+				"03",
+				"04",
+				"05",
+				"06",
+				"07",
+				"08",
+				"09",
+				"10",
+				"11",
+				"12",
+				"13"
+			]
+		},
+		"tscodconsignee": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tscodnatoper": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 5
+		},
+		"tsyesno": {
+			"type": "string",
+			"pattern": "1|2"
+		},
+		"tsfinality": {
+			"type": "string",
+			"maxLength": 1,
+			"enum": [
+				"1",
+				"2",
+				"3"
+			]
+		},
+		"tsprice": {
+			"type": "string",
+			"pattern": "F|R"
+		},
+		"tsnumlistprice": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 10
+		},
+		"tsconditionpay": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 3,
+			"enum": [
+				"1",
+				"3",
+				"20",
+				"21",
+				"22",
+				"B01",
+				"JRM"
+			]
+		},
+		"tsnumordercli": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tsnumpedidorepres": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 20
+		},
+		"tsfreight": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 1
+		},
+		"tscodrepresaddt": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tscodcarrier": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tspackdefault": {
+			"type": "string",
+			"minLength": 2,
+			"maxLength": 2,
+			"enum": [
+				"01",
+				"02",
+				"03",
+				"04",
+				"05",
+				"06"
+			]
+		},
+		"tstpdelivery": {
+			"type": "string",
+			"minLength": 2,
+			"maxLength": 2,
+			"enum": [
+				"01",
+				"02",
+				"03",
+				"04"
+			]
+		},
+		"tssitorder": {
+			"type": "string",
+			"pattern": "N|F|C|A|S|B"
+		},
+		"tscodtpsale": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 15
+		},
+		"tsconditvendor": {
+			"type": "string",
+			"pattern": "B|L|N|T"
+		},
+		"tslabelgrade": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 30
+		},
+		"tsvaluegrade": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 30
+		},
+		"tsorderpricetype": {
+			"type": "string",
+			"pattern": "1|2|3"
+		},
+		"DiscountType": {
+			"type": "object",
+			"properties": {
+				"Discount": {
+					"description": "Desconto",
+					"type": "array",
+					"maxItems": 4,
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"ItemDiscountType": {
+			"type": "object",
+			"properties": {
+				"ItemDiscount": {
+					"description": "Desconto Unitário",
+					"type": "array",
+					"maxItems": 4,
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"ItemMessageType": {
+			"type": "object",
+			"properties": {
+				"ItemMessage": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"InvoiceMessageType": {
+			"type": "object",
+			"properties": {
+				"InvoiceMessage": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"ListOfReturnedInputDocumentType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/ReturnedInputDocumentType",
+				"type": "object"
+			}
+		},
+		"ReturnedInputDocumentType": {
+			"type": "object",
+			"properties": {
+				"InputDocumentNumber": {
+					"description": "Número da Nota Fiscal de Entrada",
+					"type": "string",
+					"maxLength": 20
+				},
+				"InputDocumentSerie": {
+					"description": "Serie da Nota Fiscal de Entrada",
+					"type": "string",
+					"maxLength": 3
+				},
+				"InputDocumentSequence": {
+					"description": "Sequencia da Nota Fiscal de Entrada",
+					"type": "string",
+					"maxLength": 4
+				},
+				"InputDocumentQuantity": {
+					"description": "Quantidade da Nota Fiscal",
+					"type": "number",
+					"format": "double"
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

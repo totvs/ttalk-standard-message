@@ -1,0 +1,591 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Suspects_2_000.json#",
+	"info": {
+		"description": "entidade Suspects (x-totv) para produtos TOTVS",
+		"version": "2.000",
+		"title": "Suspects",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Suspects",
+				"description": "Cadastro de Suspects",
+				"segment": "Services"
+			},
+			"transactionDefinition": {
+				"subType": "",
+				"businessContentType": {
+					"$ref": "",
+					"type": ""
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedSuspects": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Suspects"
+				}
+			]
+		},
+		"Suspects": {
+			"type": "object",
+			"properties": {
+				"Suspects": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/SuspectInfo"
+					}
+				}
+			}
+		},
+		"SuspectInfo": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"description": "Empresa",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"example": "D MG 01",
+					"description": "Filial",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"length": "12",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "InternalId da chave completa de empresa do produto",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|ACH.ACH_FILIAL|ACH.ACH_CODIGO|ACH.ACH_LOJA",
+							"required": true,
+							"type": "varchar",
+							"length": "12",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"example": "000001",
+					"description": "Código do Suspect",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_CODIGO",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "datasul",
+							"field": "crm_pessoa.num_id",
+							"required": true,
+							"type": "integer",
+							"length": "9",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StoreId": {
+					"type": "string",
+					"example": "01",
+					"description": "Loja do Suspect",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_LOJA",
+							"required": true,
+							"type": "varchar",
+							"length": "02",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId da entidade"
+				},
+				"ShortName": {
+					"type": "string",
+					"example": "JOHN M. CO",
+					"description": "Nome reduzido",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_NFANT",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "datasul",
+							"field": "crm_pessoa.nom_abrev",
+							"required": true,
+							"type": "character",
+							"length": "30",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Name": {
+					"type": "string",
+					"example": "JOHN & MARY CO",
+					"description": "Nome da entidade",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_RAZAO",
+							"required": true,
+							"type": "varchar",
+							"length": "40",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "datasul",
+							"field": "crm_pessoa.nom_razao_social",
+							"required": true,
+							"type": "character",
+							"length": "100",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EntityType": {
+					"type": "string",
+					"example": "1-Company",
+					"description": "Situação Jurídica da Entidade",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_PESSOA",
+							"required": false,
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"canUpdate": true,
+							"note": "1=Física;=2=Jurídica"
+						},
+						{
+							"product": "datasul",
+							"field": "crm_pessoa.idi_tip_pessoa",
+							"required": true,
+							"type": "integer",
+							"length": "9",
+							"available": true,
+							"canUpdate": true,
+							"note": "1=Física;=2=Jurídica;3=Estrangeiro;4=Trading"
+						}
+					]
+				},
+				"StrategicType": {
+					"type": "string",
+					"example": "3",
+					"description": "Tipo do Suspect",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_TIPO",
+							"required": false,
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"canUpdate": true,
+							"note": "1=Cons.Final;2=Produtor Rural;3=Revendedor;4=Solidario;5=Exportacao"
+						},
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"Origin": {
+					"type": "string",
+					"example": "1",
+					"description": "Origem do Suspect",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7",
+						"8",
+						"9",
+						"10",
+						"11",
+						"12",
+						"13"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_ORIGEM",
+							"required": false,
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"canUpdate": true,
+							"note": "1=Mailing; 2=Campanha; 3=Web; 4=Indicação; 5=Evento; 6=Anúncio; 7=Parceiro; 8=Relações públicas; 9=Seminário; 10=Boca-a-boca; 11=Outros"
+						},
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"OriginEntity": {
+					"type": "string",
+					"description": "Informa a entidade relacionada à origem do Suspect",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_ENTORI",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"ContactInformation": {
+					"type": "object",
+					"description": "Informações de Contato",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/CommunicationInformation_1_002.json#/definitions/CommunicationInformationType",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true,
+							"canUpdate": false,
+							"note": "No Datasul os campos DiallingCode e InternationalDiallingCode estão contido dentro do campo PhoneNumber. No Datasul os campos PhoneExtension e FaxNumberExtension não são implementados. No Datasul o campo Type sempre irá retornar Telefone"
+						}
+					]
+				},
+				"Address": {
+					"type": "array",
+					"description": "Endereço Principal",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_2_000.json#/definitions/AddressType",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true,
+							"canUpdate": false,
+							"note": "No datasul o campo number está contido dentro do campo address. No datasul os campos region e poBox não são implementados"
+						}
+					]
+				},
+				"CompanyInfo": {
+					"type": "object",
+					"description": "Dados da Empresa",
+					"properties": {
+						"CNAE": {
+							"type": "string",
+							"example": "0111-3/01",
+							"description": "Código CNAE",
+							"maxLength": 9,
+							"x-totvs": [
+								{
+									"product": "protheus",
+									"field": "ACH.ACH_CNAE",
+									"required": false,
+									"type": "varchar",
+									"length": "9",
+									"available": true,
+									"canUpdate": true
+								},
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						},
+						"Annualbilling": {
+							"type": "number",
+							"format": "double",
+							"description": "Faturamento Anual",
+							"maxLength": 14,
+							"x-totvs": [
+								{
+									"product": "protheus",
+									"field": "ACH.ACH_FATANU",
+									"required": false,
+									"type": "varchar",
+									"length": "14",
+									"available": true,
+									"canUpdate": true
+								},
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						},
+						"Employees": {
+							"type": "string",
+							"description": "Quantidade de funcionários",
+							"enum": [
+								"1",
+								"2",
+								"3",
+								"4",
+								"5",
+								"6"
+							],
+							"x-totvs": [
+								{
+									"product": "protheus",
+									"field": "ACH.ACH_QTFUNC",
+									"required": false,
+									"type": "varchar",
+									"length": "1",
+									"available": true,
+									"canUpdate": true,
+									"note": "1= < 50;2= 51 a 200;3= 201 a 500;4= 501 a 1000;5= 1001 a 5000;6= > 5000"
+								},
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						}
+					}
+				},
+				"InternalInformation": {
+					"type": "object",
+					"description": "Informações Internas",
+					"properties": {
+						"VendorTypeCode": {
+							"type": "string",
+							"description": "Código do Vendedor",
+							"x-totvs": [
+								{
+									"product": "protheus",
+									"field": "ACH.ACH_VEND",
+									"required": false,
+									"type": "varchar",
+									"length": "06",
+									"note": "Código do Vendedor vinculado ao Suspect",
+									"available": true,
+									"canUpdate": true
+								},
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						},
+						"Reserv": {
+							"type": "string",
+							"description": "Suspect Reservado",
+							"enum": [
+								"1",
+								"2"
+							],
+							"x-totvs": [
+								{
+									"product": "protheus",
+									"field": "ACH.ACH_RESERV",
+									"required": false,
+									"type": "varchar",
+									"length": "1",
+									"available": true,
+									"canUpdate": true
+								},
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						}
+					}
+				},
+				"MarketSegment": {
+					"type": "object",
+					"description": "Segmento de Mercado",
+					"properties": {
+						"marketSegmentCode": {
+							"type": "string",
+							"description": "Código do segmento",
+							"x-totvs": [
+								{
+									"product": "protheus",
+									"field": "ACH.ACH_CODSEG",
+									"required": false,
+									"type": "varchar",
+									"length": "6",
+									"note": "Segmento Principal",
+									"available": true
+								},
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						},
+						"marketSegmentInternalId": {
+							"type": "string",
+							"description": "InternalId do MarketSegmentCode",
+							"x-totvs": [
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						},
+						"marketSegmentDescription": {
+							"type": "string",
+							"description": "Descrição do segmento",
+							"x-totvs": [
+								{
+									"product": "protheus",
+									"field": "ACH.ACH_DESSEG",
+									"required": false,
+									"type": "varchar",
+									"length": "40",
+									"note": "Segmento Principal",
+									"available": true
+								},
+								{
+									"product": "datasul",
+									"available": false
+								}
+							]
+						}
+					}
+				},
+				"RegisterSituation": {
+					"type": "string",
+					"example": "1",
+					"description": "Status: 1 - Ativo, 2 - Inativo",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_MSBLQL",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "No Protheus Status active/inactive serão convertidos em: active='2',inactive='1'"
+						},
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"SuspectSituation": {
+					"type": "string",
+					"example": "1",
+					"maxLength": 9,
+					"description": "Status Atual.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACH.ACH_STATUS",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "O Protheus só trabalha com as seguintes opções: 1=Mailing;2=Clasificado;3=Desarrollo;4=Gerente;5=Standby;6=Descalificado;7=Prospect. . Qualquer opção diferetne será desconsiderada."
+						},
+						{
+							"product": "datasul",
+							"field": "crm_pessoa.num_id_classif",
+							"required": false,
+							"type": "integer",
+							"length": "9",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"GovernmentalInformation": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_2_000.json#/definitions/GovernmentalInformationType"
+					},
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true,
+							"canUpdate": true,
+							"note": "No produto Datasul os campos issueOn, expiresOn e scope não são implementados. No campo name serão aceitos apenas os valores CPF, CNPJ, Inscrição Estadual e Inscrição Municipal, qualquer valor diferente será desconsiderado."
+						}
+					]
+				}
+			}
+		}
+	}
+}

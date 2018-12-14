@@ -1,0 +1,661 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfAccountReceivableSettlements_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "ListOfAccountReceivableSettlements",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ListOfAccountReceivableSettlements",
+				"description": "Lista de Baixas a Receber",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "Poliana Aparecida Pessoa",
+					"note": "GDP de Inovação Controladoria",
+					"adapter": "SettingComplementaryValues"
+				},
+				{
+					"product": "PROTHEUS",
+					"contact": "Rogério Nagy",
+					"note": "GDP - Inovacao Controladoria",
+					"adapter": "FINI070LST"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyInternalId": {
+					"description": "InernalId da Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODCOLIGADA | FLAN.CODFILIAL",
+							"required": true,
+							"type": "integer|integer",
+							"length": "",
+							"note": "Coligada e Filial do Lançamento Financeiro",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId da empresa é formado por EMPRESA|FILIAL",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyId": {
+					"description": "Código da Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Coligada do Lançamento Financeiro",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "não possui campo físico na tabela",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "Código da Empresa (cEmpAnt)",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODFILIAL",
+							"required": true,
+							"type": "integer",
+							"length": "",
+							"note": "Código da Filial do Lançamento Financeiro",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FK1XX0.FK1_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfAccountReceivableSettlement": {
+					"description": "Lista de Baixas a Receber",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfAccountReceivableSettlementType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"ListOfAccountReceivableSettlementType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/AccountReceivableSettlementType",
+				"type": "object"
+			}
+		},
+		"AccountReceivableSettlementType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"description": "Identificador único da baixa a receber",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.CODCOLIGADA | FLANBAIXA.IDLAN | FLANBAIXA.IDBAIXA",
+							"required": true,
+							"type": "integer|integer|integer",
+							"length": "",
+							"note": "Código da Coligada, Identificador do Lançamento Financeiro e Identificador do Item de Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XXF_INTVAL",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "Identificador único da baixa no Protheus.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AccountReceivableDocumentInternalId": {
+					"description": "Identificador único do título a receber a ser baixado",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.CODCOLIGADA | FLAN.IDLAN",
+							"required": true,
+							"type": "integer|integer",
+							"length": "",
+							"note": "Coligada e Identificador do Lançamento Financeiro",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XXF_INTVAL",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "Identificador único do título a receber a ser baixado no Protheus.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentDate": {
+					"description": "Data em que o cliente efetuou o pagamento do título",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FXCX.DATA",
+							"required": true,
+							"type": "datetime",
+							"length": "",
+							"note": "Data do Extrato do Item de Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FK1_DATA",
+							"required": true,
+							"type": "date",
+							"length": "8",
+							"note": "Data da Baixa",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CreditDate": {
+					"description": "Data na qual o valor foi creditado na conta da empresa",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FXCX.DATACOMPENSACAO",
+							"required": false,
+							"type": "datetime",
+							"length": "",
+							"note": "Data de Compensação do Extrato do Item de Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FK5_DTDISP",
+							"required": true,
+							"type": "date",
+							"length": "8",
+							"note": "Data de Disponibilizacão",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentValue": {
+					"description": "Valor do Pagamento",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.VALORBAIXA",
+							"required": true,
+							"type": "decimal",
+							"length": "",
+							"note": "Valor do Item de Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FK1_VALOR",
+							"required": true,
+							"type": "double",
+							"length": "16,2",
+							"note": "Valor da Baixa",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OtherValues": {
+					"$ref": "#/definitions/OtherValuesType",
+					"description": "Outros Valores",
+					"type": "object"
+				},
+				"ListOfComplementaryValues": {
+					"description": "Lista de Valores Complementares",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfComplementaryValueType",
+						"type": "object"
+					}
+				},
+				"CurrencyInternalId": {
+					"description": "Identificador único da moeda da baixa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.CODMOEDABAIXA",
+							"required": true,
+							"type": "varchar",
+							"length": "10",
+							"note": "Código da Moeda da Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XXF_INTVAL",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "Identificador único da moeda da baixa no Protheus.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CurrencyRate": {
+					"description": "Taxa da moeda da baixa",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "COTACAOBAIXA",
+							"required": true,
+							"type": "decimal",
+							"length": "",
+							"note": "Cotação da Moeda da Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FK1_TXMOED",
+							"required": false,
+							"type": "double",
+							"length": "11,4",
+							"note": "Taxa informada para outras moedas",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentMethod": {
+					"$ref": "#/definitions/PaymentMethodType",
+					"description": "Forma de Baixa 001-AD - ADIANTAMENTO, 002-AB - ABATIMENTO, 003-DV - DEVOLUÇÃO, 004-NC - NOTA DE CRÉDITO/TÍTULOS DE CRÉDITO, 005-NP - NOTA PROMISSÓRIA, 006-BX - BAIXA, 007-NOR - NORMAL, 008-DAC - DACAO, 009-DEB - DEBITO CC, 010-VEN - VENDOR, 011-LIQ - LIQUIDA, 012-FAT - FATURAS, 013-CRD - CREDITO, 014-CEC - COMP CARTE",
+					"type": "object",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Calculado: se o Valor da Baixa for zero (015), nos demais casos (007)",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FK1_MOTBX",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "Motivo da baixa do título",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BankInternalId": {
+					"description": "Identificador único do banco (portador)",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Não informado pelo RM",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XXF_INTVAL",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "Identificador único do banco no Protheus",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HistoryText": {
+					"description": "Historico do movimento",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FXCX.HISTORICO",
+							"required": false,
+							"type": "varchar",
+							"length": "255",
+							"note": "Histórico do Extrato do Item de Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FK1_HISTOR",
+							"required": true,
+							"type": "varchar",
+							"length": "40",
+							"note": "Histórico do movimento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"OtherValuesType": {
+			"type": "object",
+			"properties": {
+				"InterestValue": {
+					"description": "Valor de Juros Pagos",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.VALORJUROS",
+							"required": false,
+							"type": "decimal",
+							"length": "",
+							"note": "Valor do Juros da Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountValue": {
+					"description": "Valor de Desconto Concedido",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.VALORDESCONTO",
+							"required": false,
+							"type": "decimal",
+							"length": "",
+							"note": "Valor do Desconto da Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AbatementValue": {
+					"description": "Valor de Abatimento",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Não informado pelo RM",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ExpensesValue": {
+					"description": "Valor de Despesas Financeiras",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Não informado pelo RM",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FineValue": {
+					"description": "Valor da Multa Paga",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.VALORMULTA",
+							"required": false,
+							"type": "decimal",
+							"length": "",
+							"note": "Valor da Multa da Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ListOfComplementaryValueType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/ComplementaryValueType",
+				"type": "object"
+			}
+		},
+		"ComplementaryValueType": {
+			"type": "object",
+			"properties": {
+				"ComplementaryValueInternalId": {
+					"description": "InternalId do valor acessório",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.CODCOLIGADA | \"VALOROP1\", \"VALOROP2\", ...",
+							"required": true,
+							"type": "integer|varchar",
+							"length": "",
+							"note": "Código é formatado pela regra de negócio, são integrados os valores opcionais (1..8), os valores dos vínculos (devolução, nota de crédito, crédito de adiantamento), e o valor da perda financeira",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "XXF_INTVAL",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "InternalId do valor acessório",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InformedValue": {
+					"description": "Valor informado do valor acessório",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLANBAIXA.VALOROP[n], FLANBAIXA.VALORDEVOLUCAO, FLANBAIXA.VALORNOTACREDITO, FLANBAIXA.VALORNOTACREDITOADIANTAMENTO, FLANBAIXA.VALORPERDAFINANCEIRA",
+							"required": false,
+							"type": "decimal",
+							"length": "",
+							"note": "Valor definido pela regra de negócio",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "FKD_VALOR",
+							"required": true,
+							"type": "decimal",
+							"length": "16,2",
+							"note": "Valor",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"PaymentMethodType": {
+			"type": "string",
+			"enum": [
+				"001",
+				"002",
+				"003",
+				"004",
+				"005",
+				"006",
+				"007",
+				"008",
+				"009",
+				"010",
+				"011",
+				"012",
+				"013",
+				"014"
+			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

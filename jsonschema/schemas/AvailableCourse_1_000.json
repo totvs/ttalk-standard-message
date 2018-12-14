@@ -1,0 +1,556 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AvailableCourse_1_000.json#",
+	"info": {
+		"description": "API para a entidade área de interesse ofertada (AvailableCourse) para produtos TOTVS",
+		"version": "1.000",
+		"title": "AvailableCourse",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "AvailableCourse",
+				"description": "Áreas de interesse ofertadas",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Listagem das áreas de interesse ofertadas do processo seletivo"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedAvailableCourse": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AvailableCourseInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"AvailableCourse": {
+			"type": "object",
+			"allOf": [
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AvailableCourseOne"
+							}
+						}
+					}
+				}
+			]
+		},
+		"AvailableCourseInfo": {
+			"type": "object",
+			"properties": {
+				"Id": {
+					"type": "string",
+					"description": "InternalId da mensagem",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Esta listagem considera sempre a parametrização, por isso é necessário que o internalid tenha os dados do contexto da parametrização",
+							"field": "CODCOLIGADA|IDPS",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"CompanyCode": {
+					"type": "integer",
+					"format": "int16",
+					"example": "1",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "InternalId Company",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Código do processo seletivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.IDPS",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessInternalId": {
+					"type": "string",
+					"description": "InternalId selectionProcess",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.CODCOLIGADA|SPSPROCESSOSELETIVO.IDPS",
+							"required": false,
+							"available": true,
+							"note": "O processo seletivo na linha RM é composta por CODCOLIGADA e IDPS"
+						}
+					]
+				},
+				"SelectionProcessDescription": {
+					"type": "string",
+					"example": "Processo Seletivo TOTVS",
+					"description": "Nome do Processo Seletivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.NOME",
+							"required": true,
+							"type": "string",
+							"length": 60,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ChosenAreaCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 38,
+					"description": "Id da área de interesse",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.IDAREAINTERESSE",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ChosenAreaInternalId": {
+					"type": "string",
+					"description": "InternalId ChosenAreaCode",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAINTERESSE.IDAREAINTERESSE",
+							"type": "integer",
+							"length": 4,
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"ChosenAreaDescription": {
+					"type": "string",
+					"example": "Área de interesse ofertada TOTVS",
+					"description": "Nome da área de interesse",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAINTERESSE.NOME",
+							"required": true,
+							"type": "varchar",
+							"length": 120,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"VacanciesNumber": {
+					"type": "integer",
+					"format": "int32",
+					"example": 10,
+					"description": "Número de vagas",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.NUMEROVAGAS",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"InscriptionValue": {
+					"type": "number",
+					"example": 10,
+					"description": "Valor da inscrição",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.VALORINSCRICAO",
+							"required": false,
+							"type": "numeric",
+							"length": "15,4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"AvailableCourseOne": {
+			"type": "object",
+			"properties": {
+				"_expandables": {
+					"type": "array",
+					"description": "Expandable property/field list",
+					"items": {
+						"type": "string"
+					}
+				},
+				"Id": {
+					"type": "string",
+					"description": "InternalId da mensagem",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Esta listagem considera sempre a parametrização, por isso é necessário que o internalid tenha os dados do contexto da parametrização",
+							"field": "CODCOLIGADA|IDPS|IDAREAINTERESSE",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"CompanyCode": {
+					"type": "integer",
+					"format": "int16",
+					"example": "1",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "InternalId Company",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Código do processo seletivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.IDPS",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessInternalId": {
+					"type": "string",
+					"description": "InternalId selectionProcess",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.CODCOLIGADA|SPSPROCESSOSELETIVO.IDPS",
+							"required": false,
+							"available": true,
+							"note": "O processo seletivo na linha RM é composta por CODCOLIGADA e IDPS"
+						}
+					]
+				},
+				"ChosenAreaCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 38,
+					"description": "Id da área de interesse",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.IDAREAINTERESSE",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ChosenAreaInternalId": {
+					"type": "string",
+					"description": "InternalId ChosenAreaCode",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAINTERESSE.IDAREAINTERESSE",
+							"type": "integer",
+							"length": 4,
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"ChosenAreaDescription": {
+					"type": "string",
+					"example": "Área de interesse ofertada TOTVS",
+					"description": "Nome da área de interesse",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAINTERESSE.NOME",
+							"required": true,
+							"type": "varchar",
+							"length": 120,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"VacanciesNumber": {
+					"type": "integer",
+					"format": "int32",
+					"example": 10,
+					"description": "Número de vagas",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.NUMEROVAGAS",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"InscriptionValue": {
+					"type": "number",
+					"example": 10,
+					"description": "Valor da inscrição",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.VALORINSCRICAO",
+							"required": false,
+							"type": "numeric",
+							"length": "15,4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"DiscountApplies": {
+					"type": "string",
+					"example": "T",
+					"description": "Incide desconto",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.INCIDEDESCONTO",
+							"required": true,
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"MinimumNumberLanguagesInscription": {
+					"type": "integer",
+					"format": "int16",
+					"example": 1,
+					"description": "Número mínimo de idiomas por inscrição",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.NUMMINIDIOMASINSCRICAO",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"MaximumNumberLanguagesInscription": {
+					"type": "integer",
+					"format": "int16",
+					"example": 1,
+					"description": "Número máximo de idiomas por inscrição",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.NUMMAXIDIOMASINSCRICAO",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"MaximumNumberOptions": {
+					"type": "integer",
+					"format": "int16",
+					"example": 1,
+					"description": "Número máximo de áreas opcionais",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.NUMMAXAREASOPCIONAIS",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Status": {
+					"type": "string",
+					"example": "T",
+					"description": "Status",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.STATUS",
+							"required": true,
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"UseEnem": {
+					"type": "string",
+					"example": "T",
+					"description": "Utliza nota do ENEM",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.UTILIZAENEM",
+							"required": true,
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"MinimumNumberInscription": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Número mínimo de inscrições",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.NUMMININSCRICOES",
+							"required": false,
+							"type": "integer",
+							"length": "4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"MinimumDiscountPercentage": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Percentual de desconto mínimo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.PERCDESCONTOMINIMO",
+							"required": false,
+							"type": "integer",
+							"length": "4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"UseAgeRangeControl": {
+					"type": "string",
+					"example": "T",
+					"description": "Utiliza controle de faixa etária",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.CONTROLEFAIXAETARIA",
+							"required": false,
+							"type": "varchar",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}

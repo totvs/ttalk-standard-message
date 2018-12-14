@@ -1,0 +1,161 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ScheduleWork_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "ScheduleWork",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ScheduleWork",
+				"description": "Agenda de trabalho",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Codigo da Empresa",
+					"type": "string"
+				},
+				"BranchId": {
+					"description": "Codigo da Filial",
+					"type": "string"
+				},
+				"CompanyInternalId": {
+					"description": "Codigo Interno da Empresa",
+					"type": "string"
+				},
+				"WorkShiftCode": {
+					"description": "Codigo do turno. No Datasul/RM, a estrutura de horarios eh diferente. Sera necessario rever quando utilizar esta mensagem. Sera revisto pelas marcas RM/Datasul mais uma forma de propor esta mensagem, analisando a regra de negocio.",
+					"type": "string"
+				},
+				"WorkShiftInternalId": {
+					"description": "InternalId do WorkShift",
+					"type": "string"
+				},
+				"Description": {
+					"description": "Descrição do Turno",
+					"type": "string"
+				},
+				"RegularHour": {
+					"description": "Horas mensal de trabalho. Ex: 180hrs Caso o produto nao possua aberto as Hrs Normais e DSR, deve enviar o total de horas do turno.",
+					"type": "number"
+				},
+				"RestHour": {
+					"description": "Horas mensal de DSR. Ex: 40hrs No RM/Datasul nao ha este campo, ele e calculado. Sera necessario a analise no RM/Datasul quando for utilizar esta informacao",
+					"type": "number"
+				},
+				"StartDateScheduleWork": {
+					"description": "Data de inicio da escala.",
+					"type": "string",
+					"format": "date"
+				},
+				"ListOfSchedule": {
+					"description": "Lista de Escala",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfScheduleType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"ListOfScheduleType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/ScheduleType",
+				"type": "object"
+			}
+		},
+		"ScheduleType": {
+			"type": "object",
+			"properties": {
+				"StartSequence": {
+					"description": "Sequencia Inicio da Escala",
+					"type": "integer",
+					"format": "int32"
+				},
+				"EndSequence": {
+					"description": "Sequência Final da Escala",
+					"type": "integer",
+					"format": "int32"
+				},
+				"TypeOfDay": {
+					"description": "Tipo de Dia da Escala / 1 - Dia Trabalhado / 2 - Compensado / 3 - DSR",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3"
+					]
+				},
+				"ListOfScheduleHour": {
+					"description": "Lista de Horários",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfScheduleHourType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"ListOfScheduleHourType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/ScheduleHourType",
+				"type": "object"
+			}
+		},
+		"ScheduleHourType": {
+			"type": "object",
+			"properties": {
+				"HourType": {
+					"description": "Tipo de Horário / 1 - Jornada / 2 - Intervalo / 3 - Lanche",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3"
+					]
+				},
+				"StartHour": {
+					"description": "Hora Início: ex: 08:00",
+					"type": "string",
+					"pattern": "(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"
+				},
+				"EndHour": {
+					"description": "Hora Término: ex: 18:00",
+					"type": "string",
+					"pattern": "(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,370 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/EmployeeHistoryWorkShift_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "EmployeeHistoryWorkShift",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "EmployeeHistoryWorkShift",
+				"description": "Mensagem para integração de Histório de Alteração de Turnos do(s) funcionário(s)",
+				"segment": "Recursos Humanos"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "NATIÊ SUGAHARA",
+					"note": "",
+					"adapter": ""
+				},
+				{
+					"product": "PIMS",
+					"contact": "JOSÉ ALBERTO DA SILVA",
+					"note": "",
+					"adapter": ""
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Codigo da Empresa do funcionário",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "EMPRESA.CD_INT_ERP",
+							"required": true,
+							"type": "varchar",
+							"length": "...",
+							"note": "Código da Empresa do funcionário",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Código da Filial do funcionário",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "FILIAL.CD_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"length": "...",
+							"note": "Código da Filial",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa de empresa do produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "o InternalID da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODCOLIGADA+PFUNC.CODFILIAL",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EmployeeCode": {
+					"description": "Chapa/Matricula do funcionario",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SPFXX0.PF_MAT",
+							"required": true,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "FUNCIONAR.CD_INT_ERP",
+							"required": true,
+							"type": "varchar",
+							"length": "...",
+							"note": "Código do Funcionario",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EmployeeInternalId": {
+					"description": "InternalId do funcionário",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WorkShiftList": {
+					"$ref": "#/definitions/WorkShiftListType",
+					"type": "object"
+				}
+			},
+			"required": [
+				"CompanyId",
+				"BranchId",
+				"EmployeeCode",
+				"WorkShiftList"
+			]
+		},
+		"WorkShiftListType": {
+			"type": "object",
+			"properties": {
+				"WorkShiftId": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/definitions/WorkShiftIdType",
+						"type": "object"
+					}
+				}
+			},
+			"required": [
+				"WorkShiftId"
+			]
+		},
+		"WorkShiftIdType": {
+			"type": "object",
+			"properties": {
+				"ChangedDate": {
+					"description": "Data de alteração do Turno do Funcionário",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SPFXX0.PF_DATA",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "FUNCIONARHR.DT_INICIO",
+							"required": true,
+							"type": "date",
+							"length": "8",
+							"note": "Data de alteração do turno do funcionário",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WorkShiftCode": {
+					"description": "Código do Turno do Funcionário",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SPFXX0.PF_TURNOPA",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "MDO_HORARIO.CD_MDO_HORARIO",
+							"required": true,
+							"type": "varchar",
+							"length": "",
+							"note": "Código do Turno do Funcionário. Composto pelo Código do Turno+Sequencia",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WorkShiftInternalId": {
+					"description": "InternalId do WorkShift",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "O InternalID é formado pelos campos empresa|PF_FILIAL|PF_TURNOPA",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODCOLIGADA+PFUNC.CODHORARIO",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WorkShiftSequence": {
+					"description": "Código Sequencia do Turno do Funcionário",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SPFXX0.PF_SEQUEPA",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PIMS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "",
+							"note": "Compoe o código do Turno no Pims Turno+Sequencia = MDO_HORARIO.CD_MDO_HORARIO",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			},
+			"required": [
+				"ChangedDate",
+				"WorkShiftCode"
+			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,179 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReversalOfAccountPayableDocumentDischarge_2_001.json#",
+	"info": {
+		"description": "",
+		"version": "2.001",
+		"title": "ReversalOfAccountPayableDocumentDischarge",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ReversalOfAccountPayableDocumentDischarge",
+				"description": "Reversão da liberação de documentos de contas a pagar",
+				"segment": ""
+			},
+			"productInformation": [
+				{
+					"product": "LOGIX",
+					"contact": "Rafael Luis da Silva",
+					"note": "Finanças e Controladoria Logix",
+					"adapter": "EAIAdapterReversalOfAccountPayableDocumentDischarge2"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "request",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"maxLength": 2
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"maxLength": 2
+				},
+				"VendorCode": {
+					"description": "Fornecedor",
+					"type": "string"
+				},
+				"StoreId": {
+					"description": "Loja",
+					"type": "string"
+				},
+				"CancelDate": {
+					"description": "Data do Cancelamento da Baixa",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "DataCancelamento",
+							"required": true,
+							"type": "string",
+							"length": "50",
+							"note": "Data do Cancelamento da Baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "Identificador da baixa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "InternalId",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "Identificador da baixa",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentPrefix": {
+					"description": "Prefixo",
+					"type": "string",
+					"maxLength": 3
+				},
+				"DocumentNumber": {
+					"description": "Número do Título",
+					"type": "string",
+					"maxLength": 9
+				},
+				"DocumentParcel": {
+					"description": "Parcela",
+					"type": "string",
+					"maxLength": 1
+				},
+				"DocumentTypeCode": {
+					"description": "Tipo de Documento",
+					"type": "string",
+					"maxLength": 3
+				},
+				"DischargeSequence": {
+					"description": "Sequência da Baixa. Utilizado para estornar a baixa.",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Sequencia para lotes que possuem somente um título ou está cancelando a última sequecia de um lote.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BatchPaymentNumber": {
+					"description": "Número do lote de pagamento gerado ao pagamento do título",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ap.num_docum_pgto",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Número do Lote que foi gerado no Logix. Informando este campo que irá excluir todos os títulos gerados no Lote.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"OriginInternalID": {
+					"description": "Identificador de quem enviou a mensagem",
+					"type": "string"
+				},
+				"DestinationInternalID": {
+					"description": "Identificador de quem recebeu a mensagem",
+					"type": "string"
+				}
+			}
+		}
+	}
+}

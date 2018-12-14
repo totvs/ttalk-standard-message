@@ -1,0 +1,124 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CurrencyQuote_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "CurrencyQuote",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "CurrencyQuote",
+				"description": "Mensagem de integração de cotação da moeda.",
+				"segment": "Geral"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Rogerio Nagy",
+					"note": "PO Contas a Receber.",
+					"adapter": "MATA090"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string"
+				},
+				"BranchId": {
+					"type": "string"
+				},
+				"CompanyInternalId": {
+					"type": "string"
+				},
+				"Date": {
+					"description": "Data da cotação",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "M2_DATA",
+							"required": true,
+							"type": "Date",
+							"length": "10",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfCurrency": {
+					"description": "Cotações das moedas",
+					"type": "array",
+					"maxItems": 99,
+					"items": {
+						"$ref": "#/definitions/CurrencyType",
+						"type": "object"
+					}
+				}
+			},
+			"required": [
+				"CompanyId",
+				"BranchId",
+				"CompanyInternalId",
+				"Date"
+			]
+		},
+		"CurrencyType": {
+			"type": "object",
+			"properties": {
+				"Code": {
+					"description": "Código da moeda (número de 1 a 99)",
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 99,
+					"format": "int32",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Quote": {
+					"description": "Cotação da moeda",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "M2_MOEDA + código da moeda (ex: M2_MOEDA1, M2_MOEDA2... M2_MOEDA99)",
+							"required": true,
+							"type": "M2_DATA",
+							"length": "Sim",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			},
+			"required": [
+				"Code",
+				"Quote"
+			]
+		}
+	}
+}

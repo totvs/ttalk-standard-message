@@ -1,0 +1,249 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CostCenter_2_002.json#",
+	"info": {
+		"description": "",
+		"version": "2.002",
+		"title": "CostCenter",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "CostCenter",
+				"description": "Cadastro de centro de custo - TYPE centraliza as informações para uso das mensagens CostCenter e ListOfCostCenter",
+				"segment": "Manufatura"
+			},
+			"productInformation": [
+				{
+					"product": "Logix",
+					"contact": "Lediel Eleutério",
+					"note": "INOVAÇÃO LOGIX",
+					"adapter": "EAIADAPTERCOSTCENTER2.4GL"
+				},
+				{
+					"product": "RM",
+					"contact": "Tiago Figueiredo",
+					"note": "GDP RH INOVAÇÃO",
+					"adapter": ""
+				},
+				{
+					"product": "protheus",
+					"contact": "squad.control@totvs.com.br",
+					"description": "Cadastro de Centro de Custo",
+					"adapter": "CTBA030.prw"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/CostCenterType_2_002.json#/definitions/CostCenterType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedCostCenters": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/CostCenters"
+				}
+			]
+		},
+		"CostCenters": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CostCentersInfo"
+					}
+				}
+			}
+		},
+		"CostCentersInfo": {
+			"description": "Cadastro de Centro de Custo",
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"description": "Código da empresa",
+					"example": "T1",
+					"maxLength": 3
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_FILIAL",
+							"required": true,
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "InternalId da chave completa de empresa do produto",
+					"example": "T1D MG 01 000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|CTT.CTT_FILIAL|CTT.CTT_CUSTO",
+							"required": true,
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"description": "Código do Centro de Custo",
+					"example": "000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_CUSTO",
+							"type": "varchar",
+							"length": "9",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId de Integração",
+					"example": "D MG 01 000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_FILIAL|CTT.CTT_CUSTO",
+							"type": "varchar",
+							"length": "17",
+							"available": true,
+							"note": "O internalID da anotação é formado por CTT.CTT_FILIAL|CTT.CTT_CUSTO"
+						}
+					]
+				},
+				"RegisterSituation": {
+					"type": "string",
+					"description": "Situação do Centro de Custo (Ativo ou Inativo)",
+					"example": "2",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_BLOQ",
+							"type": "varchar",
+							"length": "1",
+							"required": true,
+							"available": true,
+							"note": "Situação do Centro de Custo (2 - Ativo ou 1 - Inativo)"
+						}
+					]
+				},
+				"Name": {
+					"type": "string",
+					"description": "Descrição do Centro de Custo",
+					"example": "Centro de Custo",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_DESC01",
+							"type": "varchar",
+							"length": "40",
+							"required": true,
+							"available": true,
+							"note": "Descrição do Centro de Custo"
+						}
+					]
+				},
+				"ShortCode": {
+					"type": "string",
+					"description": "Código Reduzido",
+					"example": "C001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_RES",
+							"type": "varchar",
+							"length": "10",
+							"required": true,
+							"available": true,
+							"note": "Código do Centro de Custo reduzido"
+						}
+					]
+				},
+				"SPED": {
+					"type": "string",
+					"description": "Define se Centro de Custo será enviado para SPED",
+					"example": "",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": true,
+							"available": true,
+							"note": "Tag não utilizada no Protheus"
+						}
+					]
+				},
+				"Class": {
+					"type": "string",
+					"description": "Classe",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_CLASS",
+							"type": "varchar",
+							"required": true,
+							"available": true,
+							"note": "Classe (1 - Analítico ou 2 - Sintético)"
+						}
+					]
+				},
+				"TopCode": {
+					"type": "string",
+					"description": "Código do Centro de Custo Superior",
+					"example": "000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_CCSUP",
+							"type": "varchar",
+							"required": false,
+							"available": true,
+							"length": "9"
+						}
+					]
+				}
+			}
+		},
+		"ReturnContent": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,189 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ShiftWork_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "ShiftWork",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Turno de Trabalho",
+				"description": "Turno de Trabalho de Recursos humanos",
+				"segment": "Recursos humanos"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Natiê Sugahara",
+					"note": "Turno de Trabalho",
+					"adapter": "GPEI080.prw"
+				},
+				{
+					"product": "RM",
+					"contact": "Tiago Figueiredo de Carvalho",
+					"note": "",
+					"adapter": ""
+				},
+				{
+					"product": "DATASUL",
+					"contact": "Patricia Theilacker",
+					"note": "",
+					"adapter": ""
+				},
+				{
+					"product": "LOGIX",
+					"contact": "Rafael Luis Silva",
+					"note": "",
+					"adapter": ""
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Codigo da Empresa.No Datasul não há relação de Empresa e Filiais.",
+					"type": "string"
+				},
+				"BranchId": {
+					"description": "Codigo da Filial.            No Datasul não há relação de Empresa e Filiais.            No RM não há relação de Filiais.",
+					"type": "string"
+				},
+				"Code": {
+					"description": "Codigo do turno",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "R6_TURNO",
+							"required": true,
+							"type": "char",
+							"length": "3",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId do turno",
+					"type": "string"
+				},
+				"Description": {
+					"description": "Denominacao do turno",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "R6_DESC",
+							"required": true,
+							"type": "char",
+							"length": "50",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RegularHour": {
+					"description": "Horas mensal de trabalho. Ex: 180hrs            Caso o produto não possua aberto as Hrs Normais e DSR,             deve enviar o total de horas do turno.",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "R6_HRNORMA",
+							"required": false,
+							"type": "decimal",
+							"length": "6,2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RestHour": {
+					"description": "Horas mensal de DSR. Ex: 40hrs            No RM/Datasul não há este campo, ele é calculado.             Será necessário a análise no RM/Datasul quando for             utilizar esta informação",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "R6_HRDESC",
+							"required": false,
+							"type": "decimal",
+							"length": "5,2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ReturnContent": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

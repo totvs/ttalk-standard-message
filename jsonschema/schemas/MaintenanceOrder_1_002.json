@@ -1,0 +1,352 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MaintenanceOrder_1_002.json#",
+	"info": {
+		"description": "",
+		"version": "1.002",
+		"title": "MaintenanceOrder",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "MaintenanceOrder",
+				"description": "Ordem de Manutenção",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"Code": {
+					"description": "Código da Ordem de Manutenção",
+					"type": "string",
+					"maxLength": 6
+				},
+				"InternalId": {
+					"description": "InternalId da Ordem de Manutenção",
+					"type": "string"
+				},
+				"Number": {
+					"description": "Numero da Ordem de Manutenção",
+					"type": "string",
+					"maxLength": 35
+				},
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string"
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string"
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da Empresa",
+					"type": "string"
+				},
+				"Status": {
+					"description": "Situação da Ordem de Manutenção / 000 - Não Iniciada / 001 - Em andamento / 002 - Finalizada / 003 - A Faturar / 004 - Faturada / 999 - Cancelada (Enviar a mensagem com este status não efetua o cancelamento da Ordem)",
+					"type": "string",
+					"minLength": 3,
+					"maxLength": 3,
+					"enum": [
+						"000",
+						"001",
+						"002",
+						"003",
+						"004",
+						"999"
+					]
+				},
+				"MaintenanceOrderType": {
+					"description": "Tipo da Ordem de Manutenção / 1 - Ordem de Manutenção Normal / 2 - Ordem de Manutençao com Terceiros",
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 1,
+					"enum": [
+						"1",
+						"2"
+					]
+				},
+				"CustomerVendorCode": {
+					"description": "Código do Cliente/Fornecedor",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCFO",
+							"required": false,
+							"type": "varchar",
+							"length": "25",
+							"note": "Código do Cliente/Fornecedor",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SA2.A2_COD",
+							"required": false,
+							"type": "varchar",
+							"length": "30",
+							"note": "Código do Cliente/Fornecedor",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CustomerVendorInternalId": {
+					"description": "Código do Fornecedor responsável pela execução da manutenção",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TMOV.CODCOLCFO|TMOV.CODCFO",
+							"required": false,
+							"type": "integer|varchar",
+							"length": "25",
+							"note": "Este campo deve ser composto pela chave completa do registro no RM que é: TMOV.CODCOLCFO|TMOV.CODCFO",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt|SA2.A2_FILIAL|SA2.A2_COD",
+							"required": false,
+							"type": "varchar",
+							"length": "30",
+							"note": "Este campo deve ser composto pela chave completa do registro no MNT que é: cEmpAnt|STJ.TJ_FILIAL|STJ.TJ_FORNEC",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AssetInternalId": {
+					"description": "Código do Patrimônio a ser feito a manutenção",
+					"type": "string"
+				},
+				"EquipmentInternalId": {
+					"description": "Código do Equipamento (Bem) associado à OS.",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "EMPRESA|STJ.TJ_FILIAL|STJ.TJ_CODBEM",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "O EquipamentInternalId é formado por EMPRESA|STJ.TJ_FILIAL|STJ.TJ_CODBEM",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "Não possui campo específico.",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "Não possui campo específico.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EquipmentCode": {
+					"description": "Código do Equipamento (Bem) associado à OS.",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "STJ.TJ_CODBEM",
+							"required": false,
+							"type": "varchar",
+							"length": "16",
+							"note": "Código do bem.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TITMMOV.CODBEMSIGAMNT",
+							"required": false,
+							"type": "varchar",
+							"length": "30",
+							"note": "Bem do Manutenção de Ativos associado ao item de movimento.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UserRequesterCode": {
+					"description": "Código do Usuário Requisitante",
+					"type": "string",
+					"maxLength": 40
+				},
+				"AccountableUserInternalID": {
+					"description": "Código do Usuário Responsável pela Manutenção (FK a partir da tabela de Usuários)   Campo necessário para armazenar o usuário responsável (Planejador) para o Datasul.",
+					"type": "string",
+					"maxLength": 40
+				},
+				"RegisterDateTime": {
+					"description": "Data de Emissão da Ordem de Manutenção",
+					"type": "string",
+					"format": "date-time"
+				},
+				"MaintenanceServiceCode": {
+					"description": "Código do serviço desempenhado",
+					"type": "string"
+				},
+				"FirstCounter": {
+					"description": "Primeiro contador de utilização do Patrimônio",
+					"type": "integer",
+					"format": "int32"
+				},
+				"SecondCounter": {
+					"description": "Segundo contador de utilização do Patrimônio",
+					"type": "integer",
+					"format": "int32"
+				},
+				"ProjectInternalId": {
+					"description": "Id de integração do Projeto",
+					"type": "string"
+				},
+				"TaskInternalId": {
+					"description": "Id de integração da Tarefa",
+					"type": "string"
+				},
+				"Observation": {
+					"description": "Observação",
+					"type": "string"
+				},
+				"ListOfMaintenanceOrderItem": {
+					"description": "Lista de Itens da Ordem de Manutenção",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MaintenanceOrderItemType",
+						"type": "object"
+					}
+				},
+				"ListOfApportionMaintenanceOrder": {
+					"description": "Rateio da Ordem de Manutenção",
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ApportionType_1_000.json#/definitions/ApportionType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"MaintenanceOrderItemType": {
+			"type": "object",
+			"properties": {
+				"Event": {
+					"description": "Operação a ser executada no registro. / Upsert - Alterar/Incluir / Delete - Excluir",
+					"type": "string",
+					"enum": [
+						"Upsert",
+						"Delete"
+					]
+				},
+				"Code": {
+					"description": "Código do item da Ordem de Manutenção",
+					"type": "integer",
+					"format": "int32"
+				},
+				"InternalId": {
+					"description": "InternalId do item da Ordem de Manutenção",
+					"type": "string"
+				},
+				"ItemInternalId": {
+					"description": "Id de integração do Produto",
+					"type": "string"
+				},
+				"ItemReferenceCode": {
+					"description": "Código de Referência do Produto",
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 20
+				},
+				"UnitPrice": {
+					"description": "Preço Unitário",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999.99,
+					"maximum": 9999999999.99
+				},
+				"TotalPrice": {
+					"description": "Preço Total do Item",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999.99,
+					"maximum": 9999999999.99
+				},
+				"Quantity": {
+					"description": "Quantidade",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999.99,
+					"maximum": 9999999999.99
+				},
+				"UnitOfMeasureInternalId": {
+					"description": "Id de integração da Unidade de Medida",
+					"type": "string"
+				},
+				"WarehouseInternalId": {
+					"description": "Id de integração do Local de Estoque(Armazem)",
+					"type": "string"
+				},
+				"InitialDateTime": {
+					"description": "Data de Inicio do item",
+					"type": "string",
+					"format": "date-time"
+				},
+				"FinalDateTime": {
+					"description": "Data de Término do item",
+					"type": "string",
+					"format": "date-time"
+				},
+				"ProjectInternalId": {
+					"description": "Id de integração do Projeto",
+					"type": "string"
+				},
+				"TaskInternalId": {
+					"description": "Id de integração da Tarefa",
+					"type": "string"
+				},
+				"Observation": {
+					"description": "Observação",
+					"type": "string"
+				},
+				"ListOfApportionMaintenanceOrderItem": {
+					"description": "Rateio dos Itens da Ordem de Manutenção",
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ApportionType_1_000.json#/definitions/ApportionType",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"ReturnContent": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

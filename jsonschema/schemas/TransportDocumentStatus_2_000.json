@@ -1,0 +1,389 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/TransportDocumentStatus_2_000.json#",
+	"info": {
+		"description": "",
+		"version": "2.000",
+		"title": "TransportDocumentStatus",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Status do Documento de Transporte",
+				"description": "Status do Documento de Transporte a Pagar",
+				"segment": "Transportation Management System"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Caio Bruno Murakami y Cruces, Leandro Ferreira Paulino",
+					"note": "Integração SIGATMS x Contas a Pagar Datasul",
+					"adapter": "TMSIAPB"
+				},
+				{
+					"product": "DATASUL",
+					"contact": "Adriano de Avila",
+					"note": "Integração Contas a Pagar Datasul x SIGATMS",
+					"adapter": ""
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt",
+							"required": true,
+							"type": "caracter",
+							"length": "2",
+							"note": "Número da empresa que está em uso no momento Formato do Campo: @!",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cFilEnv",
+							"required": true,
+							"type": "caracter",
+							"length": "2",
+							"note": "Filial da fatura Caso a filial da tabela (xFilial(\"DRT\")) esteja em branco, será assumido a filial corrente (FWFilial()) Formato do Campo: @!",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchIdInternalId": {
+					"description": "InternalId da Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt|cFilEnv",
+							"required": true,
+							"type": "caracter",
+							"length": "5",
+							"note": "InternalId da Filial Concatenação da Empresa com a Filial (cEmpAnt|cFilEnv) Formato do Campo: @!",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt|cFilEnv",
+							"required": true,
+							"type": "caracter",
+							"length": "5",
+							"note": "InternalId da empresa Concatenação da Empresa com a Filial (cEmpAnt|cFilEnv) Formato do Campo: @!",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId de Integração",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Prefixo | Num.Titulo | Tipo da Mensagem",
+							"required": true,
+							"type": "char",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentId": {
+					"description": "Numero de Identificacao do Documento",
+					"type": "string",
+					"maxLength": 9
+				},
+				"DocumentType": {
+					"description": "diz a respeito de qual informacao o documento se refere: 1-VIAGEM;2-CONTRATO CARRETEIRO;3-INDENIZACAO;4-SEGURO;5-Custos de Transporte;6-Contrato Carreteiro Complementar; / 1 - Viagem / 2 - Contrato Carreteiro / 3 - Indenizacao / 4 - Seguro / 5 - Custo de Transporte / 6 - Contrato Complementar / 7 - Impostos",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7"
+					],
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "Tipo Documento",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfAccountPayableDocument": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"CompanyId": {
+								"description": "Empresa",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_empresa",
+										"required": true,
+										"type": "varchar",
+										"length": "3",
+										"note": "Empresa",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"BranchId": {
+								"description": "Filial",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_estab",
+										"required": true,
+										"type": "varchar",
+										"length": "5",
+										"note": "Estabelecimento",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"VendorCode": {
+								"description": "Código do Fornecedor",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cdn_fornecedor",
+										"required": true,
+										"type": "integer",
+										"length": "",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentTypeCode": {
+								"description": "Tipo do Título",
+								"type": "string",
+								"maxLength": 3,
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_espec_docto",
+										"required": true,
+										"type": "varchar",
+										"length": "3",
+										"note": "Espécie de documento",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentPrefix": {
+								"description": "Prefixo do Título",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_ser_docto",
+										"required": false,
+										"type": "varchar",
+										"length": "5",
+										"note": "Série do documento",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentNumber": {
+								"description": "Número do Título",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_tit_ap",
+										"required": false,
+										"type": "varchar",
+										"length": "16",
+										"note": "Código do título",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentParcel": {
+								"description": "Parcela do Título",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_parcela",
+										"required": false,
+										"type": "varchar",
+										"length": "2",
+										"note": "Parcela do título",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentInternalId": {
+								"description": "InternalId do Título",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_estab|tit_ap.cdn_fornecedor|tit_ap.cod_espec_docto|tit_ap.cod_ser_docto|tit_ap.cod_tit_ap|tit_ap.cod_parcela",
+										"required": true,
+										"type": "varchar",
+										"length": "50",
+										"note": "O InternalId do Título é formado por: cod_estab|cdn_fornecedor|cod_espec_docto|cod_ser_docto|cod_tit_ap|cod_parcela",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"CurrencyCode": {
+								"description": "Código da Moeda",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.cod_indic_econ",
+										"required": true,
+										"type": "varchar",
+										"length": "8",
+										"note": "Código da moeda",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"IssueDate": {
+								"description": "Data de Emissão",
+								"type": "string",
+								"format": "date",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.dat_emis_docto",
+										"required": true,
+										"type": "date",
+										"length": "8",
+										"note": "Data de emissão",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DueDate": {
+								"description": "Data de Vencimento",
+								"type": "string",
+								"format": "date",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.dat_vencto_tit_ap",
+										"required": true,
+										"type": "date",
+										"length": "8",
+										"note": "Data de vencimento",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"GrossValue": {
+								"description": "Valor Bruto",
+								"type": "number",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.val_origin_tit_ap",
+										"required": true,
+										"type": "decimal",
+										"length": "10,2",
+										"note": "Valor bruto",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"NetValue": {
+								"description": "Valor Líquido (Saldo)",
+								"type": "number",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "tit_ap.val_liq_tit_ap",
+										"required": false,
+										"type": "decimal",
+										"length": "10,2",
+										"note": "Valor líquido",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

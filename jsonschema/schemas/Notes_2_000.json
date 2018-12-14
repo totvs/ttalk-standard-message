@@ -1,0 +1,241 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Notes_2_000.json#",
+	"info": {
+		"description": "API para a entidade Anotações (Notas) para produtos TOTVS",
+		"version": "2.000",
+		"title": "Notes",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/NotesInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "Notes",
+				"description": "Cadastro de Anotações",
+				"segment": "CRM"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de Anotações",
+					"adapter": "CRMA100.prw"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedNotes": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Notes"
+				}
+			]
+		},
+		"Notes": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/NotesInfo"
+					}
+				}
+			}
+		},
+		"NotesInfo": {
+			"description": "Descreve uma Anotação",
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"description": "Código da empresa",
+					"maxLength": 3
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"maxLength": 12,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_FILIAL",
+							"required": true,
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|AOB.AOB_FILIAL|AOB.AOB_IDNOTA",
+							"required": true,
+							"type": "varchar",
+							"available": true,
+							"length": "16",
+							"canUpdate": false
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"description": "Código da Anotação.",
+					"example": "000001",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_IDNOTA",
+							"type": "varchar",
+							"length": "6",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"example": "T1D MG 01 000001",
+					"description": "InternalId da anotação no ERP",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_FILIAL|AOB.AOB_IDNOTA",
+							"type": "varchar",
+							"available": true,
+							"length": "14",
+							"note": "O InternalId da anotação é formado por AOB.AOB_FILIAL|AOB.AOB_IDNOTA"
+						}
+					]
+				},
+				"Description": {
+					"type": "string",
+					"description": "Descrição da anotação",
+					"example": "Anotações do Cliente XPTO",
+					"maxLength": 250,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_TITULO",
+							"type": "varchar",
+							"available": true,
+							"length": "15",
+							"required": true,
+							"note": "Descrição"
+						}
+					]
+				},
+				"ResourceType": {
+					"type": "string",
+					"description": "Código da Entidade",
+					"example": "SA1",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_ENTIDA",
+							"type": "varchar",
+							"length": "3",
+							"available": true,
+							"required": true,
+							"note": "Entidade"
+						}
+					]
+				},
+				"ResourceCode": {
+					"type": "string",
+					"description": "Chave da Entidade",
+					"example": "00000101",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_CHAVE",
+							"type": "varchar",
+							"available": true,
+							"length": "100",
+							"required": true,
+							"note": "Chave"
+						}
+					]
+				},
+				"Date": {
+					"type": "string",
+					"format": "date-time",
+					"description": "Data da Anotação",
+					"example": "20180101",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_DTNOTA",
+							"available": true,
+							"type": "varchar",
+							"required": true,
+							"note": "O campo Data é preenchido automaticamente pelo Protheus."
+						}
+					]
+				},
+				"Content": {
+					"type": "string",
+					"description": "Conteúdo da Anotação",
+					"example": "Anotações necessárias.",
+					"maxLength": 250,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_CONTEU",
+							"available": true,
+							"type": "varchar",
+							"required": true,
+							"note": "O campo é tratado como Memo."
+						}
+					]
+				},
+				"Bloqued": {
+					"type": "string",
+					"description": "Registro Bloqueado",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AOB.AOB_MSBLQL",
+							"available": true,
+							"type": "varchar",
+							"required": true,
+							"note": "1 - Bloquado, 2 - Liberado."
+						}
+					]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,548 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/TransportDocument_2_000.json#",
+	"info": {
+		"description": "",
+		"version": "2.000",
+		"title": "TransportDocument",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Documento de Transporte",
+				"description": "Documento de Transporte a Pagar",
+				"segment": "Transportation Management System"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Tiago Dos Santos, Leandro Ferreira Paulino",
+					"note": "Integração SIGATMS x Contas a Pagar Datasul",
+					"adapter": ""
+				},
+				{
+					"product": "DATASUL",
+					"contact": "Adriano de Avila",
+					"note": "Integração Contas a Pagar Datasul x SIGATMS",
+					"adapter": ""
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Informar a referencia da organizacao",
+					"type": "string"
+				},
+				"BranchId": {
+					"description": "Informar a referencia da filial na organizacao",
+					"type": "string"
+				},
+				"BranchInternalId": {
+					"description": "Informar a chave completa que identifica a filial na organizacao",
+					"type": "string"
+				},
+				"CompanyInternalId": {
+					"description": "Informar a chave completa que identifica a informacao da marca/produto (codigo que representa a empresa)",
+					"type": "string"
+				},
+				"InternalId": {
+					"description": "InternalId de Integração [Protheus] Compoe-se a chave para de-para da seguinte forma: cEmpAnt | cFilAnt | Nr.do Documento de Acordo com o tipo de mensagem| Tipo da mensagem",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Prefixo | Num.Titulo | Tipo da Mensagem",
+							"required": true,
+							"type": "char",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentId": {
+					"description": "Numero de Identificacao do Documento",
+					"type": "string",
+					"maxLength": 9
+				},
+				"DocumentType": {
+					"description": "diz a respeito de qual informacao o documento se refere: 1-VIAGEM;2-CONTRATO CARRETEIRO;3-INDENIZACAO;4-SEGURO;5-Custos de Transporte;6-Contrato Carreteiro Complementar; / 1 - Viagem / 2 - Contrato Carreteiro / 3 - Indenizacao / 4 - Seguro / 5 - Custo de Transporte / 6 - Contrato Complementar / 7 - Impostos",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7"
+					],
+					"x-totvs": [
+						{
+							"product": "DATASUL",
+							"field": "Tipo Documento",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentSubType": {
+					"description": "Sub-Tipo do Documento é uma tag livre e deve ser usada para reforçar a classificação do tipo de documento. Por exemplo um documento do tipo SEGURO engloba os tipos RCF-DC e RCTR-C; Se for Ocorrência: pode ter o sub-tipo que o classifica como INDENIZACAO, HORASPARADAS, etc. Os subtipos padrões existentes são: 101 - Viagem – Geração - Adiantamento 102 - Viagem - Fechamento - Adiantamento/Pedágio 201 - Contrato Carreteiro – Frete Pagar 202 - Contrato Carreteiro – NDF 203 - Contrato Carreteiro – NCF 301 - Indenização – Indenização de Seguro, Sinistros/Roubos da carga/veículos 401 - Seguro – Premiação 402 - Seguro – RCF-DC – Cobertura de Seguro contra Roubo ou Desaparecimento da carga. 403 - Seguro – RCTR-C – Cobertura de Seguro contra avarias, tombamentos do equipamento utilizado no transporte 501 - Custos de Transporte 601 - Contrato Complementar 701 - Impostos - GNRE - ICMS  A informação aqui serve também para relacionar a ESPECIE Financeira do DATASUL ou outra marca receptora. Tipo do Campo deve ser CHAR de tamanho 15.",
+					"type": "string"
+				},
+				"VendorCode": {
+					"description": "Codigo referente ao cadastro do fornecedor que sera enviado no formato Char-999999 [0-9][A-Z]",
+					"type": "string",
+					"maxLength": 10
+				},
+				"VendorInternalId": {
+					"description": "Codigo referente ao cadastro do fornecedor que sera enviado no formato Char-999999 [0-9][A-Z] Quano a marca transmissora for [ Protheus ] enviar concatenado os campos A2_COD + A2_LOJA",
+					"type": "string",
+					"maxLength": 10
+				},
+				"VendorDescription": {
+					"description": "Descrição do Fornecedor Char(40) [0-9][a-z][A-Z]",
+					"type": "string",
+					"maxLength": 40
+				},
+				"GovernmentalInformation": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType",
+					"description": "Informações governamentais do Fornecedor (CPF/CNPJ, Incrição Municipal e Estadual, etc.) Para essa tag informar o grupo de elementos conforme abaixo: <Id name=\"INSCRICAO ESTADUAL\" scope=\"State\" expiresOn=\"\" issueOn=\"2016-09-16\">1234567890</Id> <Id name=\"CNPJCPF\" scope=\"Federal\" expiresOn=\"\" issueOn=\"2016-09-16\">00000000000000</Id>",
+					"type": "object"
+				},
+				"LocalCurrency": {
+					"description": "informe: Codigo    <Code/> Descricao <Description/> Simbolo   <Simbol/>",
+					"type": "object",
+					"properties": {
+						"Code": {
+							"type": "string"
+						},
+						"Description": {
+							"type": "string"
+						},
+						"Simbol": {
+							"type": "string"
+						}
+					}
+				},
+				"Preview": {
+					"description": "informa ao receptor da mensagem se o xml é uma simulação ou não. Onde que: 1 (Sim) -> é uma simulação deverá apenas validar o resultado, mas não efetivar o processamento do xml;  2 (Não) -> não é uma simulação, deve efetivar o processamento do xml; / 1 - Sim / 2 - Não",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					]
+				},
+				"IssueDate": {
+					"description": "Data de Emissao",
+					"type": "string",
+					"format": "date-time"
+				},
+				"TransactionDate": {
+					"description": "Data de Transacao",
+					"type": "string",
+					"format": "date-time"
+				},
+				"DueDate": {
+					"description": "Data de Vencimento",
+					"type": "string",
+					"format": "date-time"
+				},
+				"DebitBranchCode": {
+					"description": "Filial de Debito",
+					"type": "string"
+				},
+				"DebitBranchInternalId": {
+					"description": "Chave completa que identifica a Filial de Debito",
+					"type": "string"
+				},
+				"DocumentValues": {
+					"description": "Grupo relacionado a valores de documentos.",
+					"type": "object",
+					"properties": {
+						"TransportDocumentValue": {
+							"description": "Refere-se ao valor do Frete/do Titulo a ser gerado.",
+							"type": "number",
+							"format": "float"
+						},
+						"TollValue": {
+							"description": "Refere-se ao valor do Pedagio/do Titulo a ser gerado.",
+							"type": "number",
+							"format": "float"
+						},
+						"AdvancesValue": {
+							"description": "Refere-se ao valor do Adiantamento de Frete Carreteiro/do Titulo a ser gerado.",
+							"type": "number",
+							"format": "float"
+						},
+						"TaxBaseValue": {
+							"description": "Refere-se ao valor base para calculo dos impostos que serão retornados no final do processamento da mensagem.",
+							"type": "number",
+							"format": "float"
+						},
+						"INSSRetention": {
+							"description": "Valor do INSS retido pelo prestador do serviço. Esta Tag deve ser preenchido quando houver retenção de imposto informado na viagem para que a marca receptora da mensagem faça os abatimentos necessários no calculo do imposto.",
+							"type": "number",
+							"format": "float"
+						},
+						"ISSRate": {
+							"description": "Aliquota do ISS para calculo do imposto sobre o valor da base de calculo.",
+							"type": "number",
+							"format": "float"
+						},
+						"TransportCostValue": {
+							"description": "Valor de Custo de Transporte.",
+							"type": "number",
+							"format": "float"
+						},
+						"OperatorChargeValue": {
+							"description": "Valor da Taxa para uso da Operadora de Frete PamCare. (Pode ser utilizado para outras operadoras no futuro)",
+							"type": "number",
+							"format": "float"
+						},
+						"RefundValue": {
+							"description": "Valor de Reembolso/do Titulo a ser gerado.",
+							"type": "number",
+							"format": "float"
+						}
+					}
+				},
+				"DocumentHistory": {
+					"description": "Campo livre, use-o para incluir informações que reforcem a identificação do documento no financeiro.",
+					"type": "string",
+					"maxLength": 200
+				},
+				"PaymentStatus": {
+					"description": "Este campo controla se o titulo será lançado com ou sem bloqueio de pagamento do titulo.                        pode assumir os valores:                        1-Bloqueado para Pagamento;                        2-Sem bloqueio de pagamento;                                                Observação: quando o envio ocorre pelo Protheus o parâmetro MV_LIBCTC determina se este campo assume o valor 1 para MV_LIBCTC=.T.(true) / 1 - 1-Pagamento Bloqueado / 2 - 2-Pagamento Desbloqueado",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					]
+				},
+				"BondsToPay": {
+					"description": "Este campo controla se o Título de Frete será gerado ou não.    Será utilizado para possibilitar que o Título seja gerado na Geração do Contrato ou na Liberação do Contrato.                        Pode assumir os valores:                        1 (Sim) -> Gera o Título de Frete;                        2 (Não) -> Não gera o Título de Frete; / 1 - Sim / 2 - Não",
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					]
+				},
+				"OperatorCode": {
+					"description": "Código da Operadora. Exemplo: 01 - REPOM, 02 - PamCard, etc...",
+					"type": "string"
+				},
+				"ListOfDocumentsPerTrip": {
+					"description": "Informe a lista de documentos da seguinte forma: <Document> <BranchId></BranchId> <BranchInternalId></BranchInternalId> <Code></Code> <Serial></Serial> </Document>",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"BranchId": {
+								"type": "string"
+							},
+							"BranchInternalId": {
+								"type": "string"
+							},
+							"Code": {
+								"type": "string"
+							},
+							"Serial": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"ListOfTripsPerContract": {
+					"description": "Informe a lista de viagens por contrato para quando a tag <DocumentType> contiver o valor 'VIAGEM'; Tem que ser preenchida da seguinte forma: <Trip> <BranchId></BranchId> <BranchInternalId></BranchInternalId> <Code></Code> </Trip>",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"BranchId": {
+								"type": "string"
+							},
+							"BranchInternalId": {
+								"type": "string"
+							},
+							"Code": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"ListOfTaxes": {
+					"description": "Impostos Calculados pela Origem ou Sistema Externo",
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Tax_1_003.json#/definitions/TaxesType",
+						"type": "object"
+					}
+				}
+			},
+			"required": [
+				"Preview",
+				"PaymentStatus"
+			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				},
+				"ListOfAccountPayableDocument": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"CompanyId": {
+								"description": "Empresa",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cod_empresa",
+										"required": true,
+										"type": "varchar",
+										"length": "3",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"BranchId": {
+								"description": "Filial",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cod_estab",
+										"required": true,
+										"type": "varchar",
+										"length": "5",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"VendorCode": {
+								"description": "Código do Fornecedor",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cdn_fornecedor",
+										"required": true,
+										"type": "integer",
+										"length": "",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentTypeCode": {
+								"description": "Tipo do Título",
+								"type": "string",
+								"maxLength": 3,
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cod_espec_docto",
+										"required": true,
+										"type": "varchar",
+										"length": "3",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentPrefix": {
+								"description": "Prefixo do Título (Série)",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cod_ser_docto",
+										"required": false,
+										"type": "varchar",
+										"length": "5",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentNumber": {
+								"description": "Número do Título",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cod_tit_ap",
+										"required": false,
+										"type": "varchar",
+										"length": "16",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentParcel": {
+								"description": "Parcela do Título",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cod_parcela",
+										"required": false,
+										"type": "varchar",
+										"length": "",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DocumentInternalId": {
+								"description": "InternalId do Título",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "",
+										"required": true,
+										"type": "varchar",
+										"length": "50",
+										"note": "O InternalId do Título é formado por: cod_estab|cdn_fornecedor|cod_espec_docto|cod_ser_docto|cod_tit_ap|cod_parcela",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"CurrencyCode": {
+								"description": "Código da Moeda",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "cod_indic_econ",
+										"required": true,
+										"type": "varchar",
+										"length": "8",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"IssueDate": {
+								"description": "Data de Emissão",
+								"type": "string",
+								"format": "date",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "dat_emis_docto",
+										"required": true,
+										"type": "date",
+										"length": "8",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"DueDate": {
+								"description": "Data de Vencimento",
+								"type": "string",
+								"format": "date",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "dat_vencto_tit_ap",
+										"required": true,
+										"type": "date",
+										"length": "8",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"GrossValue": {
+								"description": "Valor Bruto",
+								"type": "number",
+								"format": "double",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "val_origin_tit_ap",
+										"required": true,
+										"type": "decimal",
+										"length": "10,2",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"NetValue": {
+								"description": "Valor Líquido (Saldo)",
+								"type": "number",
+								"format": "double",
+								"x-totvs": [
+									{
+										"product": "DATASUL",
+										"field": "val_sdo_tit_ap",
+										"required": false,
+										"type": "decimal",
+										"length": "10,2",
+										"note": "",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"ListOfTaxes": {
+								"description": "Impostos Calculados pelo BackOffice",
+								"type": "array",
+								"items": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Tax_1_003.json#/definitions/TaxesType",
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
