@@ -14,6 +14,8 @@ var foundpagesize;
 var thisIsCollectionEndpoint;
 var hasgetcollectionendpoint;
 var parsedOpenAPI;
+var derefOpenAPI;
+
 var idWasCorrecltyDefinedInGeneralParams;
 var operationIdList;
 
@@ -166,39 +168,6 @@ var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
     }
 }
 
-/**
- * This method adds compelete schema information, that will be used in another class for getting it's content and doing further validations
- * @param {*} responseRequest Object (Of a request or a response - The internal structure is the same)
- * @param {*} schematype String - Possible values 'request', 'response' 
- * @param {*} pathkey String (/endpoint)
- * @param {*} iscollection Boolean - Is this a collection endpoint? 
- * @param {*} httpVerbkey String ('get','put,'post','delete'...)  
- */
-var addSchema = function (responseRequest, schematype, pathkey, iscollection, httpVerbkey) {
-    if (responseRequest) {
-        if (responseRequest.content) {
-            if (responseRequest.content["application/json"].schema) {
-                var ref = responseRequest.content["application/json"].schema.$ref;
-                if (!ref) {
-                    if (responseRequest.content["application/json"].schema.items) {
-                        ref = responseRequest.content["application/json"].schema.items.$ref;
-                    }
-                }
-                if (ref) {
-                    var schemaObj = {
-                        ref: ref.slice(0, ref.indexOf("#")),
-                        objectName: ref.slice(ref.indexOf("definitions/") + 12, ref.length),
-                        schematype: schematype,
-                        pathkey: pathkey,
-                        iscollection: iscollection,
-                        httpVerbkey: httpVerbkey
-                    }
-                    results.schemaObjList.push(schemaObj);
-                } else results.errorAddingSchema = true;
-            }
-        }
-    }
-};
 
 /**
  * This method checks if all verbs that demand Id in the URL have it
@@ -235,6 +204,41 @@ var checkIfOperationIdIsUnique = function (operationId) {
             results.operationIdUnique = true;
         }
     }
+};
+
+
+/**
+ * This method checks if 'hasNext' and 'items' exist together
+ * @param {*} properties Object
+ * @param {*} pathkey String
+ */
+var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
+    if (results.containsItemsAndHasNext != false) {
+        let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
+        if (properties) {
+            if (properties.hasOwnProperty("items") || properties.hasOwnProperty("hasNext")) {
+                results.containsItemsAndHasNext = properties.hasOwnProperty("items") && properties.hasOwnProperty("hasNext");
+                if (results.containsItemsAndHasNext == false) {
+                    results.erroredPathMissingItemOrHasNext = pathkey;
+                }
+            }
+        }
+    }
+}
+
+var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, pathidkey, pathkey) {
+    let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
+    if (properties) {
+        if (thisIsCollectionEndpoint && results.containsTheSameKeyInUrlAndBody != false) results.containsTheSameKeyInUrlAndBody = true; //No need to validate that. Collections don't have 'id' in URL
+        else {
+            if (results.containsTheSameKeyInUrlAndBody != false) {
+                results.containsTheSameKeyInUrlAndBody = properties.hasOwnProperty(pathidkey);
+                if (results.containsTheSameKeyInUrlAndBody == false) {
+                    results.erroredPathWithoutSameKeyInUrlAndBody = pathkey;
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -244,15 +248,20 @@ var checkIfOperationIdIsUnique = function (operationId) {
  * @param {*} thisIsCollectionEndpoint Boolean
  * @param {*} httpVerbkey String ('get','put,'post','delete'...)  
  */
-var runThroughResponses = function (responses, pathkey, thisIsCollectionEndpoint, httpVerbkey) {
+var runThroughResponses = function (responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey) {
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
+        var dereferencedResponse = dereferencedResponses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
             checkIfSchemaIsSettedToExternaFile(response, true);
-            if (responseKey < 400) //Only success response
-                addSchema(response, "response", pathkey, thisIsCollectionEndpoint, httpVerbkey);
+            if (responseKey < 400) { //Only success response 
+                if (dereferencedResponse.content['application/json'].schema) {
+                    checkIfHasNextAndItems(dereferencedResponse, pathkey);
+                    containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
+                }
+            }
         }
     }
 };
@@ -376,7 +385,7 @@ var checkIfParametersContainPathId = function (alreadyfoundpathid, pathkey, para
         results.hasPathParamDefinedInParameters = alreadyfoundpathid;
 
         if (!alreadyfoundpathid && !results.endpointsWithoutPathParamDefinedInParameters) {
-                results.endpointsWithoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive). (Was the parameter object - schema definition - correctly defined?)";
+            results.endpointsWithoutPathParamDefinedInParameters = "Check this endpoint: '" + pathkey + "'.Please observe if path param is defined in general 'params' property or in all httpVerbs 'parameters' property. Make sure 'name' matches urlId and 'in' is 'path' (case sensitive). (Was the parameter object - schema definition - correctly defined?)";
         }
     }
 }
@@ -391,7 +400,9 @@ exports.clear = function () {
         collectionsWithoutRequiredParams: "",
         wrongXTotvs: "",
         notUsingCommonParams: "",
-        useIdInAllPuts: true
+        useIdInAllPuts: true,
+        containsItemsAndHasNext: true,
+        containsTheSameKeyInUrlAndBody: true
     };
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;
@@ -402,12 +413,15 @@ exports.clear = function () {
 
 /**
  * This method will iterate through 'paths'(endpoints) and it's http verbs
- * @param {*} _parsedOpenAPI 
+ * @param {*} _parsedOpenAPI OpenAPI object with all external references addresses
+ * @param {*} _derefOpenAPI OpenAPI object with all external objects already dereferenced
  */
-exports.runThroughPaths = function (_parsedOpenAPI) {
+exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
     parsedOpenAPI = _parsedOpenAPI;
+    derefOpenAPI = _derefOpenAPI;
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
+        let pathidkey = pathkey.substr(pathkey.lastIndexOf("/{") + 2, pathkey.length).replace("}", "").replace("{", "");
         var httpVerbsList = parsedOpenAPI.paths[pathkey]
         verifyIfThisIsCollectionEndpoint(pathkey);
         checkIfPutHaveId(thisIsCollectionEndpoint, httpVerbsList);
@@ -418,15 +432,18 @@ exports.runThroughPaths = function (_parsedOpenAPI) {
             } else {
                 verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
+                var dereferenceHttpVerbInfo = derefOpenAPI.paths[pathkey][httpVerbkey];
                 checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
                 checkIfOperationIdIsUnique(httpVerbInfo.operationId);
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid);
                 var request = httpVerbInfo.requestBody;
+                var dereferencedRequest = dereferenceHttpVerbInfo.requestBody;
                 checkIfSchemaIsSettedToExternaFile(request);
-                addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
+                // addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
                 var responses = httpVerbInfo.responses;
-                runThroughResponses(responses, pathkey, thisIsCollectionEndpoint, httpVerbkey);
+                var dereferencedResponses = dereferenceHttpVerbInfo.responses;
+                runThroughResponses(responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
             }
         }
         if (!hasgetcollectionendpoint)

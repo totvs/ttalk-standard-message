@@ -7,7 +7,7 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var schemaDefinitionsValidator = require('../libSchema/schemaDefinitionsValidator.js');
-var schemaDereferencer = require('../libSchema/schemaDereferencer.js');
+var deref = require('../libCommons/deref.js')
 
 var expect = require('chai').expect;
 
@@ -34,7 +34,7 @@ describe("Validating Schema files...", function () {
             before(async function (done) { //only used done here to be able to use the timeout (next line);
               this.timeout(60000);
               parsedSchema = JSON.parse(file);
-              dereferencedSchema = await schemaDereferencer.getDereferenced(parsedSchema);
+              dereferencedSchema = await deref.getDereferenced(parsedSchema);
               parsedSchema = dereferencedSchema;
               schemaDefinitionsValidator.clear();
               schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema, done);

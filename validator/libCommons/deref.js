@@ -27,5 +27,4 @@ exports.getDereferenced = async function (parsedSchema) {
         }
     });
     return dereferencedSchema;
-    
 }
