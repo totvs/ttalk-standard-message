@@ -3,7 +3,7 @@
   "servers": [
     {
       "description": "API de lotes de guias do segmento HealthCare para produtos TOTVS",
-      "url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/hat/v1",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1",
       "variables": {
         "serverUrl": {
           "default": "localhost"
@@ -15,9 +15,9 @@
     }
   ],
   "info": {
-    "description": "API para a entidade Batches do segmento HealthCare para produtos TOTVS",
+    "description": "API de lotes de guias do segmento HealthCare para produtos TOTVS",
     "version": "1.000",
-    "title": "Batches",
+    "title": "Batches Authorization",
     "contact": {
       "name": "T-Talk",
       "url": "api.Totvs.com.br",
@@ -25,25 +25,24 @@
     },
     "x-totvs": {
       "messageDocumentation": {
-        "name": "Batches",
-        "description": "Batches",
+        "name": "Batches Authorization",
+        "description": "Batches Authorization",
         "segment": "HealthCare"
       },
       "productInformation": [
         {
           "product": "hat",
           "contact": "hat@totvs.com.br",
-          "description": "Lotes de guias",
-          "adapter": "RestLote.prw"
+          "description": "Lotes de guias"
         }
       ]
     }
   },
   "paths": {
-    "/batch": {
+    "/batchesAuthorization": {
       "get": {
         "tags": [
-          "batch"
+          "batches"
         ],
         "summary": "Retorna informações dos lotes de guias",
         "x-totvs": {
@@ -113,7 +112,7 @@
       },
       "post": {
         "tags": [
-          "batch"
+          "batches"
         ],
         "summary": "Inclusão de um lote de guias",
         "x-totvs": {
@@ -189,10 +188,10 @@
         }
       }
     },
-    "/batch/{batchNumber}": {
+    "/batchesAuthorization/{batchNumber}": {
       "get": {
         "tags": [
-          "batch"
+          "batches"
         ],
         "summary": "Retorna informações do lote",
         "x-totvs": {
@@ -274,122 +273,12 @@
             }
           }
         }
-      },
-      "put": {
-        "tags": [
-          "batch"
-        ],
-        "summary": "Altera informações de um lote de guias",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "hat",
-              "avaliable": true
-            }
-          ]
-        },
-        "description": "Altera informações do lote de guias de acordo com o número informado. Onde a única propriedade que pode ser alterada é 'authorizations' junto com o parâmetro action para definir se as guias serão adiicionadas ao lote ou removidas dele.",
-        "operationId": "putBatch",
-        "parameters": [
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/ExpiresAt"
-          },
-          {
-            "$ref": "#/components/parameters/Action"
-          },
-          {
-            "$ref": "#/components/parameters/BatchNumber"
-          }
-        ],
-        "requestBody": {
-          "description": "Lote a ser alterado.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/BatchBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/Batch"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Erro durante alteração do lote"
-          },
-          "404": {
-            "description": "Nao foram encontrados dados de lotes para os parametros fornecidos.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "batch"
-        ],
-        "summary": "Deleta um lote de guias",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "hat",
-              "avaliable": false
-            }
-          ]
-        },
-        "description": "Exclui um lote de guias de acordo com o número informado.",
-        "operationId": "delBatch",
-        "parameters": [
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/ExpiresAt"
-          },
-          {
-            "$ref": "#/components/parameters/BatchNumber"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Operação realizada com sucesso!"
-          },
-          "400": {
-            "description": "Erro durante exclusão do lote"
-          },
-          "404": {
-            "description": "Nao foram encontrados dados de lotes para os parametros fornecidos.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
-                }
-              }
-            }
-          }
-        }
       }
     },
-    "/batch/{batchNumber}/authorizations": {
+    "/batchesAuthorization/{batchNumber}/authorizations": {
       "get": {
         "tags": [
-          "batch"
+          "batches"
         ],
         "summary": "Retorna as guias do lote",
         "x-totvs": {
@@ -468,6 +357,71 @@
           },
           "500": {
             "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "batches"
+        ],
+        "summary": "Altera informações de um lote de guias",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            }
+          ]
+        },
+        "description": "Altera informações do lote de guias de acordo com o número informado. Onde a única propriedade que pode ser alterada é 'authorizations' junto com o parâmetro action para definir se as guias serão adiicionadas ao lote ou removidas dele.",
+        "operationId": "putBatch",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/Action"
+          },
+          {
+            "$ref": "#/components/parameters/BatchNumber"
+          }
+        ],
+        "requestBody": {
+          "description": "Lote a ser alterado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/BatchBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/Batch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro durante alteração do lote"
+          },
+          "404": {
+            "description": "Nao foram encontrados dados de lotes para os parametros fornecidos.",
             "content": {
               "application/json": {
                 "schema": {
