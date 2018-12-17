@@ -1,0 +1,117 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade renovação de empréstimo de livro (RenewBookLoan) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade renovação de empréstimo de livro",
+		"version": "1.000",
+		"title": "RenewBookLoan",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "RenewBookLoan",
+				"description": "Renovação de empréstimo de livro pendente",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Renovação de empréstimo de livro pendente"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/bookloans/{BookLoanInternalId}/RenewBookLoans": {
+			"post": {
+				"tags": [
+					"RenewBookLoans"
+				],
+				"summary": "Renova o empréstimo passado na requisição",
+				"description": "Renova o empréstimo passado na requisição",
+				"operationId": "postRenewBookLoan",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/BookLoanInternalId"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RenewBookLoan_1_000.json#/definitions/RenewBookLoanInfo"
+							}
+						}
+					},
+					"description": "Empréstimo de livro a ser renovado"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RenewBookLoan_1_000.json#/definitions/RenewBookLoanInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento do processamento",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"BookLoanInternalId": {
+				"name": "BookLoanInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do empréstimo do livro",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}

@@ -11,8 +11,11 @@ var pathValidator = require('../libOpenAPI/pathValidator.js');
 var jsonHandler = require('../libOpenAPI/jsonHandler.js');
 var fileGetter = require('../libOpenAPI/fileGetter.js');
 var schemaReferenceFromApi = require('../libOpenAPI/schemaReferenceFromApiValidator.js');
-
+var derefScript = require('../libOpenAPI/deref.js');
+var $RefParser = require('json-schema-ref-parser');
 var expect = require('chai').expect;
+
+var segmentDictionary = {};
 
 describe("Validating OpenAPI files...", function () {
   it("test suite started", function (done) {
@@ -37,10 +40,12 @@ describe("Validating OpenAPI files...", function () {
             var pathValidatorResult
             var fileGetterResult;
             var schemaReferenceFromApiResult;
+            var derefResult;
 
             before(function (done) {
               this.timeout(60000);
               parsedOpenAPI = JSON.parse(file);
+              //derefResult = derefScript.derefScript(parsedOpenAPI);
               pathValidator.clear();
               pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
               fileGetter.clear();
@@ -49,7 +54,7 @@ describe("Validating OpenAPI files...", function () {
               schemaReferenceFromApi.clear();
               schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult, done);
             })
-           
+
             describe(" - Filename: ", function () {
               it("should start with uppercase letter", function () {
                 expect(filename[0]).to.equal(filename[0].toUpperCase());
@@ -133,6 +138,34 @@ describe("Validating OpenAPI files...", function () {
                 expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
               });
 
+              it("should be dereferenced", function (done) {
+                this.timeout(60000);
+                var parser = new $RefParser();
+                var resultEvaluation = true;
+                parser.dereference(parsedOpenAPI, { // (.dereference could be .bundle) doc: https://apidevtools.org/json-schema-ref-parser/docs/ref-parser.html#bundleschema-options-callback
+                    dereference: { //these are options
+                        dereference: true
+                    },
+                    resolve: {
+                        external: true,
+                        http: {
+                            redirects: 0,
+                            timeout: 50000
+                        }
+                    }
+                },  function (err, newSchema) {
+                    if (err) {
+                        resultEvaluation = false;
+                        
+                    } else {
+                        resultEvaluation = true;
+                    }
+                    expect(resultEvaluation, err).to.be.true;
+                    done();
+                });
+              });
+             
+
               it("should reference valid objects inside schema file", function () {
                 var errorMessage = "";
                 if (schemaReferenceFromApiResult.erroredObjectName)
@@ -191,16 +224,30 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - xtotvs: ", function () {
-              it("should contain xtotvs/productinformation as an array on 'info'", function () {
-                expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
-              });
-
-              it("should contain xtotvs/productinformation as an array on 'paths'", function () {
-                var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
-                expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
+              describe(" - path", function () {
+                it("should contain xtotvs/productinformation as an array on 'paths'", function () {
+                  var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
+                  expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
+                });
+              })
+              describe(" - info", function () {
+                it("should contain xtotvs/productinformation as an array on 'info'", function () {
+                  expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
+                });
+                it("segment name should be standardized", function () {
+                  const keyName = parsedOpenAPI.info["x-totvs"].messageDocumentation.segment.toLowerCase().replace(" ", "").normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+                  //Verificar se ja existe a propriedade com este nome
+                  if (!(keyName in segmentDictionary)) {
+                    //Se nao existe, adiciona
+                    segmentDictionary[keyName] = parsedOpenAPI.info["x-totvs"].messageDocumentation.segment;
+                  } else {
+                    //Verificar se o valor do dictionary é igual ao valor do OpenApi
+                    var wrongSegment = "You passed '" + parsedOpenAPI.info["x-totvs"].messageDocumentation.segment + "' as x-totvs segment, but we already got '" + segmentDictionary[keyName] + "'.";
+                    expect(parsedOpenAPI.info["x-totvs"].messageDocumentation.segment, wrongSegment).to.be.equal(segmentDictionary[keyName]);
+                  }
+                })
               });
             });
-            
           });
         };
       });

@@ -1,481 +1,481 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfStationSalePoint_1_001.json#",
-  "info": {
-    "description": "",
-    "version": "1.001",
-    "title": "ListOfStationSalePoint",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "Estação PDV",
-        "description": "Estação de Ponto de Venda",
-        "segment": "Varejo"
-      },
-      "productInformation": [
-        {
-          "product": "PROTHEUS",
-          "contact": "leandro.lima",
-          "note": "Inovação Varejo",
-          "adapter": ""
-        },
-        {
-          "product": "RM",
-          "contact": "Alaim Porto Alvarenga",
-          "note": "GDP Inovação Construção e Projetos.",
-          "adapter": ""
-        }
-      ],
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfStationSalePoint": {
-          "description": "Lista de Estação de Ponto de Venda",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ListOfStationSalePointType",
-            "type": "object"
-          },
-          "x-totvs": [
-            {
-              "product": "RM",
-              "field": "",
-              "required": true,
-              "type": "",
-              "length": "",
-              "note": "Lista de Estação de Ponto de Venda (Tabela TPONTOVENDA)",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "PROTHEUS",
-              "field": "SLG",
-              "required": true,
-              "type": "",
-              "length": "",
-              "note": "Estação Estação de Ponto de Venda",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        }
-      }
-    },
-    "ListOfStationSalePointType": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/StationSalePointType",
-        "type": "object"
-      }
-    },
-    "StationSalePointType": {
-      "type": "object",
-      "properties": {
-        "Event": {
-          "description": "Evento do item / upsert - Atualizar registro. / delete - Apagar registro.",
-          "type": "string",
-          "enum": [
-            "upsert",
-            "delete"
-          ],
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": true,
-              "type": "Char",
-              "length": "6",
-              "note": "Update ou Delete",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": ".",
-              "required": true,
-              "type": "string",
-              "length": "6",
-              "note": "Operação a ser executada no registro: upsert ou gelete",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyId": {
-          "description": "Empresa",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "Char",
-              "length": "2",
-              "note": "Será enviado o valor da variável cEmpAnt(Empresa)",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.CODCOLIGADA",
-              "required": true,
-              "type": "integer",
-              "length": "2",
-              "note": "Codigo da Coligada",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "BranchId": {
-          "description": "Filial",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "Char",
-              "length": "12",
-              "note": "Será enviado o valor da variável cFilAnt",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.CODFILIAL",
-              "required": false,
-              "type": "integer",
-              "length": "2",
-              "note": "Filial Default",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "description": "InternalId da chave completa de empresa do produto",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "",
-              "length": "",
-              "note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework  estando no ambiente (Empresa x Filial) correto",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.CODCOLIGADA | TPONTOVENDA.CODFILIAL",
-              "required": true,
-              "type": "varchar",
-              "length": "10",
-              "note": "Concatenação da coligada do registro e filial do contexto",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Code": {
-          "description": "Código Ponto de Venda",
-          "type": "string",
-          "maxLength": 30,
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_CODIGO",
-              "required": true,
-              "type": "varchar",
-              "length": "3",
-              "note": "Código da Estacao de Trabalho",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.PONTOVENDA",
-              "required": true,
-              "type": "varchar",
-              "length": "10",
-              "note": "Código do Ponto de Venda",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "InternalId": {
-          "description": "InternalId de Integração",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": ".",
-              "required": true,
-              "type": "varchar",
-              "length": "50",
-              "note": "O InternalID do Código de Estação é formado por EMPRESA|LG_FILIAL|LG_CODIGO",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": ".",
-              "required": true,
-              "type": "varchar",
-              "length": "6",
-              "note": "O InternalID do Ponto de Venda é formado por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.PONTOVENDA",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Series": {
-          "description": "Série",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_SERIE",
-              "required": true,
-              "type": "varchar",
-              "length": "3",
-              "note": "Série da Estação de Trabalho",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.SERIE",
-              "required": false,
-              "type": "varchar",
-              "length": "5",
-              "note": "Série Default",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "FiscalSerie": {
-          "description": "Serie ECF",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_SERPDV",
-              "required": true,
-              "type": "varchar",
-              "length": "20",
-              "note": "Serie da impressora fiscal, do equipamento ECF",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "SATSerie": {
-          "description": "Série SAT",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_SERSAT",
-              "required": true,
-              "type": "varchar",
-              "length": "9",
-              "note": "Serie do equipamento SAT-ECF",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "SeriesInternalId": {
-          "description": "Id de integração da Série",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_SERIE",
-              "required": true,
-              "type": "varchar",
-              "length": "3",
-              "note": "Série da Estação de Trabalho",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "Este campo é composto por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.SERIE",
-              "required": false,
-              "type": "varchar",
-              "length": "5",
-              "note": "Série Default",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Description": {
-          "description": "Descrição",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_NOME",
-              "required": true,
-              "type": "varchar",
-              "length": "20",
-              "note": "Nome da Estação de Trabalho",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.DESCRICAO",
-              "required": false,
-              "type": "varchar",
-              "length": "60",
-              "note": "Descrição do Ponto de Venda",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "WarehouseCode": {
-          "description": "Codigo Local de Estoque(Armazem)",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_LOCAL",
-              "required": false,
-              "type": "varchar",
-              "length": "2",
-              "note": "Armazém padrão",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.CODLOC",
-              "required": false,
-              "type": "varchar",
-              "length": "15",
-              "note": "Local de Estoque Default",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "WarehouseInternalId": {
-          "description": "Id de integração do Local de Estoque(Armazem)",
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": ".",
-              "required": true,
-              "type": "varchar",
-              "length": "50",
-              "note": "InternalId do Local de Estoque Default",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": ".",
-              "required": false,
-              "type": "varchar",
-              "length": "19",
-              "note": "Este campo é composto por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.CODFILIAL|TPONTOVENDA.CODLOC",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "Active": {
-          "description": "Estação Ativa?",
-          "type": "boolean",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": false,
-              "type": "",
-              "length": "",
-              "note": "",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.INATIVO",
-              "required": false,
-              "type": "boolean",
-              "length": "",
-              "note": "Ponto de venda Inativo: 0-Ativo 1-Inativo",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CRO": {
-          "description": "Contador Reinício de Operação",
-          "type": "integer",
-          "format": "int32",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "SLG.LG_CRO",
-              "required": false,
-              "type": "varchar",
-              "length": "6",
-              "note": "Contador Reinício de Operação",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "TPONTOVENDA.CRO",
-              "required": false,
-              "type": "integer",
-              "length": "",
-              "note": "Contador Reinício de Operação Default",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        }
-      },
-      "required": [
-        "Event"
-      ]
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ListOfInternalId": {
-          "type": "array",
-          "items": {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
-            "type": "object"
-          }
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ListOfStationSalePoint_1_001.json#",
+	"info": {
+		"description": "",
+		"version": "1.001",
+		"title": "ListOfStationSalePoint",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Estação PDV",
+				"description": "Estação de Ponto de Venda",
+				"segment": "Varejo"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "leandro.lima",
+					"note": "Inovação Varejo",
+					"adapter": ""
+				},
+				{
+					"product": "RM",
+					"contact": "Alaim Porto Alvarenga",
+					"note": "GDP Inovação Construção e Projetos.",
+					"adapter": ""
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfStationSalePoint": {
+					"description": "Lista de Estação de Ponto de Venda",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfStationSalePointType",
+						"type": "object"
+					},
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "",
+							"length": "",
+							"note": "Lista de Estação de Ponto de Venda (Tabela TPONTOVENDA)",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SLG",
+							"required": true,
+							"type": "",
+							"length": "",
+							"note": "Estação Estação de Ponto de Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ListOfStationSalePointType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/StationSalePointType",
+				"type": "object"
+			}
+		},
+		"StationSalePointType": {
+			"type": "object",
+			"properties": {
+				"Event": {
+					"description": "Evento do item / upsert - Atualizar registro. / delete - Apagar registro.",
+					"type": "string",
+					"enum": [
+						"upsert",
+						"delete"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "Char",
+							"length": "6",
+							"note": "Update ou Delete",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": ".",
+							"required": true,
+							"type": "string",
+							"length": "6",
+							"note": "Operação a ser executada no registro: upsert ou gelete",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "Char",
+							"length": "2",
+							"note": "Será enviado o valor da variável cEmpAnt(Empresa)",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": "2",
+							"note": "Codigo da Coligada",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "Char",
+							"length": "12",
+							"note": "Será enviado o valor da variável cFilAnt",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.CODFILIAL",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "Filial Default",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa de empresa do produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework  estando no ambiente (Empresa x Filial) correto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.CODCOLIGADA | TPONTOVENDA.CODFILIAL",
+							"required": true,
+							"type": "varchar",
+							"length": "10",
+							"note": "Concatenação da coligada do registro e filial do contexto",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Code": {
+					"description": "Código Ponto de Venda",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_CODIGO",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "Código da Estacao de Trabalho",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.PONTOVENDA",
+							"required": true,
+							"type": "varchar",
+							"length": "10",
+							"note": "Código do Ponto de Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId de Integração",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": ".",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalID do Código de Estação é formado por EMPRESA|LG_FILIAL|LG_CODIGO",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": ".",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"note": "O InternalID do Ponto de Venda é formado por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.PONTOVENDA",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Series": {
+					"description": "Série",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_SERIE",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "Série da Estação de Trabalho",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.SERIE",
+							"required": false,
+							"type": "varchar",
+							"length": "5",
+							"note": "Série Default",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FiscalSerie": {
+					"description": "Serie ECF",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_SERPDV",
+							"required": true,
+							"type": "varchar",
+							"length": "20",
+							"note": "Serie da impressora fiscal, do equipamento ECF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SATSerie": {
+					"description": "Série SAT",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_SERSAT",
+							"required": true,
+							"type": "varchar",
+							"length": "9",
+							"note": "Serie do equipamento SAT-ECF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SeriesInternalId": {
+					"description": "Id de integração da Série",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_SERIE",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "Série da Estação de Trabalho",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "Este campo é composto por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.SERIE",
+							"required": false,
+							"type": "varchar",
+							"length": "5",
+							"note": "Série Default",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Description": {
+					"description": "Descrição",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_NOME",
+							"required": true,
+							"type": "varchar",
+							"length": "20",
+							"note": "Nome da Estação de Trabalho",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.DESCRICAO",
+							"required": false,
+							"type": "varchar",
+							"length": "60",
+							"note": "Descrição do Ponto de Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WarehouseCode": {
+					"description": "Codigo Local de Estoque(Armazem)",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_LOCAL",
+							"required": false,
+							"type": "varchar",
+							"length": "2",
+							"note": "Armazém padrão",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.CODLOC",
+							"required": false,
+							"type": "varchar",
+							"length": "15",
+							"note": "Local de Estoque Default",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WarehouseInternalId": {
+					"description": "Id de integração do Local de Estoque(Armazem)",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": ".",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "InternalId do Local de Estoque Default",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": ".",
+							"required": false,
+							"type": "varchar",
+							"length": "19",
+							"note": "Este campo é composto por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.CODFILIAL|TPONTOVENDA.CODLOC",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Active": {
+					"description": "Estação Ativa?",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.INATIVO",
+							"required": false,
+							"type": "boolean",
+							"length": "",
+							"note": "Ponto de venda Inativo: 0-Ativo 1-Inativo",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CRO": {
+					"description": "Contador Reinício de Operação",
+					"type": "integer",
+					"format": "int32",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_CRO",
+							"required": false,
+							"type": "varchar",
+							"length": "6",
+							"note": "Contador Reinício de Operação",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.CRO",
+							"required": false,
+							"type": "integer",
+							"length": "",
+							"note": "Contador Reinício de Operação Default",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			},
+			"required": [
+				"Event"
+			]
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
 }
