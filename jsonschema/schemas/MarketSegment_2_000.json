@@ -1,0 +1,180 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AjustesMensagens/jsonschema/schemas/MarketSegment_2_000.json#",
+  "info": {
+    "description": "API para cadastro de Segmentos nos produtos TOTVS",
+    "version": "2.000",
+    "title": "MarketSegment",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "marketSegment",
+        "description": "Cadastro de Segmento",
+        "segment": "Services"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "squad.crm@totvs.com.br",
+          "description": "Cadastro de Segmentos",
+          "adapter": "crms610.prw"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "PagedMarketSegments": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Paging"
+        },
+        {
+          "$ref": "#/definitions/MarketSegments"
+        }
+      ]
+    },
+    "MarketSegments": {
+      "type": "object",
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/MarketSegmentsInfo"
+        }
+      }
+    },
+    "MarketSegmentsInfo": {
+      "type": "object",
+      "properties": {
+        "marketSegmentID": {
+          "type": "string",
+          "example": "000001",
+          "description": "Código do Segmento",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "Field": "AOV.AOV_CODSEG",
+              "Required": true,
+              "type": "Char",
+              "length": "06",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "branchId": {
+          "type": "string",
+          "example": "D MG 01",
+          "description": "Filial",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "AOV.AOV_FILIAL",
+              "required": true,
+              "type": "Char",
+              "length": "12",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "companyId": {
+          "type": "string",
+          "description": "Empresa"
+        },
+        "marketSegmentDescription": {
+          "type": "string",
+          "example": "Services",
+          "description": "Descrição do Segmento",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "Field": "AOV.AOV_DESSEG",
+              "Required": true,
+              "type": "Char",
+              "length": "40",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "mainMarketSegment": {
+          "type": "boolean",
+          "example": true,
+          "description": "Indica se é um segmento principal"
+        },
+        "parentMarketSegment": {
+          "type": "string",
+          "example": "000002",
+          "description": "Segmento pai/superior",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "AOV.AOV_PAI",
+              "required": false,
+              "type": "Char",
+              "length": "06",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "parentMarketSegmentDescription": {
+          "type": "string",
+          "example": "AGROPECUARIA",
+          "description": "Descrição do Segmento pai/superior",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "description": "Campo virtual no Protheus, não é atualizado via API",
+              "field": "AOV.AOV_DESPAI",
+              "required": false,
+              "type": "Char",
+              "length": "40",
+              "available": false,
+              "canUpdate": false
+            }
+          ]
+        },
+        "childs": {
+          "type": "object",
+          "description": "Lista de Segmentos filhos",
+          "properties": {
+            "childMarketSegmentId": {
+              "type": "string",
+              "description": "ID do segmento filho"
+            },
+            "childMarketSegmantDescription": {
+              "type": "string",
+              "description": "Descrição do segmento filho"
+            }
+          },
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "description": "Lista de Segmentos Filho ainda não está implementada - usado apenas como consulta",
+              "available": false
+            }
+          ]
+        },
+        "IsActive": {
+          "type": "boolean",
+          "example": true,
+          "description": "Indica se o Segmento está ativo."
+        }
+      }
+    },
+    "Paging": {
+      "type": "object",
+      "properties": {
+        "hasNext": {
+          "type": "boolean",
+          "example": false
+        }
+      }
+    }
+  }
+}
