@@ -1,0 +1,597 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/SalesProcess_2_000.json#",
+	"info": {
+		"description": "API para a entidade Processo de Venda (salesProcess) para produtos TOTVS",
+		"version": "2.001",
+		"title": "SalesProcess",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/SalesProcessInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "salesProcess",
+				"description": "Entidade Processo de Venda (salesProcess) para produtos TOTVS",
+				"segment": "services"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de Processos de Vendas",
+					"adapter": "fats010.prw"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedSalesProcess": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/SalesProcess"
+				}
+			]
+		},
+		"SalesProcess": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/SalesProcessInfo"
+					}
+				}
+			}
+		},
+		"SalesProcessInfo": {
+			"description": "Descreve um Processo de Venda",
+			"type": "object",
+			"properties": {
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC1.AC1_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"lenght": "8",
+							"available": false,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "Código da Empresa",
+					"example": "T1D MG 01 000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|AC1.AC1_FILIAL|AC1.AC1_PROVEN",
+							"required": true,
+							"type": "varchar",
+							"length": "18",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este dado é formado pelos campos Empresa, Filial e Código do Processo de Venda"
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId da Anotação no ERP",
+					"example": "D MG 01 000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC1.AC1_FILIAL|AC1.AC1_PROVEN",
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"note": "Este dado e formado pelos campos Filial e Código do Processo de Venda"
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"example": "000001",
+					"description": "Código do Processo de Venda",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC1.AC1_PROVEN",
+							"description": "Código",
+							"required": true,
+							"type": "varchar",
+							"lenght": "6",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Description": {
+					"type": "string",
+					"example": "Processo de Venda Ex CO",
+					"description": "Descrição do Processo de Venda",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC1.AC1_DESCRI",
+							"description": "Descrição",
+							"required": true,
+							"type": "varchar",
+							"lenght": "30",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"RegisterSituation": {
+					"type": "string",
+					"example": "1",
+					"description": "Status do registro: 1=Inativo;2=Ativo",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC1_MSBLQL",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": false,
+							"canUpdate": true
+						}
+					]
+				},
+				"ListofStages": {
+					"type": "array",
+					"description": "Lista dos Estágios",
+					"items": {
+						"type": "array",
+						"$ref": "#/definitions/StagesInfo"
+					}
+				},
+				"ListofRules": {
+					"type": "array",
+					"description": "Lista das Regras",
+					"items": {
+						"type": "array",
+						"$ref": "#/definitions/RulesInfo"
+					}
+				}
+			}
+		},
+		"PagedStages": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Stages"
+				}
+			]
+		},
+		"Stages": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/StagesInfo"
+					}
+				}
+			}
+		},
+		"StagesInfo": {
+			"description": "Descreve um Estágio do Processo de Vendas",
+			"type": "object",
+			"properties": {
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"lenght": "8",
+							"available": false,
+							"canUpdate": false
+						}
+					]
+				},
+				"StageInternalId": {
+					"type": "string",
+					"description": "InternalId da Anotação no ERP",
+					"example": "D MG 01 000001000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_FILIAL|AC2.AC2_PROVEN|AC2.AC2_STAGE",
+							"type": "varchar",
+							"length": "22",
+							"available": true,
+							"note": "Este dado e formado pelos campos Filial, Código do Processo de Venda e Código do Estágio"
+						}
+					]
+				},
+				"StageId": {
+					"type": "string",
+					"example": "000001",
+					"description": "Estágio do Processo de Venda",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_STAGE",
+							"description": "Estágio",
+							"required": true,
+							"type": "varchar",
+							"lenght": "6",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StageDescription": {
+					"type": "string",
+					"example": "Descrição",
+					"description": "Descrição do Estágio do Processo de Venda",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_DESCRI",
+							"description": "Descrição",
+							"required": true,
+							"type": "varchar",
+							"lenght": "30",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Contribute": {
+					"description": "Contrinuição em %",
+					"example": 1,
+					"type": "number",
+					"minimum": 1,
+					"maximum": 100,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_RELEVA",
+							"type": "integer",
+							"length": "3",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Notify": {
+					"type": "string",
+					"example": "1",
+					"description": "Notifica responsável: 1=Sim;2=Não",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_SENDWF",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Action": {
+					"type": "string",
+					"example": "Função()",
+					"description": "Ação executada",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_ACAO",
+							"description": "Ação",
+							"required": false,
+							"type": "varchar",
+							"lenght": "128",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"FinancialEvaluation": {
+					"type": "string",
+					"example": "1",
+					"description": "Realiza avaliação financeira: 1=Sim;2=Não",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_AVFIN",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ValueOverdue": {
+					"description": "Valor limite para avaliação",
+					"example": 1000,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 999999999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_VLRLIM",
+							"type": "integer",
+							"length": "12",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"DaysOverdue": {
+					"description": "Valor limite para avaliação",
+					"example": 1,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 999,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_DIALIM",
+							"type": "integer",
+							"length": "3",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ProspectEvaluation": {
+					"type": "string",
+					"example": "1",
+					"description": "Avalia crédito para prospect: 1=Sim;2=Não",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_AVLPRO",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"DurationDays": {
+					"description": "Dias de duração do estágio",
+					"example": 1,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 999,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_DDURAC",
+							"type": "integer",
+							"length": "3",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"DurationHours": {
+					"type": "string",
+					"example": "00:00",
+					"description": "Horas de duração do estágio",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "AC2.AC2_HDURAC",
+							"description": "Horas de duração",
+							"required": false,
+							"type": "varchar",
+							"lenght": "5",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"PagedRules": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Rules"
+				}
+			]
+		},
+		"Rules": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RulesInfo"
+					}
+				}
+			}
+		},
+		"RulesInfo": {
+			"description": "Descreve uma Regra do Processo de Vendas",
+			"type": "object",
+			"properties": {
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACZ.ACZ_FILIAL",
+							"required": true,
+							"type": "varchar",
+							"lenght": "8",
+							"available": false,
+							"canUpdate": false
+						}
+					]
+				},
+				"RuleInternalId": {
+					"type": "string",
+					"description": "InternalId da Anotação no ERP",
+					"example": "D MG 01 00000101",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACZ.ACZ_FILIAL|ACZ.ACZ_PROVEN|ACZ.ACZ_ITEM",
+							"type": "varchar",
+							"length": "18",
+							"available": true,
+							"note": "Este dado e formado pelos campos Filial, Código do Processo de Venda e Item das regras"
+						}
+					]
+				},
+				"RuleId": {
+					"type": "string",
+					"example": "01",
+					"description": "Regra do Processo de Venda",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACZ.ACZ_ITEM",
+							"description": "Regra",
+							"required": false,
+							"type": "varchar",
+							"lenght": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Operation": {
+					"type": "string",
+					"example": "1",
+					"description": "Código da operação: 1=Inclusão;2=Alteração;3=Exclusão",
+					"enum": [
+						"1",
+						"3"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACZ.ACZ_OPER",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Event": {
+					"type": "string",
+					"example": "000001",
+					"description": "Código do evento",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACZ.ACZ_EVENTO",
+							"description": "Evento",
+							"required": false,
+							"type": "varchar",
+							"lenght": "6",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Action": {
+					"type": "string",
+					"example": "1",
+					"description": "Código da ação: 1=Avança estágio;2=Vai para estágio;3=Retrocede estágio",
+					"enum": [
+						"1",
+						"3"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACZ.ACZ_ACAO",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Stage": {
+					"type": "string",
+					"example": "000001",
+					"description": "Estágio do processo",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "ACZ.ACZ_STAGE",
+							"description": "Estágio",
+							"required": false,
+							"type": "varchar",
+							"lenght": "6",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
