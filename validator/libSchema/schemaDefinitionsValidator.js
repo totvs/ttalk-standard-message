@@ -99,17 +99,18 @@ var checkIfEnumIsString = function (theObject, currentObjectName) {
 }
 
 var $refCache = {};
+
 function guid() {
     function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
+}
 
-var checkRecursive = function (theObject, currentObjectName, parent){
-    if(!theObject.$idCache)
+var checkRecursive = function (theObject, currentObjectName, parent) {
+    if (!theObject.$idCache)
         theObject.$idCache = guid();
 
     if ($refCache[theObject.$idCache] !== true) {
@@ -119,13 +120,13 @@ var checkRecursive = function (theObject, currentObjectName, parent){
     }
 }
 
-var checkIsControlProperty = function(propertyName){
+var checkIsControlProperty = function (propertyName) {
     return ((propertyName != 'parent') && (propertyName != 'isAParent') && (propertyName != '$idCache'));
 }
 
 //This function will go through all objects existing in the json, recursively for nested objects 
 var getObjectRecursive = function (theObject, currentObjectName, parent) {
-    if(!theObject.$idCache)
+    if (!theObject.$idCache)
         theObject.$idCache = guid();
 
     if (parent) theObject.parent = parent;
@@ -169,7 +170,7 @@ var getObjectRecursive = function (theObject, currentObjectName, parent) {
 
 exports.validateSchema = function (_parsedSchema, done) {
     parsedSchema = _parsedSchema;
-    getObjectRecursive(parsedSchema);
+    if (_parsedSchema) getObjectRecursive(parsedSchema);
     done();
     return results;
 }
