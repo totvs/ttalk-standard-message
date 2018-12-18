@@ -8,12 +8,8 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../libOpenAPI/pathValidator.js');
-var jsonHandler = require('../libOpenAPI/jsonHandler.js');
-var fileGetter = require('../libOpenAPI/fileGetter.js');
-var schemaReferenceFromApi = require('../libOpenAPI/schemaReferenceFromApiValidator.js');
-var derefScript = require('../libOpenAPI/deref.js');
-var $RefParser = require('json-schema-ref-parser');
 var expect = require('chai').expect;
+var $RefParser = require('json-schema-ref-parser');
 
 var segmentDictionary = {};
 
@@ -38,21 +34,39 @@ describe("Validating OpenAPI files...", function () {
             });
             var parsedOpenAPI;
             var pathValidatorResult
-            var fileGetterResult;
-            var schemaReferenceFromApiResult;
             var derefResult;
+            var derefErroDetail;
 
-            before(function (done) {
+            before(async function (done) {
               this.timeout(60000);
               parsedOpenAPI = JSON.parse(file);
-              //derefResult = derefScript.derefScript(parsedOpenAPI);
-              pathValidator.clear();
-              pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI);
-              fileGetter.clear();
-              fileGetterResult = fileGetter.getAllExternalFiles(pathValidatorResult.schemaObjList);
-              pathValidatorResult.schemaObjBody = jsonHandler.buildSchemaObjectBody(pathValidatorResult.schemaObjList, fileGetterResult.apiSchema);
-              schemaReferenceFromApi.clear();
-              schemaReferenceFromApiResult = schemaReferenceFromApi.runThroughSchemaObjects(pathValidatorResult, done);
+              derefResult = JSON.parse(file); //Need to have other obj reference than the previous one          
+
+              var parser = new $RefParser();
+              await parser.dereference(derefResult, { // (.dereference could be .bundle) doc: https://apidevtools.org/json-schema-ref-parser/docs/ref-parser.html#bundleschema-options-callback
+                  dereference: { //these are options
+                    dereference: true
+                  },
+                  resolve: {
+                    external: true,
+                    http: {
+                      redirects: 0,
+                      timeout: 50000
+                    }
+                  }
+                }, await
+                function (err, newSchema) {
+                  if (err) {
+                    derefResult = false;
+                    derefErroDetail = err;
+
+                  } else {
+                    derefResult = newSchema;
+                  }
+                  pathValidator.clear();
+                  pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI, derefResult);
+                  done();
+                });
             })
 
             describe(" - Filename: ", function () {
@@ -130,62 +144,22 @@ describe("Validating OpenAPI files...", function () {
                 expect(pathValidatorResult.useExternalSchema).to.be.true;
               });
 
-              it("should reference valid schema files", function () {
-                var errorMessage = "Could not find schemas: ";
-                for (var i in fileGetterResult.notFoundSchemas) {
-                  errorMessage += fileGetterResult.notFoundSchemas[i] + ";"
-                }
-                expect(fileGetterResult.notFoundSchemas.length, errorMessage).to.equal(0);
-              });
-
-              it("should be dereferenced", function (done) {
-                this.timeout(60000);
-                var parser = new $RefParser();
-                var resultEvaluation = true;
-                parser.dereference(parsedOpenAPI, { // (.dereference could be .bundle) doc: https://apidevtools.org/json-schema-ref-parser/docs/ref-parser.html#bundleschema-options-callback
-                    dereference: { //these are options
-                        dereference: true
-                    },
-                    resolve: {
-                        external: true,
-                        http: {
-                            redirects: 0,
-                            timeout: 50000
-                        }
-                    }
-                },  function (err, newSchema) {
-                    if (err) {
-                        resultEvaluation = false;
-                        
-                    } else {
-                        resultEvaluation = true;
-                    }
-                    expect(resultEvaluation, err).to.be.true;
-                    done();
-                });
-              });
-             
-
-              it("should reference valid objects inside schema file", function () {
-                var errorMessage = "";
-                if (schemaReferenceFromApiResult.erroredObjectName)
-                  errorMessage = "Could not find the object '" + schemaReferenceFromApiResult.erroredObjectName + "' inside the json schema file '" + schemaReferenceFromApiResult.ref + "'"
-                expect(schemaReferenceFromApiResult.validObject, errorMessage).to.be.true;
+              it("should be dereferenced. This means all external references are correct (FilePaths and Object property names)", function () {
+                expect(derefResult, derefErroDetail).to.be.ok;
               });
 
               it("should contain the same Id property name in URL and body", function () {
-                var errorMessage = "";
-                if (schemaReferenceFromApiResult.erroredPath)
-                  errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'. It may be a typo or case sensitve difference";
-                if (schemaReferenceFromApiResult.validObject)
-                  expect(schemaReferenceFromApiResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
+                let errorMessage = "";
+                if (pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody)
+                  errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody + "'. It may be a typo or case sensitive difference";
+                expect(pathValidatorResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
               });
 
               it("should contain 'hasNext' prop if there is 'items' prop and vice versa", function () {
-                var errorMessage = "";
-                if (schemaReferenceFromApiResult.erroredPath)
-                  errorMessage = "Check the endpoint '" + schemaReferenceFromApiResult.erroredPath + "'";
-                expect(schemaReferenceFromApiResult.containsItemsAndHasNext, errorMessage).to.be.true;
+                let errorMessage = "";
+                if (pathValidatorResult.erroredPathMissingItemOrHasNext)
+                  errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathMissingItemOrHasNext + "'";
+                expect(pathValidatorResult.containsItemsAndHasNext, errorMessage).to.be.true;
               });
             });
 
