@@ -3,29 +3,14 @@
  
     "info": {
         "description": "Rastreio da situação do processamento de Venda SIGALOJA",
-        "version": "2.001",
+        "version": "1.000",
         "title": "DocumentTraceAbilityRetailSales",
-        "contact": {
-            "name": "T-Talk",
-            "url": "API.Totvs.com.br",
-            "email": "comiteintegracao@totvs.com.br"
-        },
+        "contact": {},
         "x-totvs": {
-            "transactionMessageDocumentation": {
-                "subType": "event",
-                "businessContentType": {
-                    "type": "object",
-                    "$ref": "#/definitions/DocumentTraceAbilityRetailSalesType"
-                },
-                "returnContentType": {
-                    "type": "object",
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
-                }
-            },
             "messageDocumentation": {
                 "name": "Branch",
                 "description": "Filial",
-                "segment": "FrameWork"
+                "segment": "Varejo"
             },
             "productInformation": [
                 {
@@ -36,6 +21,13 @@
                     "helpUrl": "link aqui"
                 }
             ]
+			"transactionDefinition": {
+				"subType": "request",
+				"businessContentType": {
+					"$ref": "#/definitions/DocumentTraceAbilityRetailSalesType",
+					"type": "object"
+				}
+			}
         }
     },
  
@@ -59,7 +51,35 @@
                         }
                     ]
                 },
-                "BranchId": {
+            },
+            
+        },
+                
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Código da Empresa",
+					"type": "string",
+					"example": "D",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/InternalIdType",
+						"type": "object"
+					},
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "cEmpAnt",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "Código da Empresa",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
                     "type": "string",
                     "example": "D",
                     "description": "Código da Filial",
@@ -107,9 +127,9 @@
                         }
                     ]
                 },
-                "Status": {
+                "Detail": {
                     "type": "string",
-                    "example": "D",
+                    "example": "",
                     "description": "Erro no Processamento da Venda",
                     "x-totvs": [
                         {
@@ -117,14 +137,15 @@
                             "Field": "SL1.L1_ERGRVBT",
                             "Required": false,
                             "Type": "Char",
-                            "length": "12",
+                            "length": "memo",
                             "avialable": true,
                             "canUpdate": false
                         }
                     ]
                 },
-            },
-            "required":["CompanyCode"]
-        }
-    }
+			},
+			"required":["CompanyId"]
+			]
+		}
+	}
 }
