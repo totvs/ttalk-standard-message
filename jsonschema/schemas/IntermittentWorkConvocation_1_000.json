@@ -1,0 +1,457 @@
+{
+	"$schema":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/IntermittentWorkConvocations/v1/1_000/jsonschema/schemas/IntermittentWorkConvocation_1_000.json#",
+	"info":{
+		"description":"Contrato de Mensagem Padronizada para Convocação de Funcionário para Trabalho Intermitente de produtos TOTVS",
+		"version":"1.000",
+		"title":"IntermittentWorkConvocations",
+		"contact":{
+			"name":"T-Talk",
+			"url":"API.Totvs.com.br",
+			"email":"comiteintegracao@totvs.com.br"
+		},
+		"x-totvs":{
+			"messageDocumentation":{
+				"name":"IntermittentWorkConvocations",
+				"description":"Convocação de Funcionário para Trabalho Intermitente",
+				"segment":"RH"
+			},
+			"productInformation":[
+				{
+					"product":"RM",
+					"contact":"tiago.santana@totvs.com.br",
+					"description":"Convocação de Funcionário para Trabalho Intermitente",
+					"adapter":"",
+					"helpUrl":"link aqui"
+				}
+			]
+		}
+	},
+	"definitions":{
+		"PagedIntermittentWorkConvocations":{
+			"type":"object",
+			"allOf":[
+				{
+					"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type":"object",
+					"properties":{
+						"items":{
+							"type":"array",
+							"items":{
+								"$ref":"#/definitions/IntermittentWorkConvocationInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"IntermittentWorkConvocationDetail":{
+			"type": "object",
+			"description":"Descreve um registro de Convocação de Funcionário para Trabalho Intermitente a ser exibido com detalhes expansíveis",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ExpandablesType"
+				},
+				{
+					"$ref": "#/definitions/IntermittentWorkConvocationInfo"
+				}
+			]
+		},
+		"IntermittentWorkConvocationInfo":{
+			"type": "object",
+			"description":"Descreve um registro de Convocação de Funcionário para Trabalho Intermitente a ser exibido",
+			"allOf": [
+				{
+					"$ref": "#/definitions/IntermittentWorkConvocationSave"
+				},
+				{
+					"type": "object",
+					"properties":{
+						"id":{
+							"description":"Identificador da convocação do funcionário",
+							"type":"string",
+							"example" : "1|00007|C01S000001",
+							"x-totvs": [
+								{
+									"product": "RM",
+									"available": true,
+									"note": "Código da coligada, Chapa do funcionário, Código da convocação",
+									"field": "PFCONVOCACAO.CODCOLIGADA|PFCONVOCACAO.CHAPA|PFCONVOCACAO.CODCONVOCACAO",
+									"type": "string"
+								}
+							]
+						},
+						"code":{
+							"description":"Código da convocação do funcionário",
+							"type":"string",
+							"maxLength":"60",
+							"x-totvs": [
+								{
+									"product": "RM",
+									"field": "PFCONVOCACAO.CODCONVOCACAO",
+									"required": false,
+									"type": "nvarchar",
+									"available": true,
+									"canUpdate": false,
+									"note": "O valor desse campo será gerado automaticamente conforme máscara definida no parametrizador do sistema"
+								}
+							]
+						},
+					}
+				}
+			]
+		},
+		"IntermittentWorkConvocationSave":{
+			"type": "object",
+			"description": "Descreve um registro de Convocação de Funcionário para Trabalho Intermitente a ser inserido/atualizado",
+			"properties": {
+				"companyId": {
+					"description": "Empresa",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.CODCOLIGADA",
+							"required": true,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"employeeId":{
+					"description":"Chapa do funcionário",
+					"type":"string",
+					"maxLength":"16",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.CHAPA",
+							"required": true,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": false,
+							"note": "Deve ser um valor de PFUNC.CHAPA"
+						}
+					]
+				},
+				"convocationDate":{
+					"description":"Data da emissão da convocação",
+					"type":"string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.DTCONVOCACAO",
+							"required": false,
+							"type": "datetime2",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso não seja informado, o valor desse campo será gerado automaticamente com a data e hora atuais"
+						}
+					]
+				},
+				"employeeAnswerDate":{
+					"description":"Data da resposta do funcionário",
+					"type":"string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.DTRESPOSTA",
+							"required": false,
+							"type": "datetime2",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso o campo 'convocationStatusCode' seja maior que 0, este campo passa a ser obrigatório"
+						}
+					]
+				},
+				"convocationStatusCode": {
+					"description": "Código da situação da convocação",
+					"type": "integer",
+					"enum": [0, 1, 2, 3, 4, 5, 6],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.ESTADOCONVOCACAO",
+							"required": false,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso não seja informado, assumirá por padrão o valor 0. 0=Aguardando resposta;1=Aceita pelo funcionário;2=Rejeitada pelo funcionário;3=Em progresso;4=Concluída;5=Interrompida pelo funcionário;6=Interrompida pelo empregador"
+						}
+					]
+				},
+				"servicePlaceCode":{
+					"description":"Código indicativo do local de prestação de serviço",
+					"type":"integer",
+					"enum": [0, 1, 2],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.INDLOCALPRESTACTRAB",
+							"required": false,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso não seja informado, assumirá por padrão o valor 0. Caso seja informado o valor 1, os campos referentes a endereço passam a ser obrigatórios. 0=No próprio estabelecimento que o contratou;1=Em apenas um local fora do estabelecimento que o contratou;2=De natureza externa ou em vários locais fora do próprio estabelecimento que o contratou"
+						}
+					]
+				},
+				"workingDayDescription":{
+					"description":"Descrição da jornada de trabalho",
+					"type":"string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.DESCRICAOJORNADA",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso seja informado este campo, os campos 'timeStartIndex' e 'timeCode' não devem ser informados"
+						}
+					]
+				},
+				"timeCode":{
+					"description":"Código do horário de prestação de serviço",
+					"type":"string",
+					"maxLength":"10",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.CODHORARIO",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso seja informado este campo, o campo 'workingDayDescription' não deve ser informado e o campo 'timeStartIndex' passa a ser obrigatório. Deve ser um valor de AHORARIO.CODIGO"
+						}
+					]
+				},
+				"timeStartIndex":{
+					"description":"Índice de início de horário de prestação de serviço",
+					"type":"integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.INDINICIOHOR",
+							"required": false,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": true,
+							"note": "Este campo passa a ser obrigatório caso seja informado o campo 'timeCode'"
+						}
+					]
+				},
+				"serviceStartDate":{
+					"description":"Data de início de prestação de serviço",
+					"type":"string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.DTINIPRESTSERV",
+							"required": false,
+							"type": "datetime2",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso não seja informado, este campo assumirá o valor padrão da data atual acrescida de 3 dias, truncando o horário. Este campo trabalha sempre com o horário truncado"
+						}
+					]
+				},
+				"serviceEndDate":{
+					"description":"Data final de prestação de serviço",
+					"type":"string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.DTFIMPRESTSERV",
+							"required": false,
+							"type": "datetime2",
+							"available": true,
+							"canUpdate": true,
+							"note": "Caso não seja informado, este campo assumirá o valor padrão da data atual acrescida de 4 dias, truncando o horário. Este campo trabalha sempre com o horário truncado"
+						}
+					]
+				},
+				"expectedPaymentDate":{
+					"description":"Data prevista de pagamento",
+					"type":"string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.DTPREVPGTO",
+							"required": false,
+							"type": "datetime2",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'convocationStatusCode' seja diferente de 0 e diferente de 2. Este campo trabalha sempre com o horário truncado"
+						}
+					]
+				},
+				"serviceInterruptionDate":{
+					"description":"Data de interrupção da prestação de serviço",
+					"type":"string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.DTINTERRUPCAO",
+							"required": false,
+							"type": "datetime2",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'convocationStatusCode' seja igual a 5 ou igual a 6. Este campo trabalha sempre com o horário truncado"
+						}
+					]
+				},
+				"streetTypeCode":{
+					"description":"Código do tipo de rua",
+					"type":"integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.CODTIPORUA",
+							"required": false,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1. Deve ser um valor de DTIPORUA.CODIGO"
+						}
+					]
+				},
+				"street":{
+					"description":"Rua do local de prestação de serviço",
+					"type":"string",
+					"maxLength":"140",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.RUA",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1"
+						}
+					]
+				},
+				"number":{
+					"description":"Número do local de prestação de serviço",
+					"type":"string",
+					"maxLength":"8",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.NUMERO",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1"
+						}
+					]
+				},
+				"complement":{
+					"description":"Complemento do local de prestação de serviço",
+					"type":"string",
+					"maxLength":"60",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.COMPLEMENTO",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"neighborhood":{
+					"description":"Bairro do local de prestação de serviço",
+					"type":"string",
+					"maxLength":"80",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.BAIRRO",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1"
+						}
+					]
+				},
+				"zipCode":{
+					"description":"CEP do local de prestação de serviço",
+					"type":"string",
+					"maxLength":"9",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.CEP",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1"
+						}
+					]
+				},
+				"cityCode":{
+					"description":"Código do município do local de prestação de serviço",
+					"type":"string",
+					"maxLength":"20",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.CODMUNICIPIO",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1. Deve ser um valor de GMUNICIPIO.CODMUNICIPIO"
+						}
+					]
+				},
+				"state":{
+					"description":"Estado do local de prestação de serviço",
+					"type":"string",
+					"maxLength":"2",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.ESTADO",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1. Deve ser um valor de GETD.CODETD"
+						}
+					]
+				},
+				"countryId":{
+					"description":"Id do país do local de prestação de serviço",
+					"type":"integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFCONVOCACAO.IDPAIS",
+							"required": false,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": true,
+							"note": "Será obrigatório caso o campo 'servicePlaceCode' seja igual a 1. Deve ser um valor de GPAIS.IDPAIS"
+						}
+					]
+				}
+			}
+		}
+	}
+}
