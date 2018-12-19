@@ -1,0 +1,909 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentPlansSimulations_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para simulação de valores de parcelas de planos de pagamento",
+		"version": "1.000",
+		"title": "PaymentPlansSimulations",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "PostPaymentPlansSimulations",
+				"description": "Dados para simulação de valores de parcelas de planos de pagamento",
+				"segment": "Educational"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Simulação de valores de parcelas de planos de pagamento"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PaymentPlansSimulationsPost": {
+			"description": "Descreve as informações que serão obrigatórias no request body",
+			"properties": {
+				"ListDisciplineClass": {
+					"type": "array",
+					"items": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"UseAntecipationDiscount": {
+					"type": "string",
+					"example": "S",
+					"enum": [
+						"S",
+						"N"
+					],
+					"default": "S",
+					"description": "Considera desconto por antecipação",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SCONTRATO.CONSIDERADESCANTECIPACAO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UseScholarshipAntecipationDiscount": {
+					"type": "string",
+					"example": "S",
+					"enum": [
+						"S",
+						"N"
+					],
+					"default": "N",
+					"description": "Considera desconto por antecipação para valores de bolsas",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SCONTRATO.CONSIDERADESCANTECIPACAOBOLSA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ScholarshipContractType": {
+					"type": "string",
+					"example": "S",
+					"enum": [
+						"S",
+						"M",
+						"C"
+					],
+					"default": "S",
+					"description": "Comportamento de bolsas do contrato [Somar Bolsas, Cascata ou Maior Bolsa]",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SCONTRATO.TIPOBOLSA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DisciplineRegistryStatusCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Código da situação de matrícula",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SSTATUS.CODSTATUS",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DisciplineRegistryStatusInternalId": {
+					"type": "string",
+					"example": "1|1",
+					"description": "Código da situação de matrícula",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SSTATUS.CODCOLIGADA|SSTATUS.CODSTATUS",
+							"required": false,
+							"available": true
+						}
+					]
+				}
+			}
+		},
+		"PaymentPlansSimulationsInfo": {
+			"description": "Descreve o retorno da simulação de valores de parcelas de planos de pagamento",
+			"properties": {
+				"CompanyCode": {
+					"description": "Código da empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId Company",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchCode": {
+					"type": "string",
+					"example": "2",
+					"description": "Código da Filial",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GFILIAL.CODFILIAL",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchInternalId": {
+					"type": "string",
+					"description": "InternalId Branch",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GFILIAL.CODCOLIGADA|GFILIAL.CODFILIAL",
+							"required": false,
+							"available": true,
+							"note": "A filial na linha RM é composta por CODCOLIGADA e CODFILIAL"
+						}
+					]
+				},
+				"LevelEducationCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Nível de ensino",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "STIPOCURSO.CODTIPOCURSO",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"LevelEducationInternalId": {
+					"type": "string",
+					"description": "InternalId Level Education",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "STIPOCURSO.CODCOLIGADA|STIPOCURSO.CODTIPOCURSO",
+							"required": false,
+							"available": true,
+							"note": "O nível de ensino na linha RM é composto pelos campos CODCOLIGADA e CODTIPOCURSO"
+						}
+					]
+				},
+				"TermCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Id. do período letivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.IDPERLET",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TermCodeInternalId": {
+					"type": "string",
+					"example": "1|1",
+					"description": "InternalId Term",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SPLETIVO.CODCOLIGADA|SPLETIVO.IDPERLET",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"StudentCode": {
+					"type": "string",
+					"example": "ES-0001",
+					"description": "Registro acadêmico",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SALUNO.RA",
+							"required": true,
+							"type": "varchar",
+							"length": 20,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StudentInternalId": {
+					"type": "string",
+					"example": "1|ES-0001",
+					"description": "InternalId Term",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SALUNO.CODCOLIGADA|SALUNO.RA",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"PaymentPlanCode": {
+					"type": "string",
+					"example": "PLAN",
+					"description": "Código do plano de pagamento",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPLANOPGTO.CODPLANOPGTO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentPlanInternalId": {
+					"type": "string",
+					"example": "1|1",
+					"description": "InternalId de Plano de Pagamento",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SPLANOPGTO.CODCOLIGADA|SPLANOPGTO.CODPLANOPGTO",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"SpecializationBranchCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Identificador da matriz aplicada",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SHABILITACAOFILIAL.IDHABILITACAOFILIAL",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SpecializationBranchInternalId": {
+					"type": "string",
+					"example": "1|1",
+					"description": "InternalId da Matriz aplicada",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SHABILITACAOFILIAL.CODCOLIGADA|SHABILITACAOFILIAL.IDHABILITACAOFILIAL",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"ListDisciplineClass": {
+					"type": "array",
+					"items": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"UseAntecipationDiscount": {
+					"type": "string",
+					"example": "S",
+					"enum": [
+						"S",
+						"N"
+					],
+					"default": "S",
+					"description": "Considera desconto por antecipação",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SCONTRATO.CONSIDERADESCANTECIPACAO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UseScholarshipAntecipationDiscount": {
+					"type": "string",
+					"example": "S",
+					"enum": [
+						"S",
+						"N"
+					],
+					"default": "N",
+					"description": "Considera desconto por antecipação para valores de bolsas",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SCONTRATO.CONSIDERADESCANTECIPACAOBOLSA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ScholarshipContractType": {
+					"type": "string",
+					"example": "S",
+					"enum": [
+						"S",
+						"M",
+						"C"
+					],
+					"default": "S",
+					"description": "Comportamento de bolsas do contrato [Somar Bolsas, Cascata ou Maior Bolsa]",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SCONTRATO.TIPOBOLSA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DisciplineRegistryStatusCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Código da situação de matrícula",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SSTATUS.CODSTATUS",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DisciplineRegistryStatusInternalId": {
+					"type": "string",
+					"example": "1|1",
+					"description": "Código da situação de matrícula",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SSTATUS.CODCOLIGADA|SSTATUS.CODSTATUS",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"ListPaymentPlansSimulations": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListPaymentPlansSimulations"
+					}
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId da mensagem",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "CODCOLIGADA|IDPARCELA",
+							"required": false,
+							"available": true
+						}
+					]
+				}
+			}
+		},
+		"ListPaymentPlansSimulations": {
+			"type": "object",
+			"properties": {
+				"CompanyCode": {
+					"description": "Código da empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId Company",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InstalmentNumber": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Número da parcela",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.PARCELA",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Quota": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Número da cota",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.COTA",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OriginalValue": {
+					"description": "Valor original",
+					"type": "number",
+					"example": "1000,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.VALORORIGINAL",
+							"required": false,
+							"type": "numeric",
+							"length": "15,4",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountValue": {
+					"description": "Valor do desconto",
+					"type": "number",
+					"example": "100,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FLAN.VALORDESCONTO",
+							"required": false,
+							"type": "numeric",
+							"length": "15,4",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"NetValue": {
+					"description": "Valor líquido",
+					"type": "number",
+					"example": "900,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Campo calculado com base no valor original excluindo todos os descontos e bolsas.",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ConditionalScholarshipValue": {
+					"description": "Valor total de bolsas condicionais",
+					"type": "number",
+					"example": "100,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Campo calculado com o valor total de bolsas condicionais.",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UnconditionalScholarshipValue": {
+					"description": "Valor de bolsas incondicionais",
+					"type": "number",
+					"example": "100,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Campo calculado com o valor total de bolsas condicionais.",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TermCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Id. do período letivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.IDPERLET",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TermInternalId": {
+					"type": "string",
+					"example": "1|1",
+					"description": "InternalId Term",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "SPLETIVO.CODCOLIGADA|SPLETIVO.IDPERLET",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"TermCodeDescription": {
+					"type": "string",
+					"example": "2018/2",
+					"description": "Código do período letivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPLETIVO.CODPERLET",
+							"required": true,
+							"type": "varchar",
+							"length": 10,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ServiceCode": {
+					"type": "string",
+					"example": "2",
+					"description": "Código do Serviço",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SSERVICO.CODSERVICO",
+							"required": true,
+							"type": "string",
+							"length": 10,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ServiceInternalId": {
+					"type": "string",
+					"description": "InternalId Service",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SSERVICO.CODCOLIGADA|SSERVICO.CODSERVICO",
+							"required": false,
+							"available": true,
+							"note": "O serviço na linha RM é composto por CODCOLIGADA e CODSERVICO"
+						}
+					]
+				},
+				"ServiceName": {
+					"type": "string",
+					"example": "Mensalidade",
+					"description": "Nome do Serviço",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SSERVICO.NOME",
+							"required": true,
+							"type": "string",
+							"length": 60,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DueDate": {
+					"description": "Data de vencimento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.DTVENCIMENTO",
+							"required": false,
+							"type": "datetime",
+							"length": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CreditNumber": {
+					"type": "string",
+					"example": "S",
+					"enum": [
+						"S",
+						"N"
+					],
+					"default": "S",
+					"description": "Indica se a parcela é por número de crédito",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.VALORAUTOMATICO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompetenceDate": {
+					"description": "Data de competência",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.DTCOMPETENCIA",
+							"required": false,
+							"type": "datetime",
+							"length": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RetroactiveCreditValue": {
+					"description": "Valor de créditos retroativos",
+					"type": "number",
+					"example": "100,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Campo calculado com o saldo de crédito retroativo de contratos do aluno.",
+							"required": false,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Scholarships": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Scholarships"
+					}
+				},
+				"AntecipationDiscounts": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/AntecipationDiscounts"
+					}
+				}
+			}
+		},
+		"Scholarships": {
+			"type": "object",
+			"properties": {
+				"ScholarshipCode": {
+					"description": "Código da bolsa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SBOLSA.CODBOLSA",
+							"required": false,
+							"type": "varchar",
+							"length": 10,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ScholarshipInternalId": {
+					"type": "string",
+					"description": "InternalId Scholarship",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SBOLSA.CODCOLIGADA|SBOLSA.CODBOLSA",
+							"required": false,
+							"available": true,
+							"note": "A bolsa na linha RM é composta por CODCOLIGADA e CODBOLSA"
+						}
+					]
+				},
+				"ScholarshipValue": {
+					"description": "Valor da bolsa",
+					"type": "number",
+					"example": "1000,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SBOLSA.VALOR",
+							"required": false,
+							"type": "numeric",
+							"length": "15,4",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"AntecipationDiscounts": {
+			"type": "object",
+			"properties": {
+				"CompanyCode": {
+					"description": "Código da empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPARCELA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId Company",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": 1,
+					"description": "Id. do desconto",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "FDESCONTOPONTUAL.IDDESCONTO",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentValue": {
+					"description": "Valor de pagamento ",
+					"type": "number",
+					"example": "1000,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SLANDESCPONTUAL.VALORPARAPAGTO",
+							"required": false,
+							"type": "numeric",
+							"length": "15,4",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AntecipationDiscountDate": {
+					"description": "Data limite calculada do desconto por antecipação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SLANDESCPONTUAL.DATALIMITECALCULADA",
+							"required": false,
+							"type": "datetime",
+							"length": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AntecipationDiscountValue": {
+					"description": "Valor calculado do desconto por antecipação",
+					"type": "number",
+					"example": "100,00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SLANDESCPONTUAL.VALORDESCONTOCALCULADO",
+							"required": false,
+							"type": "numeric",
+							"length": "15,4",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		}
+	}
+}
