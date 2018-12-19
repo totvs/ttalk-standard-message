@@ -21,7 +21,7 @@ describe("Validating Schema files...", function () {
       // console.log('SCHEMA files');
       // console.log(filenames);
       filenames.forEach(function (filename) {
-        if (filename.includes("ReliefType_2_000.json") && !filename.includes("package")) {
+        if (filename.includes("OperationType_2_000.json") && !filename.includes("package")) {
           let schemaPath = path.join(dirname, filename);
           var parsedSchema;
           var schemaDefinitionsValidatorResult
