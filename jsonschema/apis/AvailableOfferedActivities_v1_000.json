@@ -1,0 +1,181 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade Atividades ofertadas, perfil aluno (AvailableOfferedActivities) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade atividades ofertadas do educacional",
+		"version": "1.000",
+		"title": "Atividades ofertadas",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "AvailableOfferedActivities",
+				"description": "Atividades ofertadas do educacional",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "rm_FW@totvs.com.br",
+					"description": "Entidade Atividades ofertadas, perfil aluno"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/students/{StudentInternalId}/offeredactivities": {
+			"get": {
+				"tags": [
+					"AvailableOfferedActivities"
+				],
+				"summary": "Retorna todas as atividades ofertadas que o aluno pode visualizar",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"description": "Retorna todas as atividades ofertadas que o aluno pode visualizar",
+				"operationId": "getAll",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/StudentInternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AvailableOfferedActivities_1_000.json#/definitions/PagedAvailableOfferedActivities"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da listagem das atividades ofertadas",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/students/{StudentInternalId}/offeredactivities/{InternalId}": {
+			"get": {
+				"tags": [
+					"AvailableOfferedActivities"
+				],
+				"summary": "Retorna somente a atividade ofertada passada",
+				"description": "Retorna somente a atividade ofertada",
+				"operationId": "getId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/StudentInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AvailableOfferedActivities_1_000.json#/definitions/AvailableOfferedActivities"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Atividade não encontrada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"StudentInternalId": {
+				"name": "StudentInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do aluno",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da atividade ofertada do educacional",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}

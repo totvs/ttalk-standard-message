@@ -2,7 +2,7 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para a entidade período, perfil acadêmico (Period) para produtos TOTVS",
+			"description": "API para a entidade ocorrência, perfil professor (ProfessorWarning) para produtos TOTVS",
 			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
 			"variables": {
 				"serverUrl": {
@@ -15,9 +15,9 @@
 		}
 	],
 	"info": {
-		"description": "API para a entidade período",
+		"description": "API para a entidade ocorrências do aluno, cadastrados pelo professor educacional",
 		"version": "1.000",
-		"title": "Periods",
+		"title": "Ocorrências do aluno - Acesso Professor",
 		"contact": {
 			"name": "T-Talk",
 			"url": "API.Totvs.com.br",
@@ -25,41 +25,41 @@
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "Periods",
-				"description": "Período",
+				"name": "ProfessorWarning",
+				"description": "Ocorrência do aluno educacional",
 				"segment": "Educacional"
 			},
 			"productInformation": [
 				{
 					"product": "RM",
 					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
-					"description": "Entidade de período, perfil acadêmico"
+					"description": "Entidade de ocorrência educacional, perfil professor"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/Academics/{GradeInternalID}/Periods ": {
+		"/Professors/{ProfessorInternalId}/studentwarnings": {
 			"get": {
 				"tags": [
-					"Periods"
+					"ProfessorWarning"
 				],
-				"summary": "Retorna todos os períodos de uma matriz curricular",
+				"summary": "Retorna todas as ocorrências do aluno, cadastrados pelo professor do Educacional",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "RM",
 							"available": true,
-							"note": "Este verbo está disponível com todos os parâmetros",
+							"note": "Este verbo esta disponível com todos os parâmetros",
 							"minimalVersion": "12.1.23"
 						}
 					]
 				},
-				"description": "Retorna todos os períodos de uma matriz curricular",
+				"description": "Retorna todas as ocorrências do aluno, cadastrados pelo professor do Educacional",
 				"operationId": "getAll",
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/GradeInternalID"
+						"$ref": "#/components/parameters/ProfessorInternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -72,9 +72,6 @@
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
 					}
 				],
 				"responses": {
@@ -83,13 +80,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/PagedPeriod"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ProfessorWarning_1_000.json#/definitions/PagedProfessorWarning"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da listagem dos relatórios",
+						"description": "erro no momento da listagem das ocorrências do aluno",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -102,11 +99,11 @@
 			},
 			"post": {
 				"tags": [
-					"Periods"
+					"ProfessorWarning"
 				],
-				"summary": "Inclui o período passado na requisição",
-				"description": "Inclui o período passado na requisição",
-				"operationId": "postPeriod",
+				"summary": "Inclui a ocorrência passada na requisição",
+				"description": "Inclui a ocorrência passada na requisição",
+				"operationId": "postProfessorWarning",
 				"x-totvs": {
 					"productInformation": [
 						{
@@ -119,35 +116,25 @@
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/GradeInternalID"
+						"$ref": "#/components/parameters/ProfessorInternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
-							}
-						}
-					},
-					"description": "Período para ser incluído"
-				},
 				"responses": {
 					"200": {
 						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ProfessorWarning_1_000.json#/definitions/ProfessorWarning"
 								}
 							}
 						}
 					},
-					"400": {
-						"description": "erro no momento da inclusão",
+					"404": {
+						"description": "Ocorrência não localizada na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -159,13 +146,13 @@
 				}
 			}
 		},
-		"/Academics/{GradeInternalID}/Periods/{InternalId}": {
+		"/Professors/{ProfessorInternalId}/studentwarning/{InternalId}": {
 			"get": {
 				"tags": [
-					"Periods"
+					"ProfessorWarning"
 				],
-				"summary": "Retorna detalhes do período",
-				"description": "Retorna o período",
+				"summary": "Retorna detalhes da ocorrência do aluno educacional",
+				"description": "Retorna a ocorrência do aluno do educacional",
 				"operationId": "getId",
 				"x-totvs": {
 					"productInformation": [
@@ -179,7 +166,7 @@
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/GradeInternalID"
+						"$ref": "#/components/parameters/ProfessorInternalId"
 					},
 					{
 						"$ref": "#/components/parameters/InternalId"
@@ -194,13 +181,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ProfessorWarning_1_000.json#/definitions/ProfessorWarning"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Usuário não localizado na base",
+						"description": "Ocorrência não localizada na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -213,11 +200,11 @@
 			},
 			"put": {
 				"tags": [
-					"Periods"
+					"ProfessorWarning"
 				],
-				"summary": "Altera o período passado na requisição",
-				"description": "Altera o período passado na requisição",
-				"operationId": "postPeriodId",
+				"summary": "Altera a ocorrência do aluno, feita pelo professor do educacional",
+				"description": "Altera a ocorrência do aluno, feita pelo professor do educacional",
+				"operationId": "putId",
 				"x-totvs": {
 					"productInformation": [
 						{
@@ -230,7 +217,7 @@
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/GradeInternalID"
+						"$ref": "#/components/parameters/ProfessorInternalId"
 					},
 					{
 						"$ref": "#/components/parameters/InternalId"
@@ -239,39 +226,19 @@
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
-							}
-						}
-					},
-					"description": "Período para ser incluído"
-				},
 				"responses": {
 					"200": {
 						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Period_1_000.json#/definitions/Period"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Erro no momento da alteração",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ProfessorWarning_1_000.json#/definitions/ProfessorWarning"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Usuário não localizado na base",
+						"description": "Ocorrência não localizada na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -284,11 +251,11 @@
 			},
 			"delete": {
 				"tags": [
-					"Periods"
+					"ProfessorWarning"
 				],
-				"summary": "Exclusão de período da base",
-				"description": "Exclusão de período da base",
-				"operationId": "DeletePeriod",
+				"summary": "Exclusão da ocorrência passada na requisição",
+				"description": "Exclusão da ocorrência passada na requisição",
+				"operationId": "DeleteProfessorWarning",
 				"x-totvs": {
 					"productInformation": [
 						{
@@ -301,7 +268,7 @@
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/GradeInternalID"
+						"$ref": "#/components/parameters/ProfessorInternalId"
 					},
 					{
 						"$ref": "#/components/parameters/InternalId"
@@ -311,11 +278,18 @@
 					}
 				],
 				"responses": {
-					"204": {
-						"description": "Período removido com sucesso"
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ProfessorWarning_1_000.json#/definitions/ProfessorWarning"
+								}
+							}
+						}
 					},
 					"404": {
-						"description": "Período não encontrado",
+						"description": "Ocorrência não localizada na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -330,11 +304,11 @@
 	},
 	"components": {
 		"parameters": {
-			"GradeInternalID": {
-				"name": "GradeInternalID",
+			"ProfessorInternalId": {
+				"name": "ProfessorInternalId",
 				"in": "path",
 				"required": true,
-				"description": "InternalId da matriz curricular",
+				"description": "InternalId do professor",
 				"schema": {
 					"type": "string"
 				}
@@ -343,7 +317,7 @@
 				"name": "InternalId",
 				"in": "path",
 				"required": true,
-				"description": "InternalId do período",
+				"description": "InternalId da ocorrência do aluno",
 				"schema": {
 					"type": "string"
 				}

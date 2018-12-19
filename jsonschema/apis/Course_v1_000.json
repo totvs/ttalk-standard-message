@@ -2,63 +2,65 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para a entidade Grupo de Produto (StockGroup) para Produtos TOTVS",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/entradas/v1",
+			"description": "API para a entidade Curso, perfil acadêmico (Course) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
 			"variables": {
 				"serverUrl": {
 					"default": "localhost"
 				},
 				"serverHttpPort": {
-					"default": "8012"
+					"default": "8051"
 				}
 			}
 		}
 	],
 	"info": {
-		"description": "API para informações de Grupo de Produto para Produtos TOTVS ",
+		"description": "API para a entidade curso",
 		"version": "1.000",
-		"title": "StockGroup",
+		"title": "Cursos educacionais",
 		"contact": {
 			"name": "T-Talk",
-			"url": "api.totvs.com.br",
+			"url": "API.Totvs.com.br",
 			"email": "comiteintegracao@totvs.com.br"
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "StockGroup",
-				"description": "Cadastro de Grupo de Produto",
-				"segment": "Services"
+				"name": "Course",
+				"description": "Curso",
+				"segment": "Educacional"
 			},
 			"productInformation": [
 				{
-					"product": "PROTHEUS",
-					"contact": "squad.entradas@totvs.com.br",
-					"description": "Grupo de Produto",
-					"adapter": "MATS035.prw"
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Entidade de curso, perfil acadêmico"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/StockGroups": {
+		"/Academics/{AcademicInternalID}/Courses ": {
 			"get": {
 				"tags": [
-					"StockGroup"
+					"Course"
 				],
-				"summary": "Retorna lista de Grupo de Produto",
+				"summary": "Retorna todos os cursos cadastrados no sistema",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
-				"description": "Retorna lista completa de Grupo de Produto",
-				"operationId": "getStockGroups",
+				"description": "Retorna todos os cursos cadastrados no sistema",
+				"operationId": "getAll",
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalID"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
@@ -81,23 +83,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/PagedStockGroups"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Course_1_000.json#/definitions/PagedCourse"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro na listagem dos Grupo de Produto",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Registro não encontrado",
+						"description": "Erro ao processar solicitação",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -110,21 +102,25 @@
 			},
 			"post": {
 				"tags": [
-					"StockGroup"
+					"Course"
 				],
-				"summary": "Inclui um Local de Estoque",
-				"operationId": "postStockGroup",
+				"summary": "Inclui o curso passado na requisição",
+				"description": "Inclui o Course passado na requisição",
+				"operationId": "postCourse",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalID"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
@@ -133,11 +129,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Course_1_000.json#/definitions/Course"
 							}
 						}
 					},
-					"description": "Inclui um Local de Estoque"
+					"description": "Curso para ser incluído"
 				},
 				"responses": {
 					"200": {
@@ -145,13 +141,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Course_1_000.json#/definitions/Course"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
+						"description": "erro no momento da inclusão",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -163,27 +159,30 @@
 				}
 			}
 		},
-		"/StockGroups/{Code}": {
+		"/Academics/{AcademicInternalID}/Courses/{InternalId}": {
 			"get": {
 				"tags": [
-					"Code"
+					"Course"
 				],
-				"summary": "Retorna Local de Estoque pelo seu Código",
-				"description": "Retorna Local de Estoque pelo seu Código",
-				"operationId": "getStockGroup",
+				"summary": "Retorna detalhes do curso",
+				"description": "Retorna o curso",
+				"operationId": "getId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalID"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -195,13 +194,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Course_1_000.json#/definitions/Course"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Usuário não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -214,24 +213,27 @@
 			},
 			"put": {
 				"tags": [
-					"StockGroup"
+					"Course"
 				],
-				"summary": "Atualiza cadastro de Grupo de Produto conforme dados enviados na requisição",
-				"description": "Atualiza cadastro de Grupo de Produto conforme dados enviados na requisição",
-				"operationId": "putStockGroup",
+				"summary": "Altera o curso passado na requisição",
+				"description": "Altera o curso passado na requisição",
+				"operationId": "putCourseId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalID"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -241,11 +243,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Course_1_000.json#/definitions/Course"
 							}
 						}
 					},
-					"description": "Local de Estoque a ser atualizado"
+					"description": "Curso para ser editado"
 				},
 				"responses": {
 					"200": {
@@ -253,13 +255,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Course_1_000.json#/definitions/Course"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
+						"description": "Erro no momento da alteração",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -269,7 +271,7 @@
 						}
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Usuário não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -282,50 +284,38 @@
 			},
 			"delete": {
 				"tags": [
-					"StockGroup"
+					"Course"
 				],
-				"summary": "Exclui Local de Estoque cadastrado conforme dados enviados na requisição",
-				"description": "Exclui Local de Estoque cadastrado conforme dados enviados na requisição",
-				"operationId": "DeleteStockGroup",
+				"summary": "Exclusão de curso da base",
+				"description": "Exclusão de curso da base",
+				"operationId": "DeleteCourse",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
-							"available": true
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalID"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "erro no momento da Inclusão",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
+					"204": {
+						"description": "Curso removido com sucesso"
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Curso não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -340,34 +330,39 @@
 	},
 	"components": {
 		"parameters": {
-			"Code": {
-				"name": "Code",
+			"AcademicInternalID": {
+				"name": "AcademicInternalID",
 				"in": "path",
 				"required": true,
-				"description": "Identificador Único representando a Grupo de Produto",
+				"description": "InternalId da matriz curricular",
 				"schema": {
 					"type": "string"
-				}
+				},
+				"x-totvs": [
+					{
+						"product": "RM",
+						"note": "CODCOLIGADA|CODFILIAL|CODTIPOCURSO",
+						"required": true,
+						"available": true
+					}
+				]
 			},
-			"StockGroups": {
-				"name": "StockGroups",
-				"in": "query",
-				"description": "Códigos de Grupo de Produto retornados pelo get separado por vírgula (,) ",
-				"required": false,
-				"example": "param1,param2",
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do curso",
 				"schema": {
 					"type": "string"
-				}
-			},
-			"Names": {
-				"name": "name",
-				"in": "query",
-				"description": "Busca Grupo de Produto por descrição",
-				"required": false,
-				"example": "Usuário de busca",
-				"schema": {
-					"type": "string"
-				}
+				},
+				"x-totvs": [
+					{
+						"product": "RM",
+						"note": "SCURSO.CODCOLIGADA|SCURSO.CODCURSO",
+						"required": false,
+						"available": true
+					}
+				]
 			}
 		},
 		"schemas": {}

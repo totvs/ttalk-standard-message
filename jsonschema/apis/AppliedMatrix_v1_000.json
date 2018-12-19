@@ -2,63 +2,65 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para a entidade Grupo de Produto (StockGroup) para Produtos TOTVS",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/entradas/v1",
+			"description": "API para a entidade de matriz aplicada, perfil acadêmico (AppliedMatrix) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
 			"variables": {
 				"serverUrl": {
 					"default": "localhost"
 				},
 				"serverHttpPort": {
-					"default": "8012"
+					"default": "8051"
 				}
 			}
 		}
 	],
 	"info": {
-		"description": "API para informações de Grupo de Produto para Produtos TOTVS ",
+		"description": "API para a entidade de matriz aplicada",
 		"version": "1.000",
-		"title": "StockGroup",
+		"title": "Matriz aplicada",
 		"contact": {
 			"name": "T-Talk",
-			"url": "api.totvs.com.br",
+			"url": "API.Totvs.com.br",
 			"email": "comiteintegracao@totvs.com.br"
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "StockGroup",
-				"description": "Cadastro de Grupo de Produto",
-				"segment": "Services"
+				"name": "AppliedMatrixes",
+				"description": "Matriz aplicada",
+				"segment": "Educacional"
 			},
 			"productInformation": [
 				{
-					"product": "PROTHEUS",
-					"contact": "squad.entradas@totvs.com.br",
-					"description": "Grupo de Produto",
-					"adapter": "MATS035.prw"
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Entidade de matriz aplicada, perfil acadêmico"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/StockGroups": {
+		"/Academics/{AcademicInternalId}/appliedmatrixes ": {
 			"get": {
 				"tags": [
-					"StockGroup"
+					"AppliedMatrixes"
 				],
-				"summary": "Retorna lista de Grupo de Produto",
+				"summary": "Retorna todos as matrizes aplicadas de um ",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
-				"description": "Retorna lista completa de Grupo de Produto",
-				"operationId": "getStockGroups",
+				"description": "Retorna todas as matrizes aplicadas de uma matriz curricular",
+				"operationId": "getAll",
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
@@ -81,23 +83,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/PagedStockGroups"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AppliedMatrix_1_000.json#/definitions/PagedAppliedMatrix"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro na listagem dos Grupo de Produto",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Registro não encontrado",
+						"description": "erro no momento da listagem dos relatórios",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -110,21 +102,25 @@
 			},
 			"post": {
 				"tags": [
-					"StockGroup"
+					"AppliedMatrixes"
 				],
-				"summary": "Inclui um Local de Estoque",
-				"operationId": "postStockGroup",
+				"summary": "Inclui o período passado na requisição",
+				"description": "Inclui o período passado na requisição",
+				"operationId": "postAppliedMatrix",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
@@ -133,11 +129,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AppliedMatrix_1_000.json#/definitions/AppliedMatrix"
 							}
 						}
 					},
-					"description": "Inclui um Local de Estoque"
+					"description": "Matriz aplicada para ser incluído"
 				},
 				"responses": {
 					"200": {
@@ -145,13 +141,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AppliedMatrix_1_000.json#/definitions/AppliedMatrix"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
+						"description": "erro no momento da inclusão",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -163,27 +159,30 @@
 				}
 			}
 		},
-		"/StockGroups/{Code}": {
+		"/Academics/{AcademicInternalId}/appliedmatrixes/{InternalId}": {
 			"get": {
 				"tags": [
-					"Code"
+					"AppliedMatrixes"
 				],
-				"summary": "Retorna Local de Estoque pelo seu Código",
-				"description": "Retorna Local de Estoque pelo seu Código",
-				"operationId": "getStockGroup",
+				"summary": "Retorna detalhes da matriz aplicada",
+				"description": "Retorna a matriz aplicada",
+				"operationId": "getId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -195,13 +194,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AppliedMatrix_1_000.json#/definitions/AppliedMatrix"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Usuário não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -214,24 +213,27 @@
 			},
 			"put": {
 				"tags": [
-					"StockGroup"
+					"AppliedMatrixes"
 				],
-				"summary": "Atualiza cadastro de Grupo de Produto conforme dados enviados na requisição",
-				"description": "Atualiza cadastro de Grupo de Produto conforme dados enviados na requisição",
-				"operationId": "putStockGroup",
+				"summary": "Altera o período passado na requisição",
+				"description": "Altera o período passado na requisição",
+				"operationId": "postAppliedMatrixId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -241,11 +243,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AppliedMatrix_1_000.json#/definitions/AppliedMatrix"
 							}
 						}
 					},
-					"description": "Local de Estoque a ser atualizado"
+					"description": "Matriz aplicada a ser incluído"
 				},
 				"responses": {
 					"200": {
@@ -253,13 +255,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AppliedMatrix_1_000.json#/definitions/AppliedMatrix"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
+						"description": "Erro no momento da alteração",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -269,7 +271,7 @@
 						}
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Usuário não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -282,50 +284,38 @@
 			},
 			"delete": {
 				"tags": [
-					"StockGroup"
+					"AppliedMatrixes"
 				],
-				"summary": "Exclui Local de Estoque cadastrado conforme dados enviados na requisição",
-				"description": "Exclui Local de Estoque cadastrado conforme dados enviados na requisição",
-				"operationId": "DeleteStockGroup",
+				"summary": "Exclusão de matriz aplicada da base",
+				"description": "Exclusão de matriz aplicada da base",
+				"operationId": "DeleteAppliedMatrix",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
-							"available": true
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "erro no momento da Inclusão",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
+					"204": {
+						"description": "Período removido com sucesso"
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Período não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -340,34 +330,39 @@
 	},
 	"components": {
 		"parameters": {
-			"Code": {
-				"name": "Code",
+			"AcademicInternalId": {
+				"name": "AcademicInternalId",
 				"in": "path",
 				"required": true,
-				"description": "Identificador Único representando a Grupo de Produto",
+				"description": "InternalId da matriz curricular",
 				"schema": {
 					"type": "string"
-				}
+				},
+				"x-totvs": [
+					{
+						"product": "RM",
+						"note": "CODCOLIGADA|CODFILIAL|CODTIPOCURSO",
+						"required": true,
+						"available": true
+					}
+				]
 			},
-			"StockGroups": {
-				"name": "StockGroups",
-				"in": "query",
-				"description": "Códigos de Grupo de Produto retornados pelo get separado por vírgula (,) ",
-				"required": false,
-				"example": "param1,param2",
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da matriz aplicada",
 				"schema": {
 					"type": "string"
-				}
-			},
-			"Names": {
-				"name": "name",
-				"in": "query",
-				"description": "Busca Grupo de Produto por descrição",
-				"required": false,
-				"example": "Usuário de busca",
-				"schema": {
-					"type": "string"
-				}
+				},
+				"x-totvs": [
+					{
+						"product": "RM",
+						"note": "SHABILITACAOFILIAL.CODCOLIGADA|SHABILITACAOFILIAL.IDHABILITACAOFILIAL",
+						"required": true,
+						"available": true
+					}
+				]
 			}
 		},
 		"schemas": {}

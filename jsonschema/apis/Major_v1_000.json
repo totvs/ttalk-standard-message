@@ -2,63 +2,65 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para a entidade Grupo de Produto (StockGroup) para Produtos TOTVS",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/entradas/v1",
+			"description": "API para a entidade habilitações, perfil secretaria (Majors) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
 			"variables": {
 				"serverUrl": {
 					"default": "localhost"
 				},
 				"serverHttpPort": {
-					"default": "8012"
+					"default": "8051"
 				}
 			}
 		}
 	],
 	"info": {
-		"description": "API para informações de Grupo de Produto para Produtos TOTVS ",
+		"description": "API para a entidade habilitações educacionais",
 		"version": "1.000",
-		"title": "StockGroup",
+		"title": "Habilitações educacionais",
 		"contact": {
 			"name": "T-Talk",
-			"url": "api.totvs.com.br",
+			"url": "API.Totvs.com.br",
 			"email": "comiteintegracao@totvs.com.br"
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "StockGroup",
-				"description": "Cadastro de Grupo de Produto",
-				"segment": "Services"
+				"name": "Majors",
+				"description": "Habilitações educacionais",
+				"segment": "Educacional"
 			},
 			"productInformation": [
 				{
-					"product": "PROTHEUS",
-					"contact": "squad.entradas@totvs.com.br",
-					"description": "Grupo de Produto",
-					"adapter": "MATS035.prw"
+					"product": "RM",
+					"contact": "rm_FW@totvs.com.br",
+					"description": "Entidade de habilitações educacional, perfil secretaria"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/StockGroups": {
+		"/Academics/{AcademicInternalId}/Majors": {
 			"get": {
 				"tags": [
-					"StockGroup"
+					"Majors"
 				],
-				"summary": "Retorna lista de Grupo de Produto",
+				"summary": "Retorna todos as habilitações do Educacional",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
-				"description": "Retorna lista completa de Grupo de Produto",
-				"operationId": "getStockGroups",
+				"description": "Retorna todas as habilitações educacionais",
+				"operationId": "getAll",
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
@@ -81,23 +83,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/PagedStockGroups"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Major_1_000.json#/definitions/PagedMajor"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro na listagem dos Grupo de Produto",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Registro não encontrado",
+						"description": "erro no momento da listagem das habilitações",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -110,21 +102,25 @@
 			},
 			"post": {
 				"tags": [
-					"StockGroup"
+					"Majors"
 				],
-				"summary": "Inclui um Local de Estoque",
-				"operationId": "postStockGroup",
+				"summary": "Inclui a habilitação passado na requisição",
+				"description": "Inclui a habilitação passado na requisição",
+				"operationId": "postMajors",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
@@ -133,11 +129,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Major_1_000.json#/definitions/Major"
 							}
 						}
 					},
-					"description": "Inclui um Local de Estoque"
+					"description": "Habilitação para ser incluído"
 				},
 				"responses": {
 					"200": {
@@ -145,13 +141,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Major_1_000.json#/definitions/Major"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
+						"description": "erro no momento da inclusão",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -163,27 +159,30 @@
 				}
 			}
 		},
-		"/StockGroups/{Code}": {
+		"/Academics/{AcademicInternalId}/Majors/{InternalId}": {
 			"get": {
 				"tags": [
-					"Code"
+					"Majors"
 				],
-				"summary": "Retorna Local de Estoque pelo seu Código",
-				"description": "Retorna Local de Estoque pelo seu Código",
-				"operationId": "getStockGroup",
+				"summary": "Retorna detalhes da habilitação educacional",
+				"description": "Retorna a habilitação do educacional",
+				"operationId": "getId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -195,13 +194,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Major_1_000.json#/definitions/Major"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Habilitação não localizada na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -214,24 +213,27 @@
 			},
 			"put": {
 				"tags": [
-					"StockGroup"
+					"Majors"
 				],
-				"summary": "Atualiza cadastro de Grupo de Produto conforme dados enviados na requisição",
-				"description": "Atualiza cadastro de Grupo de Produto conforme dados enviados na requisição",
-				"operationId": "putStockGroup",
+				"summary": "Altera a habilitação passado na requisição",
+				"description": "Altera a habilitação passado na requisição",
+				"operationId": "postMajorId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
+							"product": "RM",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -241,11 +243,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Major_1_000.json#/definitions/Major"
 							}
 						}
 					},
-					"description": "Local de Estoque a ser atualizado"
+					"description": "Prédio para ser incluído"
 				},
 				"responses": {
 					"200": {
@@ -253,13 +255,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Major_1_000.json#/definitions/Major"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
+						"description": "erro no momento da alteração",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -269,7 +271,7 @@
 						}
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Habilitação não localizada na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -282,50 +284,38 @@
 			},
 			"delete": {
 				"tags": [
-					"StockGroup"
+					"Majors"
 				],
-				"summary": "Exclui Local de Estoque cadastrado conforme dados enviados na requisição",
-				"description": "Exclui Local de Estoque cadastrado conforme dados enviados na requisição",
-				"operationId": "DeleteStockGroup",
+				"summary": "Exclusão de habilitação da base",
+				"description": "Exclusão da habilitação da base",
+				"operationId": "DeleteMajor",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "PROTHEUS",
-							"available": true
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/Code"
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/StockGroup_1_000.json#/definitions/StockGroupInfo"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "erro no momento da Inclusão",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
+					"204": {
+						"description": "Habiltiação removida com sucesso"
 					},
 					"404": {
-						"description": "Local de Estoque não localizado na base",
+						"description": "Habilitação não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -340,31 +330,20 @@
 	},
 	"components": {
 		"parameters": {
-			"Code": {
-				"name": "Code",
+			"AcademicInternalId": {
+				"name": "AcademicInternalId",
 				"in": "path",
 				"required": true,
-				"description": "Identificador Único representando a Grupo de Produto",
+				"description": "InternalId da secretaria",
 				"schema": {
 					"type": "string"
 				}
 			},
-			"StockGroups": {
-				"name": "StockGroups",
-				"in": "query",
-				"description": "Códigos de Grupo de Produto retornados pelo get separado por vírgula (,) ",
-				"required": false,
-				"example": "param1,param2",
-				"schema": {
-					"type": "string"
-				}
-			},
-			"Names": {
-				"name": "name",
-				"in": "query",
-				"description": "Busca Grupo de Produto por descrição",
-				"required": false,
-				"example": "Usuário de busca",
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da habilitação educacional",
 				"schema": {
 					"type": "string"
 				}
