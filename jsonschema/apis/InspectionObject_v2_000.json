@@ -1,0 +1,339 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "2.000",
+    "title": "Objetos a vistoriar",
+    "description": "API para a entidade objeto de inspeção(InspectionObject) para produtos TOTVS",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "InspectionObject",
+        "description": "Objeto de inspeção",
+        "segment": "Distribuição e Logística"
+      },
+      "productInformation": [
+        {
+          "product": "TotvsChecklist",
+          "contact": "SUPPLY.ML.LOG.HUB@totvs.com.br",
+          "description": "Objetos a vistoriar",
+          "helpUrl": "link aqui"
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "description": "The TOTVS Agriculture API (aka T-Agri API) is a RESTFul API that provides entities and resources based on the agriculture context for TOTVS' solutions.\n\nBelow is a list of available REST API call for business agriculture resources.",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/TotvsChecklist/planning/v2",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8090"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/inspectionObjects": {
+      "get": {
+        "tags": [
+          "InspectionObjectQuery"
+        ],
+        "summary": "Listagem dos objetos de inspeção",
+        "description": "Método responsável por retornar todos os objetos de inspeção respeitando os filtros de requisição",
+        "operationId": "ApiTotvsChecklistPlanningV1InspectionObjectsGet",
+        "parameters": [
+          {
+            "name": "InspectionObjectCustomId",
+            "in": "query",
+            "description": "Identificador do objeto",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Description",
+            "in": "query",
+            "description": "Descrição do objeto",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ajustesMensagens2/jsonschema/schemas/InspectionObject_2_000.json#/definitions/InspectionObjectPaginatedList"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "TotvsChecklist",
+              "available": true,
+              "note": "Este verbo está disponivel com todos os parâmetros",
+              "minimalVersion": "12.1.22"
+            }
+          ]
+        }
+      },
+      "post": {
+        "tags": [
+          "InspectionObject"
+        ],
+        "summary": "Cria um objeto de inspeção",
+        "description": "Método responsável por criar um objeto de inspeção",
+        "operationId": "ApiTotvsChecklistPlanningV1InspectionObjectsPost",
+        "responses": {
+          "202": {
+            "description": "Consultar objeto de inspeção na uri: api/TotvsChecklist/planning/v1/inspectionObjects/{id}"
+          },
+          "400": {
+            "description": "Requisição não aceita. O tipo e o identificador do objeto devem estar informados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "TotvsChecklist",
+              "available": true,
+              "note": "Este verbo está disponivel com todos os parâmetros",
+              "minimalVersion": "12.1.22"
+            }
+          ]
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ajustesMensagens2/jsonschema/schemas/InspectionObject_2_000.json#/definitions/InspectionObject"
+              }
+            }
+          },
+          "description": "Informações do objeto de inspeção"
+        }
+      }
+    },
+    "/inspectionObjects/{id}": {
+      "put": {
+        "tags": [
+          "InspectionObject"
+        ],
+        "summary": "Altera o objeto de inspeção",
+        "description": "Método responsável por alterar a descrição de um objeto de inspeção",
+        "operationId": "ApiTotvsChecklistPlanningV1InspectionObjectsByInspectionObjectIdPut",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Chave primária",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Consultar objeto de inspeção na uri: api/TotvsChecklist/planning/v1/inspectionObjects/{id}"
+          },
+          "400": {
+            "description": "Requisição não aceita. Id deve ser um inteiro e maior que zero.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "O recurso não pode ser localizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "TotvsChecklist",
+              "available": true,
+              "note": "Este verbo está disponivel com todos os parâmetros",
+              "minimalVersion": "12.1.22"
+            }
+          ]
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ajustesMensagens2/jsonschema/schemas/InspectionObject_2_000.json#/definitions/InspectionObject"
+              }
+            }
+          },
+          "description": "Descrição do objeto de inspeção"
+        }
+      },
+      "delete": {
+        "tags": [
+          "InspectionObject"
+        ],
+        "summary": "Remove o objeto de inspeção",
+        "description": "Método responsável por remover um objeto de inspeção",
+        "operationId": "ApiTotvsChecklistPlanningV1InspectionObjectsByInspectionObjectIdDelete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Chave primária",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "O recurso foi excluído com sucesso."
+          },
+          "400": {
+            "description": "O recurso não pode ser excluído.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "O recurso não pode ser localizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "TotvsChecklist",
+              "available": true,
+              "note": "Este verbo está disponivel com todos os parâmetros",
+              "minimalVersion": "12.1.22"
+            }
+          ]
+        }
+      },
+      "get": {
+        "tags": [
+          "InspectionObjectQuery"
+        ],
+        "summary": "Recupera um objeto de inspeção",
+        "description": "Método responsável por retornar o objeto de inspeção que possui o id passado como parâmetro",
+        "operationId": "ApiTotvsChecklistPlanningV1InspectionObjectsByIdGet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Chave primária",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ajustesMensagens2/jsonschema/schemas/InspectionObject_2_000.json#/definitions/InspectionObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição não aceita. Id deve ser um inteiro e maior que zero.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "TotvsChecklist",
+              "available": true,
+              "note": "Este verbo está disponivel com todos os parâmetros",
+              "minimalVersion": "12.1.22"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "tags": []
+}
