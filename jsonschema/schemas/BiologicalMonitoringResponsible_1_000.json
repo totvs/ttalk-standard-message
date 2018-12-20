@@ -1,9 +1,9 @@
 {
-	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/events/WorkAccidentOccurrence_1_000.json#",
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/events/BiologicalMonitoringResponsible_1_000.json#",
 	"info": {
-		"description": "API para a entidade de CAT (WorkAccidentOccurrence) para produtos TOTVS",
+		"description": "API para a entidade de Responsável pela Monitoração Biológica (BiologicalMonitoringResponsible) para produtos TOTVS",
 		"version": "1.000",
-		"title": "MedicalConsultations",
+		"title": "BiologicalMonitoringResponsible",
 		"contact": {
 			"name": "T-Talk",
 			"url": "API.Totvs.com.br",
@@ -11,21 +11,21 @@
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "WorkAccidentOccurrence",
-				"description": "CAT",
+				"name": "BiologicalMonitoringResponsible",
+				"description": "Responsável pela Monitoração Biológica",
 				"segment": "RH"
 			},
 			"productInformation": [
 				{
 					"product": "RM",
 					"contact": "rm_FW@totvs.com.br",
-					"description": "Listagem de CATs"
+					"description": "Listagem dos Responsáveis pela Monitoração Biológica"
 				}
 			]
 		}
 	},
 	"definitions": {
-		"WorkAccidentOccurrenceGroups": {
+		"BiologicalMonitoringResponsibleGroups": {
 			"type": "object",
 			"allOf": [
 				{
@@ -35,29 +35,13 @@
 					"type": "object",
 					"properties": {
 						"items": {
-							"$ref": "#/definitions/WorkAccidentOccurrenceInfo"
+							"$ref": "#/definitions/BiologicalMonitoringResponsibleReadView"
 						}
 					}
 				}
 			]
 		},
-		"WorkAccidentOccurrenceDetail": {
-			"type": "object",
-			"allOf": [
-				{
-					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ExpandablesType"
-				},
-				{
-					"type": "object",
-					"properties": {
-						"items": {
-							"$ref": "#/definitions/WorkAccidentOccurrenceInfo"
-						}
-					}
-				}
-			]
-		},
-		"WorkAccidentOccurrenceSave": {
+		"BiologicalMonitoringResponsibleSave": {
 			"type": "object",
 			"properties": {
 				"CompanyCode": {
@@ -76,204 +60,77 @@
 						}
 					]
 				},
-				"OccurenceCode": {
-					"type": "string",
-					"example": "00001",
-					"description": "Código da ocorrência",
+				"PersonCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": "15",
+					"description": "Código da pessoa responsável",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "VOCORRENCIA.CODOCORRENCIA",
+							"field": "VRESPMONBIOLOGICA.CODPESSOA",
 							"required": true,
-							"type": "varchar",
-							"length": 10,
+							"type": "int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"SeqCode": {
+					"description": "Seq. Do Responsável",
+					"type": "integer",
+					"format": "int32",
+					"example": "15",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "VRESPMONBIOLOGICA.SEQRESPBIO",
+							"required": true,
+							"type": "int",
 							"available": true,
 							"canUpdate": false
 						}
 					]
 				},
-				"DateTime": {
+				"BranchId": {
+					"type": "integer",
+					"format": "int16",
+					"example": "15",
+					"description": "Código Filial",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "VRESPMONBIOLOGICA.CODFILIAL",
+							"required": false,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"BeginDate": {
 					"type": "string",
 					"format": "date-time",
-					"description": "Data da CAT",
+					"description": "Data de Início",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "VOCORRENCIA.DATAHORA",
-							"required": false,
-							"type": "datetime",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Description": {
-					"type": "string",
-					"description": "Descrição da CAT",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.DESCRICAO",
-							"required": false,
-							"type": "varchar",
-							"length": 8000,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"EmployeeId": {
-					"type": "string",
-					"example": "00001",
-					"description": "Chapa do Funcinário",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CHAPA",
-							"required": false,
-							"type": "varchar",
-							"length": 16,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"BodyPartCode": {
-					"type": "string",
-					"example": "00001",
-					"description": "Código da parte do corpo",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODNATUREZA",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"WorkPlaceCode": {
-					"type": "string",
-					"example": "00001",
-					"description": "Código do local de trabalho",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODLOCALTRABALHO",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"TypeOfOccurrenceCode": {
-					"type": "string",
-					"example": "00001",
-					"description": "Código do tipo de ocorrência",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODTIPOOCORRENCIA",
+							"field": "VRESPMONBIOLOGICA.DATAINICIAL",
 							"required": true,
-							"type": "varchar",
-							"length": 10,
+							"type": "datetime",
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"TimeWorked": {
-					"type": "integer",
-					"format": "int32",
-					"example": "15",
-					"description": "Horas trabalhadas",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.HORASTRAB",
-							"required": false,
-							"type": "int",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"PoliceRegistration": {
-					"type": "integer",
-					"format": "int16",
-					"example": "15",
-					"description": "Registro policial",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.REGPOLICIAL",
-							"required": false,
-							"type": "smallint",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Decease": {
-					"type": "integer",
-					"format": "int16",
-					"example": "15",
-					"description": "Ocasionou óbito",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.MORTE",
-							"required": false,
-							"type": "smallint",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Issuer": {
-					"type": "string",
-					"example": "00001",
-					"description": "Código do emitente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.EMITENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Type": {
-					"type": "string",
-					"example": "1",
-					"description": "Tipo da CAT",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.EMITENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"DeceaseDate": {
+				"EndDate": {
 					"type": "string",
 					"format": "date-time",
-					"description": "Data de óbito",
+					"description": "Data de Término",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "VOCORRENCIA.DTOBITO",
+							"field": "VRESPMONBIOLOGICA.DATAFINAL",
 							"required": false,
 							"type": "datetime",
 							"available": true,
@@ -281,683 +138,155 @@
 						}
 					]
 				},
-				"Parentage": {
+				"Nit": {
+					"description": "NIT",
 					"type": "string",
-					"example": "1",
-					"description": "Filiação previdência",
+					"example": "84818515155",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "VOCORRENCIA.FILIACAOPREVIDENCIA",
+							"field": "VRESPMONBIOLOGICA.NIT",
 							"required": false,
-							"type": "varchar",
-							"length": 2,
+							"type": "string",
+							"length": 11,
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"DaysBeforeAccident": {
+				"ClassCouncilRegistrationCode": {
+					"description": "NIT",
 					"type": "string",
-					"format": "date-time",
-					"description": "Dias antes do acidente",
+					"example": "84818515155",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "VOCORRENCIA.DIASANTECEDACIDENTE",
+							"field": "VRESPMONBIOLOGICA.REGCONSELHOCLASSE",
 							"required": false,
-							"type": "datetime",
+							"type": "string",
+							"length": 20,
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"ThereWasLeaveDays": {
+				"SectionCode": {
+					"description": "Código da sessão",
 					"type": "string",
-					"example": "1",
-					"description": "Houve afastamento?",
+					"example": "1.1.1",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "VOCORRENCIA.HOUVEAFASTAMENTO",
+							"field": "VRESPMONBIOLOGICA.REGCONSELHOCLASSE",
 							"required": false,
-							"type": "varchar",
-							"length": 3,
+							"type": "string",
+							"length": 35,
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"AccidentLocation": {
-					"type": "string",
-					"example": "Sala de Treinamento",
-					"description": "Local do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.LOCALACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 255,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentLocationCity": {
-					"type": "string",
-					"example": "Belo Horizonte",
-					"description": "Cidade do local do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.MUNLOCALACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 27,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentLocationState": {
+				"CouncilState": {
+					"description": "UF de expedição do CRM/COREN",
 					"type": "string",
 					"example": "MG",
-					"description": "Estado do local do acidente",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "VOCORRENCIA.UFLOCALACIDENTE",
+							"field": "VRESPMONBIOLOGICA.UFREGCONSELHO",
 							"required": false,
-							"type": "varchar",
+							"type": "string",
 							"length": 2,
 							"available": true,
 							"canUpdate": true
 						}
 					]
-				},
-				"WhereHasAccidentOccured": {
-					"type": "string",
-					"example": "Guarda equip. para concerto",
-					"description": "Onde ocorreu o acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.ONDEOCORREUACID",
-							"required": false,
-							"type": "varchar",
-							"length": 32,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"InssRegistrationCode": {
-					"type": "string",
-					"example": "1234567890",
-					"description": "Registro INSS",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.REGISTROINSS",
-							"required": false,
-							"type": "varchar",
-							"length": 32,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"InssAccidentLocation": {
-					"type": "string",
-					"example": "1",
-					"description": "Local acidente para o INSS",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.LOCALACIDENTEINSS",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"NatureCatCode": {
-					"type": "string",
-					"example": "0001",
-					"description": "Natureza CAT",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODNATUREZACAT",
-							"required": false,
-							"type": "varchar",
-							"length": 20,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"MedicalConsultationUnit": {
-					"type": "string",
-					"example": "VAI Sete de Setembro",
-					"description": "Unidade de Atendimento",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.UNIDATENDIMENTO",
-							"required": false,
-							"type": "varchar",
-							"length": 40,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Diagnosis": {
-					"type": "string",
-					"example": "Perda dos dois quirodáctilos",
-					"description": "Unidade de Atendimento",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.DIAGNOSTICO",
-							"required": false,
-							"type": "varchar",
-							"length": 40,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"MedicalDate": {
-					"type": "string",
-					"format": "date-time",
-					"description": "Dias antes do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.DATAMEDICA",
-							"required": false,
-							"type": "datetime",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Hospitalization": {
-					"type": "integer",
-					"format": "int16",
-					"example": "15",
-					"description": "Houve internação",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.INTERNACAO",
-							"required": false,
-							"type": "smallint",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"TreatmentDuration": {
-					"type": "integer",
-					"format": "int16",
-					"example": "15",
-					"description": "Duração do tratamento",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.INTERNACAO",
-							"required": false,
-							"type": "smallint",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Cid": {
-					"type": "string",
-					"example": "L65",
-					"description": "CID",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CID",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"SourceCode": {
-					"type": "string",
-					"example": "00016",
-					"description": "Código da fonte geradora",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CID",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"OccupationalActivity": {
-					"type": "integer",
-					"format": "int16",
-					"example": "1",
-					"description": "Atividade Ocupacional",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.ATIVOOCUPACIONAL",
-							"required": false,
-							"type": "smallint",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"TreatmentLeave": {
-					"type": "string",
-					"example": "1",
-					"description": "Acidentado deve se afastar durante o tratamento",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.AFASTAMENTOTRATAMENTO",
-							"required": false,
-							"type": "varchar",
-							"length": 3,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"MedicalObservation": {
-					"type": "string",
-					"description": "Observações médicas",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.OBSERVACAOMEDICA",
-							"required": false,
-							"type": "varchar",
-							"length": 8000,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"HazardItemCode": {
-					"type": "string",
-					"example": "00016",
-					"description": "Código do item de risco",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODITEMRISCO",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"SituationGeneratorCode": {
-					"type": "string",
-					"example": "200004300",
-					"description": "Código da situação geradora",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODSITUACAOGERA",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentAddress": {
-					"type": "string",
-					"example": "Avenida Afonso Pena",
-					"description": "Logradouro do local de acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.LOGRADOUROACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 140,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentNumber": {
-					"type": "string",
-					"example": "11",
-					"description": "Número do endereço do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.NUMEROACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 8,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"Cnes": {
-					"type": "string",
-					"example": "14123214",
-					"description": "CNES",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CNES",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentCityCode": {
-					"type": "string",
-					"example": "06200",
-					"description": "Código do município do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODMUNICIPIOACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 20,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"DoctorCode": {
-					"type": "string",
-					"example": "1",
-					"description": "Código do médico",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODMEDICO",
-							"required": false,
-							"type": "int",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"IssuerRegistrationType": {
-					"type": "integer",
-					"format": "int32",
-					"example": "1",
-					"description": "Inscrição",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.EMITENTETIPOINSCRICAO",
-							"required": false,
-							"type": "int",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"EsocialAccidentType": {
-					"type": "string",
-					"example": "1.0.01",
-					"description": "Código acidente de trabalho eSocial",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.TIPOACIDENTEESOCIAL",
-							"required": false,
-							"type": "varchar",
-							"length": 10,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentLocationCep": {
-					"type": "string",
-					"example": "30535691",
-					"description": "CEP do local do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CEPLOCALACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 15,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"RegistrationType": {
-					"type": "string",
-					"example": "30535691",
-					"description": "Tipo de inscrição",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.TIPOINSCRICAO",
-							"required": false,
-							"type": "varchar",
-							"length": 15,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"RegistrationNRO": {
-					"type": "string",
-					"example": "2131232132",
-					"description": "Número da inscrição",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.NROINSCRICAO",
-							"required": false,
-							"type": "varchar",
-							"length": 15,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"WorkEnvironmentCode": {
-					"type": "string",
-					"example": "CSTC0001S0000002",
-					"description": "Código do ambiente de trabalho",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CODAMBIENTETRABALHO",
-							"required": false,
-							"type": "varchar",
-							"length": 15,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentAdressComplement": {
-					"type": "string",
-					"example": "apto. 102",
-					"description": "Complemento local do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.COMPLOGRADOUROACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 100,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentNeighborhood": {
-					"type": "string",
-					"example": "Funcionários",
-					"description": "Bairro local do acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.BAIRROACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 100,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentAdressType": {
-					"type": "string",
-					"example": "2",
-					"description": "Tipo de logradouro",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.TPLOGRADOUROACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 100,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"AccidentLocationCGC": {
-					"type": "string",
-					"example": "2",
-					"description": "CGC Local do Acidente",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "VOCORRENCIA.CGCLOCALACIDENTE",
-							"required": false,
-							"type": "varchar",
-							"length": 20,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				}				
-			}
-		},
-		"WorkAccidentOccurrenceInfo": {
-			"type": "object",
-			"allOf": [
-				{
-					"$ref": "#/definitions/WorkAccidentOccurrenceSave"
-				},
-				{
-					"type": "object",
-					"properties": {
-						"id": {
-							"description": "Código da coligada, Código da ocorrência",
-							"type": "string",
-							"x-totvs": [
-								{
-									"product": "RM",
-									"available": true,
-									"note": "Código da coligada, Código da ocorrência",
-									"field": "VOCORRENCIA.CODCOLIGADA|VPPRAMEDICOES.CODOCORRENCIA",
-									"type": "string"
-								}
-							]
-						},
-						"PersonCode": {
-							"type": "integer",
-							"format": "int32",
-							"example": "15",
-							"description": "Código da pessoa afetada",
-							"x-totvs": [
-								{
-									"product": "RM",
-									"field": "PFUNC.CODPESSOA",
-									"required": false,
-									"type": "int",
-									"available": true,
-									"canUpdate": false
-								}
-							]
-						},
-						"PersonCPF": {
-							"type": "string",
-							"example": "",
-							"description": "CPF da pessoa",
-							"x-totvs": [
-								{
-									"product": "RM",
-									"field": "PPESSOA.CPF",
-									"required": false,
-									"type": "varchar",
-									"length": 11,
-									"available": true,
-									"canUpdate": false
-								}
-							]
-						},
-						"TimeWorkedHMFormat": {
-							"type": "string",
-							"example": "30535691",
-							"description": "Horas trabalhadas no formato HH:MM",
-							"x-totvs": [
-								{
-									"product": "RM",
-									"required": false,
-									"type": "varchar",
-									"available": true,
-									"canUpdate": false
-								}
-							]
-						},
-						"EmployeeNIS": {
-							"type": "string",
-							"example": "12546934556",
-							"description": "NIS do funcionário",
-							"x-totvs": [
-								{
-									"product": "RM",
-									"field": "PFUNC.PISPASEP",
-									"required": false,
-									"type": "varchar",
-									"length": 11,
-									"available": true,
-									"canUpdate": false
-								}
-							]
+				}
+			},
+			"BiologicalMonitoringResponsibleReadRecord": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/definitions/BiologicalMonitoringResponsibleSave"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "Código da coligada, Código Seq. do Responsável",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "RM",
+										"available": true,
+										"note": "Código da coligada, Código da ocorrência",
+										"field": "VRESPMONBIOLOGICA.CODCOLIGADA|VRESPMONBIOLOGICA.SEQRESPBIO",
+										"type": "string"
+									}
+								]
+							}
 						}
 					}
-				}
-			]
+				]
+			},
+			"BiologicalMonitoringResponsibleReadView": {
+				"type": "object",
+				"allOf": [
+					{
+						"$ref": "#/definitions/BiologicalMonitoringResponsibleReadRecord"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"PersonName": {
+								"type": "string",
+								"example": "Itamar",
+								"description": "Nome da Pessoa Responsável",
+								"x-totvs": [
+									{
+										"product": "RM",
+										"field": "PPESSOA.NOME",
+										"required": true,
+										"type": "varchar",
+										"length": 120,
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"BranchDescription": {
+								"description": "Descrição da filial",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "RM",
+										"field": "GFILIAL.NOMEFANTASIA",
+										"required": false,
+										"type": "string",
+										"length": 100,
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"SectionDescription": {
+								"description": "Nome da seção responsável",
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "RM",
+										"field": "PSECAO.DESCRICAO",
+										"required": false,
+										"type": "string",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							}
+						}
+					}
+				]
+			}
 		}
 	}
 }
