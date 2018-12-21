@@ -2,21 +2,20 @@ language: node_js
 sudo: false
 node_js:
   - node
-env:
-  - APIREFERENCEHOST=https://api.totvs.com.br:8027
 before_install:
   - chmod +x travis-renameRef.sh
+  - chmod +x travis-refreshApiReferenceSearchIndex.sh
 install:  
   - sudo apt install curl
   - npm install
 script:
   - npm test
 after_success:
-  - "curl -X POST https://api.totvs.com.br:8027/api/apireference/v1/search/refreshindex -d \"Content-Length: 0\""
-# - if [ "$TRAVIS_BRANCH" == "validatorchanges" ]; ./refreshApiReferenceSearchIndex.sh;
-#   fi
+  # - "curl -X POST https://api.totvs.com.br:8027/api/apireference/v1/search/refreshindex -d \"Content-Length: 0\""
+  - if [ "$TRAVIS_BRANCH" == "validatorchanges" ]; 
+     ./refreshApiReferenceSearchIndex.sh;
+    fi
 after_script:
-  - ./travis-refreshApiReferenceSearchIndex.sh;
 # - if [ "$TRAVIS_BRANCH" == "validatorchanges" ]; then ./travis-renameRef.sh;
 #   fi
 env:
