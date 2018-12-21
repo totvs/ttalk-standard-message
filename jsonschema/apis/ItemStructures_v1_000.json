@@ -1,0 +1,450 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "Estrutura de itens",
+		"description": "Documentação para API de Estrutura de Itens",
+		"version": "1.000",
+		"contact": {
+			"name": "API itemStructures",
+			"email": "guilherme.hoch@totvs.com.br"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "itemStructures",
+				"description": "Estrutura de Item",
+				"segment": "Manufatura"
+			},
+			"productInformation": [
+				{
+					"product": "Datasul",
+					"contact": "guilherme.hoch@totvs.com.br",
+					"description": "Cadastro de Estruturas de Itens",
+					"adapter": "/totvs-rest/prg/man/v1/itemStructures.p",
+					"helpUrl": ""
+				}
+			]
+		}
+	},
+	"servers": [
+		{
+			"description": "Documentação para API de Estrutura de Itens",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/totvs-rest/prg/man/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8090"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "itemStructures",
+			"description": "Estruturas de itens"
+		}
+	],
+	"externalDocs": {
+		"description": "Descubra mais",
+		"url": "http://api.totvs.com.br"
+	},
+	"paths": {
+		"/itemStructures": {
+			"get": {
+				"tags": [
+					"itemStructures"
+				],
+				"summary": "Busca a estrutura de um item",
+				"description": "Retorna o primeiro nível da estrutura dos itens selecionados",
+				"operationId": "getItemStructure",
+				"parameters": [
+					{
+						"name": "search",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Busca por todos os itens cujo código seja composto por este parâmetro. Exemplo: \"search=001\" trará itens como \"item-001\", \"001002\" etc."
+					},
+					{
+						"name": "code",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Código do item a ser consultado"
+					},
+					{
+						"name": "itemReference",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Busca todos os itens que possuam a Referência informada"
+					},
+					{
+						"name": "itemComponentCode",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Busca todas as estruturas onde o item em questão é utilizado como componente"
+					},
+					{
+						"name": "expired",
+						"in": "query",
+						"schema": {
+							"type": "boolean"
+						},
+						"description": "Define se a consulta deverá trazer itens componentes fora da validade da estrutura. Valor padrão = NO"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemStructures_1_002.json#/definitions/ItemStructures"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			},
+			"post": {
+				"tags": [
+					"itemStructures"
+				],
+				"summary": "Adiciona um ou mais componentes na estrutura",
+				"description": "",
+				"operationId": "addItemStructure",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemStructures_1_002.json#/definitions/ItemStructures"
+							}
+						}
+					},
+					"description": "Informações do objeto do componente"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			}
+		},
+		"/itemStructures/{ItemInternalId}": {
+			"put": {
+				"tags": [
+					"itemStructures"
+				],
+				"summary": "Atualiza uma estrutura existente",
+				"description": "",
+				"operationId": "updateItemStructure",
+				"parameters": [
+					{
+						"name": "ItemInternalId",
+						"in": "path",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Código do item pai da estrutura a ser modificada",
+						"required": true
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemStructures_1_002.json#/definitions/ItemStructures"
+							}
+						}
+					},
+					"description": "Informações do objeto de componente"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"400": {
+						"description": "ID passado na URL está diferente do ItemCode presente no corpo da mensagem",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "ID do componente da estrutura nao encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			},
+			"get": {
+				"tags": [
+					"itemStructures"
+				],
+				"summary": "Busca uma estrutura pelo ID do item pai",
+				"description": "Retorna o primeiro nível da estrutura do item informado",
+				"operationId": "getItemStructureById",
+				"parameters": [
+					{
+						"name": "ItemInternalId",
+						"in": "path",
+						"schema": {
+							"type": "string"
+						},
+						"description": "ID do item pai a ser consultado",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemStructures_1_002.json#/definitions/ItemStructures"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			},
+			"delete": {
+				"tags": [
+					"itemStructures"
+				],
+				"summary": "Deleta completamente a estrutura de um item",
+				"description": "",
+				"operationId": "deleteItemStructure",
+				"parameters": [
+					{
+						"name": "ItemInternalId",
+						"in": "path",
+						"schema": {
+							"type": "string"
+						},
+						"description": "ID do item pai a ter a estrutura excluída",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"404": {
+						"description": "ID do item pai não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			}
+		},
+		"/itemStructures/{ItemInternalId}/component": {
+			"delete": {
+				"tags": [
+					"itemStructures"
+				],
+				"parameters": [
+					{
+						"name": "ItemInternalId",
+						"in": "path",
+						"schema": {
+							"type": "string"
+						},
+						"description": "ID do item pai da estrutura",
+						"required": true
+					}
+				],
+				"summary": "Exclui um ou mais componentes na estrutura",
+				"description": "",
+				"operationId": "removeItemStructure",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemStructures_1_002.json#/definitions/ItemStructures"
+							}
+						}
+					},
+					"description": "Informações do(s) objeto(s) componente(s) a ser(em) excluído(s)."
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"400": {
+						"description": "ID passado na URL está diferente do ItemCode presente no corpo da mensagem",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			}
+		}
+	}
+}

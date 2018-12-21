@@ -30,10 +30,11 @@ describe("Validating Schema files...", function () {
               encoding: 'utf-8'
             });
 
-            before(function () {
-              parsedSchema = JSON.parse(file);
+            before(async function (done) { //only used done here to be able to use the timeout (next line);
+              this.timeout(60000);
+              parsedSchema = JSON.parse(file);              
               schemaDefinitionsValidator.clear();
-              schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema);
+              schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema, done);
             })
 
             describe(" - Filename: ", function () {
@@ -70,6 +71,10 @@ describe("Validating Schema files...", function () {
                 }
               });
 
+              it("should be available=true in x-totvs, because it is required", function () {
+                var inconsistentAvailable = schemaDefinitionsValidatorResult.inconsistentAvailable;
+                expect(schemaDefinitionsValidatorResult.hasAcceptableAvailable, inconsistentAvailable).not.to.be.false;
+              });
 
               it("should be an array in properties inside 'definitions'", function () {
                 var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvs;
