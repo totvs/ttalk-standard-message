@@ -1,0 +1,403 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade de disciplinas da grade, perfil acadêmico (GridDiscipline) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade de disciplina de um período da grade",
+		"version": "1.000",
+		"title": "Disciplina da grade",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "GridDisciplines",
+				"description": "Disciplinas da grade",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Entidade de disciplina da grade, perfil acadêmico"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/academics/{AcademicInternalId}/periods/{PeriodInternalId}/griddisciplines": {
+			"get": {
+				"tags": [
+					"gridDisciplines"
+				],
+				"summary": "Retorna todas as disciplinas de um período de uma grade",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"description": "Retorna todas as disciplinas de um período de uma grade",
+				"operationId": "getAll",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/PeriodInternalId"
+					},					
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/GridDiscipline/v1/1_000/jsonschema/schemas/GridDiscipline_1_000.json#/definitions/PagedGridDiscipline"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da listagem dos relatórios",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"griddisciplines"
+				],
+				"summary": "Inclui uma disciplina em uma grade",
+				"description": "Inclui uma disciplina em uma grade passado na requisição",
+				"operationId": "postGridDisciplines",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/PeriodInternalId"
+					},						
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/GridDiscipline/v1/1_000/jsonschema/schemas/GridDiscipline_1_000.json#/definitions/GridDiscipline"
+							}
+						}
+					},
+					"description": "Matriz aplicada para ser incluído"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/GridDiscipline/v1/1_000/jsonschema/schemas/GridDiscipline_1_000.json#/definitions/GridDiscipline"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/academics/{AcademicInternalId}/periods/{PeriodInternalId}/griddisciplines/{InternalId}": {
+			"get": {
+				"tags": [
+					"griddisciplines"
+				],
+				"summary": "Retorna detalhes da matriz aplicada",
+				"description": "Retorna a matriz aplicada",
+				"operationId": "getId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/PeriodInternalId"
+					},					
+					{
+						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/GridDiscipline/v1/1_000/jsonschema/schemas/GridDiscipline_1_000.json#/definitions/GridDiscipline"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"griddisciplines"
+				],
+				"summary": "Altera o período passado na requisição",
+				"description": "Altera o período passado na requisição",
+				"operationId": "postGridDisciplinesId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/PeriodInternalId"
+					},						
+					{
+						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/GridDiscipline/v1/1_000/jsonschema/schemas/GridDiscipline_1_000.json#/definitions/GridDiscipline"
+							}
+						}
+					},
+					"description": "Disciplina da grade a ser incluída"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/GridDiscipline/v1/1_000/jsonschema/schemas/GridDiscipline_1_000.json#/definitions/GridDiscipline"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da alteração",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"griddisciplines"
+				],
+				"summary": "Exclusão de disciplina de uma matriz aplicada da base",
+				"description": "Exclusão de disciplina de uma matriz aplicada da base",
+				"operationId": "DeleteGridDiscipline",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/AcademicInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/PeriodInternalId"
+					},						
+					{
+						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Disciplina da grade removida com sucesso"
+					},
+					"404": {
+						"description": "Disciplina da grade não encontrada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"AcademicInternalId": {
+				"name": "AcademicInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da matriz curricular",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "RM",
+						"note": "CODCOLIGADA|CODFILIAL|CODTIPOCURSO",
+						"required": true,
+						"available": true
+					}
+				]
+			},
+			"PeriodInternalId": {
+				"name": "PeriodInternalId",
+				"in": "path",
+				"required": true,
+				"example": "1|C001|C001-01|C001-01-01|1",
+				"description": "InternalId do período da grade",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "RM",
+						"note": "SPERIODO.CODCOLIGADA|SPERIODO.CODCURSO|SPERIODO.CODHABILITACAO|SPERIODO.CODGRADE|SPERIODO.CODPERIODO",
+						"required": true,
+						"available": true
+					}
+				]
+			},			
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da disciplina de um período da grade",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "RM",
+						"note": "SDISCGRADE.CODCOLIGADA|SDISCGRADE.CODCURSO|SDISCGRADE.CODHABILITACAO|SDISCGRADE.CODGRADE|SDISCGRADE.CODPERIODO|SDISCGRADE.CODDISC",
+						"required": true,
+						"available": true
+					}
+				]
+			}
+		},
+		"schemas": {}
+	}
+}
