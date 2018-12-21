@@ -69,7 +69,7 @@ describe("Validating OpenAPI files...", function () {
                 });
             })
 
-            describe(" - Filename: ", function () {
+            describe(" - Filename: ", function () {              
               it("should start with uppercase letter", function () {
                 expect(filename[0]).to.equal(filename[0].toUpperCase());
               });
@@ -81,6 +81,10 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - Content Format: ", function () {
+              it("shouldn't contain weird special characteres", function() {
+                expect(file.includes("�"), "Please check file encode").to.be.false;
+              });
+
               it("should be complient with OpenAPI in version 3.0'", function () {
                 expect(parsedOpenAPI).to.have.property("openapi");
                 expect(parsedOpenAPI).to.not.have.property("swagger");
