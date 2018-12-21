@@ -226,6 +226,31 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     }
 }
 
+var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pathkey) {
+    if (results.typeIsRequiredWhenPathId != false) {
+        let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
+        if (properties) {
+            if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
+                pathkey = pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length);
+                var pathId = pathkey.substring(2, pathkey.length - 1);
+                if (properties.hasOwnProperty(pathId)) {
+                    for (var i in properties[pathId]['x-totvs']) {
+                        if (results.typeIsRequiredWhenPathId != false) {
+                            if (properties[pathId]['x-totvs'][i].required) {
+                                results.typeIsRequiredWhenPathId = true;
+                            } else {
+                                results.typeIsRequiredWhenPathId = false;
+                                results.typeIsNotRequiredWhenPathId = "Type '" + pathId + "' must be required, because it is a final path param.";
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}
+
 var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, pathidkey, pathkey) {
     let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
     if (properties) {
@@ -252,7 +277,7 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
-        if(dereferencedResponses) var dereferencedResponse = dereferencedResponses[responseKey];
+        if (dereferencedResponses) var dereferencedResponse = dereferencedResponses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
             checkIfSchemaIsSettedToExternaFile(response, true);
@@ -260,6 +285,7 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
                 if (dereferencedResponse) {
                     if (dereferencedResponse.content['application/json'].schema) {
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
+                        checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
                     }
                 }
@@ -279,14 +305,18 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
 var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey, pathkey, alreadyfoundpathid) {
     for (var parameterKey in parameters) {
         var parameter = parameters[parameterKey];
+        if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
+            checkIfPathIdIsRequired(getLastPathId(pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length)), parameter); //Gets the last Id from the parameter
+        }
         if (parameterType == "httpVerbLevel") {
             checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
             checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
         }
         alreadyfoundpathid = verifyIfThisIsThePathParameter(parameter, pathkey, alreadyfoundpathid);
-        addParamDefinedInComponentList(parameters[parameterKey])
+        addParamDefinedInComponentList(parameters[parameterKey]);
     }
     checkIfParametersContainPathId(alreadyfoundpathid, pathkey, parameterType);
+
 }
 
 /**
@@ -328,6 +358,28 @@ var verifyIfThisIsCollectionEndpoint = function (pathkey) {
         thisIsCollectionEndpoint = false;
     } else {
         thisIsCollectionEndpoint = true;
+    }
+}
+
+var getLastPathId = function (pathId) {
+    pathId = pathId.substring(2, pathId.length - 1);
+    return pathId;
+}
+
+var checkIfPathIdIsRequired = function (pathId, parameter) {
+    if (results.pathIdIsRequired != false) {
+        if (parameter.hasOwnProperty('required')) {
+            if (!parameter.required) { //is required false
+                if (parameter.name == pathId) {
+                    results.pathIdIsRequired = false;
+                    results.pathIdIsNotRequired = "Path parameter '" + pathId + "' must be required."
+                }
+            }
+            else{ //Does not have required property
+                results.pathIdIsRequired = false;
+                results.pathIdIsNotRequired = "Path parameter " + pathId + " does not even have a 'required' property (must be 'required=true')."
+            }
+        }
     }
 }
 

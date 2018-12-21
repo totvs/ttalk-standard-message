@@ -33,7 +33,7 @@ describe("Validating OpenAPI files...", function () {
               encoding: 'utf-8'
             });
             var parsedOpenAPI;
-            var pathValidatorResult
+            var pathValidatorResult;
             var derefResult;
             var derefErroDetail;
 
@@ -161,6 +161,11 @@ describe("Validating OpenAPI files...", function () {
                   errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathMissingItemOrHasNext + "'";
                 expect(pathValidatorResult.containsItemsAndHasNext, errorMessage).to.be.true;
               });
+
+              it("should be 'required=true' at schema, because it's a final path param", function () {
+                var errorMessage = pathValidatorResult.typeIsNotRequiredWhenPathId;
+                expect(pathValidatorResult.typeIsRequiredWhenPathId, errorMessage).not.to.be.false;
+              });
             });
 
             describe(" - Parameters: ", function () {
@@ -188,6 +193,11 @@ describe("Validating OpenAPI files...", function () {
               it("should contain path param defined 'params' property", function () {
                 var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
                 expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
+              });
+
+              it("should be 'required=true' when final path param", function () {
+                var errorMessage = pathValidatorResult.pathIdIsNotRequired;
+                expect(pathValidatorResult.pathIdIsRequired, errorMessage).not.to.be.false;
               });
             });
 
