@@ -1,0 +1,181 @@
+{
+	"$schema":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/EmployeeAssociatedValue/v1/1_000/jsonschema/schemas/EmployeeAssociatedValue_1_000.json#",
+	"info":{
+		"description":"Contrato de Mensagem Padronizada para Valores Associados ao Funcionário de produtos TOTVS",
+		"version":"1.000",
+		"title":"Valores Associados ao Funcionário",
+		"contact":{
+			"name":"T-Talk",
+			"url":"API.Totvs.com.br",
+			"email":"comiteintegracao@totvs.com.br"
+		},
+		"x-totvs":{
+			"messageDocumentation":{
+				"name":"EmployeeAssociatedValue",
+				"description":"Valores Associados ao Funcionário",
+				"segment":"RH"
+			},
+			"productInformation":[
+				{
+					"product":"RM",
+					"contact":"tiago.santana@totvs.com.br",
+					"description":"Valores Associados ao Funcionário",
+					"adapter":"",
+					"helpUrl":"link aqui"
+				}
+			]
+		}
+	},
+	"definitions":{
+		"PagedEmployeeAssociatedValues":{
+			"type":"object",
+			"allOf":[
+				{
+					"$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type":"object",
+					"properties":{
+						"items":{
+							"type":"array",
+							"items":{
+								"$ref":"#/definitions/EmployeeAssociatedValueInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"EmployeeAssociatedValueInfo":{
+			"type": "object",
+			"description":"Descreve um registro de Valor Associado ao Funcionário a ser exibido",
+			"allOf": [
+				{
+					"$ref": "#/definitions/EmployeeAssociatedValueSave"
+				},
+				{
+					"type": "object",
+					"properties":{
+						"id":{
+							"description":"Identificador do valor associado ao funcionário",
+							"type":"string",
+							"example" : "1|00007|02|2018-12-17T00:00:00",
+							"x-totvs": [
+								{
+									"product": "RM",
+									"available": true,
+									"note": "Código da coligada, Chapa do funcionário, Código do valor associado, Data do valor associado",
+									"field": "PFUNCVAL.CODCOLIGADA|PFUNCVAL.CHAPA|PFUNCVAL.CODVALOR|PFUNCVAL.DTVALOR",
+									"type": "string"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"EmployeeAssociatedValueSave":{
+			"type": "object",
+			"description": "Descreve um registro de Valor Associado ao Funcionário a ser inserido/atualizado",
+			"properties": {
+				"companyId": {
+					"description": "Empresa",
+					"type": "integer",
+					"format": "int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFUNCVAL.CODCOLIGADA",
+							"required": true,
+							"type": "smallint",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"employeeId":{
+					"description": "Chapa do funcionário",
+					"type": "string",
+					"maxLength": "16",
+					"example": "00007",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFUNCVAL.CHAPA",
+							"required": true,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": false,
+							"note": "Deve ser um valor de PFUNC.CHAPA"
+						}
+					]
+				},
+				"code":{
+					"description": "Código do valor associado",
+					"type": "string",
+					"maxLength": "25",
+					"example": "02",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFUNCVAL.CODVALOR",
+							"required": true,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": false,
+							"note": "Deve ser um valor de PCODVALFUNC.CODCLIENTE"
+						}
+					]
+				},
+				"date":{
+					"description": "Data do valor associado",
+					"type": "string",
+					"format": "date-time",
+					"example": "2018-12-17T00:00:00",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFUNCVAL.DTVALOR",
+							"required": true,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"value": {
+					"description": "Valor associado",
+					"type": "number",
+					"format": "double",
+					"example": "375.43",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFUNCVAL.VALOR",
+							"required": false,
+							"type": "numeric",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"note":{
+					"description": "Observação a respeito do valor associado. Pode ser usado para identificar a que o valor associado se refere",
+					"type": "string",
+					"maxLength": "50",
+					"example": "Compra no supermercado",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "PFUNCVAL.OBSERVACAO",
+							"required": false,
+							"type": "varchar",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
