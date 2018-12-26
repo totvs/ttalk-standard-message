@@ -306,7 +306,7 @@ var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey,
     for (var parameterKey in parameters) {
         var parameter = parameters[parameterKey];
         if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
-            checkIfPathIdIsRequired(getLastPathId(pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length)), parameter); //Gets the last Id from the parameter
+            checkIfPathIdIsRequired(getLastPathId(pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length)), parameter, httpVerbkey); //Gets the last Id from the parameter
         }
         if (parameterType == "httpVerbLevel") {
             checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
@@ -366,19 +366,19 @@ var getLastPathId = function (pathId) {
     return pathId;
 }
 
-var checkIfPathIdIsRequired = function (pathId, parameter) {
+var checkIfPathIdIsRequired = function (pathId, parameter, httpVerbkey) {
     if (results.pathIdIsRequired != false) {
         if (parameter.hasOwnProperty('required')) {
             if (parameter.required==false) { //is required false
                 if (parameter.name == pathId) {
                     results.pathIdIsRequired = false;
-                    results.pathIdIsNotRequired = "Path parameter '" + pathId + "' must be required."
+                    results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', must be required."
                 }
             }    
         }
         else{ //Does not have required property
-                //results.pathIdIsRequired = false;
-                //results.pathIdIsNotRequired = "Path parameter " + pathId + " does not even have a 'required' property (must be 'required=true')."
+                results.pathIdIsRequired = false;
+                results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', does not even have a 'required' property (must be 'required=true')."
         }
     }
 }
