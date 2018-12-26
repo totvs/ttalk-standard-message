@@ -369,16 +369,16 @@ var getLastPathId = function (pathId) {
 var checkIfPathIdIsRequired = function (pathId, parameter) {
     if (results.pathIdIsRequired != false) {
         if (parameter.hasOwnProperty('required')) {
-            if (!parameter.required) { //is required false
+            if (parameter.required==false) { //is required false
                 if (parameter.name == pathId) {
                     results.pathIdIsRequired = false;
                     results.pathIdIsNotRequired = "Path parameter '" + pathId + "' must be required."
                 }
-            }
-            else{ //Does not have required property
-                results.pathIdIsRequired = false;
-                results.pathIdIsNotRequired = "Path parameter " + pathId + " does not even have a 'required' property (must be 'required=true')."
-            }
+            }    
+        }
+        else{ //Does not have required property
+                //results.pathIdIsRequired = false;
+                //results.pathIdIsNotRequired = "Path parameter " + pathId + " does not even have a 'required' property (must be 'required=true')."
         }
     }
 }
