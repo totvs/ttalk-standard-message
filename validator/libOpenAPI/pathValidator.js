@@ -378,7 +378,7 @@ var checkIfPathIdIsRequired = function (pathId, parameter, httpVerbkey) {
         }
         else{ //Does not have required property
                 results.pathIdIsRequired = false;
-                results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', does not even have a 'required' property (must be 'required=true')."
+                results.pathIdIsNotRequired = "Path parameter '" + pathId + "'', at method '" + httpVerbkey + "', does not even have a 'required' property (must be 'required=true')."
         }
     }
 }
@@ -489,6 +489,7 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
                 if (derefOpenAPI) var dereferenceHttpVerbInfo = derefOpenAPI.paths[pathkey][httpVerbkey];
                 checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
                 checkIfOperationIdIsUnique(httpVerbInfo.operationId);
+                var derefParams = derefOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid);
                 var request = httpVerbInfo.requestBody;
