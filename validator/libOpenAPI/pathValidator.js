@@ -302,11 +302,11 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
  * @param {*} pathkey String (/endpoint)
  * @param {*} alreadyfoundpathid Object - Path parameter that was referenced in the 'parameters' property 
  */
-var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey, pathkey, alreadyfoundpathid) {
+var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey, pathkey, alreadyfoundpathid, derefParams) {
     for (var parameterKey in parameters) {
         var parameter = parameters[parameterKey];
         if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
-            checkIfPathIdIsRequired(getLastPathId(pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length)), parameter, httpVerbkey); //Gets the last Id from the parameter
+            checkIfPathIdIsRequired(getLastPathId(pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length)), httpVerbkey, derefParams); //Gets the last Id from the parameter
         }
         if (parameterType == "httpVerbLevel") {
             checkUseOfCommonsParams(parameter, httpVerbkey, pathkey);
@@ -325,8 +325,8 @@ var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey,
  * @param {*} pathkey String (/endpoint)
  * @param {*} alreadyfoundpathid Object - Path parameter that was referenced in the 'parameters' property Bool
  */
-var runThroughGeneralParams = function (parameters, pathkey, alreadyfoundpathid) {
-    runThroughParamsInternal(parameters, "pathLevel", null, pathkey, alreadyfoundpathid);
+var runThroughGeneralParams = function (parameters, pathkey, alreadyfoundpathid, derefParams) {
+    runThroughParamsInternal(parameters, "pathLevel", null, pathkey, alreadyfoundpathid, derefParams);
 }
 
 /**
@@ -336,8 +336,8 @@ var runThroughGeneralParams = function (parameters, pathkey, alreadyfoundpathid)
  * @param {*} pathkey String (/endpoint)
  * @param {*} alreadyfoundpathid Object - Path parameter that was referenced in the 'parameters' property Bool
  */
-var runThroughHttpVerbParams = function (parameters, httpVerbkey, pathkey, alreadyfoundpathid) {
-    runThroughParamsInternal(parameters, "httpVerbLevel", httpVerbkey, pathkey, alreadyfoundpathid);
+var runThroughHttpVerbParams = function (parameters, httpVerbkey, pathkey, alreadyfoundpathid, derefParams) {
+    runThroughParamsInternal(parameters, "httpVerbLevel", httpVerbkey, pathkey, alreadyfoundpathid, derefParams);
 }
 
 /**
@@ -366,19 +366,27 @@ var getLastPathId = function (pathId) {
     return pathId;
 }
 
-var checkIfPathIdIsRequired = function (pathId, parameter, httpVerbkey) {
+var checkIfPathIdIsRequired = function (pathId, httpVerbkey, derefParams) {
     if (results.pathIdIsRequired != false) {
-        if (parameter.hasOwnProperty('required')) {
-            if (parameter.required==false) { //is required false
-                if (parameter.name == pathId) {
-                    results.pathIdIsRequired = false;
-                    results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', must be required."
+        if(httpVerbkey==null) httpVerbkey = 'no method';
+        for (var derefParamIndex in derefParams){
+            if (derefParams[derefParamIndex].hasOwnProperty('name')){
+                if (pathId==derefParams[derefParamIndex].name){ 
+                    if (derefParams[derefParamIndex].hasOwnProperty('required')) {
+                        if (derefParams[derefParamIndex].required==false) { //is required false
+                            results.pathIdIsRequired = false;
+                            results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', must be required."
+                        }    
+                    }
+                    else{ //Does not have required property
+                        results.pathIdIsRequired = false;
+                        results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', does not have a 'required' property (must be 'required=true')."
+                    }
+                    //if (derefParams[derefParamIndex].hasOwnProperty('x-totvs')){
+                    //    console.log("Tem x-totvs");
+                    //}
                 }
-            }    
-        }
-        else{ //Does not have required property
-                results.pathIdIsRequired = false;
-                results.pathIdIsNotRequired = "Path parameter '" + pathId + "'', at method '" + httpVerbkey + "', does not even have a 'required' property (must be 'required=true')."
+            }
         }
     }
 }
@@ -482,7 +490,12 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
         var alreadyfoundpathid = false;
         for (var httpVerbkey in httpVerbsList) {
             if (httpVerbkey == "parameters") {
-                runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid);
+                if (derefOpenAPI.paths[pathkey].hasOwnProperty('parameters')){
+                    runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid, derefOpenAPI.paths[pathkey].parameters);
+                }
+                else{
+                    runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid, derefOpenAPI.paths[pathkey]);
+                }
             } else {
                 verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
@@ -491,7 +504,7 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
                 checkIfOperationIdIsUnique(httpVerbInfo.operationId);
                 var derefParams = derefOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
-                runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid);
+                runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid, derefParams);
                 var request = httpVerbInfo.requestBody;
                 if (dereferenceHttpVerbInfo) var dereferencedRequest = dereferenceHttpVerbInfo.requestBody;
                 checkIfSchemaIsSettedToExternaFile(request);
