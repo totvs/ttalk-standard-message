@@ -104,6 +104,15 @@ describe("Validating OpenAPI files...", function () {
                 expect(result, errorMessage).to.be.true;
               });
             });
+            
+            describe(" - X-Totvs: ", function(){
+              it ("should have 'product' in the correct pattern", function(){
+                expect(parsedOpenAPI.info['x-totvs'].productInformation, "'ProductInformation' has to be an array of objects.").to.be.an('array');
+                for (var i in parsedOpenAPI.info['x-totvs'].productInformation){
+                  expect(parsedOpenAPI.info['x-totvs'].productInformation[i], "'Product' must be a property of 'ProductInformation'.").to.have.property("product");
+                }              
+              });
+            });
 
             describe(" - Version: ", function () {
               it("should contain the same version on 'info' as in filename", function () {
