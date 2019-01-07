@@ -69,7 +69,7 @@ describe("Validating OpenAPI files...", function () {
                 });
             })
 
-            describe(" - Filename: ", function () {              
+            describe(" - Filename: ", function () {
               it("should start with uppercase letter", function () {
                 expect(filename[0]).to.equal(filename[0].toUpperCase());
               });
@@ -81,7 +81,7 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - Content Format: ", function () {
-              it("shouldn't contain weird special characteres", function() {
+              it("shouldn't contain weird special characteres", function () {
                 expect(file.includes("�"), "Please check file encode").to.be.false;
               });
 
@@ -221,6 +221,12 @@ describe("Validating OpenAPI files...", function () {
               describe(" - info", function () {
                 it("should contain xtotvs/productinformation as an array on 'info'", function () {
                   expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
+                });
+                it("should have 'product' in the correct pattern", function () {
+                  expect(parsedOpenAPI.info['x-totvs'].productInformation, "'ProductInformation' has to be an array of objects.").to.be.an('array');
+                  for (var i in parsedOpenAPI.info['x-totvs'].productInformation) {
+                    expect(parsedOpenAPI.info['x-totvs'].productInformation[i], "'Product' must be a property of 'ProductInformation'.").to.have.property("product");
+                  }
                 });
                 it("segment name should be standardized", function () {
                   const keyName = parsedOpenAPI.info["x-totvs"].messageDocumentation.segment.toLowerCase().replace(" ", "").normalize('NFD').replace(/[\u0300-\u036f]/g, "");
