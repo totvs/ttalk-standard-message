@@ -213,15 +213,16 @@ describe("Validating OpenAPI files...", function () {
 
             describe(" - xtotvs: ", function () {
               describe(" - path", function () {
-                it("should contain xtotvs/productinformation as an array on 'paths'", function () {
+                it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
                   var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
                   expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
                 });
+                it("should contain 'product' as a key in productInformation, inside 'paths'", function () {
+                  var wrongXTotvs = pathValidatorResult.wrongProductAsKeyInProductInfo;
+                  expect(pathValidatorResult.hasProductAsKeyInProductInfo, wrongXTotvs).not.to.be.false;
+                });
               })
               describe(" - info", function () {
-                it("should contain xtotvs/productinformation as an array on 'info'", function () {
-                  expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
-                });
                 it("should have 'product' in the correct pattern", function () {
                   expect(parsedOpenAPI.info['x-totvs'].productInformation, "'ProductInformation' has to be an array of objects.").to.be.an('array');
                   for (var i in parsedOpenAPI.info['x-totvs'].productInformation) {

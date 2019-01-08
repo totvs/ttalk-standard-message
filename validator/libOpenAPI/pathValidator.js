@@ -36,6 +36,17 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
                 results.wrongXTotvs = pathkey + "|" + httpVerbkey;
             }
         }
+        for (var i in productInfo) {
+            if (results.hasProductAsKeyInProductInfo != false) {
+                if (productInfo[i].hasOwnProperty("product")) {
+                    results.hasProductAsKeyInProductInfo = true;
+                } else {
+                    results.hasProductAsKeyInProductInfo = false;
+                    results.wrongProductAsKeyInProductInfo = "At path '"+pathkey+"', method '"+httpVerbkey+"'.";
+                }
+            }
+        }
+
     } else {
         results.useProductInfoAsArray = true;
     }
@@ -368,17 +379,16 @@ var getLastPathId = function (pathId) {
 
 var checkIfPathIdIsRequired = function (pathId, httpVerbkey, derefParams) {
     if (results.pathIdIsRequired != false) {
-        if(httpVerbkey==null) httpVerbkey = 'no method';
-        for (var derefParamIndex in derefParams){
-            if (derefParams[derefParamIndex].hasOwnProperty('name')){
-                if (pathId==derefParams[derefParamIndex].name){ 
+        if (httpVerbkey == null) httpVerbkey = 'no method';
+        for (var derefParamIndex in derefParams) {
+            if (derefParams[derefParamIndex].hasOwnProperty('name')) {
+                if (pathId == derefParams[derefParamIndex].name) {
                     if (derefParams[derefParamIndex].hasOwnProperty('required')) {
-                        if (derefParams[derefParamIndex].required==false) { //is required false
+                        if (derefParams[derefParamIndex].required == false) { //is required false
                             results.pathIdIsRequired = false;
                             results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', must be required."
-                        }    
-                    }
-                    else{ //Does not have required property
+                        }
+                    } else { //Does not have required property
                         results.pathIdIsRequired = false;
                         results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', does not have a 'required' property (must be 'required=true')."
                     }
@@ -490,10 +500,9 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
         var alreadyfoundpathid = false;
         for (var httpVerbkey in httpVerbsList) {
             if (httpVerbkey == "parameters") {
-                if (derefOpenAPI.paths[pathkey].hasOwnProperty('parameters')){
+                if (derefOpenAPI.paths[pathkey].hasOwnProperty('parameters')) {
                     runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid, derefOpenAPI.paths[pathkey].parameters);
-                }
-                else{
+                } else {
                     runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid, derefOpenAPI.paths[pathkey]);
                 }
             } else {
