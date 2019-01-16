@@ -17,7 +17,15 @@
 					"$ref": "#/definitions/JobExecution",
 					"type": "object"
 				}
-			}
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "RM_FW@totvs.com.br",
+					"description": "Gerenciamento de agendamento de tarefas",
+					"helpUrl": "http://tdn.totvs.com/pages/viewpage.action?pageId=427049339"
+				}
+			]
 		}
 	},
 	"definitions": {
@@ -52,20 +60,30 @@
 						"items": {
 							"type": "array",
 							"items": {
-								"$ref": "#/definitions/JobScheduleGET"
+								"$ref": "#/definitions/JobScheduleType"
 							}
 						}
 					}
 				}
 			]
 		},
-		"JobScheduleGET": {
+		"JobSchedulerType": {
 			"type": "object",
 			"properties": {
-				"jobScheduleID": {
+				"jobScheduleId": {
 					"description": "Identificador único do agendamento do processo",
 					"type": "string",
-					"maxLength": 30
+					"maxLength": 30,
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.idjob",
+						"required": true,
+						"type": "integer",
+						"length": "4",
+						"note": "",
+						"available": true,
+						"canUpdate": false
+					}]
 				},
 				"status": {
 					"description": "Indica o status da execução do processo",
@@ -74,48 +92,117 @@
 						"active",
 						"inactive",
 						"completed"
-					]
+					],
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.status",
+						"required": true,
+						"type": "integer",
+						"length": "2",
+						"note": "Se o job for recorrente: 0,1=active; 2,4,5,6,7=completed; 3,8=inactive. Senão: 0,1=active; 2,3,4,5,6,7,8=inactive.",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"lastModified": {
 					"description": "Data da última alteração no agendamento",
 					"type": "string",
-					"format": "date"
+					"format": "date",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.recmodifiedon",
+						"required": false,
+						"type": "datetime",
+						"length": "8",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"processID": {
 					"description": "Identificador do processo (rotina) que será executado",
 					"type": "string",
-					"maxLength": 100
+					"maxLength": 100,
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.classeprocesso",
+						"required": true,
+						"type": "varchar",
+						"length": "128",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"firstExecution": {
 					"description": "Data prevista para início da execução do processo",
 					"type": "string",
-					"format": "dateTime"
+					"format": "dateTime",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.dataprogramada",
+						"required": true,
+						"type": "datetime",
+						"length": "8",
+						"note": "Data prevista para início da primeira execução do processo",
+						"available": true,
+						"canUpdate": false
+					}]
 				},
 				"user": {
 					"description": "Usuário responsável pelo agendamento",
 					"type": "string",
-					"maxLength": 100
+					"maxLength": 100,
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.reccreatedby",
+						"required": false,
+						"type": "varchar",
+						"length": "50",
+						"note": "",
+						"available": true,
+						"canUpdate": false
+					}]
 				},
 				"recurrent": {
 					"description": "indica se a execução do job deve ocorrer mais de uma vez",
-					"type": "boolean"
+					"type": "boolean",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.tiporecorrencia",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "1,2,3=true;0=false",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"executionParameter": {
 					"type": "object",
-					"description": "Parâmetros para execução do processo"
+					"description": "Parâmetros para execução do processo",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.valorparametros",
+						"required": false,
+						"type": "varchar",
+						"length": "",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"daily": {
-					"$ref": "#/definitions/Daily"
+					"$ref": "#/definitions/DailyType"
 				},
 				"weekly": {
-					"$ref": "#/definitions/Weekly"
+					"$ref": "#/definitions/WeeklyType"
 				},
 				"monthly": {
-					"$ref": "#/definitions/Monthly"
+					"$ref": "#/definitions/MonthlyType"
 				}
 			}
 		},
-		"Single": {
 			"type": "object",
 			"properties": {
 				"year": {
@@ -140,20 +227,40 @@
 				}
 			}
 		},
-		"Daily": {
+		"DailyType": {
 			"type": "object",
 			"properties": {
 				"hour": {
 					"format": "int32",
-					"type": "integer"
+					"type": "integer",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.horarecorrencia",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"minute": {
 					"format": "int32",
-					"type": "integer"
+					"type": "integer",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.minutorecorrencia",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				}
 			}
 		},
-		"Weekly": {
+		"WeeklyType": {
 			"type": "object",
 			"properties": {
 				"daysOfWeek": {
@@ -169,36 +276,95 @@
 							"Saturday"
 						],
 						"type": "string"
-					}
+					},
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.diasdasemana",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "Somatório dos dias:domingo=1;segunda=2;terça=4;quarta=8;quinta=16;sexta=32;sábado=64",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"hour": {
 					"format": "int32",
-					"type": "integer"
+					"type": "integer",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.horarecorrencia",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"minute": {
 					"format": "int32",
-					"type": "integer"
+					"type": "integer",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.minutorecorrencia",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				}
 			}
 		},
-		"Monthly": {
+		"MonthlyType": {
 			"type": "object",
 			"properties": {
 				"day": {
 					"format": "int32",
-					"type": "integer"
+					"type": "integer",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.diadomes",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"hour": {
 					"format": "int32",
-					"type": "integer"
+					"type": "integer",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.horarecorrencia",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"minute": {
 					"format": "int32",
-					"type": "integer"
+					"type": "integer",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.minutorecorrencia",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				}
 			}
 		},
-		"JobSchedulePOST": {
 			"type": "object",
 			"properties": {
 				"jobScheduleID": {
@@ -254,18 +420,38 @@
 				}
 			}
 		},
-		"JobExecution": {
+		"JobExecutionType": {
 			"type": "object",
 			"properties": {
 				"executionID": {
 					"description": "Identificador único da execução do processo",
 					"type": "string",
-					"maxLength": 30
+					"maxLength": 30,
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.idexecucao",
+						"required": true,
+						"type": "integer",
+						"length": "4",
+						"note": "",
+						"available": true,
+						"canUpdate": false
+					}]
 				},
 				"jobScheduleID": {
 					"description": "Identificador único do agendamento do processo",
 					"type": "string",
-					"maxLength": 30
+					"maxLength": 30,
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.idjob",
+						"required": true,
+						"type": "integer",
+						"length": "4",
+						"note": "",
+						"available": true,
+						"canUpdate": false
+					}]
 				},
 				"status": {
 					"description": "Indica o status da execução do processo",
@@ -276,30 +462,90 @@
 						"success",
 						"running ",
 						"canceled"
-					]
+					],
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.status",
+						"required": false,
+						"type": "integer",
+						"length": "2",
+						"note": "0,8=pending;1=running;2,6=success;3,4,5,7=failure",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"createdDate": {
 					"description": "Indica a data da última alteração do agendamento no momento da execução do processo",
 					"type": "string",
-					"format": "date"
+					"format": "date",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.reccreatedon",
+						"required": false,
+						"type": "datetime",
+						"length": "8",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"startedDate": {
 					"description": "Indica a data de execução do processo",
 					"type": "string",
-					"format": "date"
+					"format": "date",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.datainiexec",
+						"required": false,
+						"type": "datetime",
+						"length": "8",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"user": {
 					"description": "Usuário responsável pelo agendamento",
 					"type": "string",
-					"maxLength": 100
+					"maxLength": 100,
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobx.reccreatedby",
+						"required": false,
+						"type": "varchar",
+						"length": "50",
+						"note": "",
+						"available": true,
+						"canUpdate": false
+					}]
 				},
 				"return": {
 					"type": "object",
-					"description": "Resultado da execução do processo"
+					"description": "Resultado da execução do processo",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.mensagemstatus",
+						"required": false,
+						"type": "varchar",
+						"length": "",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				},
 				"error": {
 					"type": "string",
-					"description": "Mensagem de erro na execução do processo"
+					"description": "Mensagem de erro na execução do processo",
+					"x-totvs": [{
+						"product": "rm",
+						"field": "gjobxexecucao.mensagemstatus",
+						"required": false,
+						"type": "varchar",
+						"length": "",
+						"note": "",
+						"available": true,
+						"canUpdate": true
+					}]
 				}
 			}
 		}
