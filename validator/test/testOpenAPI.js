@@ -33,7 +33,7 @@ describe("Validating OpenAPI files...", function () {
               encoding: 'utf-8'
             });
             var parsedOpenAPI;
-            var pathValidatorResult
+            var pathValidatorResult;
             var derefResult;
             var derefErroDetail;
 
@@ -81,6 +81,10 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - Content Format: ", function () {
+              it("shouldn't contain weird special characteres", function () {
+                expect(file.includes("�"), "Please check file encode").to.be.false;
+              });
+
               it("should be complient with OpenAPI in version 3.0'", function () {
                 expect(parsedOpenAPI).to.have.property("openapi");
                 expect(parsedOpenAPI).to.not.have.property("swagger");
@@ -161,6 +165,11 @@ describe("Validating OpenAPI files...", function () {
                   errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathMissingItemOrHasNext + "'";
                 expect(pathValidatorResult.containsItemsAndHasNext, errorMessage).to.be.true;
               });
+
+              it("should be 'required=true' at schema, because it's a final path param", function () {
+                var errorMessage = pathValidatorResult.typeIsNotRequiredWhenPathId;
+                expect(pathValidatorResult.typeIsRequiredWhenPathId, errorMessage).not.to.be.false;
+              });
             });
 
             describe(" - Parameters: ", function () {
@@ -189,6 +198,11 @@ describe("Validating OpenAPI files...", function () {
                 var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
                 expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
               });
+
+              it("should be 'required=true' when final path param", function () {
+                var errorMessage = pathValidatorResult.pathIdIsNotRequired;
+                expect(pathValidatorResult.pathIdIsRequired, errorMessage).not.to.be.false;
+              });
             });
 
             describe(" - Errors: ", function () {
@@ -199,14 +213,21 @@ describe("Validating OpenAPI files...", function () {
 
             describe(" - xtotvs: ", function () {
               describe(" - path", function () {
-                it("should contain xtotvs/productinformation as an array on 'paths'", function () {
+                it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
                   var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
                   expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
                 });
+                it("should contain 'product' as a key in productInformation, inside 'paths'", function () {
+                  var wrongXTotvs = pathValidatorResult.wrongProductAsKeyInProductInfo;
+                  expect(pathValidatorResult.hasProductAsKeyInProductInfo, wrongXTotvs).not.to.be.false;
+                });
               })
               describe(" - info", function () {
-                it("should contain xtotvs/productinformation as an array on 'info'", function () {
-                  expect(parsedOpenAPI.info["x-totvs"].productInformation).to.be.an('array');
+                it("should have 'product' in the correct pattern", function () {
+                  expect(parsedOpenAPI.info['x-totvs'].productInformation, "'ProductInformation' has to be an array of objects.").to.be.an('array');
+                  for (var i in parsedOpenAPI.info['x-totvs'].productInformation) {
+                    expect(parsedOpenAPI.info['x-totvs'].productInformation[i], "'Product' must be a property of 'ProductInformation'.").to.have.property("product");
+                  }
                 });
                 it("segment name should be standardized", function () {
                   const keyName = parsedOpenAPI.info["x-totvs"].messageDocumentation.segment.toLowerCase().replace(" ", "").normalize('NFD').replace(/[\u0300-\u036f]/g, "");
