@@ -60,6 +60,15 @@ describe("Validating Schema files...", function () {
                   errorMessage = "Could not find the object '" + schemaDefinitionsValidatorResult.erroredObjectName + "' inside 'definitions' property of this file '"
                 expect(schemaDefinitionsValidatorResult.validObject, errorMessage).not.to.be.false;
               });
+              it("should have 'required' as an array", function () {
+                expect(schemaDefinitionsValidatorResult.requiredIsAnArray,schemaDefinitionsValidatorResult.requiredIsAnArrayErrMsg).not.to.be.false;
+              });
+              it("should have all 'required' elements as strings", function () {
+                expect(schemaDefinitionsValidatorResult.requiredIsArrayOfStrings,schemaDefinitionsValidatorResult.requiredIsArrayOfStringsErrMsg).not.to.be.false;
+              });
+              it("should have all elements of 'required' array as a property", function () {
+                expect(schemaDefinitionsValidatorResult.hasRequiredProperty,schemaDefinitionsValidatorResult.hasRequiredPropertyErrMsg).not.to.be.false;
+              });
             });
 
             describe(" - xtotvs: ", function () {

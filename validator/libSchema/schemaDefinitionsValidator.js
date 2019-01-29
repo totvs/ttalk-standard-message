@@ -55,6 +55,42 @@ var CheckIfXTotvsIsAvailableWhileParentHasRequired = function (xTotvs, currentOb
     }
 }
 
+var CheckIfRequiredMeetRequirements = function (theObject, currentObjectName, parent) {
+    if (theObject.isAParent) {
+        if (theObject.hasOwnProperty('required')) {
+            if (results.requiredIsAnArray != false) {
+                if (theObject.required instanceof Array) {
+                    results.requiredIsAnArray = true;
+                    for (j in theObject.required) {
+                        if (checkIsControlProperty(j)) { //makes it not to walk through .parent or parent.isAParent
+                            if (results.requiredIsArrayOfStrings != false) {
+                                if (typeof (theObject.required[j]) == "string") {
+                                    results.requiredIsArrayOfStrings = true;
+                                    if (results.hasRequiredProperty != false) {
+                                        if (theObject.properties.hasOwnProperty(theObject.required[j])) {
+                                            results.hasRequiredProperty = true;
+                                        } else {
+                                            results.hasRequiredProperty = false;
+                                            results.hasRequiredPropertyErrMsg = "Schema has '" + theObject.required[j] + "' as a required type (at '"+currentObjectName+"'), but it does not exist as a property.";
+                                        }
+                                    }
+                                } else {
+                                    results.requiredIsArrayOfStrings = false;
+                                    results.requiredIsArrayOfStringsErrMsg = "The array element '" + theObject.required[j] + "', at '"+currentObjectName+"' required field, must be a string.";
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    results.requiredIsAnArray = false;
+                    results.requiredIsAnArrayErrMsg = "The 'required' property of '" + currentObjectName + "' must be an array of strings.";
+                }
+            }
+        }
+    }
+}
+
+
 var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
     if (results.useXTotvsAsArray != false) {
         if (Array.isArray(xTotvs)) {
@@ -152,6 +188,7 @@ var getObjectRecursive = function (theObject, currentObjectName, parent) {
 
                 if (theObject.hasOwnProperty("type") && (theObject.hasOwnProperty("properties")) || (theObject.hasOwnProperty("allOf")) || (theObject.hasOwnProperty("anyOf") || (theObject.hasOwnProperty("oneOf")))) { //I'll have to check if it's also allof anyof etc
                     theObject.isAParent = true;
+                    CheckIfRequiredMeetRequirements(theObject, currentObjectName, theObject.parent);
                 }
 
                 if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) { //if theObject[prop] has elements
