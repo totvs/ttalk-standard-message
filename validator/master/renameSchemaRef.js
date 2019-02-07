@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var dirnames = ["./jsonschema/schemas/", "./jsonschema/schemas/types/"];
+var dirnames = ["./jsonschema/schemas/", "./jsonschema/schemas/types/", "./jsonschema/apis/types/", "./jsonschema/transactions/"];
 var commons = require("./commons.js");
 
 dirnames.forEach(function (dirname) {
