@@ -22,7 +22,7 @@ function getFromUrl(logFile){
   return substr;
 }
 
-var substr = getFromUrl(logFile); //conteúdo armazenado nesta variável
+var substr = getFromUrl(logFile);
 var pretext = "Para maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
 
 substr=substr.replace(/\/g, '');
@@ -45,12 +45,12 @@ substr=substr.replace(/\[37;40m/g, '');
 substr=substr.replace(/\[31;40m/g, '');
 
 //posta o comment
-var data = "{\n\t\"body\":\""+pretext+"\n\n"+substr+"\"\n}\n";
+var data = "{\n\t\"body\":\""+pretext+substr+"\"\n}\n";
 
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
 
-//xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/493/comments", false);
+
 xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
