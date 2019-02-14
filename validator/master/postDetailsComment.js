@@ -1,9 +1,4 @@
-var fs = require('fs');
-var path = require('path');
-var dirnames = ["./jsonschema/schemas/", "./jsonschema/schemas/types/", "./jsonschema/apis/types/", "./jsonschema/transactions/"];
-var commons = require("./commons.js");
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
-//forma o conteúdo do comment
 
 var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
 
@@ -44,12 +39,10 @@ substr=substr.replace(/\[92m/g, '');
 substr=substr.replace(/\[37;40m/g, '');
 substr=substr.replace(/\[31;40m/g, '');
 
-//posta o comment
 var data = "{\n\t\"body\":\""+pretext+substr+"\"\n}\n";
 
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
-
 
 xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
