@@ -18,8 +18,8 @@ function getFromUrl(logFile){
 }
 
 var substr = getFromUrl(logFile);
-var pretext = "Para maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
-
+var pretext = "Validação concluída! Abaixo estão os erros da execução do teste.";
+var aftertext = "Para maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
 substr=substr.replace(/\/g, '');
 substr=substr.replace(/\n/g, '\\n');
 substr=substr.replace(/\n \n/g, '\\n\\n');
@@ -42,7 +42,7 @@ substr=substr.replace(/\[2J\[1;3H/g, '');
 substr=substr.replace(/\[0K\[32;1m/g, '');
 substr=substr.replace(/:end:/g, ': end :');
 
-var data = "{\n\t\"body\":\""+pretext+substr+"\"\n}\n";
+var data = "{\n\t\"body\":\""+pretext+substr+"\n"+aftertext+"\"\n}\n";
 
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
