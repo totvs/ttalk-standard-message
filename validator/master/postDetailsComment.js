@@ -24,7 +24,6 @@ function getFromUrl(logFile){
 
 var substr = getFromUrl(logFile); //conteúdo armazenado nesta variável
 var pretext = "Para maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
-console.log(substr);
 
 substr=substr.replace(/\/g, '');
 substr=substr.replace(/\n/g, '\\n');
@@ -44,8 +43,6 @@ substr=substr.replace(/\[35m/g, '');
 substr=substr.replace(/\[92m/g, '');
 substr=substr.replace(/\[37;40m/g, '');
 substr=substr.replace(/\[31;40m/g, '');
-
-console.log(substr);
 
 //posta o comment
 var data = "{\n\t\"body\":\""+pretext+"\n\n"+substr+"\"\n}\n";
