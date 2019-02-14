@@ -5,8 +5,7 @@ var commons = require("./commons.js");
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 //forma o conteúdo do comment
 
-//var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
-var logFile = "https://api.travis-ci.org/v3/job/459848043/log.txt";
+var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
 
 function getFromUrl(logFile){
   var rawFile = new XMLHttpRequest();
@@ -24,19 +23,42 @@ function getFromUrl(logFile){
 }
 
 var substr = getFromUrl(logFile); //conteúdo armazenado nesta variável
+var pretext = "Para maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+console.log(substr);
+
+substr=substr.replace(/\/g, '');
+substr=substr.replace(/\n/g, '\\n');
+substr=substr.replace(/\n \n/g, '\\n\\n');
+substr=substr.replace(/\t/g, '\\t');
+substr=substr.replace(/\r/g, '\\r');
+substr=substr.replace(/\r\n\r\n/g, '\\r\\n');
+substr=substr.replace(/\s/g, ' ');
+substr=substr.replace(/'/g, '\'');
+substr=substr.replace(/>/g, '\>');
+substr=substr.replace(/\[0m/g, '');
+substr=substr.replace(/\[32m/g, '');
+substr=substr.replace(/\[31m/g, '');
+substr=substr.replace(/\[30m/g, '');
+substr=substr.replace(/\[90m/g, '');
+substr=substr.replace(/\[35m/g, '');
+substr=substr.replace(/\[92m/g, '');
+substr=substr.replace(/\[37;40m/g, '');
+substr=substr.replace(/\[31;40m/g, '');
+
+console.log(substr);
 
 //posta o comment
-var data = "{\n\t\"body\":\""+substr+"\"\n}\n";
+var data = "{\n\t\"body\":\""+pretext+"\n\n"+substr+"\"\n}\n";
 
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
 
+//xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/493/comments", false);
+xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
+xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
     console.log(this.responseText);
   }
 });
-
-xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/486/comments");
-//xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments");
 xhr.send(data);
