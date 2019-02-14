@@ -38,6 +38,9 @@ substr=substr.replace(/\[35m/g, '');
 substr=substr.replace(/\[92m/g, '');
 substr=substr.replace(/\[37;40m/g, '');
 substr=substr.replace(/\[31;40m/g, '');
+substr=substr.replace(/\[2J\[1;3H/g, '');
+substr=substr.replace(/\[0K\[32;1m/g, '');
+substr=substr.replace(/:end:/g, ': end :');
 
 var data = "{\n\t\"body\":\""+pretext+substr+"\"\n}\n";
 
