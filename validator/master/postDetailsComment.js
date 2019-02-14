@@ -18,8 +18,8 @@ function getFromUrl(logFile){
 }
 
 var substr = getFromUrl(logFile);
-var pretext = "A validação foi concluída! Abaixo estão os erros da execução do teste (caso haja).";
-var aftertext = "Para maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+var pretext = "A validação foi concluída! Abaixo está evidenciado o resultado do teste:";
+var aftertext = "\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
 substr=substr.replace(/\/g, '');
 substr=substr.replace(/\n/g, '\\n');
 substr=substr.replace(/\n \n/g, '\\n\\n');
