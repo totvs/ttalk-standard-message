@@ -4,7 +4,7 @@ var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "
 
 function getFromUrl(logFile){
   for (i = 0; i < 100000; i++){
-    if ((substr.match(/npm test/g) || []).length==2) var docReady = true;
+    if ((substr.match(/npm test/g) || []).length==2) var docReady = true; //check if there are 2 occurences of "npm test" inside txt
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
     rawFile.onreadystatechange = function() {
@@ -16,7 +16,7 @@ function getFromUrl(logFile){
       }
     }
     rawFile.send(null);
-    if (docReady) return substr;
+    if (docReady) return substr; //if there are 2 occurences, the document is ready and data can be returned
   }
 }
 
@@ -43,6 +43,7 @@ substr=substr.replace(/\[37;40m/g, '');
 substr=substr.replace(/\[31;40m/g, '');
 substr=substr.replace(/\[2J\[1;3H/g, '');
 substr=substr.replace(/\[0K\[32;1m/g, '');
+substr=substr.replace(/\[0K\[31;1m/g, '');
 substr=substr.replace(/:end:/g, ': end:');
 
 var data = "{\n\t\"body\":\""+pretext+substr+aftertext+"\"\n}\n";
