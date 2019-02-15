@@ -5,7 +5,7 @@ var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "
 function getFromUrl(logFile){
   var docReady = false;
   while (docReady !=true){
-    if ((substr.match(/npm test/g) || []).length==2) docReady = true; //check if there are 2 occurences of "npm test" inside txt
+    if ((substr.match(/npm test/g) || []).length==2) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
     rawFile.onreadystatechange = function() {
@@ -24,6 +24,8 @@ function getFromUrl(logFile){
 var substr = getFromUrl(logFile);
 var pretext = "A validação foi concluída! Abaixo está evidenciado o resultado do teste:";
 var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+
+// --- The following piece of code replaces all the characters that we don't want, so the JSON can be sent inside the body of the request.
 substr=substr.replace(/\/g, '');
 substr=substr.replace(/\n/g, '\\n');
 substr=substr.replace(/\n \n/g, '\\n\\n');
@@ -46,6 +48,7 @@ substr=substr.replace(/\[2J\[1;3H/g, '');
 substr=substr.replace(/\[0K\[32;1m/g, '');
 substr=substr.replace(/\[0K\[31;1m/g, '');
 substr=substr.replace(/:end:/g, ': end:');
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 var data = "{\n\t\"body\":\""+pretext+substr+aftertext+"\"\n}\n";
 
