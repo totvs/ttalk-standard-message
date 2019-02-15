@@ -3,23 +3,29 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
 
 function getFromUrl(logFile){
-  var rawFile = new XMLHttpRequest();
-  rawFile.open("GET", logFile, false);
-  rawFile.onreadystatechange = function() {
-    if (rawFile.readyState === 4) {  // Makes sure the document is ready to parse.
-      if (rawFile.status === 200) {  // Makes sure it's found the file.
-        substr = rawFile.responseText.substring(rawFile.responseText.lastIndexOf("mocha") + 27,  rawFile.responseText.lastIndexOf("npm test")-13);
-        return substr;
+  var docReady = false;
+  while (docReady !=true){
+    if ((substr.match(/npm test/g) || []).length==2) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", logFile, false);
+    rawFile.onreadystatechange = function() {
+      if (rawFile.readyState === 4) {  // Makes sure the document is ready to parse.
+        if (rawFile.status === 200) {  // Makes sure it's found the file.
+          substr = rawFile.responseText.substring(rawFile.responseText.lastIndexOf("mocha") + 27,  rawFile.responseText.lastIndexOf("npm test")-13);
+          return substr;
+        }
       }
     }
+    rawFile.send(null);
+    if (docReady) return substr; //if there are 2 occurences, the document is ready and data can be returned
   }
-  rawFile.send(null);
-  return substr;
 }
 
 var substr = getFromUrl(logFile);
 var pretext = "A validação foi concluída! Abaixo está evidenciado o resultado do teste:";
 var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+
+// --- The following piece of code replaces all the characters that we don't want, so the JSON can be sent inside the body of the request.
 substr=substr.replace(/\/g, '');
 substr=substr.replace(/\n/g, '\\n');
 substr=substr.replace(/\n \n/g, '\\n\\n');
@@ -40,7 +46,9 @@ substr=substr.replace(/\[37;40m/g, '');
 substr=substr.replace(/\[31;40m/g, '');
 substr=substr.replace(/\[2J\[1;3H/g, '');
 substr=substr.replace(/\[0K\[32;1m/g, '');
+substr=substr.replace(/\[0K\[31;1m/g, '');
 substr=substr.replace(/:end:/g, ': end:');
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 var data = "{\n\t\"body\":\""+pretext+substr+aftertext+"\"\n}\n";
 
@@ -51,7 +59,7 @@ xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issu
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
-    console.log(this.responseText);
+    //console.log(this.responseText);
   }
 });
 xhr.send(data);
