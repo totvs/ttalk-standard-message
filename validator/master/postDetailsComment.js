@@ -17,12 +17,7 @@ function getFromUrl(logFile){
     }
     rawFile.send(null);
     if (substr) {
-      console.log("É substring");
-      console.log((substr.match(new RegExp("npm test", "g")).length));
-      if ((substr.match(/npm test/g) || []).length>1) {
-        console.log("Entered here");
-        docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
-      }
+      if ((rawFile.responseText.match(/npm test/g) || []).length>1) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
     }
     if (docReady) return substr; //if there are 2 occurences, the document is ready and data can be returned
   }
@@ -58,7 +53,6 @@ substr=substr.replace(/:end:/g, ': end:');
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 var data = "{\n\t\"body\":\""+pretext+substr+aftertext+"\"\n}\n";
-
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
 
