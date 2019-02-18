@@ -54,6 +54,8 @@ var data = "{\n\t\"body\":\""+pretext+substr+aftertext+"\"\n}\n";
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
 
+console.log(data);
+
 xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
