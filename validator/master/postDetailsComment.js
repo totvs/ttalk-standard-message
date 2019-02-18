@@ -4,9 +4,10 @@ var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "
 
 function getFromUrl(logFile){
   var docReady = false;
-  while (docReady !=true){
+  for (i = 0; i < 1000000; i++){
     if (substr) {
       if ((substr.match(/npm test/g) || []).length>1) {
+        console.log("Entered here");
         docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
       }
     }
