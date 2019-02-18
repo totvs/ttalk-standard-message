@@ -5,7 +5,9 @@ var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "
 function getFromUrl(logFile){
   var docReady = false;
   while (docReady !=true){
-    if ((substr.match(/npm test/g) || []).length==2) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+    if (substr) {
+      if ((substr.match(/npm test/g) || []).length==2) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+    }
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
     rawFile.onreadystatechange = function() {
