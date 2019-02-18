@@ -3,14 +3,7 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
 
 function getFromUrl(logFile){
-  var docReady = false;
-  for (i = 0; i < 1000000; i++){
-    if (substr) {
-      if ((substr.match(/npm test/g) || []).length>1) {
-        console.log("Entered here");
-        docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
-      }
-    }
+  while (docReady!=true){
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
     rawFile.onreadystatechange = function() {
@@ -22,10 +15,13 @@ function getFromUrl(logFile){
       }
     }
     rawFile.send(null);
-    if (docReady){
-      return substr; //if there are 2 occurences, the document is ready and data can be returned
-      break;
+    if (substr) {
+      if ((substr.match(/npm test/g) || []).length>1) {
+        console.log("Entered here");
+        docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+      }
     }
+    if (docReady) return substr; //if there are 2 occurences, the document is ready and data can be returned
   }
 }
 
