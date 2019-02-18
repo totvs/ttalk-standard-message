@@ -6,7 +6,9 @@ function getFromUrl(logFile){
   var docReady = false;
   while (docReady !=true){
     if (substr) {
-      if ((substr.match(/npm test/g) || []).length==2) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+      if ((substr.match(/npm test/g) || []).length>1) {
+        docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+      }
     }
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
@@ -19,7 +21,10 @@ function getFromUrl(logFile){
       }
     }
     rawFile.send(null);
-    if (docReady) return substr; //if there are 2 occurences, the document is ready and data can be returned
+    if (docReady){
+      return substr; //if there are 2 occurences, the document is ready and data can be returned
+      break;
+    }
   }
 }
 
