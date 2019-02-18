@@ -18,7 +18,7 @@ function getFromUrl(logFile){
     rawFile.send(null);
     if (substr) {
       console.log("É substring");
-      console.log((substr.match(/npm test/g) || []).length);
+      console.log((substr.match(new RegExp("npm test", "g")).length));
       if ((substr.match(/npm test/g) || []).length>1) {
         console.log("Entered here");
         docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
