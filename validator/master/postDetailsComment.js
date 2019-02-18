@@ -57,7 +57,7 @@ xhr.withCredentials = true;
 console.log(data);
 
 xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
-xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
+xhr.setRequestHeader("Authorization", "Bearer 0f3721ce6786c927b38730f1799c2e1cb0204a2a");
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
     console.log(this.responseText);
