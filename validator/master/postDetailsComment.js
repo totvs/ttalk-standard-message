@@ -5,6 +5,9 @@ var logFile = "https://api.travis-ci.org/v3/job/"+process.env.TRAVIS_JOB_ID+"/lo
 function getFromUrl(logFile){
   var docReady = false;
   while (docReady!=true){
+    if (substr) {
+      if ((rawFile.responseText.match(/npm test/g) || []).length>1) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+    }
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
     rawFile.onreadystatechange = function() {
@@ -16,9 +19,6 @@ function getFromUrl(logFile){
       }
     }
     rawFile.send(null);
-    if (substr) {
-      if ((rawFile.responseText.match(/npm test/g) || []).length>1) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
-    }
     if (docReady) return substr; //if there are 2 occurences, the document is ready and data can be returned
   }
 }
@@ -60,7 +60,7 @@ xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issu
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
-    //console.log(this.responseText);
+    console.log(this.responseText);
   }
 });
 xhr.send(data);
