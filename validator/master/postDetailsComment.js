@@ -1,8 +1,9 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
+var logFile = process.env.TRAVIS_JOB_WEB_URL;
 
 function getFromUrl(logFile){
+  var docReady = false;
   while (docReady!=true){
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
@@ -27,7 +28,7 @@ function getFromUrl(logFile){
 
 var substr = getFromUrl(logFile);
 var pretext = "A validação foi concluída! Abaixo está evidenciado o resultado do teste:";
-var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+var aftertext = "\\n\\nPara maiores detalhes acesse: "+process.env.TRAVIS_BUILD_WEB_URL+"";
 
 // --- The following piece of code replaces all the characters that we don't want, so the JSON can be sent inside the body of the request.
 substr=substr.replace(/\/g, '');
