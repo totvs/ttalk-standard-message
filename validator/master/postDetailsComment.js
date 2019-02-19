@@ -23,8 +23,8 @@ function getFromUrl(logFile){
 
 var substr = getFromUrl(logFile);
 var pretext = "A validação foi concluída! Abaixo está evidenciado o resultado do teste:";
-//var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
-var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/495086956";
+var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+//var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/495086956";
 
 // --- The following piece of code replaces all the characters that we don't want, so the JSON can be sent inside the body of the request.
 substr=substr.replace(/\/g, '');
@@ -57,8 +57,8 @@ xhr.withCredentials = true;
 
 console.log(data);
 
-xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
-//xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/501/comments", false);
+//xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
+xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/501/comments", false);
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
