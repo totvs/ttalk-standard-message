@@ -1,11 +1,9 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
 var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
-
 function getFromUrl(logFile){
   var docReady = false;
-  while (docReady !=true){
-    if ((substr.match(/npm test/g) || []).length==2) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
+  while (docReady!=true){
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", logFile, false);
     rawFile.onreadystatechange = function() {
@@ -17,6 +15,7 @@ function getFromUrl(logFile){
       }
     }
     rawFile.send(null);
+    if ((rawFile.responseText.match(/npm test/g) || []).length>1) docReady = true; //check if there are 2 occurences of "npm test" inside txt (meaning the part that I want is ready)
     if (docReady) return substr; //if there are 2 occurences, the document is ready and data can be returned
   }
 }
@@ -51,15 +50,16 @@ substr=substr.replace(/:end:/g, ': end:');
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 var data = "{\n\t\"body\":\""+pretext+substr+aftertext+"\"\n}\n";
-
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
+
+console.log(data);
 
 xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
-    //console.log(this.responseText);
+    console.log(this.responseText);
   }
 });
 xhr.send(data);
