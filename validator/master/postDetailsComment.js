@@ -57,8 +57,8 @@ xhr.withCredentials = true;
 
 console.log(data);
 
-//xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
-xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/501/comments", false);
+xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/"+process.env.TRAVIS_PULL_REQUEST+"/comments", false);
+//xhr.open("POST", "https://api.github.com/repos/totvs/ttalk-standard-message/issues/501/comments", false);
 xhr.setRequestHeader("Authorization", "Bearer "+process.env.GH_TOKEN+"");
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
