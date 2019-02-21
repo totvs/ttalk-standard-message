@@ -45,6 +45,14 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
                     results.wrongProductAsKeyInProductInfo = "At path '"+pathkey+"', method '"+httpVerbkey+"'.";
                 }
             }
+            if (results.hasAvailableCorrectlySpelledInsidePaths!=false){
+                if(productInfo[i].hasOwnProperty("available")){
+                    results.hasAvailableCorrectlySpelledInsidePaths = true;
+                } else{
+                    results.hasAvailableCorrectlySpelledInsidePaths = false;
+                    results.availableNotCorrectlySpelled = "At path '"+pathkey+"', method '"+httpVerbkey+"'.";
+                }
+            }
         }
 
     } else {
