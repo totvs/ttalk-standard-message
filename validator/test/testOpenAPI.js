@@ -221,6 +221,10 @@ describe("Validating OpenAPI files...", function () {
                   var wrongXTotvs = pathValidatorResult.wrongProductAsKeyInProductInfo;
                   expect(pathValidatorResult.hasProductAsKeyInProductInfo, wrongXTotvs).not.to.be.false;
                 });
+                it("should contain 'available' inside productInformation, inside 'paths'", function () {
+                  var wrongXTotvs = pathValidatorResult.availableNotCorrectlySpelled;
+                  expect(pathValidatorResult.hasAvailableCorrectlySpelledInsidePaths, wrongXTotvs).not.to.be.false;
+                });
               })
               describe(" - info", function () {
                 it("should have 'product' in the correct pattern", function () {
