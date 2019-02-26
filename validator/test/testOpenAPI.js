@@ -170,6 +170,11 @@ describe("Validating OpenAPI files...", function () {
                 var errorMessage = pathValidatorResult.typeIsNotRequiredWhenPathId;
                 expect(pathValidatorResult.typeIsRequiredWhenPathId, errorMessage).not.to.be.false;
               });
+
+              it("should have an authorized 'hasNext' property when endpoint has an unique item", function(){
+                var errorMessage = pathValidatorResult.hasNextIsNotAuthorizedMsg;
+                expect(pathValidatorResult.hasNextIsAuthorized, errorMessage).not.to.be.false;
+              });
             });
 
             describe(" - Parameters: ", function () {

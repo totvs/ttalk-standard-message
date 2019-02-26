@@ -245,6 +245,37 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     }
 }
 
+var checkIfHasNextIsAuthorized = function (dereferencedResponse, pathkey){
+    if (results.hasNextIsAuthorized != false) {
+        if (dereferencedResponse.hasOwnProperty("content") && 
+        dereferencedResponse.content.hasOwnProperty("application/json") && 
+        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
+        dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties") &&
+        dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")){
+            var hasNext = dereferencedResponse.content['application/json'].schema.properties.hasNext;
+            if (hasNext.hasOwnProperty("x-totvs")){
+                if (hasNext['x-totvs'].hasOwnProperty("authorizedHasNext")){
+                    if (hasNext['x-totvs'].authorizedHasNext==true){
+                        results.hasNextIsAuthorized = true;
+                    }
+                    else {
+                        results.hasNextIsAuthorized = false;
+                        results.hasNextIsNotAuthorizedMsg = "At endpoint '"+pathkey+"', hasNext must be authorized.";
+                    }
+                }
+                else {
+                    results.hasNextIsAuthorized = false;
+                    results.hasNextIsNotAuthorizedMsg = "At endpoint '"+pathkey+"', hasNext must be authorized (inside hasNext's x-totvs).";
+                }
+            }
+            else{
+                results.hasNextIsAuthorized = false;
+                results.hasNextIsNotAuthorizedMsg = "At endpoint '"+pathkey+"', hasNext must be authorized (it does not even has a x-totvs property inside).";
+            }
+        }
+    }
+}
+
 var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pathkey) {
     if (results.typeIsRequiredWhenPathId != false) {
         let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
@@ -306,6 +337,9 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
+                        if (pathkey.replace(/[^/]/g, "").length==1){ //If pathkey is just "/something"
+                            checkIfHasNextIsAuthorized(dereferencedResponse, pathkey);
+                        }
                     }
                 }
             }
