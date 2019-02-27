@@ -64,7 +64,7 @@ describe("Validating OpenAPI files...", function () {
                     derefResult = newSchema;
                   }
                   pathValidator.clear();
-                  pathValidatorResult = pathValidator.runThroughPaths(parsedOpenAPI, derefResult);
+                  pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
                   done();
                 });
             })

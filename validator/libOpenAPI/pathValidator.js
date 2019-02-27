@@ -42,15 +42,15 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
                     results.hasProductAsKeyInProductInfo = true;
                 } else {
                     results.hasProductAsKeyInProductInfo = false;
-                    results.wrongProductAsKeyInProductInfo = "At path '"+pathkey+"', method '"+httpVerbkey+"'.";
+                    results.wrongProductAsKeyInProductInfo = "At path '" + pathkey + "', method '" + httpVerbkey + "'.";
                 }
             }
-            if (results.hasAvailableCorrectlySpelledInsidePaths!=false){
-                if(productInfo[i].hasOwnProperty("available")){
+            if (results.hasAvailableCorrectlySpelledInsidePaths != false) {
+                if (productInfo[i].hasOwnProperty("available")) {
                     results.hasAvailableCorrectlySpelledInsidePaths = true;
-                } else{
+                } else {
                     results.hasAvailableCorrectlySpelledInsidePaths = false;
-                    results.availableNotCorrectlySpelled = "At path '"+pathkey+"', method '"+httpVerbkey+"'.";
+                    results.availableNotCorrectlySpelled = "At path '" + pathkey + "', method '" + httpVerbkey + "'.";
                 }
             }
         }
@@ -245,38 +245,55 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     }
 }
 
-var checkIfHasNextInGetAll = function (dereferencedResponse, pathkey){
+var checkIfHasNextInGetAll = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
     if (results.hasNextInGetAll != false) {
-        if (hasAllPropertiesUntilHasNext(dereferencedResponse)){
-            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")){
+        if (hasAllPropertiesUntilHasNext(dereferencedResponse)) {
+            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")) {
                 results.hasNextInGetAll = true;
-            } else{
-                results.hasNextInGetAll = false;
-                results.hasNextInGetAllMsg = "At endpoint '"+pathkey+"', must have hasNext and pagination mechanism.";
-            }  
-        }
-    }
-}
-
-var checkIfNoHasNextInGetOne = function(dereferencedResponse, pathkey) {
-    if (results.noHasNextInGetOne != false) {
-        if (hasAllPropertiesUntilHasNext(dereferencedResponse)){
-            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")){ 
-                results.noHasNextInGetOne = false;
-                results.noHasNextInGetOneMsg = "At endpoint '"+pathkey+"', no hasNext can be declared, because pagination is not permited.";
-            }else {
-                results.noHasNextInGetOne = true;
-                
+            } else {
+                if (hasNextGetAllWhitelist.hasOwnProperty(filename)) {
+                    if (hasNextGetAllWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetAllWhitelist[filename][pathkey]==httpVerbkey) {
+                        results.hasNextInGetAll = true;
+                    } else {
+                        results.hasNextInGetAll = false;
+                        results.hasNextInGetAllMsg = "At endpoint '" + pathkey + "', must have hasNext and pagination mechanism.";
+                    }
+                } else {
+                    results.hasNextInGetAll = false;
+                    results.hasNextInGetAllMsg = "At endpoint '" + pathkey + "', must have hasNext and pagination mechanism.";
+                }
             }
         }
     }
 }
 
-var hasAllPropertiesUntilHasNext = function(dereferencedResponse){
-    if (dereferencedResponse.hasOwnProperty("content") && 
-        dereferencedResponse.content.hasOwnProperty("application/json") && 
+var checkIfNoHasNextInGetOne = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
+    if (results.noHasNextInGetOne != false) {
+        if (hasAllPropertiesUntilHasNext(dereferencedResponse)) {
+            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")) {
+                if (hasNextGetOneWhitelist.hasOwnProperty(filename)) {
+                    if (hasNextGetOneWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetOneWhitelist[filename][pathkey]==httpVerbkey) {
+                        results.noHasNextInGetOne = true;
+                    } else {
+                        results.noHasNextInGetOne = false;
+                        results.noHasNextInGetOneMsg = "At endpoint '" + pathkey + "', no hasNext can be declared, because pagination is not permited.";
+                    }
+                } else {
+                    results.noHasNextInGetOne = false;
+                    results.noHasNextInGetOneMsg = "At endpoint '" + pathkey + "', no hasNext can be declared, because pagination is not permited.";
+                }
+            } else {
+                results.noHasNextInGetOne = true;
+            }
+        }
+    }
+}
+
+var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
+    if (dereferencedResponse.hasOwnProperty("content") &&
+        dereferencedResponse.content.hasOwnProperty("application/json") &&
         dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
-        dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties")){
+        dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties")) {
         return true;
     } else {
         return false;
@@ -330,7 +347,7 @@ var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, path
  * @param {*} thisIsCollectionEndpoint Boolean
  * @param {*} httpVerbkey String ('get','put,'post','delete'...)  
  */
-var runThroughResponses = function (responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey) {
+var runThroughResponses = function (filename, responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey) {
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
@@ -344,9 +361,9 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
-                        if (httpVerbkey){ //(pathkey.replace(/[^/]/g, "").length==1)
-                            if((thisIsCollectionEndpoint)&&(httpVerbkey=='get'))checkIfHasNextInGetAll(dereferencedResponse, pathkey);
-                            if((!thisIsCollectionEndpoint)&&(httpVerbkey=='get'))checkIfNoHasNextInGetOne(dereferencedResponse, pathkey);
+                        if (httpVerbkey) { //(pathkey.replace(/[^/]/g, "").length==1)
+                            if ((thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfHasNextInGetAll(filename, httpVerbkey, dereferencedResponse, pathkey);
+                            if ((!thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfNoHasNextInGetOne(filename, httpVerbkey, dereferencedResponse, pathkey);
                         }
                     }
                 }
@@ -538,7 +555,7 @@ exports.clear = function () {
  * @param {*} _parsedOpenAPI OpenAPI object with all external references addresses
  * @param {*} _derefOpenAPI OpenAPI object with all external objects already dereferenced
  */
-exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
+exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
     parsedOpenAPI = _parsedOpenAPI;
     derefOpenAPI = _derefOpenAPI;
     for (var pathkey in parsedOpenAPI.paths) {
@@ -570,7 +587,7 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
                 // addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
                 var responses = httpVerbInfo.responses;
                 if (dereferenceHttpVerbInfo) var dereferencedResponses = dereferenceHttpVerbInfo.responses;
-                runThroughResponses(responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
+                runThroughResponses(filename, responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
             }
         }
         if (!hasgetcollectionendpoint)
@@ -584,4 +601,93 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
         }
     }
     return results;
+};
+
+var hasNextGetAllWhitelist = {
+    "AccountingCalendar_v1_000.json": {
+        "/AccountingCalendar": "get"
+    },
+    "ArmazenagemCargaNaoDesunitizada_v1_000.json": {
+        "/cargaNaoDesunitizada/xls": "get"
+    },
+    "Classes_v1_000.json": {
+        "/classes": "get"
+    },
+    "ClassParticipants_v1_000.json": {
+        "/classParticipants": "get"
+    },
+    "ClassValue_v1_000.json": {
+        "/classvalue": "get"
+    },
+    "CottonBales_v1_000.json": {
+        "/CottonBales": "get"
+    },
+    "DesunitizacaoCarga_v2_000.json": {
+        "/desunitizacaoCarga/xls": "get"
+    },
+    "DocumentTraceAbilityRetailSales_v1_000.json": {
+        "/DocumentTraceAbilityRetailSales": "get"
+    },
+    "EntradaSaidaPessoas_v2_000.json": {
+        "/entradaSaidaPessoas/Xls": "get"
+    },
+    "EntradaSaidaVeiculos_v2_000.json": {
+        "/entradaSaidaVeiculos/Xls": "get"
+    },
+    "InspectionScript_v1_000.json": {
+        "/inspectionScripts/{inspectionScriptId}/draftVersion": "get",
+        "/inspectionScripts/{inspectionScriptId}/version": "get"
+    },
+    "JobOpportunityProfiles_v1_000.json": {
+        "/persons": "get"
+    },
+    "Marks_v1_000.json": {
+        "/marks": "get"
+    },
+    "MaterialFamilies_v1_000.json": {
+        "/materialFamilies": "get"
+    },
+    "Models_v1_000.json": {
+        "/models": "get"
+    },
+    "MudancaSituacaoAduaneiraLoteCarga_v2_000.json": {
+        "/MudancaSituacaoAduaneiraLote/xls": "get"
+    },
+    "PerformanceEvaluations_v1_000.json": {
+        "/performanceEvaluations": "get"
+    },
+    "Persons_v1_000.json": {
+        "/persons": "get"
+    },
+    "RegistroMudancaRegimeAduaneiro_v2_000.json": {
+        "/registroMudancaRegimeAduaneiro/xls": "get"
+    },
+    "RelacaoNotasFiscais_v2_000.json": {
+        "/relacaoNotaFiscal": "get"
+    },
+    "SituacaoLoteCargaVerificacao_v2_000.json": {
+        "/situacaoLoteCargaVerificacao/xls": "get"
+    },
+    "TotalInputDocument_v1_000.json": {
+        "/totalInputDocument": "get",
+        "/TotalInputDocument/canceled": "get"
+    },
+    "TotalOutputDocument_v1_000.json": {
+       "/TotalOutputDocument": "get",
+       "/TotalOutputDocument/canceled": "get",
+    },
+    "TransferenciaLocalArmazenagem_v2_000.json": {
+        "/transferenciaLocalArmazenagem/xls": "get"
+    },
+    "UnitOfMeasure_v2_000.json": {
+        "/UnitOfMeasures": "get"
+    },
+    "WorkEnvironments_v1_000.json": {
+        "/workenvironments": "get"
+    },
+};
+var hasNextGetOneWhitelist = {
+    "UnitMeasurementConversion_v2_000.json": {
+        "/unitMeasurementConversions/{internalId}": "get"
+    }
 };
