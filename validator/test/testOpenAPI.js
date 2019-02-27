@@ -171,9 +171,14 @@ describe("Validating OpenAPI files...", function () {
                 expect(pathValidatorResult.typeIsRequiredWhenPathId, errorMessage).not.to.be.false;
               });
 
-              it("should have an authorized 'hasNext' property when endpoint has an unique item", function(){
-                var errorMessage = pathValidatorResult.hasNextIsNotAuthorizedMsg;
-                expect(pathValidatorResult.hasNextIsAuthorized, errorMessage).not.to.be.false;
+              it("should have 'hasNext' when it's an 'getAll' endpoint", function(){
+                var errorMessage = pathValidatorResult.hasNextInGetAllMsg;
+                expect(pathValidatorResult.hasNextInGetAll, errorMessage).not.to.be.false;
+              });
+
+              it("shouldn't have 'hasNext' when it's an 'getOne' endpoint", function(){
+                var errorMessage = pathValidatorResult.noHasNextInGetOneMsg;
+                expect(pathValidatorResult.noHasNextInGetOne, errorMessage).not.to.be.false;
               });
             });
 

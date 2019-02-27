@@ -245,34 +245,41 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     }
 }
 
-var checkIfHasNextIsAuthorized = function (dereferencedResponse, pathkey){
-    if (results.hasNextIsAuthorized != false) {
-        if (dereferencedResponse.hasOwnProperty("content") && 
-        dereferencedResponse.content.hasOwnProperty("application/json") && 
-        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
-        dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties") &&
-        dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")){
-            var hasNext = dereferencedResponse.content['application/json'].schema.properties.hasNext;
-            if (hasNext.hasOwnProperty("x-totvs")){
-                if (hasNext['x-totvs'].hasOwnProperty("authorizedHasNext")){
-                    if (hasNext['x-totvs'].authorizedHasNext==true){
-                        results.hasNextIsAuthorized = true;
-                    }
-                    else {
-                        results.hasNextIsAuthorized = false;
-                        results.hasNextIsNotAuthorizedMsg = "At endpoint '"+pathkey+"', hasNext must be authorized.";
-                    }
-                }
-                else {
-                    results.hasNextIsAuthorized = false;
-                    results.hasNextIsNotAuthorizedMsg = "At endpoint '"+pathkey+"', hasNext must be authorized (inside hasNext's x-totvs).";
-                }
-            }
-            else{
-                results.hasNextIsAuthorized = false;
-                results.hasNextIsNotAuthorizedMsg = "At endpoint '"+pathkey+"', hasNext must be authorized (it does not even has a x-totvs property inside).";
+var checkIfHasNextInGetAll = function (dereferencedResponse, pathkey){
+    if (results.hasNextInGetAll != false) {
+        if (hasAllPropertiesUntilHasNext(dereferencedResponse)){
+            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")){
+                results.hasNextInGetAll = true;
+            } else{
+                results.hasNextInGetAll = false;
+                results.hasNextInGetAllMsg = "At endpoint '"+pathkey+"', must have hasNext and pagination mechanism.";
+            }  
+        }
+    }
+}
+
+var checkIfNoHasNextInGetOne = function(dereferencedResponse, pathkey) {
+    if (results.noHasNextInGetOne != false) {
+        if (hasAllPropertiesUntilHasNext(dereferencedResponse)){
+            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")){ 
+                results.noHasNextInGetOne = false;
+                results.noHasNextInGetOneMsg = "At endpoint '"+pathkey+"', no hasNext can be declared, because pagination is not permited.";
+            }else {
+                results.noHasNextInGetOne = true;
+                
             }
         }
+    }
+}
+
+var hasAllPropertiesUntilHasNext = function(dereferencedResponse){
+    if (dereferencedResponse.hasOwnProperty("content") && 
+        dereferencedResponse.content.hasOwnProperty("application/json") && 
+        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
+        dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties")){
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -337,8 +344,9 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
-                        if (pathkey.replace(/[^/]/g, "").length==1){ //If pathkey is just "/something"
-                            checkIfHasNextIsAuthorized(dereferencedResponse, pathkey);
+                        if (httpVerbkey){ //(pathkey.replace(/[^/]/g, "").length==1)
+                            if((thisIsCollectionEndpoint)&&(httpVerbkey=='get'))checkIfHasNextInGetAll(dereferencedResponse, pathkey);
+                            if((!thisIsCollectionEndpoint)&&(httpVerbkey=='get'))checkIfNoHasNextInGetOne(dereferencedResponse, pathkey);
                         }
                     }
                 }
