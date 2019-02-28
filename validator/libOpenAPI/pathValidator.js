@@ -604,90 +604,90 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
 };
 
 var hasNextGetAllWhitelist = {
-    "AccountingCalendar_v1_000.json": {
-        "/AccountingCalendar": "get"
-    },
     "ArmazenagemCargaNaoDesunitizada_v1_000.json": {
-        "/cargaNaoDesunitizada/xls": "get"
-    },
-    "Classes_v1_000.json": {
-        "/classes": "get"
-    },
-    "ClassParticipants_v1_000.json": {
-        "/classParticipants": "get"
-    },
-    "ClassValue_v1_000.json": {
-        "/classvalue": "get"
-    },
-    "CottonBales_v1_000.json": {
-        "/CottonBales": "get"
+        "/cargaNaoDesunitizada/xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
     },
     "DesunitizacaoCarga_v2_000.json": {
-        "/desunitizacaoCarga/xls": "get"
-    },
-    "DocumentTraceAbilityRetailSales_v1_000.json": {
-        "/DocumentTraceAbilityRetailSales": "get"
+        "/desunitizacaoCarga/xls": "get"                                    //API definida em legislação pela Receita Federal (XLS)
     },
     "EntradaSaidaPessoas_v2_000.json": {
-        "/entradaSaidaPessoas/Xls": "get"
+        "/entradaSaidaPessoas/Xls": "get"                                   //API definida em legislação pela Receita Federal (XLS)
     },
     "EntradaSaidaVeiculos_v2_000.json": {
-        "/entradaSaidaVeiculos/Xls": "get"
-    },
-    "InspectionScript_v1_000.json": {
-        "/inspectionScripts/{inspectionScriptId}/draftVersion": "get",
-        "/inspectionScripts/{inspectionScriptId}/version": "get"
-    },
-    "JobOpportunityProfiles_v1_000.json": {
-        "/persons": "get"
-    },
-    "Marks_v1_000.json": {
-        "/marks": "get"
-    },
-    "MaterialFamilies_v1_000.json": {
-        "/materialFamilies": "get"
-    },
-    "Models_v1_000.json": {
-        "/models": "get"
+        "/entradaSaidaVeiculos/Xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
     },
     "MudancaSituacaoAduaneiraLoteCarga_v2_000.json": {
-        "/MudancaSituacaoAduaneiraLote/xls": "get"
-    },
-    "PerformanceEvaluations_v1_000.json": {
-        "/performanceEvaluations": "get"
-    },
-    "Persons_v1_000.json": {
-        "/persons": "get"
+        "/MudancaSituacaoAduaneiraLote/xls": "get"                          //API definida em legislação pela Receita Federal (XLS)
     },
     "RegistroMudancaRegimeAduaneiro_v2_000.json": {
-        "/registroMudancaRegimeAduaneiro/xls": "get"
-    },
-    "RelacaoNotasFiscais_v2_000.json": {
-        "/relacaoNotaFiscal": "get"
+        "/registroMudancaRegimeAduaneiro/xls": "get"                        //API definida em legislação pela Receita Federal (XLS)
     },
     "SituacaoLoteCargaVerificacao_v2_000.json": {
-        "/situacaoLoteCargaVerificacao/xls": "get"
-    },
-    "TotalInputDocument_v1_000.json": {
-        "/totalInputDocument": "get",
-        "/TotalInputDocument/canceled": "get"
-    },
-    "TotalOutputDocument_v1_000.json": {
-       "/TotalOutputDocument": "get",
-       "/TotalOutputDocument/canceled": "get",
+        "/situacaoLoteCargaVerificacao/xls": "get"                          //API definida em legislação pela Receita Federal (XLS)
     },
     "TransferenciaLocalArmazenagem_v2_000.json": {
-        "/transferenciaLocalArmazenagem/xls": "get"
+        "/transferenciaLocalArmazenagem/xls": "get"                         //API definida em legislação pela Receita Federal (XLS)
+    },
+    "RelacaoNotasFiscais_v2_000.json": {
+        "/relacaoNotaFiscal": "get"                                         //API definida em legislação pela Receita Federal
+    },
+    "InspectionScript_v1_000.json": {
+        "/inspectionScripts/{inspectionScriptId}/draftVersion": "get",      //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs.
+        "/inspectionScripts/{inspectionScriptId}/version": "get"            //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs. Retorno pode ser uma lista. Sugerir à equipe de negócio que na próxima versão da API eles considerem a paginação neste endpoint.
+    },
+    "AccountingCalendar_v1_000.json": {
+        "/AccountingCalendar": "get"                                        //err, entrar em contato
+    },
+    "Classes_v1_000.json": {
+        "/classes": "get"                                                   //err, entrar em contato
+    },
+    "ClassParticipants_v1_000.json": {
+        "/classParticipants": "get"                                         //err, entrar em contato
+    },
+    "ClassValue_v1_000.json": {
+        "/classvalue": "get"                                                //
+    },
+    "CottonBales_v1_000.json": {
+        "/CottonBales": "get"                                               //err, entrar em contato
+    },
+    "DocumentTraceAbilityRetailSales_v1_000.json": {
+        "/DocumentTraceAbilityRetailSales": "get"                           //err, entrar em contato
+    },
+    "JobOpportunityProfiles_v1_000.json": {
+        "/persons": "get"                                                   //err, entrar em contato
+    },
+    "Marks_v1_000.json": {
+        "/marks": "get"                                                     //
+    },
+    "MaterialFamilies_v1_000.json": {
+        "/materialFamilies": "get"                                          //err, entrar em contato
+    },
+    "Models_v1_000.json": {
+        "/models": "get"                                                    //err, entrar em contato
+    },
+    "PerformanceEvaluations_v1_000.json": {
+        "/performanceEvaluations": "get"                                    //err, entrar em contato
+    },
+    "Persons_v1_000.json": {
+        "/persons": "get"                                                   //err, entrar em contato
+    },
+    "TotalInputDocument_v1_000.json": {
+        "/totalInputDocument": "get",                                       //err, entrar em contato
+        "/TotalInputDocument/canceled": "get"                               //err, entrar em contato
+    },
+    "TotalOutputDocument_v1_000.json": {
+       "/TotalOutputDocument": "get",                                       //err, entrar em contato
+       "/TotalOutputDocument/canceled": "get",                              //err, entrar em contato
     },
     "UnitOfMeasure_v2_000.json": {
-        "/UnitOfMeasures": "get"
+        "/UnitOfMeasures": "get"                                            //
     },
     "WorkEnvironments_v1_000.json": {
-        "/workenvironments": "get"
+        "/workenvironments": "get"                                          //err, entrar em contato
     },
 };
 var hasNextGetOneWhitelist = {
     "UnitMeasurementConversion_v2_000.json": {
-        "/unitMeasurementConversions/{internalId}": "get"
+        "/unitMeasurementConversions/{internalId}": "get"                   //err, entrar em contato
     }
 };
