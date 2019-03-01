@@ -25,7 +25,7 @@ describe("Validating OpenAPI files...", function () {
       // console.log('OPENAPI files');
       // console.log(filenames);
       filenames.forEach(function (filename) {
-        if (filename.includes("User_v1_000.json") && !filename.includes("package")) {
+        if (filename.includes(".json") && !filename.includes("package")) {
           let openAPIPath = path.join(dirname, filename);
 
           describe("OpenAPI - " + filename, function () {
