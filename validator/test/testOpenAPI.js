@@ -62,9 +62,9 @@ describe("Validating OpenAPI files...", function () {
 
                   } else {
                     derefResult = newSchema;
-                  }
-                  pathValidator.clear();
-                  pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
+                    pathValidator.clear();
+                    pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
+                  }                 
                   done();
                 });
             })
@@ -117,19 +117,23 @@ describe("Validating OpenAPI files...", function () {
 
             describe(" - Endpoints: ", function () {
               it("shouldn't contain 'post', 'put', 'get' or 'delete' in the URL", function () {
-                expect(pathValidatorResult.useHttpVerbInEndpointUrl).to.not.equal(true);
+                if (pathValidatorResult)
+                  expect(pathValidatorResult.useHttpVerbInEndpointUrl).to.not.equal(true);
               });
 
               it("should contain success responses for all http verbs", function () {
-                expect(pathValidatorResult.foundSuccessResponse).to.be.true;
+                if (pathValidatorResult)
+                  expect(pathValidatorResult.foundSuccessResponse).to.be.true;
               });
 
               it("should specify 'Id' for all PUT operations", function () {
-                expect(pathValidatorResult.useIdInAllPuts).to.be.true;
+                if (pathValidatorResult)
+                  expect(pathValidatorResult.useIdInAllPuts).to.be.true;
               });
 
               it("should have unique 'operationId'", function () {
-                expect(pathValidatorResult.operationIdUnique, pathValidatorResult.repeatedUniqueId).to.be.true;
+                if (pathValidatorResult)
+                  expect(pathValidatorResult.operationIdUnique, pathValidatorResult.repeatedUniqueId).to.be.true;
               });
             });
 
@@ -145,7 +149,8 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should use external schemas for all requests and responses ", function () {
-                expect(pathValidatorResult.useExternalSchema).to.be.true;
+                if (pathValidatorResult)
+                  expect(pathValidatorResult.useExternalSchema).to.be.true;
               });
 
               it("should be dereferenced. This means all external references are correct (FilePaths and Object property names)", function () {
@@ -154,87 +159,111 @@ describe("Validating OpenAPI files...", function () {
 
               it("should contain the same Id property name in URL and body", function () {
                 let errorMessage = "";
-                if (pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody)
-                  errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody + "'. It may be a typo or case sensitive difference";
-                expect(pathValidatorResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
+                if (pathValidatorResult) {
+                  if (pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody)
+                    errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody + "'. It may be a typo or case sensitive difference";
+                  expect(pathValidatorResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
+                }
               });
 
               it("should contain 'hasNext' prop if there is 'items' prop and vice versa", function () {
                 let errorMessage = "";
-                if (pathValidatorResult.erroredPathMissingItemOrHasNext)
-                  errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathMissingItemOrHasNext + "'";
-                expect(pathValidatorResult.containsItemsAndHasNext, errorMessage).to.be.true;
+                if (pathValidatorResult) {
+                  if (pathValidatorResult.erroredPathMissingItemOrHasNext)
+                    errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathMissingItemOrHasNext + "'";
+                  expect(pathValidatorResult.containsItemsAndHasNext, errorMessage).to.be.true;
+                }
               });
 
               it("should be 'required=true' at schema, because it's a final path param", function () {
-                var errorMessage = pathValidatorResult.typeIsNotRequiredWhenPathId;
-                expect(pathValidatorResult.typeIsRequiredWhenPathId, errorMessage).not.to.be.false;
+                if (pathValidatorResult) {
+                  var errorMessage = pathValidatorResult.typeIsNotRequiredWhenPathId;
+                  expect(pathValidatorResult.typeIsRequiredWhenPathId, errorMessage).not.to.be.false;
+                }
               });
 
-              it("should have 'hasNext' when it's an 'getAll' endpoint", function(){
-                var errorMessage = pathValidatorResult.hasNextInGetAllMsg;
-                expect(pathValidatorResult.hasNextInGetAll, errorMessage).not.to.be.false;
+              it("should have 'hasNext' when it's an 'getAll' endpoint", function () {
+                if (pathValidatorResult) {
+                  var errorMessage = pathValidatorResult.hasNextInGetAllMsg;
+                  expect(pathValidatorResult.hasNextInGetAll, errorMessage).not.to.be.false;
+                }
               });
 
-              it("shouldn't have 'hasNext' when it's an 'getOne' endpoint", function(){
-                var errorMessage = pathValidatorResult.noHasNextInGetOneMsg;
-                expect(pathValidatorResult.noHasNextInGetOne, errorMessage).not.to.be.false;
+              it("shouldn't have 'hasNext' when it's an 'getOne' endpoint", function () {
+                if (pathValidatorResult) {
+                  var errorMessage = pathValidatorResult.noHasNextInGetOneMsg;
+                  expect(pathValidatorResult.noHasNextInGetOne, errorMessage).not.to.be.false;
+                }
               });
             });
 
             describe(" - Parameters: ", function () {
               it("should have 'page', 'pagesize' and 'order' for collection endpoints", function () {
-                var collectionsWithoutRequiredParams = "Please check this endpoint: " + pathValidatorResult.collectionsWithoutRequiredParams;
-                expect(pathValidatorResult.useAllRequiredParamsForCollection, collectionsWithoutRequiredParams).to.be.true;
+                if (pathValidatorResult) {
+                  var collectionsWithoutRequiredParams = "Please check this endpoint: " + pathValidatorResult.collectionsWithoutRequiredParams;
+                  expect(pathValidatorResult.useAllRequiredParamsForCollection, collectionsWithoutRequiredParams).to.be.true;
+                }
               });
 
               it("should use common parameters", function () {
-                var notUsingCommonParams = "Please check this endpoint|httpverb: " + pathValidatorResult.notUsingCommonParams;
-                expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
+                if (pathValidatorResult) {
+                  var notUsingCommonParams = "Please check this endpoint|httpverb: " + pathValidatorResult.notUsingCommonParams;
+                  expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
+                }
               });
 
               it("should reference valid param objects", function () {
-                var parametersDefinedInComponentList = pathValidatorResult.parametersDefinedInComponentList
-                var errorMessage = "";
-                for (var i in parametersDefinedInComponentList) {
-                  var containsParamObject = parsedOpenAPI.components.parameters.hasOwnProperty(parametersDefinedInComponentList[i])
-                  if (!containsParamObject)
-                    errorMessage += "Couldn't find the parameter object '#/components/parameters/" + parametersDefinedInComponentList[i] + "'; "
-                  expect(containsParamObject, errorMessage).to.be.true;
+                if (pathValidatorResult) {
+                  var parametersDefinedInComponentList = pathValidatorResult.parametersDefinedInComponentList
+                  var errorMessage = "";
+                  for (var i in parametersDefinedInComponentList) {
+                    var containsParamObject = parsedOpenAPI.components.parameters.hasOwnProperty(parametersDefinedInComponentList[i])
+                    if (!containsParamObject)
+                      errorMessage += "Couldn't find the parameter object '#/components/parameters/" + parametersDefinedInComponentList[i] + "'; "
+                    expect(containsParamObject, errorMessage).to.be.true;
+                  }
                 }
               });
 
               it("should contain path param defined 'params' property", function () {
-                var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
-                expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
+                if (pathValidatorResult) {
+                  var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
+                  expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
+                }
               });
 
               it("should be 'required=true' when final path param", function () {
-                var errorMessage = pathValidatorResult.pathIdIsNotRequired;
-                expect(pathValidatorResult.pathIdIsRequired, errorMessage).not.to.be.false;
+                if (pathValidatorResult) {
+                  var errorMessage = pathValidatorResult.pathIdIsNotRequired;
+                  expect(pathValidatorResult.pathIdIsRequired, errorMessage).not.to.be.false;
+                }
               });
             });
 
             describe(" - Errors: ", function () {
               it("should use common errors schema", function () {
-                expect(pathValidatorResult.useErrorSchema).to.be.true;
+                if (pathValidatorResult) {
+                  expect(pathValidatorResult.useErrorSchema).to.be.true;
+                }
               });
             });
 
             describe(" - xtotvs: ", function () {
               describe(" - path", function () {
-                it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
-                  var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
-                  expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
-                });
-                it("should contain 'product' as a key in productInformation, inside 'paths'", function () {
-                  var wrongXTotvs = pathValidatorResult.wrongProductAsKeyInProductInfo;
-                  expect(pathValidatorResult.hasProductAsKeyInProductInfo, wrongXTotvs).not.to.be.false;
-                });
-                it("should contain 'available' inside productInformation, inside 'paths'", function () {
-                  var wrongXTotvs = pathValidatorResult.availableNotCorrectlySpelled;
-                  expect(pathValidatorResult.hasAvailableCorrectlySpelledInsidePaths, wrongXTotvs).not.to.be.false;
-                });
+                if (pathValidatorResult) {
+                  it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
+                    var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
+                    expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
+                  });
+                  it("should contain 'product' as a key in productInformation, inside 'paths'", function () {
+                    var wrongXTotvs = pathValidatorResult.wrongProductAsKeyInProductInfo;
+                    expect(pathValidatorResult.hasProductAsKeyInProductInfo, wrongXTotvs).not.to.be.false;
+                  });
+                  it("should contain 'available' inside productInformation, inside 'paths'", function () {
+                    var wrongXTotvs = pathValidatorResult.availableNotCorrectlySpelled;
+                    expect(pathValidatorResult.hasAvailableCorrectlySpelledInsidePaths, wrongXTotvs).not.to.be.false;
+                  });
+                }
               })
               describe(" - info", function () {
                 it("should have 'product' in the correct pattern", function () {
