@@ -247,8 +247,9 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
 
 var checkIfHasNextInGetAll = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
     if (results.hasNextInGetAll != false) {
-        if (hasAllPropertiesUntilHasNext(dereferencedResponse)) {
-            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")) {
+        var properties = hasAllPropertiesUntilHasNext(dereferencedResponse);
+        if (properties) {
+            if (properties.hasOwnProperty("hasNext")) {
                 results.hasNextInGetAll = true;
             } else {
                 if (hasNextGetAllWhitelist.hasOwnProperty(filename)) {
@@ -269,8 +270,9 @@ var checkIfHasNextInGetAll = function (filename, httpVerbkey, dereferencedRespon
 
 var checkIfNoHasNextInGetOne = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
     if (results.noHasNextInGetOne != false) {
-        if (hasAllPropertiesUntilHasNext(dereferencedResponse)) {
-            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")) {
+        var properties = hasAllPropertiesUntilHasNext(dereferencedResponse);
+        if (properties) {
+            if (properties.hasOwnProperty("hasNext")) {
                 if (hasNextGetOneWhitelist.hasOwnProperty(filename)) {
                     if (hasNextGetOneWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetOneWhitelist[filename][pathkey]==httpVerbkey) {
                         results.noHasNextInGetOne = true;
@@ -294,8 +296,28 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
         dereferencedResponse.content.hasOwnProperty("application/json") &&
         dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
         dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties")) {
-        return true;
+            var properties = dereferencedResponse.content['application/json'].schema.properties;
+            return properties;
     } else {
+        if (dereferencedResponse.hasOwnProperty("content") &&
+        dereferencedResponse.content.hasOwnProperty("application/json") &&
+        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
+        dereferencedResponse.content['application/json'].schema.hasOwnProperty("allOf")){
+            for(var i in dereferencedResponse.content['application/json'].schema.allOf){
+                if (dereferencedResponse.content['application/json'].schema.allOf[i].hasOwnProperty("properties") &&
+                    dereferencedResponse.content['application/json'].schema.allOf[i].properties.hasOwnProperty("hasNext")){
+                        var properties = dereferencedResponse.content['application/json'].schema.allOf[i].properties;
+                        var control = 1;
+                        return properties;
+                }else{
+                    var control = 0;
+                }
+            }
+            if ((control==0) && (dereferencedResponse.content['application/json'].schema.allOf[0].hasOwnProperty("properties"))){
+                var properties = dereferencedResponse.content['application/json'].schema.allOf[0].properties;
+                return properties;
+            }
+        }
         return false;
     }
 }
@@ -605,89 +627,128 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
 
 var hasNextGetAllWhitelist = {
     "ArmazenagemCargaNaoDesunitizada_v1_000.json": {
-        "/cargaNaoDesunitizada/xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
+        "/cargaNaoDesunitizada/xls": "get"                                          //API definida em legislação pela Receita Federal (XLS)
     },
     "DesunitizacaoCarga_v2_000.json": {
-        "/desunitizacaoCarga/xls": "get"                                    //API definida em legislação pela Receita Federal (XLS)
+        "/desunitizacaoCarga/xls": "get"                                            //API definida em legislação pela Receita Federal (XLS)
     },
     "EntradaSaidaPessoas_v2_000.json": {
-        "/entradaSaidaPessoas/Xls": "get"                                   //API definida em legislação pela Receita Federal (XLS)
+        "/entradaSaidaPessoas/Xls": "get"                                           //API definida em legislação pela Receita Federal (XLS)
     },
     "EntradaSaidaVeiculos_v2_000.json": {
-        "/entradaSaidaVeiculos/Xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
+        "/entradaSaidaVeiculos/Xls": "get"                                          //API definida em legislação pela Receita Federal (XLS)
     },
     "MudancaSituacaoAduaneiraLoteCarga_v2_000.json": {
-        "/MudancaSituacaoAduaneiraLote/xls": "get"                          //API definida em legislação pela Receita Federal (XLS)
+        "/MudancaSituacaoAduaneiraLote/xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
     },
     "RegistroMudancaRegimeAduaneiro_v2_000.json": {
-        "/registroMudancaRegimeAduaneiro/xls": "get"                        //API definida em legislação pela Receita Federal (XLS)
+        "/registroMudancaRegimeAduaneiro/xls": "get"                                //API definida em legislação pela Receita Federal (XLS)
     },
     "SituacaoLoteCargaVerificacao_v2_000.json": {
-        "/situacaoLoteCargaVerificacao/xls": "get"                          //API definida em legislação pela Receita Federal (XLS)
+        "/situacaoLoteCargaVerificacao/xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
     },
     "TransferenciaLocalArmazenagem_v2_000.json": {
-        "/transferenciaLocalArmazenagem/xls": "get"                         //API definida em legislação pela Receita Federal (XLS)
+        "/transferenciaLocalArmazenagem/xls": "get"                                 //API definida em legislação pela Receita Federal (XLS)
     },
     "RelacaoNotasFiscais_v2_000.json": {
-        "/relacaoNotaFiscal": "get"                                         //API definida em legislação pela Receita Federal
+        "/relacaoNotaFiscal": "get"                                                 //API definida em legislação pela Receita Federal
     },
     "InspectionScript_v1_000.json": {
-        "/inspectionScripts/{inspectionScriptId}/draftVersion": "get",      //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs.
-        "/inspectionScripts/{inspectionScriptId}/version": "get"            //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs. Retorno pode ser uma lista. Sugerir à equipe de negócio que na próxima versão da API eles considerem a paginação neste endpoint.
+        "/inspectionScripts/{inspectionScriptId}/draftVersion": "get",              //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs.
+        "/inspectionScripts/{inspectionScriptId}/version": "get"                    //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs. Retorno pode ser uma lista. Sugerir à equipe de negócio que na próxima versão da API eles considerem a paginação neste endpoint.
     },
     "AccountingCalendar_v1_000.json": {
-        "/AccountingCalendar": "get"                                        //err, entrar em contato
+        "/AccountingCalendar": "get"                                                //err, entrar em contato
     },
     "Classes_v1_000.json": {
-        "/classes": "get"                                                   //err, entrar em contato
+        "/classes": "get"                                                           //err, entrar em contato
     },
     "ClassParticipants_v1_000.json": {
-        "/classParticipants": "get"                                         //err, entrar em contato
+        "/classParticipants": "get"                                                 //err, entrar em contato
     },
     "ClassValue_v1_000.json": {
-        "/classvalue": "get"                                                //
+        "/classvalue": "get"                                                        //err, entrar em contato
     },
     "CottonBales_v1_000.json": {
-        "/CottonBales": "get"                                               //err, entrar em contato
+        "/CottonBales": "get"                                                       //err, entrar em contato
     },
     "DocumentTraceAbilityRetailSales_v1_000.json": {
-        "/DocumentTraceAbilityRetailSales": "get"                           //err, entrar em contato
+        "/DocumentTraceAbilityRetailSales": "get"                                   //err, entrar em contato
     },
     "JobOpportunityProfiles_v1_000.json": {
-        "/persons": "get"                                                   //err, entrar em contato
+        "/persons": "get"                                                           //err, entrar em contato
     },
     "Marks_v1_000.json": {
-        "/marks": "get"                                                     //
+        "/marks": "get"                                                             //err, entrar em contato
     },
     "MaterialFamilies_v1_000.json": {
-        "/materialFamilies": "get"                                          //err, entrar em contato
+        "/materialFamilies": "get"                                                  //err, entrar em contato
     },
     "Models_v1_000.json": {
-        "/models": "get"                                                    //err, entrar em contato
+        "/models": "get"                                                            //err, entrar em contato
     },
     "PerformanceEvaluations_v1_000.json": {
-        "/performanceEvaluations": "get"                                    //err, entrar em contato
+        "/performanceEvaluations": "get"                                            //err, entrar em contato
     },
     "Persons_v1_000.json": {
-        "/persons": "get"                                                   //err, entrar em contato
+        "/persons": "get"                                                           //err, entrar em contato
     },
     "TotalInputDocument_v1_000.json": {
-        "/totalInputDocument": "get",                                       //err, entrar em contato
-        "/TotalInputDocument/canceled": "get"                               //err, entrar em contato
+        "/totalInputDocument": "get",                                               //err, entrar em contato
+        "/TotalInputDocument/canceled": "get"                                       //err, entrar em contato
     },
     "TotalOutputDocument_v1_000.json": {
-       "/TotalOutputDocument": "get",                                       //err, entrar em contato
-       "/TotalOutputDocument/canceled": "get",                              //err, entrar em contato
+       "/TotalOutputDocument": "get",                                               //err, entrar em contato
+       "/TotalOutputDocument/canceled": "get",                                      //err, entrar em contato
     },
     "UnitOfMeasure_v2_000.json": {
-        "/UnitOfMeasures": "get"                                            //
+        "/UnitOfMeasures": "get"                                                    //err, entrar em contato
     },
     "WorkEnvironments_v1_000.json": {
-        "/workenvironments": "get"                                          //err, entrar em contato
+        "/workenvironments": "get"                                                  //err, entrar em contato
     },
 };
 var hasNextGetOneWhitelist = {
     "UnitMeasurementConversion_v2_000.json": {
-        "/unitMeasurementConversions/{internalId}": "get"                   //err, entrar em contato
-    }
+        "/unitMeasurementConversions/{internalId}": "get"                           //err, entrar em contato
+    },
+    "AuditTopic_v1_000.json": {
+        "/auditTopic/{internalId}": "get"                                           //err, entrar em contato
+    },
+    "Company_v1_000.json": {
+        "/companies/{Code}": "get"                                                  //err, entrar em contato
+    },
+    "Contact_v1_000.json": {
+        "/contacts/{contactId}": "get"                                              //err, entrar em contato
+    },
+    "CustomerVendor_v1_000.json": {
+        "/customerVendor/{entityType}": "get"                                       //err, entrar em contato
+    },
+    "Files_v1_000.json": {
+        "/files/{yearMonthRefer}": "get",                                           //err, entrar em contato
+        "/files/ccos/{fileName}": "get"                                             //err, entrar em contato
+    },
+    "MarketSegment_v2_000.json": {
+        "/marketSegment/{marketSegmentID}": "get"                                   //err, entrar em contato
+    },
+    "Menus_v1_001.json": {
+        "/menus/{parentId}": "get"                                                  //err, entrar em contato
+    },
+    "PriceListHeaderItem_v2_005.json": {
+        "/priceList/{code}": "get",                                                 //err, entrar em contato
+        "/priceList/{code}/itensTablePrice/{itemList}": "get"                       //err, entrar em contato
+    },
+    "Prospects_v1_000.json": {
+        "/prospects/{Code}": "get"                                                  //err, entrar em contato
+    },
+    "SalesCharge_v1_000.json": {
+        "/salesCharge/{InternalId}": "get" ,
+        "/salesCharge/{InternalId}/{AccountReceivableDocumentInternalId}": "get"    //err, entrar em contato
+    },
+    "Sellers_v2_000.json": {
+        "/seller/{code}": "get"                                                     //err, entrar em contato
+    },
+    "Suspects_v1_000.json": {
+        "/suspects/{Code}": "get"                                                   //err, entrar em contato
+    },
 };
