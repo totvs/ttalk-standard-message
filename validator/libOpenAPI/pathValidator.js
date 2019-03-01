@@ -247,8 +247,9 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
 
 var checkIfHasNextInGetAll = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
     if (results.hasNextInGetAll != false) {
-        if (hasAllPropertiesUntilHasNext(dereferencedResponse)) {
-            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")) {
+        var properties = hasAllPropertiesUntilHasNext(dereferencedResponse);
+        if (properties) {
+            if (properties.hasOwnProperty("hasNext")) {
                 results.hasNextInGetAll = true;
             } else {
                 if (hasNextGetAllWhitelist.hasOwnProperty(filename)) {
@@ -269,8 +270,9 @@ var checkIfHasNextInGetAll = function (filename, httpVerbkey, dereferencedRespon
 
 var checkIfNoHasNextInGetOne = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
     if (results.noHasNextInGetOne != false) {
-        if (hasAllPropertiesUntilHasNext(dereferencedResponse)) {
-            if (dereferencedResponse.content['application/json'].schema.properties.hasOwnProperty("hasNext")) {
+        var properties = hasAllPropertiesUntilHasNext(dereferencedResponse);
+        if (properties) {
+            if (properties.hasOwnProperty("hasNext")) {
                 if (hasNextGetOneWhitelist.hasOwnProperty(filename)) {
                     if (hasNextGetOneWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetOneWhitelist[filename][pathkey]==httpVerbkey) {
                         results.noHasNextInGetOne = true;
@@ -294,8 +296,28 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
         dereferencedResponse.content.hasOwnProperty("application/json") &&
         dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
         dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties")) {
-        return true;
+            var properties = dereferencedResponse.content['application/json'].schema.properties;
+            return properties;
     } else {
+        if (dereferencedResponse.hasOwnProperty("content") &&
+        dereferencedResponse.content.hasOwnProperty("application/json") &&
+        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
+        dereferencedResponse.content['application/json'].schema.hasOwnProperty("allOf")){
+            for(var i in dereferencedResponse.content['application/json'].schema.allOf){
+                if (dereferencedResponse.content['application/json'].schema.allOf[i].hasOwnProperty("properties") &&
+                    dereferencedResponse.content['application/json'].schema.allOf[i].properties.hasOwnProperty("hasNext")){
+                        var properties = dereferencedResponse.content['application/json'].schema.allOf[i].properties;
+                        var control = 1;
+                        return properties;
+                }else{
+                    var control = 0;
+                }
+            }
+            if ((control==0) && (dereferencedResponse.content['application/json'].schema.allOf[0].hasOwnProperty("properties"))){
+                var properties = dereferencedResponse.content['application/json'].schema.allOf[0].properties;
+                return properties;
+            }
+        }
         return false;
     }
 }
