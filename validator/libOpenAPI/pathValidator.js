@@ -19,6 +19,9 @@ var derefOpenAPI;
 var idWasCorrecltyDefinedInGeneralParams;
 var operationIdList;
 
+var infoProducts = [];
+var pathsProducts = [];
+
 /**
  * This method checks if path 'x-totvs' has 'productInformation' as array
  * @param {*} httpVerbInfo Object
@@ -26,11 +29,13 @@ var operationIdList;
  * @param {*} pathkey String (/endpoint)String (/endpoint)
  */
 var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
+    
     if (httpVerbInfo["x-totvs"]) {
         var productInfo = httpVerbInfo["x-totvs"].productInformation;
         if (results.useProductInfoAsArray != false) {
             if (Array.isArray(productInfo)) {
                 results.useProductInfoAsArray = true
+                populatePathsProductArray(productInfo);
             } else {
                 results.useProductInfoAsArray = false;
                 results.wrongXTotvs = pathkey + "|" + httpVerbkey;
@@ -289,6 +294,48 @@ var checkIfNoHasNextInGetOne = function (filename, httpVerbkey, dereferencedResp
             }
         }
     }
+}
+
+var populateInfoProductArray = function (infoProductInfo) {
+    infoProducts = [];
+    for (var i in infoProductInfo) infoProducts.push(infoProductInfo[i].product);
+}
+
+var populatePathsProductArray = function (productInfo){
+    for (var j in productInfo){ 
+        var controlVar = 0;
+        for (var i in pathsProducts){
+            if (productInfo[j].product == pathsProducts[i]) controlVar = 1;
+        }
+        if (controlVar==0) pathsProducts.push(productInfo[j].product);
+    }
+}
+
+var compareInfoPathsProducts = function (){
+    for (var i in pathsProducts){
+        if(results.infoProdHasPathElement!=false){
+            if (infoProducts.includes(pathsProducts[i])){
+                results.infoProdHasPathElement = true;
+            }
+            else{
+                results.infoProdHasPathElement = false;
+                results.infoProdHasPathElementMsg = "X-Totvs inside 'paths' has '"+ pathsProducts[i]+"' as product, but it's not declared inside 'info'.";
+            }
+        }
+    }
+    for (var i in infoProducts){
+        if(results.pathProdHasInfoElement!=false){
+            if (pathsProducts.includes(infoProducts[i])){
+                results.pathProdHasInfoElement = true;
+            }
+            else{
+                results.pathProdHasInfoElement = false;
+                results.pathProdHasInfoElementMsg = "X-Totvs inside 'info' has '"+ infoProducts[i]+"' as product, but it's not declared inside 'paths'.";
+            }
+        }
+    }
+    infoProducts = [];
+    pathsProducts = [];
 }
 
 var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
@@ -580,6 +627,7 @@ exports.clear = function () {
 exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
     parsedOpenAPI = _parsedOpenAPI;
     derefOpenAPI = _derefOpenAPI;
+    populateInfoProductArray(parsedOpenAPI.info['x-totvs'].productInformation);
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
         let pathidkey = pathkey.substr(pathkey.lastIndexOf("/{") + 2, pathkey.length).replace("}", "").replace("{", "");
@@ -622,6 +670,7 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
             results.useAllRequiredParamsForCollection = false
         }
     }
+    compareInfoPathsProducts();
     return results;
 };
 

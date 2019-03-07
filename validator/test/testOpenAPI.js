@@ -248,7 +248,7 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - xtotvs: ", function () {
-              describe(" - path", function () {
+              describe(" - paths: ", function () {
                 it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
                   if (pathValidatorResult) {
                     var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
@@ -267,8 +267,11 @@ describe("Validating OpenAPI files...", function () {
                     expect(pathValidatorResult.hasAvailableCorrectlySpelledInsidePaths, wrongXTotvs).not.to.be.false;
                   }
                 });
+                it ("all products declared inside info should also exist inside paths' x-totvs", function(){
+                  expect(pathValidatorResult.pathProdHasInfoElement, pathValidatorResult.pathProdHasInfoElementMsg).not.to.be.false;
+                });
               })
-              describe(" - info", function () {
+              describe(" - info: ", function () {
                 it("should have 'product' in the correct pattern", function () {
                   expect(parsedOpenAPI.info['x-totvs'].productInformation, "'ProductInformation' has to be an array of objects.").to.be.an('array');
                   for (var i in parsedOpenAPI.info['x-totvs'].productInformation) {
@@ -286,7 +289,11 @@ describe("Validating OpenAPI files...", function () {
                     var wrongSegment = "You passed '" + parsedOpenAPI.info["x-totvs"].messageDocumentation.segment + "' as x-totvs segment, but we already got '" + segmentDictionary[keyName] + "'.";
                     expect(parsedOpenAPI.info["x-totvs"].messageDocumentation.segment, wrongSegment).to.be.equal(segmentDictionary[keyName]);
                   }
-                })
+                });
+                it ("all products declared inside paths should also exist inside info x-totvs", function(){
+                  expect(pathValidatorResult.infoProdHasPathElement, pathValidatorResult.infoProdHasPathElementMsg).not.to.be.false;
+                });
+
               });
             });
           });
