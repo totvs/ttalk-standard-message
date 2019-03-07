@@ -12,6 +12,7 @@ var expect = require('chai').expect;
 var $RefParser = require('json-schema-ref-parser');
 
 var segmentDictionary = {};
+var productDictionary = {};
 
 describe("Validating OpenAPI files...", function () {
   it("test suite started", function (done) {
@@ -288,6 +289,20 @@ describe("Validating OpenAPI files...", function () {
                     //Verificar se o valor do dictionary é igual ao valor do OpenApi
                     var wrongSegment = "You passed '" + parsedOpenAPI.info["x-totvs"].messageDocumentation.segment + "' as x-totvs segment, but we already got '" + segmentDictionary[keyName] + "'.";
                     expect(parsedOpenAPI.info["x-totvs"].messageDocumentation.segment, wrongSegment).to.be.equal(segmentDictionary[keyName]);
+                  }
+                });
+                it("product name should be standardized", function () {
+                  for (var i in parsedOpenAPI.info["x-totvs"].productInformation){
+                    const prodKeyName = parsedOpenAPI.info["x-totvs"].productInformation[i].product.toLowerCase().replace(" ", "").normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+                  //Verificar se ja existe produto com este nome
+                    if (!(prodKeyName in productDictionary)) {
+                      //Se nao existe, adiciona
+                      productDictionary[prodKeyName] = parsedOpenAPI.info["x-totvs"].productInformation[i].product;
+                    } else {
+                      //Verificar se o valor do dictionary é igual ao valor do OpenApi
+                      var wrongProduct = "You passed '" + parsedOpenAPI.info["x-totvs"].productInformation[i].product + "' as x-totvs product, but we already got '" + productDictionary[prodKeyName] + "'.";
+                      expect(parsedOpenAPI.info["x-totvs"].productInformation[i].product, wrongProduct).to.be.equal(productDictionary[prodKeyName]);
+                    }
                   }
                 });
                 it ("all products declared inside paths should also exist inside info x-totvs", function(){
