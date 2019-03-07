@@ -59,12 +59,11 @@ describe("Validating OpenAPI files...", function () {
                   if (err) {
                     derefResult = false;
                     derefErroDetail = err;
-
                   } else {
                     derefResult = newSchema;
                     pathValidator.clear();
                     pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
-                  }                 
+                  }
                   done();
                 });
             })
@@ -250,20 +249,24 @@ describe("Validating OpenAPI files...", function () {
 
             describe(" - xtotvs: ", function () {
               describe(" - path", function () {
-                if (pathValidatorResult) {
-                  it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
+                it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
+                  if (pathValidatorResult) {
                     var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
                     expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
-                  });
-                  it("should contain 'product' as a key in productInformation, inside 'paths'", function () {
+                  }
+                });
+                it("should contain 'product' as a key in productInformation, inside 'paths'", function () {
+                  if (pathValidatorResult) {
                     var wrongXTotvs = pathValidatorResult.wrongProductAsKeyInProductInfo;
                     expect(pathValidatorResult.hasProductAsKeyInProductInfo, wrongXTotvs).not.to.be.false;
-                  });
-                  it("should contain 'available' inside productInformation, inside 'paths'", function () {
+                  }
+                });
+                it("should contain 'available' inside productInformation, inside 'paths'", function () {
+                  if (pathValidatorResult) {
                     var wrongXTotvs = pathValidatorResult.availableNotCorrectlySpelled;
                     expect(pathValidatorResult.hasAvailableCorrectlySpelledInsidePaths, wrongXTotvs).not.to.be.false;
-                  });
-                }
+                  }
+                });
               })
               describe(" - info", function () {
                 it("should have 'product' in the correct pattern", function () {
