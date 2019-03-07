@@ -248,7 +248,7 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - xtotvs: ", function () {
-              describe(" - path", function () {
+              describe(" - paths: ", function () {
                 it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
                   if (pathValidatorResult) {
                     var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
@@ -271,7 +271,7 @@ describe("Validating OpenAPI files...", function () {
                   expect(pathValidatorResult.pathProdHasInfoElement, pathValidatorResult.pathProdHasInfoElementMsg).not.to.be.false;
                 });
               })
-              describe(" - info", function () {
+              describe(" - info: ", function () {
                 it("should have 'product' in the correct pattern", function () {
                   expect(parsedOpenAPI.info['x-totvs'].productInformation, "'ProductInformation' has to be an array of objects.").to.be.an('array');
                   for (var i in parsedOpenAPI.info['x-totvs'].productInformation) {
