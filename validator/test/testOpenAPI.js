@@ -271,6 +271,9 @@ describe("Validating OpenAPI files...", function () {
                 it ("all products declared inside info should also exist inside paths' x-totvs", function(){
                   expect(pathValidatorResult.pathProdHasInfoElement, pathValidatorResult.pathProdHasInfoElementMsg).not.to.be.false;
                 });
+                it ("all 'available' properties must be boolean", function(){
+                  expect(pathValidatorResult.hasAvailableAsBoolean, pathValidatorResult.hasAvailableAsBooleanMsg).not.to.be.false;
+                });
               })
               describe(" - info: ", function () {
                 it("should have 'product' in the correct pattern", function () {

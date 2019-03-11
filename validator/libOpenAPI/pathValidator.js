@@ -53,6 +53,14 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
             if (results.hasAvailableCorrectlySpelledInsidePaths != false) {
                 if (productInfo[i].hasOwnProperty("available")) {
                     results.hasAvailableCorrectlySpelledInsidePaths = true;
+                    if(results.hasAvailableAsBoolean != false){
+                        if (typeof productInfo[i].available == "boolean") {
+                            results.hasAvailableAsBoolean = true;
+                        } else{
+                            results.hasAvailableAsBoolean = false;
+                            results.hasAvailableAsBooleanMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', the property 'available' must be a boolean type.";
+                        }
+                    }
                 } else {
                     results.hasAvailableCorrectlySpelledInsidePaths = false;
                     results.availableNotCorrectlySpelled = "At path '" + pathkey + "', method '" + httpVerbkey + "'.";
