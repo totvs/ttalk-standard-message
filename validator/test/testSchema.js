@@ -71,6 +71,10 @@ describe("Validating Schema files...", function () {
                 }
               });
 
+              it("should have available as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.availableIsBoolean, schemaDefinitionsValidatorResult.availableIsBooleanMsg).not.to.be.false;
+              });
+
               it("should be available=true in x-totvs, because it is required", function () {
                 var inconsistentAvailable = schemaDefinitionsValidatorResult.inconsistentAvailable;
                 expect(schemaDefinitionsValidatorResult.hasAcceptableAvailable, inconsistentAvailable).not.to.be.false;

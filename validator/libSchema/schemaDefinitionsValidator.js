@@ -20,6 +20,7 @@ var checkXtotvs = function (theObject, prop, currentObjectName, parent) {
         var xTotvs = theObject[prop];
         CheckIfXTotvsIsAvailableWhileParentHasRequired(xTotvs, currentObjectName, parent);
         CheckIfXTotvsIsArray(xTotvs, currentObjectName);
+        CheckIfAvailableIsBoolean(xTotvs, currentObjectName);
         CheckIfXTotvsContainRequiredProperties(xTotvs, currentObjectName);
     }
 };
@@ -92,6 +93,19 @@ var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
         } else {
             results.useXTotvsAsArray = false;
             results.wrongXTotvs = "Object with invalid x-totvs: '" + currentObjectName + "'";
+        }
+    }
+}
+
+var CheckIfAvailableIsBoolean = function (xTotvs, currentObjectName) {
+    if (results.availableIsBoolean != false) {
+        for (var i in xTotvs){
+            if (typeof xTotvs[i].available == "boolean"){
+                results.availableIsBoolean = true;
+            } else{
+                results.availableIsBoolean = false;
+                results.availableIsBooleanMsg = "At object '" + currentObjectName + "', the property 'available' must be a boolean type.";
+            }
         }
     }
 }
