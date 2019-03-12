@@ -71,6 +71,10 @@ describe("Validating Schema files...", function () {
                 }
               });
 
+              it("should have available as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.availableIsBoolean, schemaDefinitionsValidatorResult.availableIsBooleanMsg).not.to.be.false;
+              });
+
               it("should be available=true in x-totvs, because it is required", function () {
                 var inconsistentAvailable = schemaDefinitionsValidatorResult.inconsistentAvailable;
                 expect(schemaDefinitionsValidatorResult.hasAcceptableAvailable, inconsistentAvailable).not.to.be.false;
@@ -89,6 +93,12 @@ describe("Validating Schema files...", function () {
               it("should have the property 'available' correctly spelled", function () {
                 var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvsAvailable;
                 expect(schemaDefinitionsValidatorResult.XTotvsContainAvailable, wrongXTotvs).not.to.be.false;
+              });
+              it("should have required as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.requiredIsBoolean, schemaDefinitionsValidatorResult.requiredIsBooleanMsg).not.to.be.false;
+              });
+              it("should have canUpdate as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.canUpdateIsBoolean, schemaDefinitionsValidatorResult.canUpdateIsBooleanMsg).not.to.be.false;
               });
             });
 
