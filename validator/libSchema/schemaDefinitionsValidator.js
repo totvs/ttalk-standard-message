@@ -20,7 +20,7 @@ var checkXtotvs = function (theObject, prop, currentObjectName, parent) {
         var xTotvs = theObject[prop];
         CheckIfXTotvsIsAvailableWhileParentHasRequired(xTotvs, currentObjectName, parent);
         CheckIfXTotvsIsArray(xTotvs, currentObjectName);
-        CheckIfAvailableIsBoolean(xTotvs, currentObjectName);
+        CheckIfAvailableCanUpdateRequiredAreBoolean(xTotvs, currentObjectName);
         CheckIfXTotvsContainRequiredProperties(xTotvs, currentObjectName);
     }
 };
@@ -97,14 +97,34 @@ var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
     }
 }
 
-var CheckIfAvailableIsBoolean = function (xTotvs, currentObjectName) {
-    if (results.availableIsBoolean != false) {
-        for (var i in xTotvs){
+var CheckIfAvailableCanUpdateRequiredAreBoolean = function (xTotvs, currentObjectName) {
+    for (var i in xTotvs){
+        if (results.availableIsBoolean != false) {
             if (typeof xTotvs[i].available == "boolean"){
                 results.availableIsBoolean = true;
             } else{
                 results.availableIsBoolean = false;
                 results.availableIsBooleanMsg = "At object '" + currentObjectName + "', the property 'available' must be a boolean type.";
+            }
+        }
+        if (results.canUpdateIsBoolean != false) {
+            if(xTotvs[i].hasOwnProperty("canUpdate")){
+                if (typeof xTotvs[i].canUpdate == "boolean"){
+                    results.canUpdateIsBoolean = true;
+                } else{
+                    results.canUpdateIsBoolean = false;
+                    results.canUpdateIsBooleanMsg = "At object '" + currentObjectName + "', the property 'canUpdate' must be a boolean type.";
+                }
+            }
+        }
+        if (results.requiredIsBoolean != false) {
+            if(xTotvs[i].hasOwnProperty("required")){
+                if (typeof xTotvs[i].required == "boolean"){
+                    results.requiredIsBoolean = true;
+                } else{
+                    results.requiredIsBoolean = false;
+                    results.requiredIsBooleanMsg = "At object '" + currentObjectName + "', the property 'required' must be a boolean type.";
+                }
             }
         }
     }

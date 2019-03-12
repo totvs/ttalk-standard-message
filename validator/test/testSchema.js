@@ -94,6 +94,12 @@ describe("Validating Schema files...", function () {
                 var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvsAvailable;
                 expect(schemaDefinitionsValidatorResult.XTotvsContainAvailable, wrongXTotvs).not.to.be.false;
               });
+              it("should have required as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.requiredIsBoolean, schemaDefinitionsValidatorResult.requiredIsBooleanMsg).not.to.be.false;
+              });
+              it("should have canUpdate as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.canUpdateIsBoolean, schemaDefinitionsValidatorResult.canUpdateIsBooleanMsg).not.to.be.false;
+              });
             });
 
             describe(" - Enum: ", function () {
