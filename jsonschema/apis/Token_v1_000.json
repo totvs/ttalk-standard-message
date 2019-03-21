@@ -1,0 +1,146 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "Implementação do OAuth 2.0 (https://tools.ietf.org/html/rfc6749) para requisição de token para acesso aos sistema TOTVS.",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/oauth2/v1/",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "Implementação do OAuth 2.0 (https://tools.ietf.org/html/rfc6749) para requisição de token para acesso aos sistema TOTVS. É altamente recomendado o uso de segurança SSL",
+		"version": "1.000",
+		"title": "Token",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Token",
+				"description": "Token",
+				"segment": "Foundation"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "Protheus_FW@totvs.com.br",
+					"description": "Requisição de Token",
+					"adapter": "Authentication.prw",
+					"helpUrl": "link aqui"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/token": {
+			"post": {
+				"tags": [
+					"Token"
+				],
+				"summary": "Retorna token de acesso",
+				"description": "Aplicativos realizam a requisição ao endpoint inserindo os parâmetros descritos a seguir",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"operationId": "getResources",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/Grant_Type"
+					},
+					{
+						"$ref": "#/components/parameters/Username"
+					},
+					{
+						"$ref": "#/components/parameters/Password"
+					},
+					{
+						"$ref": "#/components/parameters/Refresh_Token"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/token_api/jsonschema/schemas/Token_1_000.json#/definitions/BusinessContentType"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflito",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"Grant_Type": {
+				"name": "grant_type",
+				"in": "query",
+				"required": true,
+				"description": "Tipo de grant para requisição do Token",
+				"schema": {
+					"type": "string",
+					"enum": [
+						"PASSWORD",
+						"REFRESH_TOKEN"
+					]
+				}
+			},
+			"Username": {
+				"name": "username",
+				"in": "query",
+				"required": false,
+				"description": "Username do usuário.Obrigatório para o grant_type PASSWORD",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"Password": {
+				"name": "password",
+				"in": "query",
+				"required": false,
+				"description": "Senha do usuário. Obrigatório para o grant_type PASSWORD",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"Refresh_Token": {
+				"name": "refresh_token",
+				"in": "query",
+				"required": false,
+				"description": "Refresh Token para autenticar novamente. Obrigatório para o grant_type REFRESH_TOKEN",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
