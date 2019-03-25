@@ -391,7 +391,7 @@ var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pat
                                 results.typeIsRequiredWhenPathId = true;
                             } else {
                                 results.typeIsRequiredWhenPathId = false;
-                                results.typeIsNotRequiredWhenPathId = "Type '" + pathId + "' must be required, because it is a final path param.";
+                                results.typeIsNotRequiredWhenPathId = "Type '" + pathId + "' must be required, because it is a final path param (If we got '/something/{anyId}, that {anyId} type must be required at schema).";
                             }
                         }
                     }
