@@ -772,9 +772,6 @@ var hasNextGetOneWhitelist = {
     "AuditTopic_v1_000.json": {
         "/auditTopic/{internalId}": "get"                                           //err, entrar em contato
     },
-    "Company_v1_000.json": {
-        "/companies/{Code}": "get"                                                  //err, entrar em contato
-    },
     "Contact_v1_000.json": {
         "/contacts/{contactId}": "get"                                              //err, entrar em contato
     },
