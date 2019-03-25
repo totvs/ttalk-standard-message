@@ -22,8 +22,8 @@ function getFromUrl(logFile){
 
 var substr = getFromUrl(logFile);
 var pretext = "A validação foi concluída! Abaixo está evidenciado o resultado do teste:";
-var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
-var validationDetails = "\\n\\nCaso queira entender melhor cada uma das validações que foram realizadas, visite nossa documentação: http://tdn.totvs.com/pages/viewpage.action?pageId=465388996"
+var aftertext = "\\n\\nPara visualizar o log com detalhes da validação que foi realizada, acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+var validationDetails = "\\n\\nCaso queira entender melhor cada uma das validações e formas de correção, visite nossa documentação: http://tdn.totvs.com/pages/viewpage.action?pageId=465388996"
 
 // --- The following piece of code replaces all the characters that we don't want, so the JSON can be sent inside the body of the request.
 substr=substr.replace(/\/g, '');
