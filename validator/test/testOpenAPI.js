@@ -225,7 +225,7 @@ describe("Validating OpenAPI files...", function () {
                 }
               });
 
-              it("should contain path param defined 'params' property", function () {
+              it("should contain 'parameters' defined inside path property", function () {
                 if (pathValidatorResult) {
                   var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
                   expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
@@ -268,7 +268,7 @@ describe("Validating OpenAPI files...", function () {
                     expect(pathValidatorResult.hasAvailableCorrectlySpelledInsidePaths, wrongXTotvs).not.to.be.false;
                   }
                 });
-                it ("all products declared inside info should also exist inside paths' x-totvs", function(){
+                it ("all products declared inside 'info' should also exist inside paths' x-totvs", function(){
                   expect(pathValidatorResult.pathProdHasInfoElement, pathValidatorResult.pathProdHasInfoElementMsg).not.to.be.false;
                 });
                 it ("all 'available' properties must be boolean", function(){
@@ -308,7 +308,7 @@ describe("Validating OpenAPI files...", function () {
                     }
                   }
                 });
-                it ("all products declared inside paths should also exist inside info x-totvs", function(){
+                it ("all products declared inside 'paths' should also exist inside 'info's' x-totvs", function(){
                   expect(pathValidatorResult.infoProdHasPathElement, pathValidatorResult.infoProdHasPathElementMsg).not.to.be.false;
                 });
 

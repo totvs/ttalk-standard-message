@@ -22,7 +22,8 @@ function getFromUrl(logFile){
 
 var substr = getFromUrl(logFile);
 var pretext = "A validação foi concluída! Abaixo está evidenciado o resultado do teste:";
-var aftertext = "\\n\\nPara maiores detalhes acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+var aftertext = "\\n\\nPara visualizar o log com detalhes da validação que foi realizada, acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
+var validationDetails = "\\n\\nCaso queira entender melhor cada uma das validações e formas de correção, visite nossa documentação: http://tdn.totvs.com/pages/viewpage.action?pageId=465388996"
 
 // --- The following piece of code replaces all the characters that we don't want, so the JSON can be sent inside the body of the request.
 substr=substr.replace(/\/g, '');
@@ -49,7 +50,7 @@ substr=substr.replace(/\[0K\[31;1m/g, '');
 substr=substr.replace(/:end:/g, ': end:');
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-var data = "{\n\t\"body\":\""+pretext+substr+aftertext+"\"\n}\n";
+var data = "{\n\t\"body\":\""+pretext+substr+aftertext+validationDetails+"\"\n}\n";
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
 
