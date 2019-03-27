@@ -211,8 +211,8 @@ describe("Validating OpenAPI files...", function () {
                   expect(pathValidatorResult.useCommonParams, notUsingCommonParams).to.be.true;
                 }
               });
-              
-              it("should contain 'parameters' defined inside path property", function () {
+
+              it("same ID defined inside path should also be present inside the 'parameters' property", function () {
                 if (pathValidatorResult) {
                   var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
                   expect(pathValidatorResult.hasPathParamDefinedInParameters, errorMessage).not.to.be.false; //Some APIs only have collection endpoints. They will return undefined, and that is Ok
