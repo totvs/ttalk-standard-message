@@ -212,19 +212,6 @@ describe("Validating OpenAPI files...", function () {
                 }
               });
 
-              it("should reference valid param objects", function () {
-                if (pathValidatorResult) {
-                  var parametersDefinedInComponentList = pathValidatorResult.parametersDefinedInComponentList
-                  var errorMessage = "";
-                  for (var i in parametersDefinedInComponentList) {
-                    var containsParamObject = parsedOpenAPI.components.parameters.hasOwnProperty(parametersDefinedInComponentList[i])
-                    if (!containsParamObject)
-                      errorMessage += "Couldn't find the parameter object '#/components/parameters/" + parametersDefinedInComponentList[i] + "'; "
-                    expect(containsParamObject, errorMessage).to.be.true;
-                  }
-                }
-              });
-
               it("same ID defined inside path should also be present inside the 'parameters' property", function () {
                 if (pathValidatorResult) {
                   var errorMessage = pathValidatorResult.endpointsWithoutPathParamDefinedInParameters;
