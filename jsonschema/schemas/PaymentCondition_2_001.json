@@ -1,7 +1,7 @@
 {
 	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#",
 	"info": {
-		"description": "API para a entidade CondiÃ§Ã£o de Pagamento (PaymentCondition) para produtos TOTVS",
+		"description": "API para a entidade Condição de Pagamento (PaymentCondition) para produtos TOTVS",
 		"version": "2.001",
 		"title": "PaymentCondition",
 		"contact": {
@@ -23,16 +23,21 @@
 			},
 			"messageDocumentation": {
 				"name": "PaymentCondition",
-				"description": "Cadastro de CondiÃ§Ã£o de Pagamento",
+				"description": "Cadastro de Condição de Pagamento",
 				"segment": "Faturamento"
 			},
 			"productInformation": [
 				{
 					"product": "protheus",
 					"contact": "squad.crm@totvs.com.br",
-					"description": "Cadastro de CondiÃ§Ã£o de Pagamento",
+					"description": "Cadastro de Condição de Pagamento",
 					"adapter": "MATS360.prw"
-				}
+				},
+				{
+					"product": "Logix",
+					"contact": "SUPPLY.ML.MAN.SUP_L@totvs.com.br",
+					"description": "Cadastro de Condição de Pagamento"
+				}				
 			]
 		}
 	},
@@ -60,18 +65,32 @@
 			}
 		},
 		"PaymentConditionInfo": {
-			"description": "Descreve uma CondiÃ§Ã£o de pagamento",
+			"description": "Descreve uma Condição de pagamento",
 			"type": "object",
 			"properties": {
 				"CompanyId": {
 					"type": "string",
 					"example": "T1 ",
-					"description": "CÃ³digo da empresa",
-					"maxLength": 3
+					"description": "Código da empresa",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SE4.E4_FILIAL",
+							"length": "8",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Logix",
+							"available": false
+						}
+					]
 				},
 				"BranchId": {
 					"type": "string",
-					"description": "CÃ³digo da Filial",
+					"description": "Código da Filial",
 					"example": "D MG 01 ",
 					"maxLength": 12,
 					"x-totvs": [
@@ -82,12 +101,16 @@
 							"required": true,
 							"available": true,
 							"canUpdate": false
-						}
+						},
+						{
+							"product": "Logix",
+							"available": false
+						}						
 					]
 				},
 				"CompanyInternalId": {
 					"type": "string",
-					"description": "CÃ³digo da Empresa",
+					"description": "Código da Empresa",
 					"example": "T1D MG 01 001",
 					"x-totvs": [
 						{
@@ -98,12 +121,16 @@
 							"required": true,
 							"available": false,
 							"canUpdate": false
+						},
+						{
+							"product": "Logix",
+							"available": false
 						}
 					]
 				},
 				"Code": {
 					"type": "string",
-					"description": "CÃ³digo da CondiÃ§Ã£o de Pagamento.",
+					"description": "Código da Condição de Pagamento.",
 					"example": "001",
 					"maxLength": 3,
 					"x-totvs": [
@@ -115,29 +142,47 @@
 							"required": true,
 							"available": true,
 							"canUpdate": false
-						}
+						},
+						{
+							"product": "Logix",
+							"field": "cond_pgto_cap.cnd_pgto",
+							"type": "integer",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}						
 					]
 				},
 				"InternalId": {
 					"type": "string",
-					"example": "D MG 01 001",
-					"description": "InternalId da condiÃ§Ã£o de pagamento no ERP",
+					"description": "InternalId da condição de pagamento no ERP",
 					"x-totvs": [
 						{
 							"product": "protheus",
+					        "example": "D MG 01 001",
 							"field": "SE4.E4_FILIAL|SE4.E4_CODIGO",
 							"type": "varchar",
 							"length": "11",
 							"required": true,
 							"available": true,
 							"canUpdate": false,
-							"note": "O internalID da CondiÃ§Ã£o de Pagamento Ã© formado por SE4.E4_FILIAL|E4.E4_CODIGO"
+							"note": "O internalID da Condição de Pagamento é formado por SE4.E4_FILIAL|E4.E4_CODIGO"
+						},
+						{
+							"product": "Logix",
+							"example": 49,
+							"field": "cond_pgto_cap.cnd_pgto",
+							"type": "integer",
+							"required": true,
+							"available": true,
+							"canUpdate": false,
+							"note": "O internalID da Condição de Pagamento é formado pelo código: cond_pgto_cap.cnd_pgto"
 						}
 					]
 				},
 				"Description": {
 					"type": "string",
-					"description": "DescriÃ§Ã£o da CondiÃ§Ã£o de Pagamento",
+					"description": "Descrição da Condição de Pagamento",
 					"example": "A VISTA",
 					"maxLength": 50,
 					"x-totvs": [
@@ -149,16 +194,31 @@
 							"required": true,
 							"available": true,
 							"canUpdate": true
+						},
+						{
+							"product": "Logix",
+							"field": "cond_pgto_cap.des_cnd_pgto",
+							"type": "varchar",
+							"length": "40",
+							"required": true,
+							"available": true,
+							"canUpdate": true
 						}
 					]
 				},
 				"MeanTime": {
 					"type": "integer",
 					"format": "int32",
-					"description": "NÃºmero MÃ©dio de Dias",
+					"description": "Número Médio de Dias",
 					"example": 1,
 					"minimum": 0,
-					"maximum": 99
+					"maximum": 99,
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]
 				},
 				"DaysFirstDue": {
 					"type": "integer",
@@ -166,7 +226,13 @@
 					"description": "Quantidade de dias para o vencimento da primeira parcela (0 a 99)",
 					"example": 1,
 					"minimum": 0,
-					"maximum": 99
+					"maximum": 99,
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"QuantityPlots": {
 					"type": "integer",
@@ -175,6 +241,12 @@
 					"example": 1,
 					"minimum": 1,
 					"maximum": 99
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"RangePlots": {
 					"type": "integer",
@@ -182,11 +254,17 @@
 					"description": "Intervalo entre cada parcela, em dias (0 a 999).",
 					"example": 1,
 					"minimum": 0,
-					"maximum": 999
+					"maximum": 999,
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"WeekDayFixed": {
 					"type": "String",
-					"description": "Define um dia da semana fixo para o vencimento das parcelas. 1 - Domingo 2 - Segunda 3 - TerÃ§a 4 - Quarta 5 - Quinta 6 - Sexta 7 - SÃ¡bado.",
+					"description": "Define um dia da semana fixo para o vencimento das parcelas. 1 - Domingo 2 - Segunda 3 - Terça 4 - Quarta 5 - Quinta 6 - Sexta 7 - Sábado.",
 					"minimum": 1,
 					"maximum": 7,
 					"example": 1,
@@ -198,19 +276,31 @@
 						"5",
 						"6",
 						"7"
-					]
+					],
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"DayMonthFixed": {
 					"type": "integer",
 					"format": "int32",
-					"description": "Define um dia do mÃªs fixo para o vencimento das parcelas (1 a 31).",
+					"description": "Define um dia do mês fixo para o vencimento das parcelas (1 a 31).",
 					"example": 1,
 					"minimum": 1,
-					"maximum": 31
+					"maximum": 31,
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"DaysCondition": {
 					"type": "String",
-					"description": "Define como serÃ¡ a contagem dos dias do intervalo de cada parcela. 1 - Data do Dia 2 - Fora o Dia 3 - Fora Semana 4 - Fora Quinzena 5 - Fora MÃªs 6 - Fora Dezena.",
+					"description": "Define como será a contagem dos dias do intervalo de cada parcela. 1 - Data do Dia 2 - Fora o Dia 3 - Fora Semana 4 - Fora Quinzena 5 - Fora Mês 6 - Fora Dezena.",
 					"example": 1,
 					"minimum": 1,
 					"maximum": 6,
@@ -221,7 +311,13 @@
 						"4",
 						"5",
 						"6"
-					]
+					],
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"FinancialDiscountDays": {
 					"type": "integer",
@@ -229,24 +325,99 @@
 					"description": "Quantidade de dias para o desconto financeiro (1 a 99).",
 					"example": 1,
 					"minimum": 1,
-					"maximum": 99
+					"maximum": 99,
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"PercentageDiscountDays": {
-					"description": "Percentual do desconto financeiro para a condiÃ§Ã£o",
+					"description": "Percentual do desconto financeiro para a condição",
 					"type": "number",
 					"example": 1,
 					"minimum": -99.99,
-					"maximum": 99.99
+					"maximum": 99.99,
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
 				"PercentageIncrease": {
-					"description": "Percentual do acrÃ©scimo financeiro para a condiÃ§Ã£o.",
+					"description": "Percentual do acréscimo financeiro para a condição.",
 					"example": 1,
 					"minimum": -999.99,
-					"maximum": 999.99
+					"maximum": 999.99,
+					"x-totvs": [
+						{
+							"product": "logix",
+							"available": false
+						}
+					]					
 				},
+				"DaysCountWay": {
+					"description": "Forma de contagem dos dias de vencimento.",
+                    "type": "integer",
+					"format": "int32",
+					"example": 1,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"available": false
+						},
+						{
+							"product": "logix",
+							"available": true,
+							"required": true,
+							"canUpdate": true,
+							"note": "1-Dias corridos 2-Dias com meses de 30 dias"
+						}
+					]
+				},		
+				"PaymentSituation": {
+					"description": "Situação de Pagamento.",
+                    "type": "integer",
+					"format": "int32",
+					"example": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"available": false
+						},					
+						{
+							"product": "logix",
+							"available": true,
+							"required": true,
+							"canUpdate": true,
+							"note": "2-A pagar 3-Sem pagamento"
+						}
+					]
+				},
+				"StartCounting": {
+					"description": "Início da contagem dos dias das parcelas.",
+                    "type": "varchar",
+				    "length": "1",
+					"example": "N",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"available": false
+						},					
+						{
+							"product": "logix",
+							"available": true,
+							"required": true,
+							"canUpdate": true,
+							"note": "C-Despreza o dia corrente D-Despreza o decêndio M-Despreza o mês N-Normal Q-Despreza a quinzena S-Despreza a semana"
+						}
+					]
+				},						
 				"Plots": {
 					"type": "object",
-					"description": "Define as parcelas da condiÃ§Ã£o de pagamento quando o intervalo nÃ£o for regular ou o valor das parcelas nÃ£o for dividido de forma igual.",
+					"description": "Define as parcelas da condição de pagamento quando o intervalo não for regular ou o valor das parcelas não for dividido de forma igual.",
 					"properties": {
 						"Due": {
 							"type": "array",
@@ -261,21 +432,74 @@
 		"DueType": {
 			"type": "object",
 			"properties": {
+				"PlotNumber": {
+					"type": "integer",
+					"format": "int32",
+					"description": "Número sequencial da parcela.",
+					"example": 1,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"available": false
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"required": true,
+							"canUpdate": false
+						}
+					]				
+				},
 				"DueDay": {
 					"type": "integer",
 					"format": "int32",
-					"description": "Quantidade de dias para o vencimento da parcela (0 a 999).",
+					"description": "Quantidade de dias para o vencimento da parcela.",
 					"example": 1,
 					"minimum": 0,
-					"maximum": 999
+					"maximum": 9999,
+					"x-totvs": [
+						{
+							"product": "Logix",
+							"available": true,
+							"required": true,
+							"canUpdate": true
+						}
+					]
 				},
 				"Percentage": {
 					"type": "number",
-					"description": "Indica se o valor da parcela deverÃ¡ ser um percentual do total.",
+					"description": "Indica se o valor da parcela deverá ser um percentual do total.",
 					"example": 999.99,
 					"minimum": -999.99,
-					"maximum": 999.99
-				}
+					"maximum": 999.99,
+					"x-totvs": [
+						{
+							"product": "Logix",
+							"available": true,
+							"required": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"DownPaymentPercentage": {
+					"type": "number",
+					"description": "Percentual para baixa de adiantamento.",
+					"example": 50.00,
+					"minimum": 0,
+					"maximum": 999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"available": false
+						},						
+						{
+							"product": "Logix",
+							"available": true,
+							"required": false,
+							"canUpdate": true
+						}
+					]					
+				}				
 			}
 		}
 	}
