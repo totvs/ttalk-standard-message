@@ -162,22 +162,6 @@ var checkHttpVerbInUrl = function (pathkey) {
 };
 
 /**
- * This method checks if all parameters which reference the OpenAPI itself exist
- * @param {*} parameter Object 
- */
-var addParamDefinedInComponentList = function (parameter) {
-    if (parameter) {
-        if (parameter.$ref) {
-            if (parameter.$ref.includes("#/components/parameters/")) {
-                var paramName = parameter.$ref.substring(24);
-                if (!results.parametersDefinedInComponentList.includes(paramName))
-                    results.parametersDefinedInComponentList.push(paramName);
-            }
-        }
-    }
-}
-
-/**
  * This method checks if schema is setted to external file
  * OpenAPI MUST reference schema from external file
  * @param {*} responseRequest Object (Of a request or a response - The internal structure is the same)
@@ -468,7 +452,6 @@ var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey,
             checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
         }
         alreadyfoundpathid = verifyIfThisIsThePathParameter(parameter, pathkey, alreadyfoundpathid);
-        addParamDefinedInComponentList(parameters[parameterKey]);
     }
     checkIfParametersContainPathId(alreadyfoundpathid, pathkey, parameterType);
 
