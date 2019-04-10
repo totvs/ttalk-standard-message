@@ -32,7 +32,7 @@ describe("Validating Schema files...", function () {
 
             before(async function (done) { //only used done here to be able to use the timeout (next line);
               this.timeout(60000);
-              parsedSchema = JSON.parse(file);              
+              parsedSchema = JSON.parse(file);
               schemaDefinitionsValidator.clear();
               schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema, done);
             })
@@ -50,6 +50,12 @@ describe("Validating Schema files...", function () {
               it("shouldn't contain v (_v)", function () {
                 let containsWrongVersionPattern = filename.includes("_v");
                 expect(containsWrongVersionPattern).to.be.false;
+              });
+            });
+
+            describe(" - Content Format: ", function () {
+              it("shouldn't contain weird special characteres", function () {
+                expect(file.includes("�"), "Please check file encode").to.be.false;
               });
             });
 
@@ -109,21 +115,22 @@ describe("Validating Schema files...", function () {
               });
             });
 
-            describe(" - Required: ", function(){
+            describe(" - Required: ", function () {
               it("should have the 'required' field as an array", function () {
-                expect(schemaDefinitionsValidatorResult.requiredIsAnArray,schemaDefinitionsValidatorResult.requiredIsAnArrayErrMsg).not.to.be.false;
+                expect(schemaDefinitionsValidatorResult.requiredIsAnArray, schemaDefinitionsValidatorResult.requiredIsAnArrayErrMsg).not.to.be.false;
               });
               it("should have every 'required' element as strings", function () {
-                expect(schemaDefinitionsValidatorResult.requiredIsArrayOfStrings,schemaDefinitionsValidatorResult.requiredIsArrayOfStringsErrMsg).not.to.be.false;
+                expect(schemaDefinitionsValidatorResult.requiredIsArrayOfStrings, schemaDefinitionsValidatorResult.requiredIsArrayOfStringsErrMsg).not.to.be.false;
               });
               it("should have every element of the 'required' array as a property", function () {
-                expect(schemaDefinitionsValidatorResult.hasRequiredProperty,schemaDefinitionsValidatorResult.hasRequiredPropertyErrMsg).not.to.be.false;
+                expect(schemaDefinitionsValidatorResult.hasRequiredProperty, schemaDefinitionsValidatorResult.hasRequiredPropertyErrMsg).not.to.be.false;
               });
             });
           });
         };
-      });           
+      });
       done();
+      
     });
   })
 });
