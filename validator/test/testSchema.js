@@ -130,6 +130,7 @@ describe("Validating Schema files...", function () {
         };
       });
       done();
+      
     });
   })
 });
