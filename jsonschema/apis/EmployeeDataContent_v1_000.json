@@ -1,0 +1,159 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para entidade de funcionarios para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/rh/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para entidade de funcionarios para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+		"version": "1.000",
+		"title": "Relação de Funcionários - Global",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br" 
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "EmployeeDataContent",
+				"description": "Cadastro de Funcionários na base da TOTVS",
+				"segment": "Recursos Humanos"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Reginaldo.Lyra@totvs.com.br",
+					"description": "",
+					"adapter": "GPA010API",
+					"helpUrl": "link aqui"
+				},
+				{
+					"product": "RM",
+					"contact": "tiago.santana@totvs.com.br",
+					"description": "Cadastro de Funcionários na base da TOTVS",
+					"adapter": "",
+					"helpUrl": "link aqui"
+				},
+                {
+					"product": "DATASUL",
+					"contact": "",
+					"description": "Cadastro de Funcionários na base da TOTVS",
+					"adapter": "",
+					"helpUrl": "link aqui"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/employeedatacontent": {
+			"get": {
+				"tags": [
+					"employeedatacontent"
+				],
+				"summary": "Retorna todos os registros de funcionários e seus respectivos dados complementares(Ex:Departamento, Centro de Custo)",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.23"
+						},
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.23"
+						},
+						{
+							"product": "DATASUL",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"description": "Retorna todos os registros de funcionários e seus respectvos departamentos, centro de custos, cargos, funções e demais informações.",
+				"operationId": "getEmployeeDataContent",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/order"
+					},
+					{
+						"$ref": "#/components/parameters/product"
+					},
+					{
+						"$ref": "#/components/parameters/updateDate"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/events/EmployeeDataContent_1_000.json#/definitions/PagedEmployeeDataContent"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da listagem dos registros de funcionários.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"product": {
+				"name": "product",
+				"in": "query",
+				"description": "Nome do produto que está sendo integrado no momento.",
+				"example": "PROTHEUS, RM, DATASUL",
+				"required": true,
+				"schema": {
+					"type": "string"
+					}
+				},
+			"updateDate": {
+				"name": "updatedate",
+				"in": "query",
+				"required": true,
+				"description": "Data da ultima atualização do registro.",
+				"example": "YYYY-MM-DDThh:mm:ssZ",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		
+		"schemas": {}
+	}
+}
