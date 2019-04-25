@@ -1,0 +1,130 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "The TOTVS Agriculture API (aka T-Agri API) is a RESTFul API that provides entities and resources based on the agriculture context for TOTVS' solutions.\n\nBelow is a list of available REST API call for business agriculture resources.",
+		"version": "1.000",
+		"title": "GeoService API",
+		"contact": {
+			"name": "Guilherme de Cleva Farto",
+			"url": "http://www.totvs.com",
+			"email": "guilherme.farto@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"description": "TOTVS Agriculture API - GeoService API",
+				"name": "GeoService API",
+				"segment": "Agroindústria"
+			},
+			"productInformation": [
+				{
+					"product": "AgriAPI",
+					"adapter": "",
+					"contact": "guilherme.farto@totvs.com.br",
+					"description": "TOTVS Agriculture API - GeoService API",
+					"helpUrl": ""
+				}
+			]
+		}
+	},
+	"servers": [
+		{
+			"description": "API para processamento de dados de geolocalização.",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/agri-api/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8090"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "geo-service",
+			"description": "GeoService API"
+		}
+	],
+	"paths": {
+		"/geoServices": {
+			"post": {
+				"tags": [
+					"geo-service"
+				],
+				"summary": "Performs a geodata service",
+				"operationId": "5b8fe3ffddadf327c027e573",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"name": "service",
+						"in": "query",
+						"description": "Service to be performed",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Geodata service performed successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/GeoService_2_000.json#/definitions/geoServiceResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Failed to perform geodata service",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "AgriAPI",
+							"available": true,
+							"minimalVersion": "12.1.22",
+							"note": "This service is available to recover data"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "string"
+							}
+						}
+					},
+					"description": "Geojson (RFC 7946) to be processed \n Example:  { \"type\" : \"Feature\" , \"geometry\" : { \"type\" : \"Point\" , \"coordinates\" : [125.6 , 10.1] } , \"properties\" : { \"name\" : \"Dinagat Islands\" } } ",
+					"required": true
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"apiKey": {
+				"type": "apiKey",
+				"name": "X-API-Key",
+				"in": "header"
+			},
+			"basicAuth": {
+				"type": "http",
+				"scheme": "basic"
+			}
+		}
+	}
+}
