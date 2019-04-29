@@ -1,0 +1,650 @@
+{
+    "$schema": "https://raw.githubusercontent.com/edvf82/testes/master/PayrollControl_1_000.json#",
+    "info": {
+		"description": "Schema para entidade da folha de pagamento para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+		"version": "1.000",
+        "title": "Relação da Folha de Pagamento",
+        "contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "PayrollControl",
+				"description": "Esta api tem por objetivos disponibilizar para o cliente interessado em integrar seus dados de folha de pagamento com sistemas de terceiros, possibilitando criar integrações dos mais variádos tipos que necessitem dos dados de seus colaboradores.",
+				"segment": "Recursos Humanos"
+            },
+            "productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Reginaldo.Lyra@totvs.com.br",
+					"description": "",
+					"adapter": "GPA011API",
+					"helpUrl": "link aqui"
+                },
+                {
+					"product": "RM",
+					"contact": "",
+					"description": "",
+					"adapter": "",
+					"helpUrl": "link aqui"
+                },
+                {
+					"product": "DATASUL",
+					"contact": "",
+					"description": "",
+					"adapter": "",
+					"helpUrl": "link aqui"
+				}
+			]            
+		}
+	},    
+    
+    "definitions": {
+        "PagedPayrollControl": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {	
+                    "type": "object",
+                    "properties": {
+                        "product": {
+                            "type": "string",
+                            "example": "Protheus"
+                        },
+                        "dateOfReply": {
+                            "type": "string",
+                            "format":"date-time",
+                            "example": "yyyy-mm-ddThh:mm:ss+|-hh:mm"
+                        },
+    
+                        "numberOfRecords": {
+                            "type": "int32",
+                            "format":"999.999",
+                            "example": "1"
+                        }
+                    }
+                },
+				{
+					"type": "object",
+					"properties": {
+						"payments": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/PayrollControlItem"
+							}
+						}
+					}
+				}
+			]
+		},
+        "PayrollControlItem": {
+			"type": "object",
+			"description": "Descreve os dados da folha de pagamento do funcionário",
+			"properties": {
+				"companyKey": {
+					"description": "Agrupamento de Empresa, Unidade de negócio e Filial",
+                    "type": "string",
+                    "exemple":"T1|0101|MG",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":"não possui campo físico na tabela"                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+				},    
+                "branch": {
+					"description": "Filial do Funcionario",
+                    "type": "string",
+                    "exemple":"D MG 01",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_FILIAL",
+=======
+							"field": "SRAXX0.RA_FILIAL",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":"pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus"
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false                            
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false                            
+						}
+
+					]
+				},    
+                "code": {
+					"description": "Matricula do Funcionario",
+                    "type": "string",
+                    "exemple":"000100",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_MAT",
+=======
+							"field": "SRAXX0.RA_MAT",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false                            
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false                            
+						}
+
+					]
+                },    
+                "internalIdCode": {
+					"description": "InternalId do funcionário",
+                    "type": "string",
+                    "exemple":"T1||D MG 01|000100",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "SM0.M0_CODIGO + TMP.TMP_FILIAL + TMP.TMP_MAT",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":"o InternalID da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15.Para periodo aberto sera utilizado RHRXX0.RHR_FILIAL+RHRXX0.RHR_MAT e para periodo fechado sera utilizado RHPXX0.RHP_FILIAL+RHPXX0.RHP_MAT"
+=======
+							"field": "SM0.M0_CODIGO + SRAXX0.RA_FILIAL + SRAXX0.RA_MAT",
+							"required": true,
+							"type": "string",
+							"available": true,
+              "canUpdate": false,
+              "note":"o InternalID da empresa Ã© formado empresa|RA_FILIAL. Tamanho entre 05 e 15.Para periodo aberto sera utilizado RHRXX0.RHR_FILIAL+RHRXX0.RHR_MAT e para periodo fechado sera utilizado RHPXX0.RHP_FILIAL+RHPXX0.RHP_MAT"
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false                            
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false                            
+						}
+
+					]
+                },    
+                "name": {
+					"description": "Nome do Funcionario",
+                    "type": "string",
+                    "exemple":"HENRIQUE ROBERTO A. DOS SANTOS",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NOME",
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "MovimentDate": {
+					"description": "Data da Movimentação",
+					"type": "string",
+					"format": "date-time",
+                    "exemple":"yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_DATA",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "originalRecord": {
+					"description": "Registro Original",
+                    "type": "string",
+                    "exemple":"",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_ORIGEM",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "providerCode": {
+					"description": "Codigo do provedor",
+                    "type": "string",
+                    "exemple":"",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_CODFOR",
+							"required": true,
+=======
+							"field": "",
+							"required": false,
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+<<<<<<< HEAD
+                        {,
+=======
+                        {
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "providerType": {
+					"description": "Tipo do provedor",
+                    "type": "string",
+                    "exemple":"",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_TPFORN",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "contractCode": {
+					"description": "Codigo do Contrato",
+                    "type": "string",
+                    "exemple":"",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_CODCON",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "productCode": {
+					"description": "Código do produto",
+                    "type": "string",
+                    "exemple":"",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_PLANO",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "payrollIdentifier": {
+					"description": "Identificador do cálculo da folha de pagamento",
+                    "type": "string",
+                    "exemple":"T1||D MG 01|201812",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_PD",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "paymentAmount": {
+					"description": "Valor do pagamento",
+					"type": "int32",
+					"format":"999999.99",
+                    "exemple":"999.00",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_VLRFUN",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "integer",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "paymentDate": {
+					"description": "Data de pagamento",
+					"type": "string",
+                    "format": "date-time",
+                    "exemple":"yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_DATPGT"
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+
+					]
+                },    
+                "paymentPeriod": {
+					"description": "Competencia de pagamento",
+                    "type": "string",
+                    "exemple":"201810",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+<<<<<<< HEAD
+							"field": "TMP.TMP_COMPPG",
+=======
+							"field": "",
+>>>>>>> cfe8485e8c6e9d4a245d4e8f16cf5bcf6a8344da
+							"required": true,
+							"type": "string",
+							"available": true,
+                            "canUpdate": false,
+                            "note":""                         
+                        },
+                        {
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+                        {
+							"product": "DATASUL",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		}
+	}
+}
