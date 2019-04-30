@@ -12,8 +12,6 @@ var apiCompatibilityService = require('../libOpenAPI/apiCompatibilityService.js'
 var apiLatestMinorVersionService = require('../libOpenAPI/apiLatestMinorVersionService')
 var dereferenceService = require('../libOpenAPI/dereferenceService');
 var expect = require('chai').expect;
-var $RefParser = require('json-schema-ref-parser');
-
 var segmentDictionary = {};
 var productDictionary = {};
 
