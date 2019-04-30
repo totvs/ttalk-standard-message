@@ -4,6 +4,12 @@ exports.getApisDiff = function (api, api2) {
 	return doHttpRequest();
 }
 
+exports.getNoVersionToCompareOkResponse = function() {
+	return {
+		isBackwardCompatible: true
+	};
+}
+
 exports.getApisDiffMock = function (api1, api2) {
 	//Implement API client request
 	var result = {

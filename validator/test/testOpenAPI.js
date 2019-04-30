@@ -8,6 +8,9 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var pathValidator = require('../libOpenAPI/pathValidator.js');
+var apiCompatibilityService = require('../libOpenAPI/apiCompatibilityService.js');
+var apiLatestMinorVersionService = require('../libOpenAPI/apiLatestMinorVersionService')
+var dereferenceService = require('../libOpenAPI/dereferenceService');
 var expect = require('chai').expect;
 var $RefParser = require('json-schema-ref-parser');
 
@@ -23,8 +26,6 @@ describe("Validating OpenAPI files...", function () {
         console.log(err);
       }
 
-      // console.log('OPENAPI files');
-      // console.log(filenames);
       filenames.forEach(function (filename) {
         if (filename.includes(".json") && !filename.includes("package")) {
           let openAPIPath = path.join(dirname, filename);
@@ -35,38 +36,37 @@ describe("Validating OpenAPI files...", function () {
             });
             var parsedOpenAPI;
             var pathValidatorResult;
+            var apiCompatibilityServiceResult;
             var derefResult;
             var derefErroDetail;
 
             before(async function (done) {
               this.timeout(60000);
               parsedOpenAPI = JSON.parse(file);
-              derefResult = JSON.parse(file); //Need to have other obj reference than the previous one          
+              derefResult = JSON.parse(file); //Need to have other obj reference than the previous one                       
 
-              var parser = new $RefParser();
-              await parser.dereference(derefResult, { // (.dereference could be .bundle) doc: https://apidevtools.org/json-schema-ref-parser/docs/ref-parser.html#bundleschema-options-callback
-                  dereference: { //these are options
-                    dereference: true
-                  },
-                  resolve: {
-                    external: true,
-                    http: {
-                      redirects: 0,
-                      timeout: 50000
+              var callbackDereferenceResult = function (err, newSchema) {
+                if (err) {
+                  derefResult = false;
+                  derefErroDetail = err;
+                } else {
+                  derefResult = newSchema;
+                  pathValidator.clear();
+                  pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
+                  let derefLatestMinorVersionFileResult = apiLatestMinorVersionService.lookForApiLatestMinorVersion(filenames, filename, fs, path, dirname);
+                  if (derefLatestMinorVersionFileResult) {
+                    var callbackDereferenceLatestMinorVersionFile = function() {
+                      apiCompatibilityServiceResult = apiCompatibilityService.getApisDiff(derefResult, derefLatestMinorVersionFileResult);
+                      done();
                     }
-                  }
-                }, await
-                function (err, newSchema) {
-                  if (err) {
-                    derefResult = false;
-                    derefErroDetail = err;
+                    dereferenceService.dereference(derefLatestMinorVersionFileResult, callbackDereferenceLatestMinorVersionFile);
                   } else {
-                    derefResult = newSchema;
-                    pathValidator.clear();
-                    pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
+                    apiCompatibilityServiceResult = apiCompatibilityService.getNoVersionToCompareOkResponse();
+                    done();
                   }
-                  done();
-                });
+                }
+              }
+              dereferenceService.dereference(derefResult, callbackDereferenceResult);
             })
 
             describe(" - Filename: ", function () {
@@ -112,6 +112,9 @@ describe("Validating OpenAPI files...", function () {
                   .replace(".json", "");
                 var infoVersion = parsedOpenAPI.info.version;
                 expect(fileNameVersion).to.equal(infoVersion);
+              });
+              it("should be backward compatible with minor versions", function () {
+                expect(apiCompatibilityServiceResult.isBackwardCompatible, apiCompatibilityServiceResult.consoleRender).to.be.true;
               });
             });
 
@@ -255,10 +258,10 @@ describe("Validating OpenAPI files...", function () {
                     expect(pathValidatorResult.hasAvailableCorrectlySpelledInsidePaths, wrongXTotvs).not.to.be.false;
                   }
                 });
-                it ("all products declared inside 'info' should also exist inside paths' x-totvs", function(){
+                it("all products declared inside 'info' should also exist inside paths' x-totvs", function () {
                   expect(pathValidatorResult.pathProdHasInfoElement, pathValidatorResult.pathProdHasInfoElementMsg).not.to.be.false;
                 });
-                it ("all 'available' properties must be boolean", function(){
+                it("all 'available' properties must be boolean", function () {
                   expect(pathValidatorResult.hasAvailableAsBoolean, pathValidatorResult.hasAvailableAsBooleanMsg).not.to.be.false;
                 });
               })
@@ -282,9 +285,9 @@ describe("Validating OpenAPI files...", function () {
                   }
                 });
                 it("product name should be standardized", function () {
-                  for (var i in parsedOpenAPI.info["x-totvs"].productInformation){
+                  for (var i in parsedOpenAPI.info["x-totvs"].productInformation) {
                     const prodKeyName = parsedOpenAPI.info["x-totvs"].productInformation[i].product.toLowerCase().replace(" ", "").normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-                  //Verificar se ja existe produto com este nome
+                    //Verificar se ja existe produto com este nome
                     if (!(prodKeyName in productDictionary)) {
                       //Se nao existe, adiciona
                       productDictionary[prodKeyName] = parsedOpenAPI.info["x-totvs"].productInformation[i].product;
@@ -295,7 +298,7 @@ describe("Validating OpenAPI files...", function () {
                     }
                   }
                 });
-                it ("all products declared inside 'paths' should also exist inside 'info's' x-totvs", function(){
+                it("all products declared inside 'paths' should also exist inside 'info's' x-totvs", function () {
                   expect(pathValidatorResult.infoProdHasPathElement, pathValidatorResult.infoProdHasPathElementMsg).not.to.be.false;
                 });
 
