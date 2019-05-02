@@ -25,7 +25,7 @@ describe("Validating OpenAPI files...", function () {
       }
 
       filenames.forEach(function (filename) {
-        if (filename.includes(".json") && !filename.includes("package")) {
+        if (filename.includes("Branch_v1_001.json") && !filename.includes("package")) {
           let openAPIPath = path.join(dirname, filename);
 
           describe("OpenAPI - " + filename, function () {
@@ -39,7 +39,7 @@ describe("Validating OpenAPI files...", function () {
             var derefErroDetail;
 
             before(async function (done) {
-              this.timeout(60000);
+              this.timeout(120000);
               parsedOpenAPI = JSON.parse(file);
               derefResult = JSON.parse(file); //Need to have other obj reference than the previous one                       
 
@@ -51,13 +51,13 @@ describe("Validating OpenAPI files...", function () {
                   derefResult = newSchema;
                   pathValidator.clear();
                   pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
-                  let derefLatestMinorVersionFileResult = apiLatestMinorVersionService.lookForApiLatestMinorVersion(filenames, filename, fs, path, dirname);
-                  if (derefLatestMinorVersionFileResult) {
-                    var callbackDereferenceLatestMinorVersionFile = function() {
-                      apiCompatibilityServiceResult = apiCompatibilityService.getApisDiff(derefResult, derefLatestMinorVersionFileResult);
+                  let latestMinorVersionFileResult = apiLatestMinorVersionService.lookForApiLatestMinorVersion(filenames, filename, fs, path, dirname);
+                  if (latestMinorVersionFileResult) {
+                    var callbackDereferenceLatestMinorVersionFile = async function() {
+                      apiCompatibilityServiceResult = await apiCompatibilityService.getApisDiff(derefResult, latestMinorVersionFileResult);
                       done();
                     }
-                    dereferenceService.dereference(derefLatestMinorVersionFileResult, callbackDereferenceLatestMinorVersionFile);
+                    dereferenceService.dereference(latestMinorVersionFileResult, callbackDereferenceLatestMinorVersionFile);
                   } else {
                     apiCompatibilityServiceResult = apiCompatibilityService.getNoVersionToCompareOkResponse();
                     done();
@@ -113,6 +113,9 @@ describe("Validating OpenAPI files...", function () {
               });
               it("should be backward compatible with minor versions", function () {
                 expect(apiCompatibilityServiceResult.isBackwardCompatible, apiCompatibilityServiceResult.consoleRender).to.be.true;
+              });
+              it("should have anything different from the previous minor version, beside x-totvs", function () {
+                expect(apiCompatibilityServiceResult.hadChanges, apiCompatibilityServiceResult.consoleRender).to.be.true;
               });
             });
 
