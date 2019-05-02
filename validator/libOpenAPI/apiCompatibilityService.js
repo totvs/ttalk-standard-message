@@ -2,7 +2,8 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 exports.getNoVersionToCompareOkResponse = function () {
 	return {
-		isBackwardCompatible: true
+		isBackwardCompatible: true,
+		hadChanges: true
 	};
 }
 

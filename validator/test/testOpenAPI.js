@@ -302,7 +302,6 @@ describe("Validating OpenAPI files...", function () {
                 it("all products declared inside 'paths' should also exist inside 'info's' x-totvs", function () {
                   expect(pathValidatorResult.infoProdHasPathElement, pathValidatorResult.infoProdHasPathElementMsg).not.to.be.false;
                 });
-
               });
             });
           });
