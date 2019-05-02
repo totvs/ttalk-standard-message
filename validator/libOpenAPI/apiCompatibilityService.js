@@ -33,6 +33,6 @@ var doHttpRequest = function (requestObject) {
 			_strReturn = '{"isBackwardCompatible": false, "consoleRender":"Validator error: Comparator API seems not to be responding"}';
 			resolve(JSON.parse(_strReturn));
 		}
-		xhr.send(JSON.stringify(requestObject)); //This triggers onreadystatechange   		
+		xhr.send(JSON.stringify(requestObject)); 		
 	});
 }
