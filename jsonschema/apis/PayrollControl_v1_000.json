@@ -1,279 +1,295 @@
-{ 
-	"openapi": "3.0.1",
-	"servers": [
-		{
-			"description": "API para entidade da folha de pagamento para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/rh/v1",
-			"variables": {
-				"serverUrl": {
-					"default": "localhost"
-				},
-				"serverHttpPort": {
-					"default": "8051"
-				}
-			}
-		}
-	],
-	"info": {
-		"description": "API para entidade da folha de pagamento para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
-		"version": "1.000",
-		"title": "Folha de pagamento para linha de produtos totvs - Global",
-		"contact": {
-			"name": "T-Talk",
-			"url": "https://api.totvs.com.br",
-			"email": "comiteintegracao@totvs.com.br" 
-		},
-		"x-totvs": {
-			"messageDocumentation": {
-				"name": "Relação de Funcionários - Global",
-				"description": "Dados de folha de pagamento pertinente a benefícios(Assistência Médica, Odontológica) ",
-				"segment": "Recursos Humanos"
-			},
-			"productInformation": [
-				{
-					"product": "Protheus",
-					"contact": "reginaldo.Lyra@totvs.com.br",
-					"description": "Dados de folha pagamento pertinentes a Benefícios (Assistencia Médica,Odontológica) ",
-					"adapter": "GPA011API.prw"
-                },
-                {
-					"product": "RM",
-					"contact": "",
-					"description": "Dados de folha pagamento pertinentes a Benefícios (Assistencia Médica,Odontológica) ",
-					"adapter": ""
-				},
-                {
-					"product": "Datasul",
-					"contact": "",
-					"description": "Dados de folha pagamento pertinentes a Benefícios (Assistencia Médica,Odontológica) ",
-					"adapter": ""
-				}
-			]
-		}
-	},
-	"paths": {
-		"/PayrollControl": {
-			"get": {
-				"tags": [
-					"PayrollControl"
-				],
-				"summary": "Retorna todos os registros de funcionários e seus respectivos dados complementares(Ex:Departamento, Centro de Custo)",
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.23"
-                        },
-                        {
-							"product": "RM",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.23"
-						},
-                        {
-							"product": "Datasul",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.23"
-						}
-					]
-				},
-				"description": "Retorna os dados da folha de pagamento de benefícios(Assitência Médica e Odontológica)",
-				"operationId": "getPayrollControl",
-				"parameters": [
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-					},
-					{
-						"$ref": "#/components/parameters/product"
-					},
-					{
-						"$ref": "#/components/parameters/updateDate"
-					},
-					{
-						"$ref": "#/components/parameters/benefitType"
-					},
-					{
-						"$ref": "#/components/parameters/companyId"
-					},
-					{
-						"$ref": "#/components/parameters/branchId"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/payrollControl/v1/1_000/jsonschema/schemas/PayrollControl_1_000.json#/definitions/PagedPayrollControl"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Erro no momento da listagem dos registros de funcionários.",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Nenhum registro localizado.",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	},
-	"components": {
-		"parameters": {
-			"product": {
-				"name": "product",
-				"in": "query",
-				"description": "Nome do produto que está sendo integrado no momento.",
-				"example": "PROTHEUS, RM, DATASUL",
-				"required": true,
-				"schema": {
-					"type": "string"
-					},
-					"x-totvs": {
-						"productInformation": [
-							{
-								"product": "Protheus",
-								"available": true,
-								"note": "Produto Protheus,RM ou DataSul",
-								"minimalVersion": "12.1.25"
-							},
-                            {
-                                "product": "RM",
-                                "available": true,
-                                "note": "Tipo de benefício a ser requisitado.",
-                                "minimalVersion": "12.1.25"
-                            },
-                            {
-                                "product": "Datasul",
-                                "available": true,
-                                "note": "Tipo de benefício a ser requisitado.",
-                                "minimalVersion": "12.1.25"
-                            }
-                        ]
-					}
-				},
-				"benefitType": {
-					"name": "benefitType",
-					"in": "query",
-					"required": true,
-					"description": "Tipo do benefício a ser requisitado",
-					"example": "1=Assistência Médica, 2=Assistência Odontológica, A=Todos os eneficios",
-					"schema": {
-						"type": "string"
-					},
-					"x-totvs": {
-						"productInformation": [
-							{
-								"product": "Protheus",
-								"available": true,
-								"note": "Tipo de benefício a ser requisitado.",
-								"minimalVersion": "12.1.25"
-							},
-							{
-								"product": "RM",
-								"available": true,
-								"note": "Tipo de benefício a ser requisitado.",
-								"minimalVersion": "12.1.25"
-							},
-							{
-								"product": "Datasul",
-								"available": true,
-								"note": "Tipo de benefício a ser requisitado.",
-								"minimalVersion": "12.1.25"
-							}
-						]
-					}
-				},
-			"updateDate": {
-				"name": "updatedate",
-				"in": "query",
-				"required": true,
-				"description": "Data da ultima atualização do registro.",
-				"example": "YYYY-MM-DDThh:mm:ssZ",
-				"schema": {
-					"type": "string"
-				},
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Data de atualização da ultima requisição.",
-							"minimalVersion": "12.1.25"
-						},
-                        {
-							"product": "RM",
-							"available": true,
-							"note": "Tipo de benefício a ser requisitado.",
-							"minimalVersion": "12.1.25"
-                        },
-                        {
-							"product": "Datasul",
-							"available": true,
-							"note": "Tipo de benefício a ser requisitado.",
-							"minimalVersion": "12.1.25"
-						}
-					]
-				}
-			},
-			"companyId": {
-				"description": "Código da Empresa",
-				"type": "string",
-				"x-totvs": [
-					{
-						"product": "Protheus",
-						"field": "",
-						"required": false,
-						"note": "será recebido o código da empresa, relacionado para ",
-						"available": true,
-						"canUpdate": false
-					}
-				]
-			},
-			"branchId": {
-				"description": "Código da Filial",
-				"type": "string",
-				"x-totvs": [
-					{
-						"product": "Protheus",
-						"field": "",
-						"required": false,
-						"note": "Será recebido o código da variável",
-						"available": true,
-						"canUpdate": false
-					}
-				]
-			}
-		},
-		
-		"schemas": {}
-	}
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para entidade da folha de pagamento para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/rh/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8051"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para entidade da folha de pagamento para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+    "version": "1.000",
+    "title": "Folha de pagamento para linha de produtos totvs - Global",
+    "contact": {
+      "name": "T-Talk",
+      "url": "https://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Relação de Funcionários - Global",
+        "description": "Dados de folha de pagamento pertinente a benefícios(Assistência Médica, Odontológica) ",
+        "segment": "Recursos Humanos"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "reginaldo.Lyra@totvs.com.br",
+          "description": "Dados de folha pagamento pertinentes a Benefícios (Assistencia Médica,Odontológica) ",
+          "adapter": "GPA011API.prw"
+        },
+        {
+          "product": "RM",
+          "contact": "wellington.vieira@totvs.com.br",
+          "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
+          "adapter": "FopPgtoBeneficiosData"
+        },
+        {
+          "product": "Datasul",
+          "contact": "",
+          "description": "Dados de folha pagamento pertinentes a Benefícios (Assistencia Médica,Odontológica) ",
+          "adapter": ""
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/PayrollControl": {
+      "get": {
+        "tags": [
+          "PayrollControl"
+        ],
+        "summary": "Retorna todos os registros de funcionários e seus respectivos dados complementares(Ex:Departamento, Centro de Custo)",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "12.1.23"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "12.1.23"
+            }
+          ]
+        },
+        "description": "Retorna os dados da folha de pagamento de benefícios(Assitência Médica e Odontológica)",
+        "operationId": "getPayrollControl",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "#/components/parameters/product"
+          },
+          {
+            "$ref": "#/components/parameters/updateDate"
+          },
+          {
+            "$ref": "#/components/parameters/benefitType"
+          },
+          {
+            "$ref": "#/components/parameters/companyId"
+          },
+          {
+            "$ref": "#/components/parameters/branchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/payrollControl/v1/1_000/jsonschema/schemas/PayrollControl_1_000.json#/definitions/PagedPayrollControl"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da listagem dos registros de funcionários.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum registro localizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "product": {
+        "name": "product",
+        "in": "query",
+        "description": "Nome do produto que está sendo integrado no momento.",
+        "example": "PROTHEUS, RM, DATASUL",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Produto Protheus,RM ou DataSul",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Tipo de benefício a ser requisitado.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Tipo de benefício a ser requisitado.",
+              "minimalVersion": "12.1.25"
+            }
+          ]
+        }
+      },
+      "benefitType": {
+        "name": "benefitType",
+        "in": "query",
+        "required": true,
+        "description": "Tipo do benefício a ser requisitado",
+        "example": "1=Assistência Médica, 2=Assistência Odontológica, A=Todos os Beneficios",
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Tipo de benefício a ser requisitado.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Tipo de benefício a ser requisitado.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Tipo de benefício a ser requisitado.",
+              "minimalVersion": "12.1.25"
+            }
+          ]
+        }
+      },
+      "updateDate": {
+        "name": "updatedate",
+        "in": "query",
+        "required": true,
+        "description": "Data da ultima atualização do registro.",
+        "example": "YYYY-MM-DDThh:mm:ssZ",
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Data de atualização da ultima requisição.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Data de atualização da ultima requisição.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Data de atualização da ultima requisição.",
+              "minimalVersion": "12.1.25"
+            }
+          ]
+        }
+      },
+      "companyId": {
+        "description": "Código da Empresa",
+        "type": "string",
+        "x-totvs": [
+          {
+            "product": "Protheus",
+            "field": "",
+            "required": false,
+            "note": "será recebido o código da empresa, relacionado para ",
+            "available": true,
+            "canUpdate": false
+          },
+          {
+            "product": "RM",
+            "field": "",
+            "required": false,
+            "note": "será recebido o código da empresa, relacionado para ",
+            "available": true,
+            "canUpdate": false
+          }
+        ]
+      },
+      "branchId": {
+        "description": "Código da Filial",
+        "type": "string",
+        "x-totvs": [
+          {
+            "product": "Protheus",
+            "field": "",
+            "required": false,
+            "note": "Será recebido o código da variável",
+            "available": true,
+            "canUpdate": false
+          },
+          {
+            "product": "RM",
+            "field": "",
+            "required": false,
+            "note": "Não Será tratado pelo RM",
+            "available": true,
+            "canUpdate": false
+          }
+        ]
+      }
+    },
+
+    "schemas": {}
+  }
 }

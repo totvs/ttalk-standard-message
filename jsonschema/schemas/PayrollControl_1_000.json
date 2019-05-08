@@ -1,555 +1,567 @@
 {
-    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/payrollControl/v1/1_000/jsonschema/schemas/PayrollControl_1_000.json#",
-    "info": {
-		"description": "Schema para entidade da folha de pagamento para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
-		"version": "1.000",
-        "title": "Relação da Folha de Pagamento",
-        "contact": {
-			"name": "T-Talk",
-			"url": "API.Totvs.com.br",
-			"email": "comiteintegracao@totvs.com.br"
-		},
-		"x-totvs": {
-			"messageDocumentation": {
-				"name": "PayrollControl",
-				"description": "Esta api tem por objetivos disponibilizar para o cliente interessado em integrar seus dados de folha de pagamento com sistemas de terceiros, possibilitando criar integrações dos mais variádos tipos que necessitem dos dados de seus colaboradores.",
-				"segment": "Recursos Humanos"
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/payrollControl/v1/1_000/jsonschema/schemas/PayrollControl_1_000.json#",
+  "info": {
+    "description": "Schema para entidade da folha de pagamento para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+    "version": "1.000",
+    "title": "Relação da Folha de Pagamento",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "PayrollControl",
+        "description": "Esta api tem por objetivos disponibilizar para o cliente interessado em integrar seus dados de folha de pagamento com sistemas de terceiros, possibilitando criar integrações dos mais variádos tipos que necessitem dos dados de seus colaboradores.",
+        "segment": "Recursos Humanos"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "Reginaldo.Lyra@totvs.com.br",
+          "description": "",
+          "adapter": "GPA011API",
+          "helpUrl": "link aqui"
+        },
+        {
+          "product": "RM",
+          "contact": "wellington.vieira@totvs.com.br",
+          "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
+          "adapter": "FopPgtoBeneficiosData",
+          "helpUrl": "link aqui"
+        },
+        {
+          "product": "Datasul",
+          "contact": "",
+          "description": "",
+          "adapter": "",
+          "helpUrl": "link aqui"
+        }
+      ]
+    }
+  },
+
+  "definitions": {
+    "PagedPayrollControl": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "product": {
+              "type": "string",
+              "example": "Protheus"
             },
-            "productInformation": [
-				{
-					"product": "Protheus",
-					"contact": "Reginaldo.Lyra@totvs.com.br",
-					"description": "",
-					"adapter": "GPA011API",
-					"helpUrl": "link aqui"
-                },
-                {
-					"product": "RM",
-					"contact": "",
-					"description": "",
-					"adapter": "",
-					"helpUrl": "link aqui"
-                },
-                {
-					"product": "Datasul",
-					"contact": "",
-					"description": "",
-					"adapter": "",
-					"helpUrl": "link aqui"
-				}
-			]            
-		}
-	},    
-    
-    "definitions": {
-        "PagedPayrollControl": {
-			"type": "object",
-			"allOf": [
-				{
-					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-                },
-                {	
-                    "type": "object",
-                    "properties": {
-                        "product": {
-                            "type": "string",
-                            "example": "Protheus"
-                        },
-                        "dateOfReply": {
-                            "type": "string",
-                            "format":"date-time",
-                            "example": "yyyy-mm-ddThh:mm:ss+|-hh:mm"
-                        },
-    
-                        "numberOfRecords": {
-                            "type": "int32",
-                            "format":"999.999",
-                            "example": "1"
-                        }
-                    }
-                },
-				{
-					"type": "object",
-					"properties": {
-						"payments": {
-							"type": "array",
-							"items": {
-								"$ref": "#/definitions/PayrollControlItem"
-							}
-						}
-					}
-				}
-			]
-		},
-        "PayrollControlItem": {
-			"type": "object",
-			"description": "Descreve os dados da folha de pagamento do funcionário",
-			"properties": {
-				"companyKey": {
-					"description": "Agrupamento de Empresa, Unidade de negócio e Filial",
-                    "type": "string",
-                    "exemple":"T1|MG|01",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "",
-							"required": false,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"não possui campo físico na tabela"                         
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+            "dateOfReply": {
+              "type": "string",
+              "format": "date-time",
+              "example": "yyyy-mm-ddThh:mm:ss+|-hh:mm"
+            },
 
-					]
-				},    
-                "branch": {
-					"description": "Filial do Funcionario",
-                    "type": "string",
-                    "exemple":"D MG 01",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_FILIAL",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_FILIAL e para periodo fechado sera utilizado RHSXX0.RHS_FILIAL"
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false                            
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false                            
-						}
+            "numberOfRecords": {
+              "type": "int32",
+              "format": "999.999",
+              "example": "1"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "payments": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PayrollControlItem"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PayrollControlItem": {
+      "type": "object",
+      "description": "Descreve os dados da folha de pagamento do funcionário para os pagamentos pertinentes a Benefícios (Assistencia Médica,Odontológica)",
+      "properties": {
+        "companyKey": {
+          "description": "Agrupamento de Empresa, Unidade de negócio e Filial",
+          "type": "string",
+          "exemple": "T1|MG|01",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "SM0.M0_CODIGO + TMP.RHR_FILIAL",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "não possui campo físico na tabela"
+            },
+            {
+              "product": "RM",
+              "field": "PFFINANC.CODCOLIGADA",
+              "required": true,
+              "type": "integer",
+              "available": true,
+              "canUpdate": false,
+              "note": "No RM o conceito de empresa refere-se ao cadastro de Coligada na tabela GCOLIGADA."
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-				},    
-                "code": {
-					"description": "Matricula do Funcionario",
-                    "type": "string",
-                    "exemple":"000100",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_MAT",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_MAT e para periodo fechado sera utilizado RHSXX0.RHS_MAT"                         
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false                            
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false                            
-						}
+          ]
+        },
+        "branch": {
+          "description": "Filial do Funcionario",
+          "type": "string",
+          "exemple": "D MG 01",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_FILIAL",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_FILIAL e para periodo fechado sera utilizado RHSXX0.RHS_FILIAL"
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "integer",
+              "available": true,
+              "canUpdate": false,
+              "note": "O RM não tratará o conceito de filial na integração com beneficiários"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "internalIdCode": {
-					"description": "InternalId do funcionário",
-                    "type": "string",
-                    "exemple":"T1||D MG 01|000100",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "SM0.M0_CODIGO + TMP.TMP_FILIAL + TMP.TMP_MAT",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"o InternalID da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15.Para periodo aberto sera utilizado RHRXX0.RHR_FILIAL+RHRXX0.RHR_MAT e para periodo fechado sera utilizado RHSXX0.RHS_FILIAL+RHSXX0.RHS_MAT"
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false                            
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false                            
-						}
+          ]
+        },
+        "code": {
+          "description": "Matricula do Funcionario",
+          "type": "string",
+          "exemple": "000100",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_MAT",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_MAT e para periodo fechado sera utilizado RHSXX0.RHS_MAT"
+            },
+            {
+              "product": "RM",
+              "field": "PFFINANC.CHAPA",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "MovimentDate": {
-					"description": "Data da Movimentação",
-					"type": "string",
-					"format": "date-time",
-                    "exemple":"yyyy-mm-ddThh:mm:ss+|-hh:mm",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_DATA",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_DATA e para periodo fechado sera utilizado RHSXX0.RHS_DATA"                                             
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "internalIdCode": {
+          "description": "InternalId do funcionário",
+          "type": "string",
+          "exemple": "T1||D MG 01|000100",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "SM0.M0_CODIGO + TMP.TMP_FILIAL + TMP.TMP_MAT",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "o InternalID da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15.Para periodo aberto sera utilizado RHRXX0.RHR_FILIAL+RHRXX0.RHR_MAT e para periodo fechado sera utilizado RHSXX0.RHS_FILIAL+RHSXX0.RHS_MAT"
+            },
+            {
+              "product": "RM",
+              "field": "PFFINANC.CODCOLIGADA|PFFINANC.CHAPA",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "originalRecord": {
-					"description": "Registro Original",
-                    "type": "string",
-                    "exemple":"1",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_ORIGEM",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_ORIGEM e para periodo fechado sera utilizado RHSXX0.RHS_ORIGEM"                                                  
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "MovimentDate": {
+          "description": "Data da Movimentação",
+          "type": "string",
+          "format": "date-time",
+          "exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_DATA",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_DATA e para periodo fechado sera utilizado RHSXX0.RHS_DATA"
+            },
+            {
+              "product": "RM",
+              "field": "DATAMOVIMENTACAO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "pode ser PFFINANC.RECCREATEDON quando foi incluido e ainda não alteraddo OU PFFINANC.RECMODIFIEDON quando foi alterado"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "providerCode": {
-					"description": "Codigo do provedor",
-                    "type": "string",
-                    "exemple":"001",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_CODFOR",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_CODFOR e para periodo fechado sera utilizado RHSXX0.RHS_CODFOR"                                   
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "originalRecord": {
+          "description": "Registro Original",
+          "type": "string",
+          "exemple": "1",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_ORIGEM",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_ORIGEM e para periodo fechado sera utilizado RHSXX0.RHS_ORIGEM"
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note":  "neste momento será vazio"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "providerType": {
-					"description": "Tipo do provedor",
-                    "type": "string",
-                    "exemple":"1",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_TPFORN",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_TPFORN e para periodo fechado sera utilizado RHSXX0.RHS_TPFORN"                                         
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "providerCode": {
+          "description": "Codigo do provedor",
+          "type": "string",
+          "exemple": "001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_CODFOR",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_CODFOR e para periodo fechado sera utilizado RHSXX0.RHS_CODFOR"
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFFORNECEDORES.CODFORNECEDORBENEFICIO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do fornecedor (VBENEFFORNECEDORES) vinculado ao contrato (VBENEFCONTRATOS) referente ao benedifico (VBENEFICIOS) que está sendo descontado pelo (VBENEFICIOS.CODEVENTO) na Ficha financeira (PFFINANC.CODEVENTO)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "contractCode": {
-					"description": "Codigo do Contrato",
-                    "type": "string",
-                    "exemple":"",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_CODCON",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"O codigo do Contrato da tabela S074 e conteudo do CODCON da RCCXX0.RCC_CONTEUDO, localizando pelo codigo do Fornecedor RHRXX0.RHR_CODFOR quando o periodo estiver aberto e RHSXX0.RHS_CODFOR quando fechado"                                                 
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "providerType": {
+          "description": "Tipo do provedor",
+          "type": "string",
+          "exemple": "1",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_TPFORN",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_TPFORN e para periodo fechado sera utilizado RHSXX0.RHS_TPFORN"
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFFORNECEDORES.CODTIPOFORNECEDORBENEFICIO",
+              "required": true,
+              "type": "smallint",
+              "available": true,
+              "canUpdate": false,
+              "note": "O tipo do segmento de um fornecedor é registrado na tabela dinamica 'VBENEFTPOFORN' vinculada ao fornecedor pelo campo VBENEFFORNECEDORES.CODTIPOFORNECEDORBENEFICIO"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "productCode": {
-					"description": "Código do produto",
-                    "type": "string",
-                    "exemple":"",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_PLANO",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_PLANO e para periodo fechado sera utilizado RHSXX0.RHS_PLANO"                                          
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "contractCode": {
+          "description": "Codigo do Contrato",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_CODCON",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "O codigo do Contrato da tabela S074 e conteudo do CODCON da RCCXX0.RCC_CONTEUDO, localizando pelo codigo do Fornecedor RHRXX0.RHR_CODFOR quando o periodo estiver aberto e RHSXX0.RHS_CODFOR quando fechado"
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFCONTRATOS.CODCONTRATO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "O contrato é acessado pelo vínculo do contrato 'VBENEFCONTRATOS' com o benefício 'VBENEFICIOS' vinculados pelo (VBENEFICIOS.CODEVENTO) na Ficha financeira (PFFINANC.CODEVENTO)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "payrollIdentifier": {
-					"description": "Identificador do cálculo da folha de pagamento",
-                    "type": "string",
-                    "exemple":"001",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_PD",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_PD e para periodo fechado sera utilizado RHSXX0.RHS_PD"                                          
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": false,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": false,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "productCode": {
+          "description": "Código do produto",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_PLANO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_PLANO e para periodo fechado sera utilizado RHSXX0.RHS_PLANO"
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIOS.CODBENEFICIO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do beneficio registrado na tabela (VBENEFICIOS).CODBENEFICIO vinculados pelo (VBENEFICIOS.CODEVENTO) na Ficha financeira (PFFINANC.CODEVENTO)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "paymentAmount": {
-					"description": "Valor do pagamento",
-					"type": "int32",
-					"format":"999999.99",
-                    "exemple":"999.00",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_VLRFUN",
-							"required": true,
-							"type": "integer",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_VLRFUN e para periodo fechado sera utilizado RHSXX0.RHS_VLRFUN"                                            
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "payrollIdentifier": {
+          "description": "Identificador do cálculo da folha de pagamento",
+          "type": "string",
+          "exemple": "001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_PD",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_PD e para periodo fechado sera utilizado RHSXX0.RHS_PD"
+            },
+            {
+              "product": "RM",
+              "field": "PFFINANC.CODEVENTO",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "código do evento em que foi realizado o desconto do benefício na ficha financeira (PFFINANC.CODEVENTO x VBENEFICIOS.CODBENEFICIO)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "paymentDate": {
-					"description": "Data de pagamento",
-					"type": "string",
-                    "format": "date-time",
-                    "exemple":"yyyy-mm-ddThh:mm:ss+|-hh:mm",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_DATPGT",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-							"note":"Para periodo aberto sera utilizado RCHXX0.RCH_DTPAGO do roteiro PLA comparando o periodo RHRXX.RHR_COMPPG e para periodo fechado sera utilizado RHSXX0.RHS_DATPGT"                                           
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
+          ]
+        },
+        "paymentAmount": {
+          "description": "Valor do pagamento",
+          "type": "int32",
+          "format": "999999.99",
+          "exemple": "999.00",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_VLRFUN",
+              "required": true,
+              "type": "integer",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_VLRFUN e para periodo fechado sera utilizado RHSXX0.RHS_VLRFUN"
+            },
+            {
+              "product": "RM",
+              "field": "PFFINANC.VALOR",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Valor do evento em que foi realizado o desconto do benefício na ficha financeira (PFFINANC.CODEVENTO x VBENEFICIOS.CODBENEFICIO)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
 
-					]
-                },    
-                "paymentPeriod": {
-					"description": "Competencia de pagamento",
-                    "type": "string",
-                    "exemple":"201810",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"field": "TMP.TMP_COMPPG",
-							"required": true,
-							"type": "string",
-							"available": true,
-                            "canUpdate": false,
-                            "note":"Para periodo aberto sera utilizado RHRXX0.RHR_COMPPG e para periodo fechado sera utilizado RHSXX0.RHS_COMPPG"                                           
-                        },
-                        {
-							"product": "RM",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						},
-                        {
-							"product": "Datasul",
-							"field": "",
-							"required": true,
-							"type": "string",
-							"available": true,
-							"canUpdate": false
-						}
-					]
-				}
-			}
-		}
-	}
+          ]
+        },
+        "paymentDate": {
+          "description": "Data de pagamento",
+          "type": "string",
+          "format": "date-time",
+          "exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_DATPGT",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RCHXX0.RCH_DTPAGO do roteiro PLA comparando o periodo RHRXX.RHR_COMPPG e para periodo fechado sera utilizado RHSXX0.RHS_DATPGT"
+            },
+            {
+              "product": "RM",
+              "field": "PFFINANC.DTPAGTO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Data de Pagamento do evento em que foi realizado o desconto do benefício na ficha financeira (PFFINANC.CODEVENTO x VBENEFICIOS.CODBENEFICIO)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
+
+          ]
+        },
+        "paymentPeriod": {
+          "description": "Competencia de pagamento",
+          "type": "string",
+          "exemple": "201810",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "TMP.TMP_COMPPG",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para periodo aberto sera utilizado RHRXX0.RHR_COMPPG e para periodo fechado sera utilizado RHSXX0.RHS_COMPPG"
+            },
+            {
+              "product": "RM",
+              "field": "PFFINANC.ANOCOMP + PFFINANC.MESCOMP",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Ano e Mês referente a competência em que foi descontado o evento referente ao benefício na ficha financeira"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        }
+      }
+    }
+  }
 }
