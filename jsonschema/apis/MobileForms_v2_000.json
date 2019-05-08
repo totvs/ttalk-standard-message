@@ -73,6 +73,51 @@
           },
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "name": "CompanyCode",
+            "in": "query",
+            "description": "Código da empresa",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Código da Formulários de Apontamento de Produção",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "AppointmentType",
+            "in": "query",
+            "description": "Tipo de Apontamento : 1 - Apontamento por Ordem de Produção",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Produto da demanda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "UserGroup",
+            "in": "query",
+            "description": "Grupo de Usuários",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -81,7 +126,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MobileForms/v2/2_000/jsonschema/schemas/MobileForms_2_000.json#/definitions/PagedMobileForms"
                 }
               }
             }
@@ -122,30 +167,16 @@
               "note": "Este verbo esta disponivel com todos os parametros",
               "minimalVersion": "12.1.25"
             }
-          ]
-        },
-        "parameters": [
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
-              }
-            }
-          },
-          "description": "Inclui um formulários do Apontamento de Produção Mobile"
+          ],
+          "description": "cadastro de formulário do Apontamento de Produção Mobile a ser atualizada"
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Operação realizada com sucesso",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MobileForms/v2/2_000/jsonschema/schemas/MobileForms_2_000.json#/definitions/MobileForms"
                 }
               }
             }
@@ -159,18 +190,42 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Servidor não conseguiu processar a requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MobileForms/v2/2_000/jsonschema/schemas/MobileForms_2_000.json#/definitions/MobileForms"
+              }
+            }
           }
         }
       }
     },
-    "/MobileForms/{Code}": {
-      "get": {
+    "/MobileForms/{companyId}/{code}": {
+      "delete": {
         "tags": [
           "MobileForms"
         ],
-        "summary": "Retorna formulário do Apontamento de Produção Mobile pelo seu Código",
-        "description": "Retorna formulário do Apontamento de Produção Mobile pelo seu Código",
-        "operationId": "geMobileForms",
+        "summary": "Exclui Formulário do Apontamento de Produção Mobile cadastrado conforme dados enviados na requisição",
+        "description": "Exclui formulário do Apontamento de Produção Mobile cadastrado conforme dados enviados na requisição",
+        "operationId": "DeleteUnitOfMeasure",
         "x-totvs": {
           "productInformation": [
             {
@@ -183,25 +238,31 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/Code"
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            "$ref": "#/components/parameters/companyId"
+          },
+          {
+            "$ref": "#/components/parameters/code"
           }
         ],
         "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso",
+          "204": {
+            "description": "Operação realizada com sucesso"
+          },
+          "400": {
+            "description": "erro no momento da Exclusão",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                 }
               }
             }
           },
           "404": {
-            "description": "formulário do Apontamento de Produção Mobile não localizada na base",
+            "description": "Formulário do Apontamento de Produção Mobile não localizada na base",
             "content": {
               "application/json": {
                 "schema": {
@@ -231,17 +292,20 @@
         },
         "parameters": [
           {
-            "$ref": "#/components/parameters/Code"
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
           },
           {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            "$ref": "#/components/parameters/companyId"
+          },
+          {
+            "$ref": "#/components/parameters/code"
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MobileForms/v2/2_000/jsonschema/schemas/MobileForms_2_000.json#/definitions/MobileForms"
               }
             }
           },
@@ -253,7 +317,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MobileForms/v2/2_000/jsonschema/schemas/MobileForms_2_000.json#/definitions/MobileForms"
                 }
               }
             }
@@ -279,194 +343,29 @@
             }
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "MobileForms"
-        ],
-        "summary": "Exclui Formulário do Apontamento de Produção Mobile cadastrado conforme dados enviados na requisição",
-        "description": "Exclui formulário do Apontamento de Produção Mobile cadastrado conforme dados enviados na requisição",
-        "operationId": "DeleteUnitOfMeasure",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "Logix",
-              "available": true,
-              "note": "Este verbo esta disponivel com todos os parametros",
-              "minimalVersion": "12.1.25"
-            }
-          ]
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Code"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "erro no momento da Exclusão",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Formulário do Apontamento de Produção Mobile não localizada na base",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MobileForms/formUser/{User}": {
-      "get": {
-        "tags": [
-          "FormUser"
-        ],
-        "summary": "Retorna os formulário de Apontamento de Produção Mobile a partir do usuário",
-        "description": "Retorna formulário do Apontamento de Produção Mobile a partir do usuário",
-        "operationId": "getFormUser",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "Logix",
-              "available": true,
-              "note": "Este verbo esta disponivel com todos os parametros",
-              "minimalVersion": "12.1.25"
-            }
-          ]
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/User"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "formulário do Apontamento de Produção Mobile não localizada na base",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/MobileForms/formUser/{Id}": {
-      "get": {
-        "tags": [
-          "FormUser"
-        ],
-        "summary": "Retorna os formulário de Apontamento de Produção Mobile a partir do usuário e código do formulário",
-        "description": "Retorna formulário do Apontamento de Produção Mobile a partir do usuário e código do formulário",
-        "operationId": "getId",
-        "x-totvs": {
-          "productInformation": [
-            {
-              "product": "Logix",
-              "available": true,
-              "note": "Este verbo esta disponivel com todos os parametros",
-              "minimalVersion": "12.1.25"
-            }
-          ]
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Id"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MobileForms_v2_000.json#/definitions/BusinessContentType"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "formulário do Apontamento de Produção Mobile não localizada na base",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
       }
     }
   },
   "components": {
     "parameters": {
-      "Code": {
-        "name": "Code",
+      "companyId": {
+        "name": "companyId",
         "in": "path",
+        "description": "Código da empresa",
         "required": true,
-        "description": "Identificador único representando o Formulário do Apontamento de Produção Mobile",
         "schema": {
-          "type": "string"
+          "type": "string",
+          "format": "char(3)"
         }
       },
-      "User": {
-        "name": "User",
+      "code": {
+        "name": "code",
         "in": "path",
+        "description": "Código do Formulário do Apontamento de Produção Mobile",
         "required": true,
-        "description": "Identificador do usuário que utilizam os formulários do apontamento de produção Mobile",
         "schema": {
-          "type": "string"
-        }
-      },
-      "Id": {
-        "name": "Id",
-        "in": "path",
-        "required": true,
-        "description": "Identificador único representando o Formulário do Apontamento de Apontamento de Produção Mobile por Empresa, Código e Usuário",
-        "schema": {
-          "type": "string"
+          "type": "string",
+          "format": "char(10)"
         }
       }
     },
