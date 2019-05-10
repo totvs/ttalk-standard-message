@@ -1,0 +1,387 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para manipulação das Demandas do MRP",
+      "url": "http://{serverUrl}:{serverHttpPort}/MRPDEMANDS/api/pcp/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8040"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para a entidade de Demandas do MRP",
+    "version": "1.000",
+    "title": "Demandas do MRP",
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "MRPDemands",
+        "description": "Demandas do MRP",
+        "segment": "Manufatura"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "robson.klug@totvs.com.br",
+          "description": "Cadastro de Demandas do MRP",
+          "adapter": ""
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/Demands": {
+      "post": {
+        "tags": [
+          "Demands"
+        ],
+        "summary": "Inclui ou atualiza uma ou mais demandas do MRP",
+        "description": "",
+        "operationId": "postDemands",
+        "responses": {
+          "201": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPDemands/v1/1_000/jsonschema/schemas/MRPDemands_1_000.json#/definitions/PagedMRPDemands"
+                }
+              }
+            }
+          },
+          "207": {
+            "description": "Operação realizada parcialmente com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPDemands/v1/1_000/jsonschema/schemas/MRPDemands_1_000.json#/definitions/MRPDemandMultiple"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da Inclusão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Servidor não conseguiu processar a requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.27"
+            }
+          ]
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPDemands/v1/1_000/jsonschema/schemas/MRPDemands_1_000.json#/definitions/ListOfMRPDemand"
+              }
+            }
+          },
+          "description": "Objeto de demandas do MRP que deve ser adicionado ou atualizado",
+          "required": true
+        }
+      },
+      "get": {
+        "tags": [
+          "Demands"
+        ],
+        "summary": "Lista de demandas do MRP",
+        "description": "Retorna lista de demandas do MRP",
+        "operationId": "getMRPDemands",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "name": "branchId",
+            "in": "query",
+            "description": "Código da filial",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Código da demanda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Data da demanda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product",
+            "in": "query",
+            "description": "Produto da demanda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wareHouse",
+            "in": "query",
+            "description": "Armazém da demanda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "query",
+            "description": "Revisão da demanda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "document",
+            "in": "query",
+            "description": "Documento da demanda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "description": "Origem da demanda. 1=Plano Mestre;2=Previsão de Vendas;3=Pedido de Vendas;4=Empenho Projeto;5=Arquivo;9=Manual",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "processed",
+            "in": "query",
+            "description": "Indicador de demanda já processada pelo MRP. 1=Sim;2=Não",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPDemands/v1/1_000/jsonschema/schemas/MRPDemands_1_000.json#/definitions/PagedMRPDemands"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Demandas do MRP não localizadas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.27"
+            }
+          ]
+        }
+      },
+      "delete": {
+        "tags": [
+          "Demands"
+        ],
+        "summary": "Remove uma ou mais Demandas do MRP",
+        "description": "Remove uma ou mais Demandas do MRP",
+        "operationId": "deleteMRPDemands",
+        "responses": {
+          "204": {
+            "description": "Operação realizada com sucesso"
+          },
+          "207": {
+            "description": "Operação realizada parcialmente com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPDemands/v1/1_000/jsonschema/schemas/MRPDemands_1_000.json#/definitions/MRPDemandMultiple"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da exclusão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Demanda do MRP não localizada na base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPDemands/v1/1_000/jsonschema/schemas/MRPDemands_1_000.json#/definitions/ListOfMRPDemand"
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.27"
+            }
+          ]
+        }
+      }
+    },
+    "/Demands/{branchId}/{code}": {
+      "get": {
+        "tags": [
+          "Demands"
+        ],
+        "summary": "Retorna uma demanda do MRP",
+        "description": "Retorna uma Demanda do MRP",
+        "operationId": "getDemand",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "#/components/parameters/branchId"
+          },
+          {
+            "$ref": "#/components/parameters/code"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPDemands/v1/1_000/jsonschema/schemas/MRPDemands_1_000.json#/definitions/MRPDemandBase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Demanda do MRP não localizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.27"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "branchId": {
+        "name": "branchId",
+        "in": "path",
+        "description": "Codigo da filial da demanda do MRP",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "char(2)"
+        }
+      },
+      "code": {
+        "name": "code",
+        "in": "path",
+        "description": "Codigo da demanda do MRP",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "char(200)"
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
