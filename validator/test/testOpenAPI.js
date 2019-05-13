@@ -112,7 +112,7 @@ describe("Validating OpenAPI files...", function () {
                 expect(fileNameVersion).to.equal(infoVersion);
               });
               it("should be backward compatible with minor versions", function () {
-                expect(apiCompatibilityServiceResult.isBackwardCompatible, apiCompatibilityServiceResult.consoleRender).to.be.true;
+                expect(apiCompatibilityServiceResult.isBackwardCompatible, "\r\n" + apiCompatibilityServiceResult.consoleRender).to.be.true;
               });
               it("should have anything different from the previous minor version, beside x-totvs", function () {
                 expect(apiCompatibilityServiceResult.hadChanges, apiCompatibilityServiceResult.consoleRender).to.be.true;
