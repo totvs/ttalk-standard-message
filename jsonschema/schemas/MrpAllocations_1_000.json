@@ -1,0 +1,262 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpAllocations_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "MRPAllocations",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "MRPAllocations",
+				"description": "Empenho da Ordem de Produção do MRP",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/ListOfMRPAllocation",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"MRPAllocationsBase": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"description": "Código da filial",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_FILIAL",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"code": {
+					"description": "Código do empenho da ordem de produção",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_IDREG",
+							"required": true,
+							"type": "Char",
+							"length": "200",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"product": {
+					"description": "Produto do empenho",
+					"type": "string",
+					"maxLength": 90,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_PROD",
+							"required": true,
+							"type": "Char",
+							"length": "90",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"productionOrder": {
+					"description": "Ordem de produção",
+					"type": "string",
+					"maxLength": 14
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_OP",
+							"required": false,
+							"type": "Char",
+							"length": "14",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"productionOrderOrig": {
+					"description": "Ordem de produção origem",
+					"type": "string",
+					"maxLength": 14
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_OPORIG",
+							"required": false,
+							"type": "Char",
+							"length": "14",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"allocationDate": {
+					"description": "Data do Empenho",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_DT",
+							"required": false,
+							"type": "Char",
+							"length": "8",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"sequence": {
+					"description": "Sequencia do produto",
+					"type": "string",
+					"maxLength": 3
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_SEQ",
+							"required": false,
+							"type": "Char",
+							"length": "3",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"quantity": {
+					"description": "Quantidade do Empenho",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_QTD",
+							"required": true,
+							"format": "double",
+							"length": 12.2,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"suspendedQuantity": {
+					"description": "Quantidade Suspensa do Empenho",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_QSUSP",
+							"required": true,
+							"format": "double",
+							"length": 11.2,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"wareHouse": {
+					"description": "Aramzém de Consumo do Empenho",
+					"type": "string",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4S.T4S_ARMCON",
+							"type": "Char",
+							"length": "10",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"MessageBase": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				},
+				"detailedMessage": {
+					"$ref": "#/definitions/MRPAllocationsBase"
+				}
+			}
+		},
+		"ListOfMessages": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"_messages": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/MessageBase"
+							}
+						}
+					}
+				}
+			]
+		},
+		"ListOfMRPAllocations": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/MRPAllocationsBase"
+							}
+						}
+					}
+				}
+			]
+		},
+		"MRPAllocationsMultiple": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/ListOfMRPAllocations"
+				},
+				{
+					"$ref": "#/definitions/ListOfMessages"
+				}
+			]
+		},
+		"PagedMRPAllocations": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ListOfMRPAllocations"
+				}
+			]
+		}
+	}
+}
