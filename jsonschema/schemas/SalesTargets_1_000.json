@@ -1,0 +1,400 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/SalesTargets_1_000.json#",
+	"info": {
+		"description": "API para retornar as metas de vendas, (x-totvs) para produtos TOTVS",
+		"version": "1.000",
+		"title": "SalesTargets",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.Totvs.crm.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "SalesTargets",
+				"businesSCTntentType": {
+					"type": "object",
+					"$ref": "#/definitions/SalesTargetsInfo"
+				},
+				"returncontentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "SalesTargets",
+				"description": "Cadastro de metas de vendas",
+				"segment": "Serviços"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de metas de vendas",
+					"adapter": "CRMS480.prw"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedSalesTargets": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/SalesTargets"
+				}
+			]
+		},
+		"SalesTargets": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/SalesTargetsInfo"
+					}
+				}
+			}
+		},
+		"SalesTargetsInfo": {
+			"description": "Descreve as metas de venda",
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"description": "Código da empresa",
+					"maxLength": 3
+				},
+				"InternalId": {
+					"type": "string",
+					"examples": "D MG 01 000001",
+					"description": "InternalId da metas de venda no ERP",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SCT.CT_FILIAL|SCT.CT_DOC",
+							"type": "varchar",
+							"length": "17",
+							"note": "Este dado e formado pelos campos Filial, código da meta de venda",
+							"available": true,
+							"canUpdate": false,
+							"required": true
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SCT.CT_FILIAL",
+							"required": true,
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|SCT.CT_FILIAL|SCT.CT_DOC",
+							"required": true,
+							"type": "varchar",
+							"length": "17",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"description": "Código da metas de venda.",
+					"example": "000000003",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"note": "O código da metas de venda é gerado automaticamente oela rotina, não será considerado valores enviados no mesmo.",
+							"field": "SCT.CT_DOC",
+							"type": "varchar",
+							"length": "9",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SalesTargetDescription": {
+					"type": "string",
+					"description": "Descrição da metas de venda.",
+					"example": "Meta de venda região norte",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SCT.CT_DESCRI",
+							"type": "varchar",
+							"length": "40",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ListOfSalesTargets": {
+					"type": "object",
+					"$ref": "#/definitions/ListSalesTargets"
+				}
+			}
+		},
+		"PagedItensSalesTargets": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ItensSalesTargets"
+				}
+			]
+		},
+		"ItensSalesTargets": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListSalesTargets"
+					}
+				}
+			}
+		},
+		"ListSalesTargets": {
+			"description": "Descreve a lista de metas de vendas",
+			"type": "array",
+			"items": {
+				"properties": {
+					"InternalId": {
+						"type": "string",
+						"examples": "D MG 01 000000001/001",
+						"description": "InternalId do item da metas de venda no ERP",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "CT_FILIAL|CT_DOC|CT_SEQUEN",
+								"type": "varchar",
+								"length": "12",
+								"note": "Este dado e formado pelos campos Filial, código da metas de venda, item da metas de venda",
+								"required": true,
+								"available": true,
+								"canUpdate": false
+							}
+						]
+					},
+					"SalesTargetItem": {
+						"type": "varchar",
+						"description": "Item da meta de venda.",
+						"example": "001",
+						"maxLength": 3,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_SEQUEN",
+								"type": "varchar",
+								"length": "3",
+								"required": true,
+								"available": true,
+								"canUpdate": false
+							}
+						]
+					},
+					"BillingDate": {
+						"type": "string",
+						"description": "Data de apuração da Meta de Venda.",
+						"example": "11/11/2018",
+						"maxLength": 8,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_DATA",
+								"type": "date",
+								"length": "8",
+								"required": true,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"SellerCode": {
+						"type": "string",
+						"description": "Código do vendedor na meta de venda.",
+						"example": "000001",
+						"maxLength": 6,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_VEND",
+								"type": "varchar",
+								"length": "6",
+								"required": false,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"RegionCode": {
+						"type": "string",
+						"description": "Código da região da Meta de Venda.",
+						"example": "001",
+						"maxLength": 3,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_REGIAO",
+								"type": "varchar",
+								"length": "3",
+								"required": false,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"CategoryCode": {
+						"type": "string",
+						"description": "Código da categotia do produto.",
+						"example": "000001",
+						"maxLength": 6,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_CATEGO",
+								"type": "varchar",
+								"length": "6",
+								"required": false,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"ProductType": {
+						"type": "string",
+						"description": "Código do tipo do produto.",
+						"example": "PA",
+						"maxLength": 2,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_TIPO",
+								"type": "varchar",
+								"length": "2",
+								"required": false,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"ProductGroup": {
+						"type": "string",
+						"description": "Código do grupo do produto.",
+						"example": "0003",
+						"maxLength": 4,
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_GRUPO",
+								"type": "varchar",
+								"length": "4",
+								"required": false,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"Quatity": {
+						"type": "number",
+						"description": "Quantidade a ser considerada para a metas de venda.",
+						"minimum": 0,
+						"maximum": 999999999999.99,
+						"example": "10.00",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_QUANT",
+								"type": "number",
+								"required": true,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"Price": {
+						"type": "number",
+						"description": "Valor da Meta de Venda.",
+						"minimum": 0,
+						"maximum": 99999999999999.98,
+						"example": "6000.00",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_VALOR",
+								"type": "number",
+								"required": true,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"Currency": {
+						"type": "number",
+						"description": "Código da moeda.",
+						"minimum": 1,
+						"maximum": 9,
+						"example": "1",
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_MOEDA",
+								"type": "number",
+								"required": true,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					},
+					"BlockedRecord": {
+						"type": "string",
+						"description": "Informa se o registro está habilitado(ativo) para uso na aplicação.",
+						"example": "2",
+						"minimum": 1,
+						"maximum": 2,
+						"enum": [
+							"1",
+							"2"
+						],
+						"x-totvs": [
+							{
+								"product": "protheus",
+								"field": "SCT.CT_MSBLQL",
+								"type": "varchar",
+								"length": "1",
+								"required": true,
+								"available": true,
+								"canUpdate": true
+							}
+						]
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,451 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/InscriptionFiles_1_000.json#",
+	"info": {
+		"description": "API para a entidade arquivos do candidato (InscriptionFiles) para produtos TOTVS",
+		"version": "1.000",
+		"title": "InscriptionFiles",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "InscriptionFiles",
+				"description": "Arquivos do candidato",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Listagem dos Arquivos do candidato"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedInscriptionFiles": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/InscriptionFilesInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"InscriptionFiles": {
+			"type": "object",
+			"allOf": [
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/InscriptionFilesOne"
+							}
+						}
+					}
+				}
+			]
+		},
+		"InscriptionFilesInfo": {
+			"type": "object",
+			"properties": {
+				"Id": {
+					"type": "string",
+					"description": "InternalId da mensagem",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Esta listagem considera sempre a parametrização, por isso é necessário que o internalid tenha os dados do contexto da parametrização",
+							"field": "CODCOLIGADA|IDPS|NUMEROINSCRICAO|NOMEARQUIVO",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"CompanyCode": {
+					"type": "string",
+					"example": "1",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "InternalId Company",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Código do processo seletivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.IDPS",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessInternalId": {
+					"type": "string",
+					"description": "InternalId selectionProcess",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.CODCOLIGADA|SPSPROCESSOSELETIVO.IDPS",
+							"required": false,
+							"available": true,
+							"note": "O processo seletivo na linha RM é composta por CODCOLIGADA e IDPS"
+						}
+					]
+				},
+				"UserCodeSelectionProcess": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Código do Usuário",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.CODUSUARIOPS",
+							"required": false,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UserInternalId": {
+					"type": "string",
+					"description": "InternalId userCode",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSUSUARIO.CODUSUARIOPS",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"InscriptionNumber": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Número de Inscrição",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.NUMEROINSCRICAO",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InscriptionNumberInternalId": {
+					"type": "string",
+					"description": "InternalId InscriptionNumber",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSINSCRICAOAREAOFERTADA.CODCOLIGADA|SPSINSCRICAOAREAOFERTADA.IDPS|SPSINSCRICAOAREAOFERTADA.NUMEROINSCRICAO",
+							"required": true,
+							"available": true,
+							"note": "Os candidatos inscritos na linha RM é composta por CODCOLIGADA, IDPS e NUMEROINSCRICAO"
+						}
+					]
+				},
+				"FileName": {
+					"type": "string",
+					"example": "Arquivo_Candidato.pdf",
+					"description": "Nome do arquivo enviado",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.NOMEARQUIVO",
+							"required": true,
+							"type": "varchar",
+							"length": 60,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"File": {
+					"type": "string",
+					"description": "Arquivo enviado do candidato em base64",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.ARQUIVO",
+							"required": true,
+							"type": "image",
+							"length": 16,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Detail": {
+					"type": "string",
+					"example": "Documento de Identidade",
+					"description": "Descrição e/ou detalhe sobre o arquivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.DETALHE",
+							"required": true,
+							"type": "varchar",
+							"length": 500,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"SendDate": {
+					"type": "string",
+					"format": "date",
+					"example": "2018-10-30",
+					"description": "Data de envio do arquivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.DATA",
+							"required": true,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"InscriptionFilesOne": {
+			"type": "object",
+			"properties": {
+				"Id": {
+					"type": "string",
+					"description": "InternalId da mensagem",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Esta listagem considera sempre a parametrização, por isso é necessário que o internalid tenha os dados do contexto da parametrização",
+							"field": "CODCOLIGADA|IDPS|NUMEROINSCRICAO|NOMEARQUIVO",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"CompanyCode": {
+					"type": "string",
+					"example": "1",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "InternalId Company",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Código do processo seletivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSAREAOFERTADA.IDPS",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessInternalId": {
+					"type": "string",
+					"description": "InternalId selectionProcess",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.CODCOLIGADA|SPSPROCESSOSELETIVO.IDPS",
+							"required": false,
+							"available": true,
+							"note": "O processo seletivo na linha RM é composta por CODCOLIGADA e IDPS"
+						}
+					]
+				},
+				"UserCodeSelectionProcess": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Código do Usuário",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.CODUSUARIOPS",
+							"required": false,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UserInternalId": {
+					"type": "string",
+					"description": "InternalId userCode",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSUSUARIO.CODUSUARIOPS",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"InscriptionNumber": {
+					"type": "integer",
+					"format": "int32",
+					"example": "2",
+					"description": "Número de Inscrição",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.NUMEROINSCRICAO",
+							"required": true,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InscriptionNumberInternalId": {
+					"type": "string",
+					"description": "InternalId InscriptionNumber",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSINSCRICAOAREAOFERTADA.CODCOLIGADA|SPSINSCRICAOAREAOFERTADA.IDPS|SPSINSCRICAOAREAOFERTADA.NUMEROINSCRICAO",
+							"required": true,
+							"available": true,
+							"note": "Os candidatos inscritos na linha RM é composta por CODCOLIGADA, IDPS e NUMEROINSCRICAO"
+						}
+					]
+				},
+				"FileName": {
+					"type": "string",
+					"example": "Arquivo_Candidato.pdf",
+					"description": "Nome do arquivo enviado",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.NOMEARQUIVO",
+							"required": true,
+							"type": "varchar",
+							"length": 60,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Detail": {
+					"type": "string",
+					"example": "Documento de Identidade",
+					"description": "Descrição e/ou detalhe sobre o arquivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.DETALHE",
+							"required": true,
+							"type": "varchar",
+							"length": 500,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"SendDate": {
+					"type": "string",
+					"format": "date",
+					"example": "2018-10-30",
+					"description": "Data de envio do arquivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSARQUIVOSCANDIDATO.DATA",
+							"required": true,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}

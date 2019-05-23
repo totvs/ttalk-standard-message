@@ -1,393 +1,393 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/InternalIdLoad_1_000.json#",
-  "info": {
-    "description": "",
-    "version": "1.000",
-    "title": "InternalIdLoad",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "InternalID Load",
-        "description": "Carga de InternalIDs",
-        "segment": "Construção e Projetos"
-      },
-      "productInformation": [
-        {
-          "product": "PROTHEUS",
-          "contact": "Celia Oliveira Silva",
-          "note": "Recebe os códigos das entidades integradas via stored procedure e webservice na integração Protheus x TOTVS Obras e Projetos e gera os InternalIDs destes registros de acordo com a regra da Mensagem Única.",
-          "adapter": "INTA001/INTI001"
-        },
-        {
-          "product": "RM",
-          "contact": "Andre Rosental Maciel",
-          "note": "Envia todos os registros que foram sincronizados na integração Protheus x TOTVS Obras e Projetos para carga do de/para.",
-          "adapter": "RM."
-        }
-      ],
-      "transactionDefinition": {
-        "subType": "request",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        },
-        "returnContentType": {
-          "$ref": "#/definitions/ReturnContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "CompanyId": {
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "LOG_EMP",
-              "required": true,
-              "type": "Char",
-              "length": "2",
-              "note": "Indica o grupo de empresas/empresa do registro.",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "GCOLIGADA.CODCOLIGADA",
-              "required": true,
-              "type": "integer",
-              "length": "2",
-              "note": "Código da coligada do registro.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "BranchId": {
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "LOG_FIL",
-              "required": true,
-              "type": "Char",
-              "length": "2",
-              "note": "Indica a filial do registro. Pode ter tamanho entre 2 e 12.",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "GFILIAL.CODFILIAL",
-              "required": true,
-              "type": "integer",
-              "length": "2",
-              "note": "Código da Filial do registro.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "CompanyInternalId": {
-          "type": "string",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "",
-              "required": true,
-              "type": "Char",
-              "length": "5",
-              "note": "Informação do grupo de empresa/empresa concatenado com a filial (empresa/unidade de negócio/filial) e separados por pipe.",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "GCOLIGADA.CODCOLIGADA|GFILIAL.CODFILIAL",
-              "required": true,
-              "type": "string",
-              "length": "5",
-              "note": "Código da coligada concatenado com o código da filial do registro ou grupo de registros.",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ExecutionIdentifier": {
-          "type": "number",
-          "x-totvs": [
-            {
-              "product": "PROTHEUS",
-              "field": "LOG_IDENT",
-              "required": true,
-              "type": "integer",
-              "length": "6",
-              "note": "Indica o número de execução da carga de dados.",
-              "available": true,
-              "canUpdate": false
-            },
-            {
-              "product": "RM",
-              "field": "HCCONVERSAOINTEGRACAOLOG.IDEXECUCAO",
-              "required": true,
-              "type": "integer",
-              "length": "4",
-              "note": "Identificador da execução do processo de conversão (carga de dados no de-para).",
-              "available": true,
-              "canUpdate": false
-            }
-          ]
-        },
-        "ListOfEntity": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "EntityName": {
-                "type": "string",
-                "x-totvs": [
-                  {
-                    "product": "PROTHEUS",
-                    "field": "LOG_ENTITY",
-                    "required": true,
-                    "type": "char",
-                    "length": "50",
-                    "note": "Indica o nome da entidade enviada.",
-                    "available": true,
-                    "canUpdate": false
-                  },
-                  {
-                    "product": "RM",
-                    "field": "HCCONVERSAOINTEGRACAOLOG.ENTIDADE",
-                    "required": true,
-                    "type": "varchar",
-                    "length": "50",
-                    "note": "Nome da entidade enviada.",
-                    "available": true,
-                    "canUpdate": false
-                  }
-                ]
-              },
-              "ListOfInternalIdLoad": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "IntegrationId": {
-                      "type": "string",
-                      "x-totvs": [
-                        {
-                          "product": "PROTHEUS",
-                          "field": "LOG_INTID",
-                          "required": true,
-                          "type": "char",
-                          "length": "50",
-                          "note": "Indica a chave da entidade que será utilizada para busca do registro no Protheus.",
-                          "available": true,
-                          "canUpdate": false
-                        },
-                        {
-                          "product": "RM",
-                          "field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVEPROTHEUS",
-                          "required": true,
-                          "type": "varchar",
-                          "length": "200",
-                          "note": "Chave da entidade que se espera que tenha no Protheus de acordo com a integração antiga.",
-                          "available": true,
-                          "canUpdate": false
-                        }
-                      ]
-                    },
-                    "NewIntegrationId": {
-                      "type": "string",
-                      "x-totvs": [
-                        {
-                          "product": "PROTHEUS",
-                          "field": "LOG_INTRM",
-                          "required": true,
-                          "type": "char",
-                          "length": "50",
-                          "note": "Indica o de/para gerado pelo TOP para o registro.",
-                          "available": true,
-                          "canUpdate": false
-                        },
-                        {
-                          "product": "RM",
-                          "field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVERM",
-                          "required": true,
-                          "type": "varchar",
-                          "length": "200",
-                          "note": "Valor da chave da entidade no RM.",
-                          "available": true,
-                          "canUpdate": false
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "ReturnContentType": {
-      "type": "object",
-      "properties": {
-        "ExecutionIdentifier": {
-          "type": "number"
-        },
-        "ListOfEntityReturn": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "EntityName": {
-                "type": "string",
-                "x-totvs": [
-                  {
-                    "product": "PROTHEUS",
-                    "field": "LOG_ENTITY",
-                    "required": true,
-                    "type": "char",
-                    "length": "50",
-                    "note": "Indica o nome da entidade recebida.",
-                    "available": true,
-                    "canUpdate": false
-                  },
-                  {
-                    "product": "RM",
-                    "field": "HCCONVERSAOINTEGRACAOLOG.ENTIDADE",
-                    "required": true,
-                    "type": "varchar",
-                    "length": "50",
-                    "note": "Nome da entidade.",
-                    "available": true,
-                    "canUpdate": false
-                  }
-                ]
-              },
-              "ListOfInternalIdLoadReturn": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "OriginInternalId": {
-                      "type": "string",
-                      "x-totvs": [
-                        {
-                          "product": "PROTHEUS",
-                          "field": "LOG_INTRM",
-                          "required": true,
-                          "type": "char",
-                          "length": "50",
-                          "note": "Indica o de/para gerado pelo TOP.",
-                          "available": true,
-                          "canUpdate": false
-                        },
-                        {
-                          "product": "RM",
-                          "field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVERM",
-                          "required": true,
-                          "type": "varchar",
-                          "length": "200",
-                          "note": "Valor da chave da entidade no RM.",
-                          "available": true,
-                          "canUpdate": false
-                        }
-                      ]
-                    },
-                    "DestinationInternalId": {
-                      "type": "string",
-                      "x-totvs": [
-                        {
-                          "product": "PROTHEUS",
-                          "field": "LOG_INTPR",
-                          "required": true,
-                          "type": "char",
-                          "length": "50",
-                          "note": "Indica o de/para gerado pelo Protheus.",
-                          "available": true,
-                          "canUpdate": false
-                        },
-                        {
-                          "product": "RM",
-                          "field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVEPROTHEUS",
-                          "required": true,
-                          "type": "varchar",
-                          "length": "200",
-                          "note": "Valor da chave da entidade no Protheus.",
-                          "available": true,
-                          "canUpdate": false
-                        }
-                      ]
-                    },
-                    "Status": {
-                      "description": "OK - / ERROR -",
-                      "type": "string",
-                      "enum": [
-                        "OK",
-                        "ERROR"
-                      ],
-                      "x-totvs": [
-                        {
-                          "product": "PROTHEUS",
-                          "field": "LOG_STATUS",
-                          "required": true,
-                          "type": "number",
-                          "length": "1",
-                          "note": "Indica se o de/para foi gerado com sucesso pelo Protheus.",
-                          "available": true,
-                          "canUpdate": false
-                        },
-                        {
-                          "product": "RM",
-                          "field": "HCCONVERSAOINTEGRACAOLOG.STATUS",
-                          "required": true,
-                          "type": "varchar",
-                          "length": "50",
-                          "note": "Informa se a a entidade foi encontrada no Protheus e se seu de-para foi gerado com sucesso.",
-                          "available": true,
-                          "canUpdate": false
-                        }
-                      ]
-                    },
-                    "StatusMessage": {
-                      "type": "string",
-                      "x-totvs": [
-                        {
-                          "product": "PROTHEUS",
-                          "field": "LOG_MESSAG",
-                          "required": true,
-                          "type": "char",
-                          "length": "5000",
-                          "note": "Indica a mensagem de processamento gerada pelo Protheus.",
-                          "available": true,
-                          "canUpdate": false
-                        },
-                        {
-                          "product": "RM",
-                          "field": "HCCONVERSAOINTEGRACAOLOG.STATUSMSG",
-                          "required": true,
-                          "type": "varchar",
-                          "length": "250",
-                          "note": "Mensagem gerad pelo Protheus referente ao processamento de uma unidade da entidade.",
-                          "available": true,
-                          "canUpdate": false
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/InternalIdLoad_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "InternalIdLoad",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "InternalID Load",
+				"description": "Carga de InternalIDs",
+				"segment": "Construção e Projetos"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Celia Oliveira Silva",
+					"note": "Recebe os códigos das entidades integradas via stored procedure e webservice na integração Protheus x TOTVS Obras e Projetos e gera os InternalIDs destes registros de acordo com a regra da Mensagem Única.",
+					"adapter": "INTA001/INTI001"
+				},
+				{
+					"product": "RM",
+					"contact": "Andre Rosental Maciel",
+					"note": "Envia todos os registros que foram sincronizados na integração Protheus x TOTVS Obras e Projetos para carga do de/para.",
+					"adapter": "RM."
+				}
+			],
+			"transactionDefinition": {
+				"subType": "request",
+				"businessContentType": {
+					"$ref": "#/definitions/BusinessContentType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"BusinessContentType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "LOG_EMP",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"note": "Indica o grupo de empresas/empresa do registro.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"length": "2",
+							"note": "Código da coligada do registro.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "LOG_FIL",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"note": "Indica a filial do registro. Pode ter tamanho entre 2 e 12.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "GFILIAL.CODFILIAL",
+							"required": true,
+							"type": "integer",
+							"length": "2",
+							"note": "Código da Filial do registro.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "Char",
+							"length": "5",
+							"note": "Informação do grupo de empresa/empresa concatenado com a filial (empresa/unidade de negócio/filial) e separados por pipe.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "GCOLIGADA.CODCOLIGADA|GFILIAL.CODFILIAL",
+							"required": true,
+							"type": "string",
+							"length": "5",
+							"note": "Código da coligada concatenado com o código da filial do registro ou grupo de registros.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ExecutionIdentifier": {
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "LOG_IDENT",
+							"required": true,
+							"type": "integer",
+							"length": "6",
+							"note": "Indica o número de execução da carga de dados.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "HCCONVERSAOINTEGRACAOLOG.IDEXECUCAO",
+							"required": true,
+							"type": "integer",
+							"length": "4",
+							"note": "Identificador da execução do processo de conversão (carga de dados no de-para).",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfEntity": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"EntityName": {
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "PROTHEUS",
+										"field": "LOG_ENTITY",
+										"required": true,
+										"type": "char",
+										"length": "50",
+										"note": "Indica o nome da entidade enviada.",
+										"available": true,
+										"canUpdate": false
+									},
+									{
+										"product": "RM",
+										"field": "HCCONVERSAOINTEGRACAOLOG.ENTIDADE",
+										"required": true,
+										"type": "varchar",
+										"length": "50",
+										"note": "Nome da entidade enviada.",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"ListOfInternalIdLoad": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"IntegrationId": {
+											"type": "string",
+											"x-totvs": [
+												{
+													"product": "PROTHEUS",
+													"field": "LOG_INTID",
+													"required": true,
+													"type": "char",
+													"length": "50",
+													"note": "Indica a chave da entidade que será utilizada para busca do registro no Protheus.",
+													"available": true,
+													"canUpdate": false
+												},
+												{
+													"product": "RM",
+													"field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVEPROTHEUS",
+													"required": true,
+													"type": "varchar",
+													"length": "200",
+													"note": "Chave da entidade que se espera que tenha no Protheus de acordo com a integração antiga.",
+													"available": true,
+													"canUpdate": false
+												}
+											]
+										},
+										"NewIntegrationId": {
+											"type": "string",
+											"x-totvs": [
+												{
+													"product": "PROTHEUS",
+													"field": "LOG_INTRM",
+													"required": true,
+													"type": "char",
+													"length": "50",
+													"note": "Indica o de/para gerado pelo TOP para o registro.",
+													"available": true,
+													"canUpdate": false
+												},
+												{
+													"product": "RM",
+													"field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVERM",
+													"required": true,
+													"type": "varchar",
+													"length": "200",
+													"note": "Valor da chave da entidade no RM.",
+													"available": true,
+													"canUpdate": false
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ExecutionIdentifier": {
+					"type": "number"
+				},
+				"ListOfEntityReturn": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"EntityName": {
+								"type": "string",
+								"x-totvs": [
+									{
+										"product": "PROTHEUS",
+										"field": "LOG_ENTITY",
+										"required": true,
+										"type": "char",
+										"length": "50",
+										"note": "Indica o nome da entidade recebida.",
+										"available": true,
+										"canUpdate": false
+									},
+									{
+										"product": "RM",
+										"field": "HCCONVERSAOINTEGRACAOLOG.ENTIDADE",
+										"required": true,
+										"type": "varchar",
+										"length": "50",
+										"note": "Nome da entidade.",
+										"available": true,
+										"canUpdate": false
+									}
+								]
+							},
+							"ListOfInternalIdLoadReturn": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"OriginInternalId": {
+											"type": "string",
+											"x-totvs": [
+												{
+													"product": "PROTHEUS",
+													"field": "LOG_INTRM",
+													"required": true,
+													"type": "char",
+													"length": "50",
+													"note": "Indica o de/para gerado pelo TOP.",
+													"available": true,
+													"canUpdate": false
+												},
+												{
+													"product": "RM",
+													"field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVERM",
+													"required": true,
+													"type": "varchar",
+													"length": "200",
+													"note": "Valor da chave da entidade no RM.",
+													"available": true,
+													"canUpdate": false
+												}
+											]
+										},
+										"DestinationInternalId": {
+											"type": "string",
+											"x-totvs": [
+												{
+													"product": "PROTHEUS",
+													"field": "LOG_INTPR",
+													"required": true,
+													"type": "char",
+													"length": "50",
+													"note": "Indica o de/para gerado pelo Protheus.",
+													"available": true,
+													"canUpdate": false
+												},
+												{
+													"product": "RM",
+													"field": "HCCONVERSAOINTEGRACAOLOG.VALORCHAVEPROTHEUS",
+													"required": true,
+													"type": "varchar",
+													"length": "200",
+													"note": "Valor da chave da entidade no Protheus.",
+													"available": true,
+													"canUpdate": false
+												}
+											]
+										},
+										"Status": {
+											"description": "OK - / ERROR -",
+											"type": "string",
+											"enum": [
+												"OK",
+												"ERROR"
+											],
+											"x-totvs": [
+												{
+													"product": "PROTHEUS",
+													"field": "LOG_STATUS",
+													"required": true,
+													"type": "number",
+													"length": "1",
+													"note": "Indica se o de/para foi gerado com sucesso pelo Protheus.",
+													"available": true,
+													"canUpdate": false
+												},
+												{
+													"product": "RM",
+													"field": "HCCONVERSAOINTEGRACAOLOG.STATUS",
+													"required": true,
+													"type": "varchar",
+													"length": "50",
+													"note": "Informa se a a entidade foi encontrada no Protheus e se seu de-para foi gerado com sucesso.",
+													"available": true,
+													"canUpdate": false
+												}
+											]
+										},
+										"StatusMessage": {
+											"type": "string",
+											"x-totvs": [
+												{
+													"product": "PROTHEUS",
+													"field": "LOG_MESSAG",
+													"required": true,
+													"type": "char",
+													"length": "5000",
+													"note": "Indica a mensagem de processamento gerada pelo Protheus.",
+													"available": true,
+													"canUpdate": false
+												},
+												{
+													"product": "RM",
+													"field": "HCCONVERSAOINTEGRACAOLOG.STATUSMSG",
+													"required": true,
+													"type": "varchar",
+													"length": "250",
+													"note": "Mensagem gerad pelo Protheus referente ao processamento de uma unidade da entidade.",
+													"available": true,
+													"canUpdate": false
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

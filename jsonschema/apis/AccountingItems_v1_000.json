@@ -1,0 +1,373 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para cadastro Notas dos produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/ctb/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8080"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade Item Contábil para produtos TOTVS",
+		"version": "1.000",
+		"title": "Item Contábil",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "AccountingItem",
+				"description": "Item Contábil",
+				"segment": "Serviços"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "squad.control@totvs.com.br",
+					"description": "Cadastro de Item Contábil",
+					"adapter": "CTBS040.prw"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/AccountingItems": {
+			"get": {
+				"tags": [
+					"AccountingItems"
+				],
+				"summary": "Retorna Itens Contábeis",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"description": "Retorna lista completa de itens contábeis",
+				"operationId": "getAccountingItems",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "operação realizada!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingItem_1_002.json#/definitions/PagedItems"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "nenhum registro encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"AccountingItems"
+				],
+				"summary": "Inclui um item contábil",
+				"description": "Inclui um item contábil conforme dados enviados na requisição.",
+				"operationId": "postAccountingItems",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"requestBody": {
+					"description": "Item contábil a ser incluido",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingItem_1_002.json#/definitions/BusinessContentType"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingItem_1_002.json#/definitions/BusinessContentType"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/AccountingItems/{InternalId}": {
+			"get": {
+				"tags": [
+					"InternalId"
+				],
+				"summary": "Retorna um item contábil específico de acordo com a chave de pesquisa",
+				"description": "Retorna o item contábil de acordo com o ID de pesquisa",
+				"operationId": "getInternalId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "o InternalId é composto por filial + Código da Anotação",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingItem_1_002.json#/definitions/BusinessContentType"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Anotação não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"InternalId"
+				],
+				"summary": "Altera um Item Contábil",
+				"description": "Atualiza o item contábil conforme dados enviados na requisição",
+				"operationId": "putInternalId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization, InternalId e Fields",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingItem_1_002.json#/definitions/BusinessContentType"
+							}
+						}
+					},
+					"description": "Anotação a ser alterada"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingItem_1_002.json#/definitions/BusinessContentType"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da alteração",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Anotação não localizada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"InternalId"
+				],
+				"summary": "Exclui um Item Contábil",
+				"description": "Exclui um Item Contábil conforme dados enviados na requisição.",
+				"operationId": "deleteInternalId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {}
+						}
+					},
+					"400": {
+						"description": "erro no momento da exclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Anotação não localizada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"description": "Identificador único do Item Contábil",
+				"required": true,
+				"example": "D MG 01 000000001",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Informar os campos Filial (CTD.CTD_FILIAL) e Código do Item (CTD.CTD_ITEM)",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				}
+			}
+		},
+		"schemas": {}
+	}
+}

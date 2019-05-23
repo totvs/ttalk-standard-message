@@ -1,0 +1,984 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Machine_1_003.json#",
+	"info": {
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/MachineType",
+					"type": "object"
+				}
+			},
+			"messageDocumentation": {
+				"name": "Machine",
+				"description": "Integração de máquinas",
+				"segment": "Manufatura"
+			}
+		}
+	},
+	"definitions": {
+		"PagedMachines": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/MachineType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"MachineType": {
+			"type": "object",
+			"properties": {
+				"Code": {
+					"type": "string",
+					"maxLength": 20,
+					"description": "Código Máquina",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctra.cod-ctrab",
+							"required": true,
+							"type": "Char",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Description": {
+					"type": "string",
+					"maxLength": 40,
+					"description": "Descrição Máquina",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.des-ctrab",
+							"required": true,
+							"type": "Char",
+							"length": "40",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"WorkCenterCode": {
+					"type": "string",
+					"maxLength": 10,
+					"description": "Código Centro Trabalho",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.gm-codigo",
+							"required": false,
+							"type": "Char",
+							"length": "9",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WorkCenterDescription": {
+					"type": "string",
+					"maxLength": 40,
+					"description": "Descrição Centro Trabalho",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "grup-maquina.descricao",
+							"required": true,
+							"type": "Char",
+							"length": "32",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ProcessorType": {
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4"
+					],
+					"description": "Tipo Processamento: \n    1 - Monoprocesso \n    2 - Por Batelada\n    3 - Multiplos Processos\n    4 - Manual\n",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.ind-tip-ctrab",
+							"required": true,
+							"type": "Integer",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"LaborType": {
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3"
+					],
+					"description": "Tipo MOD: \n    1 - Não Reporta \n    2 - Operador\n    3 - Equipe\n",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.ind-reporte-mod",
+							"required": true,
+							"type": "Integer",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"VolumeMachineQuantity": {
+					"type": "number",
+					"format": "float",
+					"maximum": 99999999.9999,
+					"minimum": -99999999.9999,
+					"multipleOf": 0.0001,
+					"description": "Quantidade Volume Máquina",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.qtd-capac-ctrab",
+							"required": true,
+							"type": "Decimal",
+							"length": "11",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EfficiencyMachineValue": {
+					"type": "number",
+					"format": "float",
+					"maximum": 999.99,
+					"minimum": -999.99,
+					"multipleOf": 0.01,
+					"description": "Eficiência Máquina",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.val-eficien-ctrab",
+							"required": false,
+							"type": "Decimal",
+							"length": "4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"OperatorMachineQuantity": {
+					"type": "integer",
+					"format": "int32",
+					"maximum": 999,
+					"minimum": -999,
+					"description": "Quantidade Operador Máquina",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.num-operador-ctrab",
+							"required": false,
+							"type": "Integer",
+							"length": "3",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"SimultaneousActivityQuantity": {
+					"type": "integer",
+					"format": "int32",
+					"maximum": 999,
+					"minimum": -999,
+					"description": "Quantidade Operações Simultaneas",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.num-operac-simult",
+							"required": false,
+							"type": "Integer",
+							"length": "3",
+							"available": true
+						}
+					]
+				},
+				"IsSetup": {
+					"type": "boolean",
+					"description": "Possui Preparação",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.log-possui-prepar",
+							"required": true,
+							"type": "Logical",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"IsControlPert": {
+					"type": "boolean",
+					"description": "Considera Evento Anterior",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.log-consid-event-ant",
+							"required": true,
+							"type": "Logical",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"IsReportEvent": {
+					"type": "boolean",
+					"description": "Reporta Contador",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "ctrab.log-reporte-contador",
+							"required": true,
+							"type": "Logical",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"IsOverlapReport": {
+					"type": "boolean",
+					"description": "Sobrepõe Apontamento",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "grup-maquina.log-overlap",
+							"required": true,
+							"type": "Logical",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"CostCenterCode": {
+					"type": "string",
+					"maxLength": 20,
+					"description": "Código Centro de Custo",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "grup-maquina.cc-codigo",
+							"required": true,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ProductionAreaCode": {
+					"type": "string",
+					"maxLength": 10,
+					"description": "Código Área Produção",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"field": "grup-maquina.cod-area-produc",
+							"required": true,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"InitialValidateDate": {
+					"type": "string",
+					"format": "date",
+					"description": "Data início validade",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"FinalValidateDate": {
+					"type": "string",
+					"format": "date",
+					"description": "Data fim validade",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"TypeMachine": {
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4"
+					],
+					"description": "Tipo de máquina: \n    1 - Recurso \n    2 - Arranjo\n    3 - Moenda\n    4 - Outros\n",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"ListOfResources": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"ResourceType": {
+								"type": "string",
+								"enum": [
+									"1",
+									"2",
+									"3",
+									"4"
+								],
+								"description": "Tipo Recurso",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"required": true,
+										"available": true,
+										"type": "Char",
+										"length": "1",
+										"note": "Tipo Recurso: \n    1 - Operador \n    2 - Ferramenta\n    3 - Equipe\n    4 - Equipamento\n"
+									}
+								]
+							},
+							"ResourceCode": {
+								"type": "string",
+								"maxLength": 20,
+								"description": "Código Recurso",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "2 - ctrab-ferram.cod-ferr-prod | 4  - ctrab-equipto.cd-equipto",
+										"required": true,
+										"type": "character",
+										"length": "8",
+										"available": true,
+										"canUpdate": true,
+										"note": "Caso 'Tipo Recurso' seja tipo 2 o field será da tabela ctrab-ferram, caso seja tipo 4 será da tabela ctrab-equipto"
+									}
+								]
+							},
+							"ResourceName": {
+								"type": "string",
+								"maxLength": 40,
+								"description": "Nome Recurso",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "2 - ferramenta.descricao | 4  - equipto.descricao",
+										"required": true,
+										"type": "character",
+										"length": "8",
+										"available": true,
+										"canUpdate": true,
+										"note": "Caso 'Tipo Recurso' seja tipo 2 o field será da tabela ctrab-ferram, caso seja tipo 4 será da tabela ctrab-equipto"
+									}
+								]
+							},
+							"UnitTimeType": {
+								"type": "string",
+								"enum": [
+									"1",
+									"2",
+									"3"
+								],
+								"description": "Tipo Medida Tempo: \n    1 - Horas \n    2 - Minutos\n    3 - Segundos\n",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ferram.descricao",
+										"required": true,
+										"type": "character",
+										"length": "8",
+										"available": true,
+										"canUpdate": true,
+										"note": "Caso 'Tipo Recurso' seja tipo 2 este campo é utilizado."
+									}
+								]
+							},
+							"StartExpirationDate": {
+								"type": "string",
+								"format": "date",
+								"description": "Data Início Validade",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-equipto.dat-inic-valid",
+										"required": true,
+										"type": "Date",
+										"available": true,
+										"canUpdate": true,
+										"note": "Caso 'Tipo Recurso' seja tipo 4 este campo é utilizado."
+									}
+								]
+							},
+							"EndExpirationDate": {
+								"type": "string",
+								"format": "date",
+								"description": "Data Fim Validade",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-equipto.dat-fim-valid",
+										"required": true,
+										"type": "Date",
+										"available": true,
+										"canUpdate": true,
+										"note": "Caso 'Tipo Recurso' seja tipo 4 este campo é utilizado."
+									}
+								]
+							},
+							"ReportOperationTime": {
+								"type": "boolean",
+								"description": "Determina Operação",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ferram.log-tempo-operac",
+										"required": true,
+										"type": "Logical",
+										"available": true,
+										"canUpdate": true,
+										"note": "Caso 'Tipo Recurso' seja tipo 2 este campo é utilizado."
+									}
+								]
+							},
+							"LoadQuantity": {
+								"type": "number",
+								"format": "float",
+								"maximum": 9999999.9999,
+								"minimum": -9999999.9999,
+								"multipleOf": 0.0001,
+								"description": "Número Ciclos",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ferram.qtd-ciclos-umt",
+										"required": false,
+										"type": "Decimal",
+										"length": "10",
+										"available": true,
+										"canUpdate": true,
+										"note": "Caso 'Tipo Recurso' seja tipo 2 este campo é utilizado."
+									}
+								]
+							}
+						}
+					},
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true
+						}
+					]
+				},
+				"ListOfResourcesSec": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"ResourceCode": {
+								"type": "string",
+								"maxLength": 20,
+								"description": "Código Recurso",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "recur-sec-ctrab.cod-recurso",
+										"required": true,
+										"type": "character",
+										"length": "16",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"ResourceName": {
+								"type": "string",
+								"maxLength": 40,
+								"description": "Nome Recurso",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "recur-sec.des-recurso",
+										"required": true,
+										"type": "character",
+										"length": "40",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"ResourceAllocation": {
+								"type": "string",
+								"enum": [
+									"1",
+									"2",
+									"3"
+								],
+								"description": "Alocação Recurso: \n    1 - Operação Completa \n    2 - Produção\n    3 - Preparação\n",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "recur-sec-ctrab.idi-aloc-ord",
+										"required": true,
+										"type": "integer",
+										"length": "2",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"QuantityUsed": {
+								"type": "number",
+								"format": "float",
+								"maximum": 9999999999.9999,
+								"minimum": -9999999999.9999,
+								"multipleOf": 0.0001,
+								"description": "Quantidade Consumida",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "recur-sec-ctrab.qtd-consum",
+										"required": true,
+										"type": "Date",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"ResourceStatus": {
+								"type": "boolean",
+								"description": "Status Recurso",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "recur-sec-ctrab.log-ativo",
+										"required": true,
+										"type": "Logical",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							}
+						}
+					},
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true
+						}
+					]
+				},
+				"ListOfDomain": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"DomainCode": {
+								"type": "string",
+								"maxLength": 8,
+								"description": "Código Especialidade",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-especialid.cod-especialid",
+										"required": true,
+										"available": true,
+										"type": "Char",
+										"length": "8"
+									}
+								]
+							},
+							"ProductionShiftDescription": {
+								"type": "string",
+								"maxLength": 40,
+								"description": "Descrição Especialidade",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "sfc-especialid.des-especialid",
+										"required": false,
+										"available": true,
+										"type": "Char",
+										"length": "30"
+									}
+								]
+							},
+							"Level": {
+								"type": "integer",
+								"format": "int32",
+								"maximum": 99,
+								"minimum": -99,
+								"description": "Nível",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-especialid.num-nivel",
+										"required": true,
+										"available": true,
+										"type": "Integer",
+										"length": "2"
+									}
+								]
+							},
+							"DomainStatus": {
+								"type": "boolean",
+								"description": "Status Especialidade",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-especialid.log-obrig-especialid",
+										"required": true,
+										"type": "Logical",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							}
+						}
+					},
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true
+						}
+					]
+				},
+				"ListOfProductionShifts": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"ProductionShiftCode": {
+								"type": "string",
+								"maxLength": 8,
+								"description": "Código Modelo Turno",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "model-turno-semana.cod-model-turno",
+										"required": false,
+										"available": true,
+										"type": "Char",
+										"length": "8"
+									}
+								]
+							},
+							"ProductionShiftDescription": {
+								"type": "string",
+								"maxLength": 40,
+								"description": "Descrição Modelo Turno",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "model-turno-semana.des-model-turno",
+										"required": false,
+										"available": true,
+										"type": "Char",
+										"length": "30"
+									}
+								]
+							},
+							"BeginDate": {
+								"type": "string",
+								"format": "date",
+								"description": "Data Início Validade",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"available": false
+									}
+								]
+							},
+							"EndDate": {
+								"type": "string",
+								"format": "date",
+								"description": "Data Fim Validade",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"available": false
+									}
+								]
+							}
+						}
+					},
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true
+						}
+					]
+				},
+				"ListOfControlItems": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"ControlItemCode": {
+								"type": "string",
+								"maxLength": 5,
+								"description": "Código Item Controle",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ic.cod-ic",
+										"required": false,
+										"available": true,
+										"type": "Char",
+										"length": "5"
+									}
+								]
+							},
+							"ControlItemDescription": {
+								"type": "string",
+								"maxLength": 40,
+								"description": "Descrição Item Controle",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "item.descricao",
+										"required": false,
+										"available": true,
+										"type": "Char",
+										"length": "60"
+									}
+								]
+							},
+							"MinDate": {
+								"type": "integer",
+								"format": "int32",
+								"maximum": 9999,
+								"minimum": -9999,
+								"description": "Diferença Data Mínima",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ic.dif-data-min",
+										"required": true,
+										"type": "Integer",
+										"length": "4",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"MaxDate": {
+								"type": "integer",
+								"format": "int32",
+								"maximum": 9999,
+								"minimum": -9999,
+								"description": "Diferença Data Máxima",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ic.dif-data-max",
+										"required": true,
+										"type": "Integer",
+										"length": "4",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"IsMandatory": {
+								"type": "boolean",
+								"description": "Item Controle Obrigatório",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ic.log-obrigat",
+										"required": true,
+										"type": "Logical",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"MaxChoices": {
+								"type": "integer",
+								"format": "int32",
+								"maximum": 99,
+								"minimum": -99,
+								"description": "Número Máximo Escolhas",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ic.nr-max-esc",
+										"required": true,
+										"type": "Integer",
+										"length": "2",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"MinValue": {
+								"type": "number",
+								"format": "float",
+								"maximum": 9999999999.9999,
+								"minimum": -9999999999.9999,
+								"multipleOf": 0.0001,
+								"description": "Valor Mínimo",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ic.vl-minimo",
+										"required": false,
+										"type": "Decimal",
+										"length": "13",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							},
+							"MaxValue": {
+								"type": "number",
+								"format": "float",
+								"maximum": 9999999999.9999,
+								"minimum": -9999999999.9999,
+								"multipleOf": 0.0001,
+								"description": "Valor Máximo",
+								"x-totvs": [
+									{
+										"product": "datasul",
+										"field": "ctrab-ic.vl-maximo",
+										"required": false,
+										"type": "Decimal",
+										"length": "13",
+										"available": true,
+										"canUpdate": true
+									}
+								]
+							}
+						}
+					},
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": true
+						}
+					]
+				},
+				"CompanyId": {
+					"type": "string",
+					"description": "Descrição Item Controle",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						},
+						{
+							"product": "pims",
+							"field": "MSIEMPRE.CD_INT_ERP",
+							"required": true,
+							"available": true,
+							"type": "string",
+							"length": "10"
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						},
+						{
+							"product": "pims",
+							"field": "MSIEMPRE.CD_INT_ERP",
+							"required": false,
+							"available": true,
+							"type": "string",
+							"length": "10"
+						}
+					]
+				},
+				"StandardRotation": {
+					"type": "number",
+					"format": "float",
+					"maximum": 100000000000000,
+					"minimum": -100000000000000,
+					"multipleOf": 0.0001,
+					"description": "Rotação Padrão",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						},
+						{
+							"product": "pims",
+							"field": "PROMOENDA.MOE_CAPESPECIF",
+							"required": false,
+							"available": true,
+							"type": "number",
+							"length": "18,4"
+						}
+					]
+				},
+				"UnitType": {
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6"
+					],
+					"description": "Formato da Unidade de Medida: \n    1 - [un]/[s] \n    2 - [un]/[min]\n    3 - [un]/[hr]\n    4 - [s]/[un]\n    5 - [min]/[un]\n    6 - [hr]/um\n",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				},
+				"Active": {
+					"type": "string",
+					"enum": [
+						"1",
+						"2"
+					],
+					"description": "Equipamento Ativo?: \n    1 - Ativo\n    2 - Inativo\n",
+					"x-totvs": [
+						{
+							"product": "datasul",
+							"available": false
+						}
+					]
+				}
+			}
+		}
+	}
+}

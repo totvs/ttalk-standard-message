@@ -1,39 +1,185 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/UnitOfMeasure_1_000.json#",
-  "info": {
-    "description": "",
-    "version": "1.000",
-    "title": "UnitOfMeasure",
-    "contact": {},
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "UnitOfMeasure",
-        "description": "Mensagem para Integração de Unidade de Medida",
-        "segment": ""
-      },
-      "transactionDefinition": {
-        "subType": "event",
-        "businessContentType": {
-          "$ref": "#/definitions/BusinessContentType",
-          "type": "object"
-        }
-      }
-    }
-  },
-  "definitions": {
-    "BusinessContentType": {
-      "type": "object",
-      "properties": {
-        "Code": {
-          "description": "Código da Unidade de Medida",
-          "type": "string",
-          "maxLength": 6
-        },
-        "Description": {
-          "description": "Descrição da Unidade de Medida",
-          "type": "string"
-        }
-      }
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/UnitOfMeasure_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "StockGroup",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Grupo de Produtos",
+				"description": "Unidade de Medida",
+				"segment": "Serviços"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "",
+					"note": "Grupo De Produto",
+					"adapter": "EAI"
+				},
+				{
+					"product": "DATASUL",
+					"contact": "....",
+					"note": "",
+					"adapter": ""
+				},
+				{
+					"product": "lOGIX",
+					"contact": "",
+					"note": "",
+					"adapter": ""
+				},
+				{
+					"product": "PROTHEUS",
+					"contact": "",
+					"note": "",
+					"adapter": "QIEA030.prx"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/UnitOfMeasureInfo",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedUnitOfMeasure": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/UnitOfMeasureInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"UnitOfMeasureInfo": {
+			"description": "Lista do Grupo de Produtos",
+			"properties": {
+				"CompanyId": {
+					"description": "Código da empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "pode ter tamanho variável até 4 com Gestão de Empresa ativado",
+							"length": "2",
+							"type": "string"
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Código da Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+							"length": "2",
+							"type": "string"
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa da empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial",
+							"length": "12",
+							"type": "string"
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId de Integração para o Grupo de Produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "Código do Grupo de Estoque",
+							"field": "SBM.BM_FILIAL+SBM.BM_GRUPO",
+							"length": "6",
+							"type": "string"
+						}
+					]
+				},
+				"Code": {
+					"description": "Unidade de Medida",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "Código da Unidade de Medida",
+							"field": "SAH.AH_UNIMED",
+							"length": "2",
+							"type": "string",
+							"required": true
+						}
+					]
+				},
+				"Description": {
+					"description": "Descricao da Unidade de Medida",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "Descricao da Unidade de Medida",
+							"field": "SAH.AH_DESCPO",
+							"length": "40",
+							"type": "string"
+						}
+					]
+				},
+				"ShortName": {
+					"description": "Descricao da Unidade de Medida",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"available": true,
+							"note": "Descricao da Unidade de Medida",
+							"field": "SAH.AH_UMRES",
+							"length": "9",
+							"type": "string"
+						}
+					]
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
 }

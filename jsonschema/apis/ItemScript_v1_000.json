@@ -1,0 +1,467 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para cadastro de Operações dos produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/man/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8080"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para manutenção dos registros de Operações de itens e roteiros dos produtos TOTVS",
+		"version": "1.000",
+		"title": "Item de Scripts",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ItemScript",
+				"description": "Mensagem para Integração do Roteiro de Operações",
+				"segment": "Manufatura"
+			},
+			"productInformation": [
+				{
+					"product": "Datasul",
+					"contact": "Rafael Luciano do Rosário",
+					"note": "Cadastro de Roteiros de Operações",
+					"adapter": "ItemScriptAdapter.cls"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/itemScripts": {
+			"get": {
+				"tags": [
+					"itemScripts"
+				],
+				"summary": "Busca as operações de um Item ou dos roteiros vinculados à ele",
+				"description": "Retorna todas as operações do item/roteiro informadoos",
+				"operationId": "getItemScript",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/search"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "#/components/parameters/fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemScript_1_000.json#/definitions/BusinessContentType"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			},
+			"post": {
+				"tags": [
+					"itemScripts"
+				],
+				"summary": "Adiciona uma ou mais operações para o item ou roteiro",
+				"description": "",
+				"operationId": "addItemScript",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemScript_1_000.json#/definitions/BusinessContentType"
+							}
+						}
+					},
+					"description": "Informações do objeto do componente"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			}
+		},
+		"/itemScripts/{ItemCode}": {
+			"get": {
+				"tags": [
+					"itemScripts"
+				],
+				"summary": "Busca as operações de um determinado item ou todos os roteiros vinculados a ele. ",
+				"description": "Retorna as operações existentes para o item ou roteiro. Nessa operação não se deve passar o código do roteiro, apenas do item. Caso o item possua roteiros, eles serão trazidos normalmente.",
+				"operationId": "getItemScriptById",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ItemCode"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemScript_1_000.json#/definitions/BusinessContentType"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			}
+		},
+		"/itemScripts/script/{ScriptCode}": {
+			"put": {
+				"tags": [
+					"itemScripts"
+				],
+				"summary": "Atualiza as operações de um roteiro pré-existente",
+				"description": "",
+				"operationId": "updateScript",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ScriptCode"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemScript_1_000.json#/definitions/BusinessContentType"
+							}
+						}
+					},
+					"description": "Informações do objeto de componente"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"400": {
+						"description": "ID passado na URL está diferente do ScriptCode presente no corpo da mensagem"
+					},
+					"404": {
+						"description": "Roteiro não encontrado na base de dados",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			},
+			"delete": {
+				"tags": [
+					"itemScripts"
+				],
+				"summary": "Deleta uma ou mais operações de um roteiro",
+				"description": "A propriedade \"ListOfActivity\" deve conter a lista de operações a serem apagadas. Caso ela seja enviada em branco, todas as operações serão excluídas.",
+				"operationId": "deleteItemScript",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ScriptCode"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemScript_1_000.json#/definitions/BusinessContentType"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"404": {
+						"description": "Roteiro não encontrado na base de dados",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			}
+		},
+		"/itemScripts/item/{ItemCode}": {
+			"put": {
+				"tags": [
+					"itemScripts"
+				],
+				"summary": "Atualiza as operações de um item pré-existente",
+				"description": "",
+				"operationId": "updateItemScript",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ItemCode"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemScript_1_000.json#/definitions/BusinessContentType"
+							}
+						}
+					},
+					"description": "Informações do objeto de componente"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"400": {
+						"description": "ID passado na URL está diferente do ItemCode presente no corpo da mensagem"
+					},
+					"404": {
+						"description": "Roteiro não encontrado na base de dados",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			},
+			"delete": {
+				"tags": [
+					"itemScripts"
+				],
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ItemCode"
+					}
+				],
+				"summary": "Exclui uma ou mais operações do item",
+				"description": "A propriedade \"ListOfActivity\" deve conter a lista de operações a serem apagadas. Caso ela seja enviada em branco, todas as operações serão excluídas.",
+				"operationId": "removeItemScript",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ItemScript_1_000.json#/definitions/BusinessContentType"
+							}
+						}
+					},
+					"description": "Informações do(s) objeto(s) componente(s) a ser(em) excluído(s)."
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"400": {
+						"description": "ID passado na URL está diferente do ItemCode presente no corpo da mensagem content: application/json:\n  schema:\n    $ref: >-\n      https://raw.githubusercontent.com/totvs/ttalk-standard-message/validator-path-required-check/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+					},
+					"500": {
+						"description": "Mensagem RowErrors Datasul",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.22"
+						}
+					]
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"search": {
+				"name": "search",
+				"in": "query",
+				"description": "Busca pelas operações de todos os itens/roteiros cujo código seja composto por este parâmetro. Exemplo: \\\"search=001\\\" trará itens como \\\"item-001\\\", \\\"001002\\\" etc.",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"fields": {
+				"name": "fields",
+				"in": "query",
+				"description": "Retorna json apenas com os campos solicitados. Exemplo: fields=ItemCode,ScriptCode,ListOfActivity,ActivityCode",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"ItemCode": {
+				"name": "ItemCode",
+				"in": "path",
+				"required": true,
+				"description": "Identificador Único representando o item",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"ScriptCode": {
+				"name": "ScriptCode",
+				"in": "path",
+				"required": true,
+				"description": "Identificador Único representando o roteiro",
+				"schema": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

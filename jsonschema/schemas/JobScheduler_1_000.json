@@ -1,0 +1,595 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/JobScheduler_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "Schedule",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Schedule",
+				"description": "Cadastro de agendamento",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/JobExecution",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedExecutionJobscheduler": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/JobExecution"
+							}
+						}
+					}
+				}
+			]
+		},
+		"PagedJobscheduler": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/JobScheduleGET"
+							}
+						}
+					}
+				}
+			]
+		},
+		"JobScheduleGET": {
+			"type": "object",
+			"properties": {
+				"jobScheduleID": {
+					"description": "Identificador único do agendamento do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": true,
+							"uniqueness": "server",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"status": {
+					"description": "Indica o status da execução do processo",
+					"type": "string",
+					"enum": [
+						"active",
+						"inactive",
+						"completed"
+					],
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"lastModified": {
+					"description": "Data da última alteração no agendamento",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"processID": {
+					"description": "Identificador do processo (rotina) que será executado",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"firstExecution": {
+					"description": "Data prevista para início da execução do processo",
+					"type": "string",
+					"format": "dateTime",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"user": {
+					"description": "Usuário responsável pelo agendamento",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"recurrent": {
+					"description": "indica se a execução do job deve ocorrer mais de uma vez",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"executionParameter": {
+					"type": "object",
+					"description": "Parâmetros para execução do processo",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"daily": {
+					"$ref": "#/definitions/Daily"
+				},
+				"weekly": {
+					"$ref": "#/definitions/Weekly"
+				},
+				"monthly": {
+					"$ref": "#/definitions/Monthly"
+				}
+			}
+		},
+		"Single": {
+			"type": "object",
+			"properties": {
+				"year": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"month": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"day": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"hour": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"minute": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"Daily": {
+			"type": "object",
+			"properties": {
+				"hour": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"minute": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"Weekly": {
+			"type": "object",
+			"properties": {
+				"daysOfWeek": {
+					"type": "array",
+					"items": {
+						"enum": [
+							"Sunday",
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday",
+							"Saturday"
+						],
+						"type": "string",
+						"x-totvs": [
+							{
+								"product": "Protheus",
+								"required": false,
+								"uniqueness": "none",
+								"available": true,
+								"canUpdate": false
+							}
+						]
+					}
+				},
+				"hour": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"minute": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"Monthly": {
+			"type": "object",
+			"properties": {
+				"day": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"hour": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"minute": {
+					"format": "int32",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"JobSchedulePOST": {
+			"type": "object",
+			"properties": {
+				"jobScheduleID": {
+					"description": "Identificador único do agendamento do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"lastModified": {
+					"description": "Data da última alteração no agendamento",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"processID": {
+					"description": "Identificador do processo (rotina) que será executado",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"recurrent": {
+					"description": "indica se a execução do job deve ocorrer mais de uma vez",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"executionParameter": {
+					"type": "object",
+					"description": "Parâmetros para execução do processo",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"daily": {
+					"$ref": "#/definitions/Daily"
+				},
+				"weekly": {
+					"$ref": "#/definitions/Weekly"
+				},
+				"monthly": {
+					"$ref": "#/definitions/Monthly"
+				},
+				"execution": {
+					"type": "object",
+					"allOf": [
+						{
+							"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"items": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/JobExecution"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"JobExecution": {
+			"type": "object",
+			"properties": {
+				"executionID": {
+					"description": "Identificador único da execução do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"jobScheduleID": {
+					"description": "Identificador único do agendamento do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"status": {
+					"description": "Indica o status da execução do processo",
+					"type": "string",
+					"enum": [
+						"pending",
+						"failure",
+						"success",
+						"running ",
+						"canceled"
+					],
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"createdDate": {
+					"description": "Indica a data da última alteração do agendamento no momento da execução do processo",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"startedDate": {
+					"description": "Indica a data de execução do processo",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"user": {
+					"description": "Usuário responsável pelo agendamento",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"return": {
+					"type": "object",
+					"description": "Resultado da execução do processo"
+				},
+				"error": {
+					"type": "string",
+					"description": "Mensagem de erro na execução do processo"
+				}
+			}
+		}
+	}
+}

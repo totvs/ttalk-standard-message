@@ -1,0 +1,422 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "Condição de Pagamento",
+		"description": "API para a entidade Condição de Pagamento (PaymentCondition) para produtos TOTVS",
+		"version": "1.00",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Condição de Pagamento",
+				"description": "Cadastro de Condição de Pagamento",
+				"segment": "Serviços"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de Condição de Pagamento",
+					"adapter": "MATS360.prw"
+				},
+				{
+					"product": "Logix",
+					"contact": "SUPPLY.ML.MAN.SUP_L@totvs.com.br",
+					"description": "Cadastro de Condição de Pagamento"
+				}
+			]
+		}
+	},
+	"servers": [
+		{
+			"description": "API para cadastro Condição de Pagamento dos produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/fat/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8080"
+				}
+			}
+		}
+	],
+	"paths": {
+		"/paymentcondition": {
+			"get": {
+				"tags": [
+					"PaymentCondition"
+				],
+				"summary": "Retorna lista de Condições de pagamento",
+				"description": "Retorna lista completa das condições de pagamento",
+				"operationId": "getPaymentCondition",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+							"minimalVersion": "12.1.21"
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order",
+						"x-totvs": {
+							"productInformation": [
+								{
+									"product": "Logix",
+									"note": "A ordenação é permitida apenas para os campos: cnd_pgto, des_cnd_pgto,ies_contag_dias, ies_pagamento ou ies_fora.",
+									"minimalVersion": "12.1.25"
+								}
+							]
+						}
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#/definitions/PagedPaymentCondition"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na listagem das Condições de Pagamento",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"PaymentCondition"
+				],
+				"summary": "Inclui Condição de Pagamento",
+				"description": "Inclui uma condição de pagamento conforme dados enviados na requisição.",
+				"operationId": "postPaymentCondition",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+							"minimalVersion": "12.1.21"
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#/definitions/PaymentConditionInfo"
+							}
+						}
+					},
+					"description": "Inclui uma Condição de Pagamento"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#/definitions/PaymentConditionInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/paymentcondition/{InternalId}": {
+			"get": {
+				"tags": [
+					"InternalId"
+				],
+				"summary": "Retorna a condição de pagamento pelo InternalId",
+				"description": "Retorna a condição de pagamento pelo InternalId",
+				"operationId": "getInternalId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros, Authorization, Fields e InternalId",
+							"minimalVersion": "12.1.21"
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros, Authorization, Fields e InternalId",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#/definitions/PaymentConditionInfo"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Condição de Pagamento não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"InternalId"
+				],
+				"summary": "Altera uma condição de pagamento",
+				"description": "Atualiza a condição de pagamento conforme dados enviados na requisição",
+				"operationId": "putInternalId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization, Fields e InternalId",
+							"minimalVersion": "12.1.21"
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros, Authorization e InternalId",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#/definitions/PaymentConditionInfo"
+							}
+						}
+					},
+					"description": "Condição de pagamento a ser alterada"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentCondition_2_001.json#/definitions/PaymentConditionInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da alteração",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Condição de Pagamento não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"InternalId"
+				],
+				"summary": "Exclui uma condição de pagamento",
+				"description": "Exclui a condição de pagamento conforme dados enviados na requisição.",
+				"operationId": "deleteInternalId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization e InternalId",
+							"minimalVersion": "12.1.21"
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Authorization e InternalId",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso"
+					},
+					"400": {
+						"description": "Erro no momento da exclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Condição de pagamento não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"description": "Identificador único da condição de pagamento",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Informar os campos Filial (SE4.E4_FILIAL) e Código da condição de pagamento (SE4.E4_CODIGO)",
+							"example": "D MG 01 001",
+							"minimalVersion": "12.1.21"
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"note": "Código da condição de pagamento(cond_pgto_cap.cnd_pgto)",
+							"example": "49",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				}
+			}
+		},
+		"schemas": {}
+	}
+}

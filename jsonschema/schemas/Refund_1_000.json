@@ -1,445 +1,791 @@
 {
-    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Refund/V1/1_000/jsonschema/schemas/Refund_1_000.json#",
-    "info": {
-        "description": "Contrato de Mensagem Padronizada para reembolso de serviços de Saúde",
-        "version": "1.000",
-        "title": "Refund",
-        "contact": {
-            "name": "T-Talk",
-            "url": "API.Totvs.com.br",
-            "email": "comiteintegracao@totvs.com.br"
-        },
-        "x-totvs": {
-            "messageDocumentation": {
-                "name": "Refund",
-                "description": "Reembolso de serviços de Saúde",
-                "segment": "Healthcare"
-            },
-            "productInformation": [
-                {
-                    "product": "protheus",
-                    "contact": "healthcare.mobile@totvs.com.br",
-                    "description": "Aplicativo de beneficiários de plano de saúde",
-                    "adapter": "prosaude.prw",
-                    "helpUrl": ""
-                }
-            ]
-        }
-    },
-    "definitions": {
-        "PagedRefunds": {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "items": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Refund"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "Refund": {
-            "type": "object",
-            "properties": {
-                "protocolNumber": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 20,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "BOW->BOW_PROTOC",
-                            "required": true,
-                            "type": "string",
-                            "length": "20",
-                            "note": "Matrícula do beneficiário titular ou responsável financeiro do plano de saúde",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "holderRegistration": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 17,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "BOW.BOW_USUARI",
-                            "required": true,
-                            "type": "string",
-                            "length": "17",
-                            "note": "Matrícula do beneficiário titular ou responsável financeiro do plano de saúde",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "cpfCnpj": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 14,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "BOW.BOW_CODREF",
-                            "required": true,
-                            "type": "string",
-                            "length": "14",
-                            "note": "CPF ou CNPJ da rede não referenciada",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "nameServiceNetowrk": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 35,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "BOW.BOW_NOMREF",
-                            "required": true,
-                            "type": "string",
-                            "length": "35",
-                            "note": "Nome da rede não referenciada",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "voucherType": {
-                    "description": "",
-                    "maxLength": 25,
-                    "enum": [
-                        "1 - RECIBO",
-                        "2 - NOTA FISCAL",
-                        "3 - CUPOM FISCAL"
-                    ],
-                    "type": "string",
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_TIPDOC",
-                            "required": true,
-                            "type": "string",
-                            "length": "25",
-                            "note": "Tipo do comprovante",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "voucherNumber": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 20,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_NUMDOC",
-                            "required": true,
-                            "type": "string",
-                            "length": "20",
-                            "note": "Número do comprovante",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "voucherDate": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 8,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_DATDOC",
-                            "required": true,
-                            "type": "string",
-                            "length": "8",
-                            "note": "Data de emissão do comprovante",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "photoVoucher": {
-                    "description": "",
-                    "type": "string",
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "",
-                            "required": true,
-                            "type": "string",
-                            "length": "",
-                            "note": "Foto do comprovante convertida para string em base 64",
-                            "available": true,
-                            "canUpdate": false
-                        }
-                    ]
-                },
-                "itemsRefund": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/RefundItem"
-                    }
-                }
-            }
-        },
-        "RefundItem": {
-            "title": "RefundItem",
-            "type": "object",
-            "properties": {
-                "city": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 7,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_CODMUN",
-                            "required": true,
-                            "type": "string",
-                            "length": "7",
-                            "note": "Código IBGE da cidade da rede não referenciada",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "drugCode": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 16,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_CODMED",
-                            "required": false,
-                            "type": "string",
-                            "length": "16",
-                            "note": "Código do medicamento",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "codeDefaultTable": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 2,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_CODPAD",
-                            "required": true,
-                            "type": "string",
-                            "length": "2",
-                            "note": "Código da tabela padrão",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "procedureCode": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 16,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_CODPRO",
-                            "required": true,
-                            "type": "string",
-                            "length": "16",
-                            "note": "Código do procedimento",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "recipeCode": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 20,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_CODREC",
-                            "required": false,
-                            "type": "string",
-                            "length": "20",
-                            "note": "Código da receita",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "cpfCnpj": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 14,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_CODREF",
-                            "required": true,
-                            "type": "string",
-                            "length": "14",
-                            "note": "CPF ou CNPJ da rede não referenciada",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "registration": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 17,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_MATRIC",
-                            "required": true,
-                            "type": "string",
-                            "length": "",
-                            "note": "Matrícula do beneficiário para quem é solicitado o reembolso",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "nameServiceNetwork": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 35,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_NOMREF",
-                            "required": true,
-                            "type": "string",
-                            "length": "35",
-                            "note": "Nome da rede não referenciada",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "voucherNumber": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 20,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_NUMDOC",
-                            "required": true,
-                            "type": "string",
-                            "length": "20",
-                            "note": "Número do comprovante",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "amountProcedure": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 3,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_QTDPRO",
-                            "required": true,
-                            "type": "string",
-                            "length": "3",
-                            "note": "Quantidade de procedimento",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "voucherType": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 25,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_TIPDOC",
-                            "required": true,
-                            "type": "string",
-                            "length": "25",
-                            "note": "Tipo do comprovante",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "serviceType": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 6,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_TIPSER",
-                            "required": true,
-                            "type": "string",
-                            "length": "6",
-                            "note": "Tipo do serviço",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "state": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 2,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_EST",
-                            "required": true,
-                            "type": "string",
-                            "length": "2",
-                            "note": "Sigla do estado da rede não referenciada",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                },
-                "valueProcedure": {
-                    "description": "",
-                    "type": "string",
-                    "maxLength": 16,
-                    "x-totvs": [
-                        {
-                            "product": "prosaude",
-                            "field": "B1N.B1N_VLRTOT || B1N.B1N_VLRAPR",
-                            "required": true,
-                            "type": "string",
-                            "length": "16",
-                            "note": "Valor do procedimento",
-                            "available": true,
-                            "canUpdate": true
-                        }
-                    ]
-                }
-            }
-        }
-    }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Refund_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para reembolso de serviços de Saúde",
+		"version": "1.000",
+		"title": "Refund",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Refund",
+				"description": "Reembolso de serviços de Saúde",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "healthcare.mobile@totvs.com.br",
+					"description": "Aplicativo de beneficiários de plano de saúde"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedRefunds": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Refund"
+							}
+						}
+					}
+				}
+			]
+		},
+		"Refund": {
+			"type": "object",
+			"properties": {
+				"protocolNumber": {
+					"description": "Protocolo da solicitação de reembolso",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_PROTOC",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"holderSubscriberId": {
+					"description": "Matrícula do titular do plano ou responsável financeiro",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_USUARI",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"cpfCnpj": {
+					"description": "CPF ou CNPJ da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_CODREF",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"unrelatedHealthProviderName": {
+					"description": "Nome da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_NOMREF",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"voucherType": {
+					"description": "Tipo do comprovante",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_TIPDOC",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "Valores permitidos: RECIBO, NOTA FISCAL e CUPOM FISCAL",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"voucherNumber": {
+					"description": "Número do comprovante",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_NUMDOC",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"voucherDate": {
+					"description": "Data de emissão do comprovante",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_DATDOC",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"status": {
+					"description": "Status do protocolo",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_STATUS",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"refundItems": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RefundItem"
+					}
+				}
+			}
+		},
+		"RefundBody": {
+			"type": "object",
+			"properties": {
+				"holderSubscriberId": {
+					"description": "Matrícula do titular do plano ou responsável financeiro",
+					"type": "string",
+					"example": "00012525000001000",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_USUARI",
+							"required": true,
+							"type": "string",
+							"length": "17",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"cpfCnpj": {
+					"description": "CPF ou CNPJ da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"example": "408.858.789-54",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_CODREF",
+							"required": true,
+							"type": "string",
+							"length": "14",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"unrelatedHealthProviderName": {
+					"description": "Nome da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"example": "REDE NÃO REFERENCIADA 1",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "BOW_NOMREF",
+							"required": true,
+							"type": "string",
+							"length": "35",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherType": {
+					"description": "Tipo do comprovante",
+					"type": "string",
+					"example": "NOTA FISCAL",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_TIPDOC",
+							"required": true,
+							"type": "string",
+							"length": "25",
+							"note": "Valores permitidos: RECIBO, NOTA FISCAL e CUPOM FISCAL",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherNumber": {
+					"description": "Número do comprovante",
+					"type": "string",
+					"example": "5151151",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_NUMDOC",
+							"required": true,
+							"type": "string",
+							"length": "20",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherDate": {
+					"description": "Data de emissão do comprovante",
+					"type": "string",
+					"example": "20180604",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_DATDOC",
+							"required": true,
+							"type": "string",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherPhoto": {
+					"description": "Foto do comprovante convertida para string em base 64",
+					"type": "string",
+					"example": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAD1BMVEX///8yMjL/6XDYugD//88O7BjQAAAAN0lEQVQImU2MSQ4AMAgCZfn/m4vVNOWgEwGrIqBWIPHQGBOildUuabszOUaaiH5ahtKZd9294wAYVgB7snALxQAAAABJRU5ErkJggg==",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "Foto do comprovante convertida para string em base 64, não possui campo vinculado nesse contexto",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"refundItems": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RefundItemBody"
+					}
+				}
+			}
+		},
+		"RefundItem": {
+			"title": "RefundItem",
+			"type": "object",
+			"properties": {
+				"city": {
+					"description": "Código IBGE da cidade da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODMUN",
+							"required": true,
+							"type": "string",
+							"length": "7",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"drugCode": {
+					"description": "Código do medicamento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODMED",
+							"required": false,
+							"type": "string",
+							"length": "16",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"tableCode": {
+					"description": "Código da tabela",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODPAD",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"procedureCode": {
+					"description": "Código do procedimento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODPRO",
+							"required": true,
+							"type": "string",
+							"length": "16",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"recipeCode": {
+					"description": "Código da receita",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODREC",
+							"required": false,
+							"type": "string",
+							"length": "20",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"cpfCnpj": {
+					"description": "CPF ou CNPJ da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODREF",
+							"required": true,
+							"type": "string",
+							"length": "14",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"subscriberId": {
+					"description": "Matrícula do beneficiário para quem é solicitado o reembolso",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_MATRIC",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"unrelatedHealthProviderName": {
+					"description": "Nome da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_NOMREF",
+							"required": true,
+							"type": "string",
+							"length": "35",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherNumber": {
+					"description": "Número do comprovante",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_NUMDOC",
+							"required": true,
+							"type": "string",
+							"length": "20",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"amountProcedure": {
+					"description": "Quantidade de procedimento",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_QTDPRO",
+							"required": true,
+							"type": "number",
+							"length": "3",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherType": {
+					"description": "Tipo do comprovante",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_TIPDOC",
+							"required": true,
+							"type": "string",
+							"length": "25",
+							"note": "Valores permitidos: RECIBO, NOTA FISCAL e CUPOM FISCAL",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"serviceTypeCode": {
+					"description": "Tipo do serviço",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_TIPSER",
+							"required": true,
+							"type": "string",
+							"length": "6",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"state": {
+					"description": "Sigla do estado da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_EST",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"valueProcedure": {
+					"description": "Valor do procedimento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_VLRTOT || B1N_VLRAPR",
+							"required": true,
+							"type": "string",
+							"length": "16",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"RefundItemBody": {
+			"title": "RefundItem",
+			"type": "object",
+			"properties": {
+				"cityCode": {
+					"description": "Código IBGE da cidade da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"example": "3513405",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODMUN",
+							"required": true,
+							"type": "string",
+							"length": "7",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"drugCode": {
+					"description": "Código do medicamento",
+					"type": "string",
+					"example": "",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODMED",
+							"required": false,
+							"type": "string",
+							"length": "16",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"tableCode": {
+					"description": "Código da tabela",
+					"type": "string",
+					"example": "01",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODPAD",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"procedureCode": {
+					"description": "Código do procedimento",
+					"type": "string",
+					"example": "10101012",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODPRO",
+							"required": true,
+							"type": "string",
+							"length": "16",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"recipeCode": {
+					"description": "Código da receita",
+					"type": "string",
+					"example": "",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODREC",
+							"required": false,
+							"type": "string",
+							"length": "20",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"cpfCnpj": {
+					"description": "CPF ou CNPJ da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"example": "408.858.789-54",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_CODREF",
+							"required": true,
+							"type": "string",
+							"length": "14",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"subscriberId": {
+					"description": "Matrícula do beneficiário para quem é solicitado o reembolso",
+					"type": "string",
+					"example": "00012525000001000",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_MATRIC",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"unrelatedHealthProviderName": {
+					"description": "Nome da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"example": "REDE NÃO REFERENCIADA 1",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_NOMREF",
+							"required": true,
+							"type": "string",
+							"length": "35",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherNumber": {
+					"description": "Número do comprovante",
+					"type": "string",
+					"example": "5151151",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_NUMDOC",
+							"required": true,
+							"type": "string",
+							"length": "20",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"amountProcedure": {
+					"description": "Quantidade de procedimento",
+					"type": "number",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_QTDPRO",
+							"required": true,
+							"type": "number",
+							"length": "3",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"voucherType": {
+					"description": "Tipo do comprovante",
+					"type": "string",
+					"example": "NOTA FISCAL",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_TIPDOC",
+							"required": true,
+							"type": "string",
+							"length": "25",
+							"note": "Valores permitidos RECIBO, NOTA FISCAL, CUPOM FISCAL",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"serviceTypeCode": {
+					"description": "Tipo do serviço",
+					"type": "string",
+					"example": "000001",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_TIPSER",
+							"required": true,
+							"type": "string",
+							"length": "6",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"state": {
+					"description": "Sigla do estado da prestador de serviço de saúde não referenciado da operadora",
+					"type": "string",
+					"example": "SP",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_EST",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"valueProcedure": {
+					"description": "Valor do procedimento sem pontuação (inteiro)",
+					"type": "string",
+					"example": "15000",
+					"x-totvs": [
+						{
+							"product": "ProSaude",
+							"field": "B1N_VLRTOT || B1N_VLRAPR",
+							"required": true,
+							"type": "string",
+							"length": "16",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
 }

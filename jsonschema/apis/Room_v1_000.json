@@ -1,0 +1,208 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade sala, perfil professor (Room) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/educational/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade sala educacional",
+		"version": "1.000",
+		"title": "Sala",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Rooms",
+				"description": "Sala educacional",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Entidade de sala educacional, perfil professor"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/Professors/{ProfessorInternalId}/buildings/{BuildingInternalId}/Blocks/{BlockInternalId}/Rooms": {
+			"get": {
+				"tags": [
+					"Rooms"
+				],
+				"summary": "Retorna todas as salas do Educacional",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"description": "Retorna todas as salas do Educacional",
+				"operationId": "getAll",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ProfessorInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/BuildingInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/BlockInternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Room_1_000.json#/definitions/PagedRoom"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da listagem das salas",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Professors/{ProfessorInternalId}/buildings/{BuildingInternalId}/Blocks/{BlockInternalId}/Rooms/{InternalId}": {
+			"get": {
+				"tags": [
+					"Rooms"
+				],
+				"summary": "Retorna detalhes da sala educacional",
+				"description": "Retorna a sala educacional",
+				"operationId": "getId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ProfessorInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/BuildingInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/BlockInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Room_1_000.json#/definitions/Room"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Sala não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"ProfessorInternalId": {
+				"name": "ProfessorInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do professor",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"BuildingInternalId": {
+				"name": "BuildingInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do prédio educacional",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"BlockInternalId": {
+				"name": "BlockInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do bloco educacional",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId da sala educacional",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
