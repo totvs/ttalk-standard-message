@@ -1,713 +1,455 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "description": "\n# API Condomínio\n\n> Descrição:\n> Documentação técnica do WebService\n\n**Documentação da API**\n\nhttps://apicondominio.docs.apiary.io/#\n\n**Condomínio**\n- Lista de condomínios\n\n- Lista de condomínios, não é obrigatório a indicação de parâmetros, listando os dados do condomínio.\n\t- https://apicondominio.docs.apiary.io/#reference/0/condominio/condominio\n\n**Token**\n- Será fornececido usuário e senha para essa integração;\n\n- Para as requisições de token, será enviado usuário e senha e retornaremos o Token para envio da requisição, nos padrões \n\t-\thttps://jwt.io/\n\t-\thttps://apicondominio.docs.apiary.io/#reference/0/token/buscar-token\n\t\t-\tO token expira em 24 h, após esse prazo pode ser utilizado o serviço de atualização do token.\n\t\t-\thttps://apicondominio.docs.apiary.io/#reference/0/token/atualizar-token\n\n**Lista Unidades**\n- Obrigatório informar o código do condomínio, listagem dos condomínios e dos proprietários de acordo com condomínio selecionado;\n\t- https://apicondominio.docs.apiary.io/#reference/0/unidade/listar-unidades\n\n**Boletos**\n- Listagem dos Boletos em abertos e pagos de acordo com parâmetros solicitados, com os dados dos documentos em aberto e baixado em determinado período.\n\n- O serviço permite alteração do vencimento e nova geração de linha digitavel.\n\t- https://apicondominio.docs.apiary.io/#reference/0/boleto/listar-boleto  \n",
-    "version": "1.0.0",
-    "title": "API Condominio",
-    "termsOfService": "https://apicondominio.docs.apiary.io/",
-    "contact": {
-      "email": "macos.leite@totvs.com.br"
-    },
-    "license": {
-      "name": "REST 2.0",
-      "url": "https://apicondominio.docs.apiary.io/"
-    },
-	"x-totvs": {
-		"messageDocumentation": {
-			"name": "Auditing",
-			"description": "Administração de CondominioLista",
-			"segment": "Financeiro"
-		},
-		"productInformation": [
-			{
-				"product": "APICondominio",
-				"contact": "macos.leite@totvs.com.br",
-				"description": "Operações referente a troca de informações sobre auditoria de atendimentos"
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para Gerenciamento de Condomínio para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/condominio/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8081"
+				}
 			}
-		]
-	}	
-	
-  },
-  "tags": [
-    {
-      "name": "Condomínio",
-      "description": "Lista de condomínios"
-    },
-    {
-      "name": "Localizar Condomínio",
-      "description": "Listagem dos condomínios e dos proprietários;"
-    },
-    {
-      "name": "Unidade",
-      "description": "Listagem dos condomínios e dos proprietários de acordo com condomínio selecionado"
-    },
-    {
-      "name": "Boleto",
-      "description": "Listagem dos Boletos em abertos e pagos de acordo com parâmetros solicitados, com os dados dos documentos em aberto e baixado em determinado período"
-    },
-    {
-      "name": "Alterar Boleto",
-      "description": "Altera os Boletos em abertos de acordo com parâmetros solicitados, com os dados dos documentos em aberto em determinado período"
-    }
-  ],
-  "schemes": [
-    "https",
-    "http"
-  ],
-  "paths": {
-    "/Listar Condomínio": {
-      "get": {
-        "tags": [
-          "Condomínio"
-        ],
-        "summary": "Retorno dos dados com a Lista de Condominios",
-        "description": "Lista de condomínios, não é obrigatório a indicação de parâmetros, listando os dados do condomínio",
-        "operationId": "findListaCondominio",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "codigoCondominio",
-            "in": "path",
-            "description": "codigo do Condominio Exempl: 1.",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/CondominioLista"
-            }
-          },
-          "400": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          },
-          "401": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:BackFiscall",
-              "read:BackFiscall"
-            ]
-          }
-        ]
-      }
-    },
-    "/Condomínio": {
-      "get": {
-        "tags": [
-          "Localizar Condomínio"
-        ],
-        "summary": "Retorno dos dados com a Lista de Condominios",
-        "description": "Lista de condomínios, não é obrigatório a indicação de parâmetros, listando os dados do condomínio",
-        "operationId": "findCondominio",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "codigoCondominio",
-            "in": "path",
-            "description": "codigo do Condominio Example: 1.",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/CondominioLista"
-            }
-          },
-          "400": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          },
-          "401": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:BackFiscall",
-              "read:BackFiscall"
-            ]
-          }
-        ]
-      }
-    },
-    "/Listar Unidade": {
-      "get": {
-        "tags": [
-          "Unidade"
-        ],
-        "summary": "Retorno dos dados com o Condominios selecionado",
-        "description": "Lista de condomínios, não é obrigatório a indicação de parâmetros, listando os dados do condomínio",
-        "operationId": "findListaUnidade",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "codigoCondominio",
-            "in": "path",
-            "description": "Cóodigo do Condomínio Exemplo: 1",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ListadaUnidade"
-            }
-          },
-          "400": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          },
-          "401": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:BackFiscall",
-              "read:BackFiscall"
-            ]
-          }
-        ]
-      }
-    },
-    "/Listar Boleto": {
-      "get": {
-        "tags": [
-          "Boleto"
-        ],
-        "summary": "Retorno dos boletos em aberto",
-        "description": "Listagem dos Boletos em abertos e pagos de acordo com parâmetros solicitados, com os dados dos documentos em aberto e baixado em determinado período.",
-        "operationId": "findListaBoleto",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "codigoCondominio",
-            "in": "path",
-            "description": "Código do Condomínio Exemplo = 1",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "status",
-            "in": "path",
-            "description": "Status do Boleto (1 = Em Aberto, 2 = Pago)",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "dataInicio",
-            "in": "path",
-            "description": "Data Vencimento ou Pagamento Inicia",
-            "required": true,
-            "type": "string",
-            "format": "date"
-          },
-          {
-            "name": "dataFim",
-            "in": "path",
-            "description": "Data Vencimento ou Pagamento Final",
-            "required": true,
-            "type": "string",
-            "format": "date"
-          },
-          {
-            "name": "codUnidade",
-            "in": "path",
-            "description": "Número da Unidade do morador Exemplo : '1A'",
-            "required": true,
-            "type": "string",
-            "format": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ListaBoleta"
-            }
-          },
-          "400": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          },
-          "401": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:BackFiscall",
-              "read:BackFiscall"
-            ]
-          }
-        ]
-      }
-    },
-    "/Alterar Boleto": {
-      "put": {
-        "tags": [
-          "Alterar Boleto"
-        ],
-        "summary": "Alteração do boleto em aberto pelo código",
-        "description": "Altera os Boletos em abertos de acordo com parâmetros solicitados, com os dados dos documentos em aberto em determinado período. O serviço permite alteração do vencimento e nova geração de linha digitavel.",
-        "operationId": "updateAlterarBoleto",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "codigoDocumento",
-            "in": "path",
-            "description": "Código do Boleto",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ListaBoleta"
-            }
-          },
-          "400": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          },
-          "401": {
-            "description": "Mensagem de Erro",
-            "schema": {
-              "$ref": "#/definitions/Erro"
-            }
-          }
-        },
-        "security": [
-          {
-            "petstore_auth": [
-              "write:BackFiscall",
-              "read:BackFiscall"
-            ]
-          }
-        ]
-      }
-    }
-  },
-  "securityDefinitions": {
-    "petstore_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "http://apicondominio.swagger.io/oauth/dialog",
-      "flow": "implicit",
-      "scopes": {
-        "write:BackFiscall": "dados da minha conta",
-        "read:BackFiscall": "leitura da minha"
-      }
-    },
-    "api_key": {
-      "type": "apiKey",
-      "name": "api_key",
-      "in": "header"
-    }
-  },
-  "definitions": {
-    "Erro": {
-      "type": "object",
-      "properties": {
-        "messageInfo": {
-          "type": "string",
-          "description": "'Erro'",
-          "enum": [
-            "'Erro'"
-          ]
-        }
-      },
-      "xml": {
-        "name": "Erro"
-      }
-    },
-    "CondominioLista": {
-      "type": "object",
-      "properties": {
-        "codigoCondominio": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "nome": {
-          "type": "string",
-          "default": ""
-        },
-        "cnpj": {
-          "type": "string"
-        },
-        "cep": {
-          "type": "string"
-        },
-        "endereco": {
-          "type": "string"
-        },
-        "bairro": {
-          "type": "string"
-        },
-        "cidade": {
-          "type": "string"
-        },
-        "estado": {
-          "type": "string"
-        },
-        "qtdeUnidades": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "flagInternet": {
-          "type": "string"
-        },
-        "telefones": {
-          "type": "array",
-          "xml": {
-            "name": "telefones",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/telefones"
-          }
-        },
-        "sindicos": {
-          "type": "array",
-          "xml": {
-            "name": "sindicos",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/pessoa"
-          }
-        },
-        "subSindicos": {
-          "type": "array",
-          "xml": {
-            "name": "subSindicos",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/pessoa"
-          }
-        },
-        "zeladores": {
-          "type": "array",
-          "xml": {
-            "name": "zeladores",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/pessoa"
-          }
-        },
-        "administradoras": {
-          "type": "array",
-          "xml": {
-            "name": "administradoras",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/pessoa"
-          }
-        }
-      },
-      "xml": {
-        "name": "TokenBuscaResponse"
-      }
-    },
-    "telefones": {
-      "type": "object",
-      "properties": {
-        "idTelefone": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "numero": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "telefones"
-      }
-    },
-    "pessoa": {
-      "type": "object",
-      "properties": {
-        "idPessoa": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "nome": {
-          "type": "string"
-        },
-        "cpfCnpj": {
-          "type": "string"
-        },
-        "cep": {
-          "type": "string"
-        },
-        "endereco": {
-          "type": "string"
-        },
-        "bairro": {
-          "type": "string"
-        },
-        "estado": {
-          "type": "string"
-        },
-        "fax": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "telefones": {
-          "type": "array",
-          "xml": {
-            "name": "telefones",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/telefones"
-          }
-        },
-        "contato": {
-          "type": "array",
-          "xml": {
-            "name": "contato",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/contato"
-          }
-        }
-      },
-      "xml": {
-        "name": "pessoa"
-      }
-    },
-    "contato": {
-      "type": "object",
-      "properties": {
-        "idcontato": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "Descricao": {
-          "type": "string"
-        }
-      },
-      "xml": {
-        "name": "contato"
-      }
-    },
-    "ListadaUnidade": {
-      "type": "object",
-      "properties": {
-        "codUnidade": {
-          "type": "string"
-        },
-        "tipoUnidade": {
-          "type": "string"
-        },
-        "bloco": {
-          "type": "string"
-        },
-        "proprietarios": {
-          "type": "array",
-          "xml": {
-            "name": "proprietarios",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/pessoa"
-          }
-        },
-        "locatarios": {
-          "type": "array",
-          "xml": {
-            "name": "locatarios",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/pessoa"
-          }
-        }
-      },
-      "xml": {
-        "name": "ListadaUnidade"
-      }
-    },
-    "ListaBoleta": {
-      "type": "object",
-      "properties": {
-        "codDocumento": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "codigoBanco": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "nomeBanco": {
-          "type": "string"
-        },
-        "agencia": {
-          "type": "string"
-        },
-        "contaCorrente": {
-          "type": "string"
-        },
-        "carteira": {
-          "type": "string"
-        },
-        "codigoCedente": {
-          "type": "string"
-        },
-        "dataEmissao": {
-          "type": "string"
-        },
-        "dataVencimento": {
-          "type": "string"
-        },
-        "dataPagamento": {
-          "type": "string"
-        },
-        "valorPagamento": {
-          "type": "number"
-        },
-        "valor": {
-          "type": "number"
-        },
-        "numeroRecibo": {
-          "type": "string"
-        },
-        "linhaDigitavel": {
-          "type": "string"
-        },
-        "codigoBarras": {
-          "type": "string"
-        },
-        "aceite": {
-          "type": "string"
-        },
-        "nossoNumero": {
-          "type": "string"
-        },
-        "unidade": {
-          "type": "array",
-          "xml": {
-            "name": "unidade",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/ListadaUnidade"
-          }
-        },
-        "pagador": {
-          "type": "array",
-          "xml": {
-            "name": "pagador",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/pessoa"
-          }
-        },
-        "verbas": {
-          "type": "array",
-          "xml": {
-            "name": "verbas",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/verbas"
-          }
-        }
-      },
-      "xml": {
-        "name": "ListaBoleta"
-      }
-    },
-    "verbas": {
-      "type": "object",
-      "properties": {
-        "codigo": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "Descricao": {
-          "type": "string"
-        },
-        "valor": {
-          "type": "number"
-        }
-      },
-      "xml": {
-        "name": "verbas"
-      }
-    }
-  },
-  "externalDocs": {
-    "description": "Find out more about Swagger",
-    "url": "http://swagger.io"
-  },
-  "host": "virtserver.swaggerhub.com",
-  "basePath": "/BackFiscall/APICondominio/1.0.0"
+		}
+	],
+	"info": {
+		"description": "\n# API Condomínio\n\n> Descrição:\n> Documentação técnica do WebService\n\n**Documentação da API**\n\nhttps://apicondominio.docs.apiary.io/#\n\n**Condomínio**\n- Lista de condomínios\n\n- Lista de condomínios, não é obrigatório a indicação de parâmetros, listando os dados do condomínio.\n\t- https://apicondominio.docs.apiary.io/#reference/0/condominio/condominio\n\n**Token**\n- Será fornececido usuário e senha para essa integração;\n\n- Para as requisições de token, será enviado usuário e senha e retornaremos o Token para envio da requisição, nos padrões \n\t-\thttps://jwt.io/\n\t-\thttps://apicondominio.docs.apiary.io/#reference/0/token/buscar-token\n\t\t-\tO token expira em 24 h, após esse prazo pode ser utilizado o serviço de atualização do token.\n\t\t-\thttps://apicondominio.docs.apiary.io/#reference/0/token/atualizar-token\n\n**Lista Unidades**\n- Obrigatório informar o código do condomínio, listagem dos condomínios e dos proprietários de acordo com condomínio selecionado;\n\t- https://apicondominio.docs.apiary.io/#reference/0/unidade/listar-unidades\n\n**Boletos**\n- Listagem dos Boletos em abertos e pagos de acordo com parâmetros solicitados, com os dados dos documentos em aberto e baixado em determinado período.\n\n- O serviço permite alteração do vencimento e nova geração de linha digitavel.\n\t- https://apicondominio.docs.apiary.io/#reference/0/boleto/listar-boleto\n",
+		"version": "1.000",
+		"title": "API Condominio",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Blocks",
+				"description": "API Condominio",
+				"segment": "Gerenciamento"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "macos.leite@totvs.com.br",
+					"description": "Gerenciamento de Condominio e Gestão financeira"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/Listar Condomínio": {
+			"get": {
+				"tags": [
+					"Condomínio"
+				],
+				"summary": "Retorno dos dados com a Lista de Condominios",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"description": "Lista de condomínios, não é obrigatório a indicação de parâmetros, listando os dados do condomínio",
+				"operationId": "findListaCondominio",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/CodCondominio"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CondominioLista"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da listagem dos relatórios",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+		},
+	},
+	"components": {
+		"parameters": {
+			"CodCondominio": {
+				"name": "CodCondominio",
+				"in": "path",
+				"required": true,
+				"description": "codigo do Condominio Exempl: 1.",
+				"schema": {
+					"type": "integer"
+				}
+			}
+		},
+		"schemas": {
+			"verbas" : {
+				"type" : "object",
+				"properties" : {
+				  "codigo" : {
+					"type" : "integer",
+					"format" : "int32"
+				  },
+				  "Descricao" : {
+					"type" : "string"
+				  },
+				  "valor" : {
+					"type" : "number"
+				  }
+				},
+				"xml" : {
+				  "name" : "verbas"
+				}
+			},
+			"pessoa" : {
+			"type" : "object",
+			"properties" : {
+			  "idPessoa" : {
+				"type" : "integer",
+				"format" : "int32"
+			  },
+			  "nome" : {
+				"type" : "string"
+			  },
+			  "cpfCnpj" : {
+				"type" : "string"
+			  },
+			  "cep" : {
+				"type" : "string"
+			  },
+			  "endereco" : {
+				"type" : "string"
+			  },
+			  "bairro" : {
+				"type" : "string"
+			  },
+			  "estado" : {
+				"type" : "string"
+			  },
+			  "fax" : {
+				"type" : "string"
+			  },
+			  "email" : {
+				"type" : "string"
+			  },
+			  "telefones" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "telefones",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/telefones"
+				}
+			  },
+			  "contato" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "contato",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/contato"
+				}
+			  }
+			},
+			"xml" : {
+			  "name" : "pessoa"
+			}
+			},
+			"ListaBoleta" : {
+			"type" : "object",
+			"properties" : {
+			  "codDocumento" : {
+				"type" : "integer",
+				"format" : "int32"
+			  },
+			  "codigoBanco" : {
+				"type" : "integer",
+				"format" : "int32"
+			  },
+			  "nomeBanco" : {
+				"type" : "string"
+			  },
+			  "agencia" : {
+				"type" : "string"
+			  },
+			  "contaCorrente" : {
+				"type" : "string"
+			  },
+			  "carteira" : {
+				"type" : "string"
+			  },
+			  "codigoCedente" : {
+				"type" : "string"
+			  },
+			  "dataEmissao" : {
+				"type" : "string"
+			  },
+			  "dataVencimento" : {
+				"type" : "string"
+			  },
+			  "dataPagamento" : {
+				"type" : "string"
+			  },
+			  "valorPagamento" : {
+				"type" : "number"
+			  },
+			  "valor" : {
+				"type" : "number"
+			  },
+			  "numeroRecibo" : {
+				"type" : "string"
+			  },
+			  "linhaDigitavel" : {
+				"type" : "string"
+			  },
+			  "codigoBarras" : {
+				"type" : "string"
+			  },
+			  "aceite" : {
+				"type" : "string"
+			  },
+			  "nossoNumero" : {
+				"type" : "string"
+			  },
+			  "unidade" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "unidade",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/ListadaUnidade"
+				}
+			  },
+			  "pagador" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "pagador",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/pessoa"
+				}
+			  },
+			  "verbas" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "verbas",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/verbas"
+				}
+			  }
+			},
+			"xml" : {
+			  "name" : "ListaBoleta"
+			}
+			},
+			"CondominioLista" : {
+			"type" : "object",
+			"properties" : {
+			  "codigoCondominio" : {
+				"type" : "integer",
+				"format" : "int32"
+			  },
+			  "nome" : {
+				"type" : "string",
+				"default" : ""
+			  },
+			  "cnpj" : {
+				"type" : "string"
+			  },
+			  "cep" : {
+				"type" : "string"
+			  },
+			  "endereco" : {
+				"type" : "string"
+			  },
+			  "bairro" : {
+				"type" : "string"
+			  },
+			  "cidade" : {
+				"type" : "string"
+			  },
+			  "estado" : {
+				"type" : "string"
+			  },
+			  "qtdeUnidades" : {
+				"type" : "integer",
+				"format" : "int32"
+			  },
+			  "flagInternet" : {
+				"type" : "string"
+			  },
+			  "telefones" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "telefones",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/telefones"
+				}
+			  },
+			  "sindicos" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "sindicos",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/pessoa"
+				}
+			  },
+			  "subSindicos" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "subSindicos",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/pessoa"
+				}
+			  },
+			  "zeladores" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "zeladores",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/pessoa"
+				}
+			  },
+			  "administradoras" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "administradoras",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/pessoa"
+				}
+			  }
+			},
+			"xml" : {
+			  "name" : "TokenBuscaResponse"
+			}
+			},
+			"Erro" : {
+			"type" : "object",
+			"properties" : {
+			  "messageInfo" : {
+				"type" : "string",
+				"description" : "'Erro'",
+				"enum" : [ "'Erro'" ]
+			  }
+			},
+			"xml" : {
+			  "name" : "Erro"
+			}
+			},
+			"ListadaUnidade" : {
+			"type" : "object",
+			"properties" : {
+			  "codUnidade" : {
+				"type" : "string"
+			  },
+			  "tipoUnidade" : {
+				"type" : "string"
+			  },
+			  "bloco" : {
+				"type" : "string"
+			  },
+			  "proprietarios" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "proprietarios",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/pessoa"
+				}
+			  },
+			  "locatarios" : {
+				"type" : "array",
+				"xml" : {
+				  "name" : "locatarios",
+				  "wrapped" : true
+				},
+				"items" : {
+				  "$ref" : "#/components/schemas/pessoa"
+				}
+			  }
+			},
+			"xml" : {
+			  "name" : "ListadaUnidade"
+			}
+			},
+			"telefones" : {
+			"type" : "object",
+			"properties" : {
+			  "idTelefone" : {
+				"type" : "integer",
+				"format" : "int32"
+			  },
+			  "numero" : {
+				"type" : "string"
+			  }
+			},
+			"xml" : {
+			  "name" : "telefones"
+			}
+			},
+			"contato" : {
+			"type" : "object",
+			"properties" : {
+			  "idcontato" : {
+				"type" : "integer",
+				"format" : "int32"
+			  },
+			  "Descricao" : {
+				"type" : "string"
+			  }
+			},
+			"xml" : {
+			  "name" : "contato"
+			}
+			}
+
+		
+		}
+	}
 }
