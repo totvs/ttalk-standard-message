@@ -2,74 +2,72 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para a entidade filial (Branch) para produtos TOTVS",
-			"url": "http://{serverUrl}:{serverHttpPort}/api/framework/v1",
+			"description": "API para a entidade Moeda (Currency) para o Cadastro de Moeda TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/fin/v1",
 			"variables": {
 				"serverUrl": {
 					"default": "localhost"
 				},
 				"serverHttpPort": {
-					"default": "8051"
+					"default": "8012"
 				}
 			}
 		}
 	],
 	"info": {
-		"description": "API para a entidade filial (Branch) para produtos TOTVS",
+		"description": "API para informações de moeda do Cadastro de Moedas TOTVS",
 		"version": "1.000",
-		"title": "Filial",
+		"title": "Cadastro de Moeda",
 		"contact": {
 			"name": "T-Talk",
-			"url": "API.Totvs.com.br",
+			"url": "api.totvs.com.br",
 			"email": "comiteintegracao@totvs.com.br"
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "Filial",
-				"description": "Filial",
-				"segment": "Foundation"
+				"name": "Currency",
+				"description": "Cadastro de Moeda",
+				"segment": "Serviços"
 			},
 			"productInformation": [
 				{
 					"product": "Protheus",
-					"contact": "Protheus_FW@totvs.com.br",
-					"description": "Cadastro de Filial",
-					"adapter": "apcfg230i.prw",
-					"helpUrl": "link aqui",
-					"note": "Essa API exige que seja configurada a segurança no servidor (SECURITY=1)."
+					"contact": "",
+					"note": "",
+					"adapter": ""
 				},
 				{
-					"product": "RMS",
-					"contact": "lsousa@totvs.com.br",
-					"description": "Cadastro de Filial"
+					"product": "Logix",
+					"contact": "SUPPLY.ML.MAN.ENT_L@totvs.com.br",
+					"description": "Cadastro de Moeda",
+					"adapter": ""
 				}
 			]
 		}
 	},
 	"paths": {
-		"/Branches": {
+		"/Currency": {
 			"get": {
 				"tags": [
-					"Branch"
+					"Currency"
 				],
-				"summary": "Retorna todas as Filiais da base",
+				"summary": "Retorna listas de Moeda",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.23"
+							"available": false
 						},
 						{
-							"product": "RMS",
+							"product": "Logix",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros"
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.25"
 						}
 					]
 				},
-				"description": "Retorna todas as Filiais da base",
-				"operationId": "getBranch",
+				"description": "Retorna lista completa de moeda",
+				"operationId": "getListCurrency",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -84,7 +82,7 @@
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
 					},
 					{
-						"$ref": "#/components/parameters/EnterpriseGroup"
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
 					}
 				],
 				"responses": {
@@ -93,7 +91,27 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Branch_2_001.json#/definitions/PagedBranches"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Currency_2_002.json#/definitions/PagedCurrencies"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na listagem de Moeda",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
 								}
 							}
 						}
@@ -102,23 +120,21 @@
 			},
 			"post": {
 				"tags": [
-					"Branch"
+					"Currency"
 				],
-				"summary": "Inclui a Filial passada na requisição",
-				"description": "Inclui a Filial passada na requisição",
-				"operationId": "postBranch",
+				"summary": "Inclui Moeda",
+				"operationId": "postCurrency",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo não esta disponivel nessa versão",
-							"minimalVersion": "12.1.23"
+							"available": false
 						},
 						{
-							"product": "RMS",
+							"product": "Logix",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros"
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.25"
 						}
 					]
 				},
@@ -131,11 +147,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Branch_2_001.json#/definitions/BranchType"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Currency_2_002.json#/definitions/CurrencyInfo"
 							}
 						}
 					},
-					"description": "Filial para ser incluida"
+					"description": "Inclui moeda"
 				},
 				"responses": {
 					"200": {
@@ -143,7 +159,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Branch_2_001.json#/definitions/PagedBranches"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Currency_2_002.json#/definitions/PagedCurrencies"
 								}
 							}
 						}
@@ -161,32 +177,31 @@
 				}
 			}
 		},
-		"/Branches/{BranchInternalId}": {
+		"/Currency/{Code}": {
 			"get": {
 				"tags": [
-					"Branch"
+					"Currency"
 				],
-				"summary": "Retorna todas as Filiais da base",
-				"description": "Retorna todas as Filiais da base",
-				"operationId": "getBranchID",
+				"summary": "Retorna Moeda pelo seu código",
+				"description": "Retorna Moeda pelo seu código",
+				"operationId": "getCurrency",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.23"
+							"available": false
 						},
 						{
-							"product": "RMS",
+							"product": "Logix",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros"
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.25"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/BranchInternalId"
+						"$ref": "#/components/parameters/Code"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -198,13 +213,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Branch_2_001.json#/definitions/BranchType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Currency_2_002.json#/definitions/CurrencyInfo"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Filial não localizada na base",
+						"description": "Moeda não localizada na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -217,29 +232,28 @@
 			},
 			"put": {
 				"tags": [
-					"Branch"
+					"Currency"
 				],
-				"summary": "Inclui a Filial passada na requisição",
-				"description": "Inclui a Filial passada na requisição",
-				"operationId": "postBranchID",
+				"summary": "Atualiza cadastro de Moeda conforme dados enviados na requisição",
+				"description": "Atualiza cadastro de Moeda conforme dados enviados na requisição",
+				"operationId": "putCurrency",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo não esta disponível nessa versão",
-							"minimalVersion": "12.1.23"
+							"available": false
 						},
 						{
-							"product": "RMS",
+							"product": "Logix",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros"
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.25"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/BranchInternalId"
+						"$ref": "#/components/parameters/Code"
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -249,11 +263,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Branch_2_001.json#/definitions/BranchType"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Currency_2_002.json#/definitions/CurrencyInfo"
 							}
 						}
 					},
-					"description": "Filial para ser incluida"
+					"description": "Moeda a ser atualizada"
 				},
 				"responses": {
 					"200": {
@@ -261,13 +275,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Branch_2_001.json#/definitions/PagedBranches"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Currency_2_002.json#/definitions/CurrencyInfo"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
+						"description": "Erro no momento da Inclusão",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -277,7 +291,7 @@
 						}
 					},
 					"404": {
-						"description": "Filial não localizada na base",
+						"description": "Moeda não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -290,39 +304,49 @@
 			},
 			"delete": {
 				"tags": [
-					"Branch"
+					"Currency"
 				],
-				"deprecated": true,
-				"summary": "Funcionalidade retirada por questão de regras",
-				"description": "Não é permitida a deleção da Filial por API, por motivos de segurança",
-				"operationId": "DeleteBranchID",
+				"summary": "Exclui Moeda conforme dados enviados na requisição",
+				"description": "Exclui Moeda conforme dados enviados na requisição",
+				"operationId": "deleteCurrency",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "Protheus",
-							"available": false,
-							"note": "Este verbo não esta disponivel pois não é permitida a exclusão de filial por endpoit"
+							"available": false
+						},
+						{
+							"product": "Logix",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.25"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/BranchInternalId"
+						"$ref": "#/components/parameters/Code"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					}
 				],
 				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
+					"204": {
+						"description": "Operação realizada com sucesso"
+					},
+					"400": {
+						"description": "erro no momento da Exclusão",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Branch_2_001.json#/definitions/BranchType"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
 								}
 							}
 						}
 					},
-					"405": {
-						"description": "Não disponivel",
+					"404": {
+						"description": "Moeda não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -337,32 +361,13 @@
 	},
 	"components": {
 		"parameters": {
-			"BranchInternalId": {
-				"name": "BranchInternalId",
+			"Code": {
+				"name": "Code",
 				"in": "path",
 				"required": true,
-				"description": "Identificador Único representando a Filial",
+				"description": "Identificador unico representando a moeda",
 				"schema": {
 					"type": "string"
-				}
-			},
-			"EnterpriseGroup": {
-				"name": "EnterpriseGroup",
-				"in": "header",
-				"required": false,
-				"description": "Grupo de empresa das filiais requisitadas",
-				"schema": {
-					"type": "string"
-				},
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "No protheus esse header é obrigatório",
-							"minimalVersion": "12.1.23"
-						}
-					]
 				}
 			}
 		},
