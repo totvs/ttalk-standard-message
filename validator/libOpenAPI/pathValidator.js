@@ -94,13 +94,13 @@ var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
             )
         }
         if (parameter.name) {
-            results.useCommonParams = !(parameter.name.includes("Authorization") ||
-                parameter.name.includes("Order") ||
-                parameter.name.includes("Page") ||
-                parameter.name.includes("PageSize") ||
-                parameter.name.includes("AcceptLanguage") ||
-                parameter.name.includes("Fields") ||
-                parameter.name.includes("Expand"));
+            results.useCommonParams = !(parameter.name == "Authorization" ||
+                parameter.name == "Order" ||
+                parameter.name == "Page" ||
+                parameter.name == "PageSize" ||
+                parameter.name == "AcceptLanguage" ||
+                parameter.name == "Fields" ||
+                parameter.name == "Expand");
         }
         if (results.useCommonParams == false) {
             results.notUsingCommonParams = pathkey + "|" + httpVerbkey
