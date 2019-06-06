@@ -7,7 +7,6 @@ var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
 var schemaDefinitionsValidator = require('../libSchema/schemaDefinitionsValidator.js');
-var schemaDereferencer = require('../libSchema/schemaDereferencer.js');
 
 var expect = require('chai').expect;
 
@@ -34,8 +33,6 @@ describe("Validating Schema files...", function () {
             before(async function (done) { //only used done here to be able to use the timeout (next line);
               this.timeout(60000);
               parsedSchema = JSON.parse(file);
-              dereferencedSchema = await schemaDereferencer.getDereferenced(parsedSchema);
-              parsedSchema = dereferencedSchema;
               schemaDefinitionsValidator.clear();
               schemaDefinitionsValidatorResult = schemaDefinitionsValidator.validateSchema(parsedSchema, done);
             })
@@ -53,6 +50,12 @@ describe("Validating Schema files...", function () {
               it("shouldn't contain v (_v)", function () {
                 let containsWrongVersionPattern = filename.includes("_v");
                 expect(containsWrongVersionPattern).to.be.false;
+              });
+            });
+
+            describe(" - Content Format: ", function () {
+              it("shouldn't contain weird special characteres", function () {
+                expect(file.includes("�"), "Please check file encode").to.be.false;
               });
             });
 
@@ -74,6 +77,10 @@ describe("Validating Schema files...", function () {
                 }
               });
 
+              it("should have available as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.availableIsBoolean, schemaDefinitionsValidatorResult.availableIsBooleanMsg).not.to.be.false;
+              });
+
               it("should be available=true in x-totvs, because it is required", function () {
                 var inconsistentAvailable = schemaDefinitionsValidatorResult.inconsistentAvailable;
                 expect(schemaDefinitionsValidatorResult.hasAcceptableAvailable, inconsistentAvailable).not.to.be.false;
@@ -93,6 +100,12 @@ describe("Validating Schema files...", function () {
                 var wrongXTotvs = schemaDefinitionsValidatorResult.wrongXTotvsAvailable;
                 expect(schemaDefinitionsValidatorResult.XTotvsContainAvailable, wrongXTotvs).not.to.be.false;
               });
+              it("should have required as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.requiredIsBoolean, schemaDefinitionsValidatorResult.requiredIsBooleanMsg).not.to.be.false;
+              });
+              it("should have canUpdate as a boolean type inside x-totvs", function () {
+                expect(schemaDefinitionsValidatorResult.canUpdateIsBoolean, schemaDefinitionsValidatorResult.canUpdateIsBooleanMsg).not.to.be.false;
+              });
             });
 
             describe(" - Enum: ", function () {
@@ -100,11 +113,24 @@ describe("Validating Schema files...", function () {
                 var wrongEnum = schemaDefinitionsValidatorResult.wrongEnumAsString;
                 expect(schemaDefinitionsValidatorResult.enumIsString, wrongEnum).not.to.be.false;
               });
-            })
+            });
+
+            describe(" - Required: ", function () {
+              it("should have the 'required' field as an array", function () {
+                expect(schemaDefinitionsValidatorResult.requiredIsAnArray, schemaDefinitionsValidatorResult.requiredIsAnArrayErrMsg).not.to.be.false;
+              });
+              it("should have every 'required' element as strings", function () {
+                expect(schemaDefinitionsValidatorResult.requiredIsArrayOfStrings, schemaDefinitionsValidatorResult.requiredIsArrayOfStringsErrMsg).not.to.be.false;
+              });
+              it("should have every element of the 'required' array as a property", function () {
+                expect(schemaDefinitionsValidatorResult.hasRequiredProperty, schemaDefinitionsValidatorResult.hasRequiredPropertyErrMsg).not.to.be.false;
+              });
+            });
           });
         };
-      });           
+      });
       done();
+      
     });
   })
 });
