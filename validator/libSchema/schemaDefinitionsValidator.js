@@ -20,6 +20,7 @@ var checkXtotvs = function (theObject, prop, currentObjectName, parent) {
         var xTotvs = theObject[prop];
         CheckIfXTotvsIsAvailableWhileParentHasRequired(xTotvs, currentObjectName, parent);
         CheckIfXTotvsIsArray(xTotvs, currentObjectName);
+        CheckIfAvailableCanUpdateRequiredAreBoolean(xTotvs, currentObjectName);
         CheckIfXTotvsContainRequiredProperties(xTotvs, currentObjectName);
     }
 };
@@ -55,6 +56,36 @@ var CheckIfXTotvsIsAvailableWhileParentHasRequired = function (xTotvs, currentOb
     }
 }
 
+var CheckIfRequiredMeetRequirements = function (theObject, currentObjectName) {
+    if (theObject.isAParent && theObject.hasOwnProperty('required') && results.requiredIsAnArray != false) {
+        if (theObject.required instanceof Array) {
+            results.requiredIsAnArray = true;
+            for (j in theObject.required) {
+                if (checkIsControlProperty(j) && results.requiredIsArrayOfStrings != false) { //makes it not to walk through .parent or parent.isAParent
+                    if (typeof (theObject.required[j]) == "string") {
+                        results.requiredIsArrayOfStrings = true;
+                        if (results.hasRequiredProperty != false) {
+                            if (theObject.properties.hasOwnProperty(theObject.required[j])) {
+                                results.hasRequiredProperty = true;
+                            } else {
+                                results.hasRequiredProperty = false;
+                                results.hasRequiredPropertyErrMsg = "Schema has '" + theObject.required[j] + "' as a required type (at '" + currentObjectName + "'), but it does not exist as a property.";
+                            }
+                        }
+                    } else {
+                        results.requiredIsArrayOfStrings = false;
+                        results.requiredIsArrayOfStringsErrMsg = "The array element '" + theObject.required[j] + "', at '" + currentObjectName + "' required field, must be a string.";
+                    }
+                }
+            }
+        } else {
+            results.requiredIsAnArray = false;
+            results.requiredIsAnArrayErrMsg = "The 'required' property of '" + currentObjectName + "' must be an array of strings.";
+        }
+    }
+}
+
+
 var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
     if (results.useXTotvsAsArray != false) {
         if (Array.isArray(xTotvs)) {
@@ -62,6 +93,39 @@ var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
         } else {
             results.useXTotvsAsArray = false;
             results.wrongXTotvs = "Object with invalid x-totvs: '" + currentObjectName + "'";
+        }
+    }
+}
+
+var CheckIfAvailableCanUpdateRequiredAreBoolean = function (xTotvs, currentObjectName) {
+    for (var i in xTotvs){
+        if (results.availableIsBoolean != false) {
+            if (typeof xTotvs[i].available == "boolean"){
+                results.availableIsBoolean = true;
+            } else{
+                results.availableIsBoolean = false;
+                results.availableIsBooleanMsg = "At object '" + currentObjectName + "', the property 'available' must be a boolean type.";
+            }
+        }
+        if (results.canUpdateIsBoolean != false) {
+            if(xTotvs[i].hasOwnProperty("canUpdate")){
+                if (typeof xTotvs[i].canUpdate == "boolean"){
+                    results.canUpdateIsBoolean = true;
+                } else{
+                    results.canUpdateIsBoolean = false;
+                    results.canUpdateIsBooleanMsg = "At object '" + currentObjectName + "', the property 'canUpdate' must be a boolean type.";
+                }
+            }
+        }
+        if (results.requiredIsBoolean != false) {
+            if(xTotvs[i].hasOwnProperty("required")){
+                if (typeof xTotvs[i].required == "boolean"){
+                    results.requiredIsBoolean = true;
+                } else{
+                    results.requiredIsBoolean = false;
+                    results.requiredIsBooleanMsg = "At object '" + currentObjectName + "', the property 'required' must be a boolean type.";
+                }
+            }
         }
     }
 }
@@ -152,6 +216,7 @@ var getObjectRecursive = function (theObject, currentObjectName, parent) {
 
                 if (theObject.hasOwnProperty("type") && (theObject.hasOwnProperty("properties")) || (theObject.hasOwnProperty("allOf")) || (theObject.hasOwnProperty("anyOf") || (theObject.hasOwnProperty("oneOf")))) { //I'll have to check if it's also allof anyof etc
                     theObject.isAParent = true;
+                    CheckIfRequiredMeetRequirements(theObject, currentObjectName);
                 }
 
                 if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) { //if theObject[prop] has elements
