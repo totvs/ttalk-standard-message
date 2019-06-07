@@ -1,0 +1,224 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Mrpcalendar_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "MRPcalendar",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "MRPcalendar",
+				"description": "Calendário do MRP",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/ListOfMRPCalendar",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"MRPCalendarBase": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"description": "Código da filial",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_FILIAL",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"code": {
+					"description": "Id único do calendário do MRP",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_IDREG",
+							"required": true,
+							"type": "Char",
+							"length": "200",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"calendar": {
+					"description": "Código do Calendário",
+					"type": "string",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_CALEND",
+							"required": true,
+							"type": "Char",
+							"length": "90",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"date": {
+					"description": "Data do calendário do MRP",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_DATA",
+							"required": false,
+							"type": "Char",
+							"length": "8",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"startTime": {
+					"description": "Hora de início do perído do MRP",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_HRINI",
+							"required": true,
+							"type": "Char",
+							"length": "05",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"endTime": {
+					"description": "Hora de término do período do MRP",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_HRFIM",
+							"required": false,
+							"type": "Char",
+							"length": "05",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"interval": {
+					"description": "Tempo de intervalo do período do MRP",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_INTERV",
+							"required": false,
+							"type": "Char",
+							"length": "05",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"totalHours": {
+					"description": "Tempo total do período do MRP",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_TOTH",
+							"required": false,
+							"type": "Char",
+							"length": "05",
+							"available": true,
+							"canUpdate": true
+						}
+					]				
+				}
+			}
+		},
+		"MessageBase": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				},
+				"detailedMessage": {
+					"$ref": "#/definitions/MRPCalendarBase"
+				}
+			}
+		},
+		"ListOfMessages": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"_messages": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/MessageBase"
+							}
+						}
+					}
+				}
+			]
+		},
+		"ListOfMRPCalendar": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPCalendarBase"
+					}
+				}
+			}
+		},
+		"MRPCalendarMultiple": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/ListOfMRPCalendar"
+				},
+				{
+					"$ref": "#/definitions/ListOfMessages"
+				}
+			]
+		},
+		"PagedMRPCalendar": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ListOfMRPCalendar"
+				}
+			]
+		}
+	}
+}
