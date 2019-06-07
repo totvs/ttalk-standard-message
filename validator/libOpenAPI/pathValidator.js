@@ -19,6 +19,9 @@ var derefOpenAPI;
 var idWasCorrecltyDefinedInGeneralParams;
 var operationIdList;
 
+var infoProducts = [];
+var pathsProducts = [];
+
 /**
  * This method checks if path 'x-totvs' has 'productInformation' as array
  * @param {*} httpVerbInfo Object
@@ -26,11 +29,13 @@ var operationIdList;
  * @param {*} pathkey String (/endpoint)String (/endpoint)
  */
 var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
+    
     if (httpVerbInfo["x-totvs"]) {
         var productInfo = httpVerbInfo["x-totvs"].productInformation;
         if (results.useProductInfoAsArray != false) {
             if (Array.isArray(productInfo)) {
                 results.useProductInfoAsArray = true
+                populatePathsProductArray(productInfo);
             } else {
                 results.useProductInfoAsArray = false;
                 results.wrongXTotvs = pathkey + "|" + httpVerbkey;
@@ -42,7 +47,23 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
                     results.hasProductAsKeyInProductInfo = true;
                 } else {
                     results.hasProductAsKeyInProductInfo = false;
-                    results.wrongProductAsKeyInProductInfo = "At path '"+pathkey+"', method '"+httpVerbkey+"'.";
+                    results.wrongProductAsKeyInProductInfo = "At path '" + pathkey + "', method '" + httpVerbkey + "'.";
+                }
+            }
+            if (results.hasAvailableCorrectlySpelledInsidePaths != false) {
+                if (productInfo[i].hasOwnProperty("available")) {
+                    results.hasAvailableCorrectlySpelledInsidePaths = true;
+                    if(results.hasAvailableAsBoolean != false){
+                        if (typeof productInfo[i].available == "boolean") {
+                            results.hasAvailableAsBoolean = true;
+                        } else{
+                            results.hasAvailableAsBoolean = false;
+                            results.hasAvailableAsBooleanMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', the property 'available' must be a boolean type.";
+                        }
+                    }
+                } else {
+                    results.hasAvailableCorrectlySpelledInsidePaths = false;
+                    results.availableNotCorrectlySpelled = "At path '" + pathkey + "', method '" + httpVerbkey + "'.";
                 }
             }
         }
@@ -73,13 +94,13 @@ var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
             )
         }
         if (parameter.name) {
-            results.useCommonParams = !(parameter.name.includes("Authorization") ||
-                parameter.name.includes("Order") ||
-                parameter.name.includes("Page") ||
-                parameter.name.includes("PageSize") ||
-                parameter.name.includes("AcceptLanguage") ||
-                parameter.name.includes("Fields") ||
-                parameter.name.includes("Expand"));
+            results.useCommonParams = !(parameter.name == "Authorization" ||
+                parameter.name == "Order" ||
+                parameter.name == "Page" ||
+                parameter.name == "PageSize" ||
+                parameter.name == "AcceptLanguage" ||
+                parameter.name == "Fields" ||
+                parameter.name == "Expand");
         }
         if (results.useCommonParams == false) {
             results.notUsingCommonParams = pathkey + "|" + httpVerbkey
@@ -139,22 +160,6 @@ var checkHttpVerbInUrl = function (pathkey) {
     }
     results.useHttpVerbInEndpointUrl;
 };
-
-/**
- * This method checks if all parameters which reference the OpenAPI itself exist
- * @param {*} parameter Object 
- */
-var addParamDefinedInComponentList = function (parameter) {
-    if (parameter) {
-        if (parameter.$ref) {
-            if (parameter.$ref.includes("#/components/parameters/")) {
-                var paramName = parameter.$ref.substring(24);
-                if (!results.parametersDefinedInComponentList.includes(paramName))
-                    results.parametersDefinedInComponentList.push(paramName);
-            }
-        }
-    }
-}
 
 /**
  * This method checks if schema is setted to external file
@@ -237,6 +242,125 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     }
 }
 
+var checkIfHasNextInGetAll = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
+    if (results.hasNextInGetAll != false) {
+        var properties = hasAllPropertiesUntilHasNext(dereferencedResponse);
+        if (properties) {
+            if (properties.hasOwnProperty("hasNext")) {
+                results.hasNextInGetAll = true;
+            } else {
+                if (hasNextGetAllWhitelist.hasOwnProperty(filename)) {
+                    if (hasNextGetAllWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetAllWhitelist[filename][pathkey]==httpVerbkey) {
+                        results.hasNextInGetAll = true;
+                    } else {
+                        results.hasNextInGetAll = false;
+                        results.hasNextInGetAllMsg = "At endpoint '" + pathkey + "', must have hasNext and pagination mechanism.";
+                    }
+                } else {
+                    results.hasNextInGetAll = false;
+                    results.hasNextInGetAllMsg = "At endpoint '" + pathkey + "', must have hasNext and pagination mechanism.";
+                }
+            }
+        }
+    }
+}
+
+var checkIfNoHasNextInGetOne = function (filename, httpVerbkey, dereferencedResponse, pathkey) {
+    if (results.noHasNextInGetOne != false) {
+        var properties = hasAllPropertiesUntilHasNext(dereferencedResponse);
+        if (properties) {
+            if (properties.hasOwnProperty("hasNext")) {
+                if (hasNextGetOneWhitelist.hasOwnProperty(filename)) {
+                    if (hasNextGetOneWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetOneWhitelist[filename][pathkey]==httpVerbkey) {
+                        results.noHasNextInGetOne = true;
+                    } else {
+                        results.noHasNextInGetOne = false;
+                        results.noHasNextInGetOneMsg = "At endpoint '" + pathkey + "', no hasNext can be declared, because pagination is not permited.";
+                    }
+                } else {
+                    results.noHasNextInGetOne = false;
+                    results.noHasNextInGetOneMsg = "At endpoint '" + pathkey + "', no hasNext can be declared, because pagination is not permited.";
+                }
+            } else {
+                results.noHasNextInGetOne = true;
+            }
+        }
+    }
+}
+
+var populateInfoProductArray = function (infoProductInfo) {
+    infoProducts = [];
+    for (var i in infoProductInfo) infoProducts.push(infoProductInfo[i].product);
+}
+
+var populatePathsProductArray = function (productInfo){
+    for (var j in productInfo){ 
+        var controlVar = 0;
+        for (var i in pathsProducts){
+            if (productInfo[j].product == pathsProducts[i]) controlVar = 1;
+        }
+        if (controlVar==0) pathsProducts.push(productInfo[j].product);
+    }
+}
+
+var compareInfoPathsProducts = function (){
+    for (var i in pathsProducts){
+        if(results.infoProdHasPathElement!=false){
+            if (infoProducts.includes(pathsProducts[i])){
+                results.infoProdHasPathElement = true;
+            }
+            else{
+                results.infoProdHasPathElement = false;
+                results.infoProdHasPathElementMsg = "X-Totvs inside 'paths' has '"+ pathsProducts[i]+"' as product, but it's not declared inside 'info'.";
+            }
+        }
+    }
+    for (var i in infoProducts){
+        if(results.pathProdHasInfoElement!=false){
+            if (pathsProducts.includes(infoProducts[i])){
+                results.pathProdHasInfoElement = true;
+            }
+            else{
+                results.pathProdHasInfoElement = false;
+                results.pathProdHasInfoElementMsg = "X-Totvs inside 'info' has '"+ infoProducts[i]+"' as product, but it's not declared inside 'paths'.";
+            }
+        }
+    }
+    infoProducts = [];
+    pathsProducts = [];
+}
+
+var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
+    if (dereferencedResponse.hasOwnProperty("content") &&
+        dereferencedResponse.content.hasOwnProperty("application/json") &&
+        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
+        dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties")) {
+            var properties = dereferencedResponse.content['application/json'].schema.properties;
+            return properties;
+    } else {
+        if (dereferencedResponse.hasOwnProperty("content") &&
+        dereferencedResponse.content.hasOwnProperty("application/json") &&
+        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
+        dereferencedResponse.content['application/json'].schema.hasOwnProperty("allOf")){
+            for(var i in dereferencedResponse.content['application/json'].schema.allOf){
+                if (dereferencedResponse.content['application/json'].schema.allOf[i].hasOwnProperty("properties") &&
+                    dereferencedResponse.content['application/json'].schema.allOf[i].properties.hasOwnProperty("hasNext")){
+                        var properties = dereferencedResponse.content['application/json'].schema.allOf[i].properties;
+                        var control = 1;
+                        return properties;
+                }else{
+                    var control = 0;
+                }
+            }
+            if ((control==0) && (dereferencedResponse.content['application/json'].schema.allOf[0].hasOwnProperty("properties"))){
+                var properties = dereferencedResponse.content['application/json'].schema.allOf[0].properties;
+                return properties;
+            }
+        }
+        return false;
+    }
+}
+
 var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pathkey) {
     if (results.typeIsRequiredWhenPathId != false) {
         let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
@@ -251,7 +375,7 @@ var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pat
                                 results.typeIsRequiredWhenPathId = true;
                             } else {
                                 results.typeIsRequiredWhenPathId = false;
-                                results.typeIsNotRequiredWhenPathId = "Type '" + pathId + "' must be required, because it is a final path param.";
+                                results.typeIsNotRequiredWhenPathId = "Type '" + pathId + "' must be required, because it is a final path param (If we got '/something/{anyId}, that {anyId} type must be required at schema).";
                             }
                         }
                     }
@@ -284,7 +408,7 @@ var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, path
  * @param {*} thisIsCollectionEndpoint Boolean
  * @param {*} httpVerbkey String ('get','put,'post','delete'...)  
  */
-var runThroughResponses = function (responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey) {
+var runThroughResponses = function (filename, responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey) {
     checkIfThereIsSuccessResponse(responses);
     for (var responseKey in responses) {
         var response = responses[responseKey];
@@ -298,6 +422,10 @@ var runThroughResponses = function (responses, dereferencedResponses, pathkey, t
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
+                        if (httpVerbkey) { //(pathkey.replace(/[^/]/g, "").length==1)
+                            if ((thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfHasNextInGetAll(filename, httpVerbkey, dereferencedResponse, pathkey);
+                            if ((!thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfNoHasNextInGetOne(filename, httpVerbkey, dereferencedResponse, pathkey);
+                        }
                     }
                 }
             }
@@ -324,7 +452,6 @@ var runThroughParamsInternal = function (parameters, parameterType, httpVerbkey,
             checkIfCollectionHasAllNeededParams(parameter, httpVerbkey, pathkey);
         }
         alreadyfoundpathid = verifyIfThisIsThePathParameter(parameter, pathkey, alreadyfoundpathid);
-        addParamDefinedInComponentList(parameters[parameterKey]);
     }
     checkIfParametersContainPathId(alreadyfoundpathid, pathkey, parameterType);
 
@@ -488,9 +615,10 @@ exports.clear = function () {
  * @param {*} _parsedOpenAPI OpenAPI object with all external references addresses
  * @param {*} _derefOpenAPI OpenAPI object with all external objects already dereferenced
  */
-exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
+exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
     parsedOpenAPI = _parsedOpenAPI;
     derefOpenAPI = _derefOpenAPI;
+    populateInfoProductArray(parsedOpenAPI.info['x-totvs'].productInformation);
     for (var pathkey in parsedOpenAPI.paths) {
         checkHttpVerbInUrl(pathkey);
         let pathidkey = pathkey.substr(pathkey.lastIndexOf("/{") + 2, pathkey.length).replace("}", "").replace("{", "");
@@ -520,7 +648,7 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
                 // addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
                 var responses = httpVerbInfo.responses;
                 if (dereferenceHttpVerbInfo) var dereferencedResponses = dereferenceHttpVerbInfo.responses;
-                runThroughResponses(responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
+                runThroughResponses(filename, responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
             }
         }
         if (!hasgetcollectionendpoint)
@@ -533,5 +661,131 @@ exports.runThroughPaths = function (_parsedOpenAPI, _derefOpenAPI) {
             results.useAllRequiredParamsForCollection = false
         }
     }
+    compareInfoPathsProducts();
     return results;
+};
+
+var hasNextGetAllWhitelist = {
+    "ArmazenagemCargaNaoDesunitizada_v1_000.json": {
+        "/cargaNaoDesunitizada/xls": "get"                                          //API definida em legislação pela Receita Federal (XLS)
+    },
+    "DesunitizacaoCarga_v2_000.json": {
+        "/desunitizacaoCarga/xls": "get"                                            //API definida em legislação pela Receita Federal (XLS)
+    },
+    "EntradaSaidaPessoas_v2_000.json": {
+        "/entradaSaidaPessoas/Xls": "get"                                           //API definida em legislação pela Receita Federal (XLS)
+    },
+    "EntradaSaidaVeiculos_v2_000.json": {
+        "/entradaSaidaVeiculos/Xls": "get"                                          //API definida em legislação pela Receita Federal (XLS)
+    },
+    "MudancaSituacaoAduaneiraLoteCarga_v2_000.json": {
+        "/MudancaSituacaoAduaneiraLote/xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
+    },
+    "RegistroMudancaRegimeAduaneiro_v2_000.json": {
+        "/registroMudancaRegimeAduaneiro/xls": "get"                                //API definida em legislação pela Receita Federal (XLS)
+    },
+    "SituacaoLoteCargaVerificacao_v2_000.json": {
+        "/situacaoLoteCargaVerificacao/xls": "get"                                  //API definida em legislação pela Receita Federal (XLS)
+    },
+    "TransferenciaLocalArmazenagem_v2_000.json": {
+        "/transferenciaLocalArmazenagem/xls": "get"                                 //API definida em legislação pela Receita Federal (XLS)
+    },
+    "RelacaoNotasFiscais_v2_000.json": {
+        "/relacaoNotaFiscal": "get"                                                 //API definida em legislação pela Receita Federal
+    },
+    "InspectionScript_v1_000.json": {
+        "/inspectionScripts/{inspectionScriptId}/draftVersion": "get",              //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs.
+        "/inspectionScripts/{inspectionScriptId}/version": "get"                    //representa ação sobre o {InspectionScriptId}, o que é permitido pelo guia de APIs. Retorno pode ser uma lista. Sugerir à equipe de negócio que na próxima versão da API eles considerem a paginação neste endpoint.
+    },
+    "AccountingCalendar_v1_000.json": {
+        "/AccountingCalendar": "get"                                                //err, entrar em contato
+    },
+    "Classes_v1_000.json": {
+        "/classes": "get"                                                           //err, entrar em contato
+    },
+    "ClassParticipants_v1_000.json": {
+        "/classParticipants": "get"                                                 //err, entrar em contato
+    },
+    "ClassValue_v1_000.json": {
+        "/classvalue": "get"                                                        //err, entrar em contato
+    },
+    "CottonBales_v1_000.json": {
+        "/CottonBales": "get"                                                       //err, entrar em contato
+    },
+    "DocumentTraceAbilityRetailSales_v1_000.json": {
+        "/DocumentTraceAbilityRetailSales": "get"                                   //err, entrar em contato
+    },
+    "JobOpportunityProfiles_v1_000.json": {
+        "/persons": "get"                                                           //err, entrar em contato
+    },
+    "Marks_v1_000.json": {
+        "/marks": "get"                                                             //err, entrar em contato
+    },
+    "MaterialFamilies_v1_000.json": {
+        "/materialFamilies": "get"                                                  //err, entrar em contato
+    },
+    "Models_v1_000.json": {
+        "/models": "get"                                                            //err, entrar em contato
+    },
+    "PerformanceEvaluations_v1_000.json": {
+        "/performanceEvaluations": "get"                                            //err, entrar em contato
+    },
+    "Persons_v1_000.json": {
+        "/persons": "get"                                                           //err, entrar em contato
+    },
+    "TotalInputDocument_v1_000.json": {
+        "/totalInputDocument": "get",                                               //err, entrar em contato
+        "/TotalInputDocument/canceled": "get"                                       //err, entrar em contato
+    },
+    "TotalOutputDocument_v1_000.json": {
+       "/TotalOutputDocument": "get",                                               //err, entrar em contato
+       "/TotalOutputDocument/canceled": "get",                                      //err, entrar em contato
+    },
+    "UnitOfMeasure_v2_000.json": {
+        "/UnitOfMeasures": "get"                                                    //err, entrar em contato
+    },
+    "WorkEnvironments_v1_000.json": {
+        "/workenvironments": "get"                                                  //err, entrar em contato
+    },
+};
+var hasNextGetOneWhitelist = {
+    "UnitMeasurementConversion_v2_000.json": {
+        "/unitMeasurementConversions/{internalId}": "get"                           //err, entrar em contato
+    },
+    "AuditTopic_v1_000.json": {
+        "/auditTopic/{internalId}": "get"                                           //err, entrar em contato
+    },
+    "Contact_v1_000.json": {
+        "/contacts/{contactId}": "get"                                              //err, entrar em contato
+    },
+    "CustomerVendor_v1_000.json": {
+        "/customerVendor/{entityType}": "get"                                       //err, entrar em contato
+    },
+    "Files_v1_000.json": {
+        "/files/{yearMonthRefer}": "get",                                           //err, entrar em contato
+        "/files/ccos/{fileName}": "get"                                             //err, entrar em contato
+    },
+    "MarketSegment_v2_000.json": {
+        "/marketSegment/{marketSegmentID}": "get"                                   //err, entrar em contato
+    },
+    "Menus_v1_001.json": {
+        "/menus/{parentId}": "get"                                                  //err, entrar em contato
+    },
+    "PriceListHeaderItem_v2_005.json": {
+        "/priceList/{code}": "get",                                                 //err, entrar em contato
+        "/priceList/{code}/itensTablePrice/{itemList}": "get"                       //err, entrar em contato
+    },
+    "Prospects_v1_000.json": {
+        "/prospects/{Code}": "get"                                                  //err, entrar em contato
+    },
+    "SalesCharge_v1_000.json": {
+        "/salesCharge/{InternalId}": "get" ,
+        "/salesCharge/{InternalId}/{AccountReceivableDocumentInternalId}": "get"    //err, entrar em contato
+    },
+    "Sellers_v2_000.json": {
+        "/seller/{code}": "get"                                                     //err, entrar em contato
+    },
+    "Suspects_v1_000.json": {
+        "/suspects/{Code}": "get"                                                   //err, entrar em contato
+    },
 };
