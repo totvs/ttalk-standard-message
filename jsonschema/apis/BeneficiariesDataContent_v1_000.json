@@ -31,22 +31,22 @@
       },
       "productInformation": [
         {
+          "product": "RM",
+          "contact": "wellington.vieira@totvs.com.br",
+          "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
+          "adapter": "RhuBeneficiariosData"
+        },
+        {
           "product": "Protheus",
           "contact": "",
           "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
           "adapter": ""
         },
         {
-          "product": "RM",
-          "contact": "wellington.vieira@totvs.com.br",
-          "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
-          "adapter": "FopGetBeneficiariosData"
-        },
-        {
           "product": "Datasul",
-          "contact": "",
+          "contact": "patricia.theilacker@totvs.com.br",
           "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
-          "adapter": ""
+          "adapter": "prghur/fpp/apiBeneficiariesDataContent.p"
         }
       ]
     }
@@ -61,13 +61,13 @@
         "x-totvs": {
           "productInformation": [
             {
-              "product": "Protheus",
+              "product": "RM",
               "available": true,
               "note": "Este verbo esta disponivel com todos os parametros.",
               "minimalVersion": "12.1.25"
             },
             {
-              "product": "RM",
+              "product": "Protheus",
               "available": true,
               "note": "Este verbo esta disponivel com todos os parametros.",
               "minimalVersion": "12.1.25"
@@ -81,7 +81,7 @@
           ]
         },
         "description": "Retorna todos os registros de beneficiários.",
-        "operationId": "getBeneficiariesDataContent",
+        "operationId": "beneficiariesDataContent",
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -99,7 +99,13 @@
             "$ref": "#/components/parameters/product"
           },
           {
-            "$ref": "#/components/parameters/updateDate"
+            "$ref": "#/components/parameters/dateModified"
+          },
+          {
+            "$ref": "#/components/parameters/companyId"
+          },
+          {
+            "$ref": "#/components/parameters/branchId"
           }
         ],
         "responses": {
@@ -143,7 +149,7 @@
         "name": "product",
         "in": "query",
         "description": "Nome do produto que está sendo integrado no momento.",
-        "example": "PROTHEUS, RM, Datasul",
+        "example": "DIVICOM",
         "required": true,
         "schema": {
           "type": "string"
@@ -151,13 +157,13 @@
         "x-totvs": {
           "productInformation": [
             {
-              "product": "Protheus",
+              "product": "RM",
               "available": true,
               "note": "Não irá gravar dados nas tabelas de origem linha RM.",
               "minimalVersion": "12.1.25"
             },
             {
-              "product": "RM",
+              "product": "Protheus",
               "available": true,
               "note": "Não irá gravar dados nas tabelas de origem linha RM.",
               "minimalVersion": "12.1.25"
@@ -165,31 +171,31 @@
             {
               "product": "Datasul",
               "available": true,
-              "note": "Não irá gravar dados nas tabelas de origem linha RM.",
+              "note": "Não irá gravar dados nas tabelas de origem linha Datasul.",
               "minimalVersion": "12.1.25"
             }
           ]
         }
       },
-      "updateDate": {
-        "name": "updatedate",
+      "dateModified": {
+        "name": "dateModified",
         "in": "query",
         "required": true,
         "description": "Data da ultima atualização do registro.",
-        "example": "YYYY-MM-DDThh:mm:ssZ",
+        "example": "YYYY-MM-DDThh:mm:ss",
         "schema": {
           "type": "string"
         },
         "x-totvs": {
           "productInformation": [
             {
-              "product": "Protheus",
+              "product": "RM",
               "available": true,
               "note": "Data de atualização da ultima requisição.",
               "minimalVersion": "12.1.25"
             },
             {
-              "product": "RM",
+              "product": "Protheus",
               "available": true,
               "note": "Data de atualização da ultima requisição.",
               "minimalVersion": "12.1.25"
@@ -202,8 +208,65 @@
             }
           ]
         }
+      },
+      "companyId": {
+        "name": "companyid",
+        "in": "query",
+        "required": true,
+        "description": "Código da Empresa",
+        "example": "1",
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": [
+          {
+            "product": "RM",
+            "field": "",
+            "required": false,
+            "note": "será recebido o cádigo da empresa. Código da Coligada",
+            "available": true,
+            "canUpdate": false
+          },
+          {
+            "product": "Protheus",
+            "field": "",
+            "required": true,
+            "note": "será recebido o código da empresa, relacionado para ",
+            "available": true,
+            "canUpdate": false
+          }
+        ]
+      },
+      "branchId": {
+        "name": "branchId",
+        "in": "query",
+        "required": false,
+        "description": "Código da Filial",
+        "example": "1",
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": [
+          {
+            "product": "RM",
+            "field": "",
+            "required": false,
+            "note": "Será conceito de Filial que no RM não é obrigatório",
+            "available": true,
+            "canUpdate": false
+          },
+          {
+            "product": "Protheus",
+            "field": "",
+            "required": true,
+            "note": "Será recebido o cádigo da variável",
+            "available": true,
+            "canUpdate": false
+          }
+        ]
       }
     },
     "schemas": {}
   }
 }
+
