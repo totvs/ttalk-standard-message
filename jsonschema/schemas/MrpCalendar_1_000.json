@@ -1,27 +1,27 @@
 {
-	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpAllocations_1_000.json#",
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Mrpcalendar_1_000.json#",
 	"info": {
 		"description": "",
 		"version": "1.000",
-		"title": "MRPAllocations",
+		"title": "MRPcalendar",
 		"contact": {},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "MRPAllocations",
-				"description": "Empenho da Ordem de Produção do MRP",
+				"name": "MRPcalendar",
+				"description": "Calendário do MRP",
 				"segment": ""
 			},
 			"transactionDefinition": {
 				"subType": "event",
 				"businessContentType": {
-					"$ref": "#/definitions/ListOfMRPAllocations",
+					"$ref": "#/definitions/ListOfMRPCalendar",
 					"type": "object"
 				}
 			}
 		}
 	},
 	"definitions": {
-		"MRPAllocationsBase": {
+		"MRPCalendarBase": {
 			"type": "object",
 			"properties": {
 				"branchId": {
@@ -31,7 +31,7 @@
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_FILIAL",
+							"field": "HWO.HWO_FILIAL",
 							"required": true,
 							"type": "Char",
 							"length": "2",
@@ -41,13 +41,13 @@
 					]
 				},
 				"code": {
-					"description": "Código do empenho da ordem de produção",
+					"description": "Id único do calendário do MRP",
 					"type": "string",
 					"maxLength": 200,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_IDREG",
+							"field": "HWO.HWO_IDREG",
 							"required": true,
 							"type": "Char",
 							"length": "200",
@@ -56,14 +56,14 @@
 						}
 					]
 				},
-				"product": {
-					"description": "Produto do empenho",
+				"calendar": {
+					"description": "Código do Calendário",
 					"type": "string",
-					"maxLength": 90,
+					"maxLength": 10,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_PROD",
+							"field": "HWO.HWO_CALEND",
 							"required": true,
 							"type": "Char",
 							"length": "90",
@@ -72,46 +72,14 @@
 						}
 					]
 				},
-				"productionOrder": {
-					"description": "Ordem de produção",
-					"type": "string",
-					"maxLength": 14,
-					"x-totvs": [
-						{
-							"product": "PROTHEUS",
-							"field": "T4S.T4S_OP",
-							"required": false,
-							"type": "Char",
-							"length": "14",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"productionOrderOrig": {
-					"description": "Ordem de produção origem",
-					"type": "string",
-					"maxLength": 14,
-					"x-totvs": [
-						{
-							"product": "PROTHEUS",
-							"field": "T4S.T4S_OPORIG",
-							"required": false,
-							"type": "Char",
-							"length": "14",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"allocationDate": {
-					"description": "Data do Empenho",
+				"date": {
+					"description": "Data do calendário do MRP",
 					"type": "string",
 					"format": "date",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_DT",
+							"field": "HWO.HWO_DATA",
 							"required": false,
 							"type": "Char",
 							"length": "8",
@@ -120,63 +88,65 @@
 						}
 					]
 				},
-				"sequence": {
-					"description": "Sequência do produto",
+				"startTime": {
+					"description": "Hora de início do perído do MRP",
 					"type": "string",
-					"maxLength": 3,
+					"maxLength": 5,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_SEQ",
+							"field": "HWO.HWO_HRINI",
+							"required": true,
+							"type": "Char",
+							"length": "05",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"endTime": {
+					"description": "Hora de término do período do MRP",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_HRFIM",
 							"required": false,
 							"type": "Char",
-							"length": "3",
+							"length": "05",
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"quantity": {
-					"description": "Quantidade do Empenho",
-					"type": "number",
-					"x-totvs": [
-						{
-							"product": "PROTHEUS",
-							"field": "T4S.T4S_QTD",
-							"required": true,
-							"format": "double",
-							"length": 12.2,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"suspendedQuantity": {
-					"description": "Quantidade Suspensa do Empenho",
-					"type": "number",
-					"x-totvs": [
-						{
-							"product": "PROTHEUS",
-							"field": "T4S.T4S_QSUSP",
-							"required": true,
-							"format": "double",
-							"length": 11.2,
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"warehouse": {
-					"description": "Armazém de Consumo do Empenho",
+				"interval": {
+					"description": "Tempo de intervalo do período do MRP",
 					"type": "string",
-					"maxLength": 10,
+					"maxLength": 5,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_LOCAL",
+							"field": "HWO.HWO_INTERV",
+							"required": false,
 							"type": "Char",
-							"length": "10",
-							"required": true,
+							"length": "05",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"totalHours": {
+					"description": "Tempo total do período do MRP",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWO.HWO_TOTH",
+							"required": false,
+							"type": "Char",
+							"length": "05",
 							"available": true,
 							"canUpdate": true
 						}
@@ -194,7 +164,7 @@
 					"type": "string"
 				},
 				"detailedMessage": {
-					"$ref": "#/definitions/MRPAllocationsBase"
+					"$ref": "#/definitions/MRPCalendarBase"
 				}
 			}
 		},
@@ -217,44 +187,36 @@
 				}
 			]
 		},
-		"ListOfMRPAllocations": {
+		"ListOfMRPCalendar": {
 			"type": "object",
-			"allOf": [
-				{
-					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-				},
-				{
-					"type": "object",
-					"properties": {
-						"items": {
-							"type": "array",
-							"items": {
-								"$ref": "#/definitions/MRPAllocationsBase"
-							}
-						}
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPCalendarBase"
 					}
 				}
-			]
+			}
 		},
-		"MRPAllocationsMultiple": {
+		"MRPCalendarMultiple": {
 			"type": "object",
 			"allOf": [
 				{
-					"$ref": "#/definitions/ListOfMRPAllocations"
+					"$ref": "#/definitions/ListOfMRPCalendar"
 				},
 				{
 					"$ref": "#/definitions/ListOfMessages"
 				}
 			]
 		},
-		"PagedMRPAllocations": {
+		"PagedMRPCalendar": {
 			"type": "object",
 			"allOf": [
 				{
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
 				},
 				{
-					"$ref": "#/definitions/ListOfMRPAllocations"
+					"$ref": "#/definitions/ListOfMRPCalendar"
 				}
 			]
 		}
