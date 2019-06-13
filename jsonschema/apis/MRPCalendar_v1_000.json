@@ -2,7 +2,7 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para manipulação das Ordens de Produção do MRP",
+			"description": "API para manipulação do calendário do MRP",
 			"url": "http://{serverUrl}:{serverHttpPort}/api/pcp/v1",
 			"variables": {
 				"serverUrl": {
@@ -15,41 +15,41 @@
 		}
 	],
 	"info": {
-		"description": "API para a entidade de Ordens de Produção do MRP",
+		"description": "API para a entidade de Calendário do MRP",
 		"version": "1.000",
-		"title": "Ordens de produção do MRP",
+		"title": "Calendário do MRP",
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "MRPProductionOrders",
-				"description": "Ordens de produção do MRP",
+				"name": "MRPCalendar",
+				"description": "Calendário do MRP",
 				"segment": "Manufatura"
 			},
 			"productInformation": [
 				{
 					"product": "Protheus",
 					"contact": "robson.klug@totvs.com.br",
-					"description": "Cadastro de Ordens de produção do MRP",
+					"description": "Cadastro do Calendário do MRP",
 					"adapter": ""
 				}
 			]
 		}
 	},
 	"paths": {
-		"/mrpproductionorders": {
+		"/mrpcalendar": {
 			"post": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpcalendar"
 				],
-				"summary": "Inclui ou atualiza uma ou mais ordens de produção do MRP",
+				"summary": "Inclui ou atualiza um ou mais registros no calendário do MRP",
 				"description": "",
-				"operationId": "postproductionorders",
+				"operationId": "postcalendar",
 				"responses": {
 					"201": {
 						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/PagedMRPProductionOrders"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpCalendar_1_000.json#/definitions/PagedMRPCalendar"
 								}
 							}
 						}
@@ -59,7 +59,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/MRPProductionOrdersMultiple"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpCalendar_1_000.json#/definitions/MRPCalendarMultiple"
 								}
 							}
 						}
@@ -99,21 +99,21 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/ListOfMRPProductionOrders"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpCalendar_1_000.json#/definitions/ListOfMRPCalendar"
 							}
 						}
 					},
-					"description": "Objeto de ordens de produção do MRP que deve ser adicionado ou atualizado",
+					"description": "Objeto do Calendário do MRP que deve ser adicionada ou atualizada",
 					"required": true
 				}
 			},
 			"get": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpcalendar"
 				],
-				"summary": "Lista de ordens de produção do MRP",
-				"description": "Retorna lista de ordens de produção do MRP",
-				"operationId": "getmrpproductionorders",
+				"summary": "Lista de calendário do MRP",
+				"description": "Retorna lista de calendário do MRP",
+				"operationId": "getmrpcalendar2",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
@@ -139,43 +139,61 @@
 					{
 						"name": "code",
 						"in": "query",
-						"description": "Código da ordem de produção do MRP",
+						"description": "Código do calendário do MRP",
 						"required": false,
 						"schema": {
 							"type": "string"
 						}
 					},
 					{
-						"name": "deliveryDate",
+						"name": "calendar",
 						"in": "query",
-						"description": "Data da ordem de produção do MRP",
+						"description": "Calendário do MRP",
 						"required": false,
 						"schema": {
 							"type": "string"
 						}
 					},
 					{
-						"name": "startDate",
+						"name": "date",
 						"in": "query",
-						"description": "Data inicial da ordem de produção do MRP",
+						"description": "Data do calendário",
 						"required": false,
 						"schema": {
 							"type": "string"
 						}
 					},
 					{
-						"name": "product",
+						"name": "startTime",
 						"in": "query",
-						"description": "Produto da ordem de produção do MRP",
+						"description": "Hora inicial do período",
 						"required": false,
 						"schema": {
 							"type": "string"
 						}
 					},
 					{
-						"name": "wareHouse",
+						"name": "endTime",
 						"in": "query",
-						"description": "Armazém da ordem de produção do MRP",
+						"description": "Hora Final do período",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "interval",
+						"in": "query",
+						"description": "Tempo de intervalo no período",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "totalHours",
+						"in": "query",
+						"description": "Tempo total do período",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -188,13 +206,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/PagedMRPProductionOrders"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpCalendar_1_000.json#/definitions/PagedMRPCalendar"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Ordens de produção do MRP não localizadas",
+						"description": "Calendário do MRP não localizado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -217,11 +235,11 @@
 			},
 			"delete": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpcalendar"
 				],
-				"summary": "Remove uma ou mais Ordens de produção do MRP",
-				"description": "Remove uma ou mais Ordens de produção do MRP",
-				"operationId": "deletemrpproductionorders",
+				"summary": "Remove um ou mais período do calendário do MRP",
+				"description": "Remove um ou mais período do Calendário do MRP",
+				"operationId": "deletemrpcalendar",
 				"responses": {
 					"204": {
 						"description": "Operação realizada com sucesso"
@@ -231,7 +249,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/MRPProductionOrdersMultiple"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpCalendar_1_000.json#/definitions/MRPCalendarMultiple"
 								}
 							}
 						}
@@ -247,7 +265,7 @@
 						}
 					},
 					"404": {
-						"description": "Ordem de produção do MRP não localizada na base",
+						"description": "Calendário não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -261,7 +279,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/ListOfMRPProductionOrders"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpCalendar_1_000.json#/definitions/ListOfMRPCalendar"
 							}
 						}
 					}
@@ -278,14 +296,14 @@
 				}
 			}
 		},
-		"/mrpproductionorders/{branchId}/{code}": {
+		"/mrpcalendar/{branchId}/{code}": {
 			"get": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpcalendar"
 				],
-				"summary": "Retorna uma ordem de produção do MRP",
-				"description": "Retorna uma ordem de produção do MRP",
-				"operationId": "getproductionorder",
+				"summary": "Retorna o Calendário do MRP",
+				"description": "Retorna o Calendário do MRP",
+				"operationId": "getmrpcalendar",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
@@ -303,13 +321,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/MRPProductionOrderBase"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpCalendar_1_000.json#/definitions/MRPCalendarBase"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Ordem de produção do MRP não localizada",
+						"description": "Calendário do MRP não localizado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -337,7 +355,7 @@
 			"branchId": {
 				"name": "branchId",
 				"in": "path",
-				"description": "Codigo da filial da ordem de produção do MRP",
+				"description": "Código da filial do calendário do MRP",
 				"required": true,
 				"schema": {
 					"type": "string",
@@ -347,7 +365,7 @@
 			"code": {
 				"name": "code",
 				"in": "path",
-				"description": "Codigo da ordem de produção do MRP",
+				"description": "Código do calendário do MRP",
 				"required": true,
 				"schema": {
 					"type": "string",

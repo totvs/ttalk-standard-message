@@ -2,7 +2,7 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para manipulação das Ordens de Produção do MRP",
+			"description": "API para manipulação dos estoques do MRP",
 			"url": "http://{serverUrl}:{serverHttpPort}/api/pcp/v1",
 			"variables": {
 				"serverUrl": {
@@ -15,41 +15,41 @@
 		}
 	],
 	"info": {
-		"description": "API para a entidade de Ordens de Produção do MRP",
+		"description": "API para a entidade de Estoques do MRP",
 		"version": "1.000",
-		"title": "Ordens de produção do MRP",
+		"title": "Estoque do MRP",
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "MRPProductionOrders",
-				"description": "Ordens de produção do MRP",
+				"name": "MRPStockBalance",
+				"description": "Estoque do MRP",
 				"segment": "Manufatura"
 			},
 			"productInformation": [
 				{
 					"product": "Protheus",
 					"contact": "robson.klug@totvs.com.br",
-					"description": "Cadastro de Ordens de produção do MRP",
+					"description": "Cadastro de Estoque do MRP",
 					"adapter": ""
 				}
 			]
 		}
 	},
 	"paths": {
-		"/mrpproductionorders": {
+		"/mrpstockbalance": {
 			"post": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpstockbalance"
 				],
-				"summary": "Inclui ou atualiza uma ou mais ordens de produção do MRP",
+				"summary": "Inclui ou atualiza um ou mais registros no estoque do MRP",
 				"description": "",
-				"operationId": "postproductionorders",
+				"operationId": "poststockbalance",
 				"responses": {
 					"201": {
 						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/PagedMRPProductionOrders"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpStockBalance_1_000.json#/definitions/PagedMRPStockBalance"
 								}
 							}
 						}
@@ -59,7 +59,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/MRPProductionOrdersMultiple"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpStockBalance_1_000.json#/definitions/MRPStockBalanceMultiple"
 								}
 							}
 						}
@@ -99,21 +99,21 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/ListOfMRPProductionOrders"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpStockBalance_1_000.json#/definitions/ListOfMRPStockBalance"
 							}
 						}
 					},
-					"description": "Objeto de ordens de produção do MRP que deve ser adicionado ou atualizado",
+					"description": "Objeto do Estoque do MRP que deve ser adicionada ou atualizada",
 					"required": true
 				}
 			},
 			"get": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpstockbalance"
 				],
-				"summary": "Lista de ordens de produção do MRP",
-				"description": "Retorna lista de ordens de produção do MRP",
-				"operationId": "getmrpproductionorders",
+				"summary": "Lista de estoques do MRP",
+				"description": "Retorna lista de estoques do MRP",
+				"operationId": "getmrpstockbalance2",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
@@ -139,25 +139,7 @@
 					{
 						"name": "code",
 						"in": "query",
-						"description": "Código da ordem de produção do MRP",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "deliveryDate",
-						"in": "query",
-						"description": "Data da ordem de produção do MRP",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "startDate",
-						"in": "query",
-						"description": "Data inicial da ordem de produção do MRP",
+						"description": "Código do saldo em estoue do produto no MRP",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -166,7 +148,7 @@
 					{
 						"name": "product",
 						"in": "query",
-						"description": "Produto da ordem de produção do MRP",
+						"description": "Código do produto",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -175,7 +157,70 @@
 					{
 						"name": "wareHouse",
 						"in": "query",
-						"description": "Armazém da ordem de produção do MRP",
+						"description": "Armazém de estoque",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "lot",
+						"in": "query",
+						"description": "Lote do produto",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "sublot",
+						"in": "query",
+						"description": "Sublote do Produto",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "expirationDate",
+						"in": "query",
+						"description": "Data de validade do estoque",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "availableQuantity",
+						"in": "query",
+						"description": "Quantidade disponível no estoque",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "consignedOut",
+						"in": "query",
+						"description": "Quantidade em terceiros",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "consignedIn",
+						"in": "query",
+						"description": "Quantidade de terceiros",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "unavailableQuantity",
+						"in": "query",
+						"description": "Quantidade indisponível em estoque",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -188,13 +233,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/PagedMRPProductionOrders"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpStockBalance_1_000.json#/definitions/PagedMRPStockBalance"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Ordens de produção do MRP não localizadas",
+						"description": "Estoque do MRP não localizado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -217,11 +262,11 @@
 			},
 			"delete": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpstockbalance"
 				],
-				"summary": "Remove uma ou mais Ordens de produção do MRP",
-				"description": "Remove uma ou mais Ordens de produção do MRP",
-				"operationId": "deletemrpproductionorders",
+				"summary": "Remove um ou mais saldo em Estoque do MRP",
+				"description": "Remove um ou mais saldo em Estoque do MRP",
+				"operationId": "deletemrpstockbalance",
 				"responses": {
 					"204": {
 						"description": "Operação realizada com sucesso"
@@ -231,7 +276,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/MRPProductionOrdersMultiple"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpStockBalance_1_000.json#/definitions/MRPStockBalanceMultiple"
 								}
 							}
 						}
@@ -247,7 +292,7 @@
 						}
 					},
 					"404": {
-						"description": "Ordem de produção do MRP não localizada na base",
+						"description": "Estoque não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -261,7 +306,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/ListOfMRPProductionOrders"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpStockBalance_1_000.json#/definitions/ListOfMRPStockBalance"
 							}
 						}
 					}
@@ -278,14 +323,14 @@
 				}
 			}
 		},
-		"/mrpproductionorders/{branchId}/{code}": {
+		"/mrpstockbalance/{branchId}/{code}": {
 			"get": {
 				"tags": [
-					"mrpproductionorders"
+					"mrpstockbalance"
 				],
-				"summary": "Retorna uma ordem de produção do MRP",
-				"description": "Retorna uma ordem de produção do MRP",
-				"operationId": "getproductionorder",
+				"summary": "Retorna o Estoque do MRP",
+				"description": "Retorna o Estoque do MRP",
+				"operationId": "getmrpstockbalance",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
@@ -303,13 +348,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPProductionOrders_1_000.json#/definitions/MRPProductionOrderBase"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpStockBalance_1_000.json#/definitions/MRPStockBalanceBase"
 								}
 							}
 						}
 					},
 					"404": {
-						"description": "Ordem de produção do MRP não localizada",
+						"description": "Estoque do MRP não localizado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -337,7 +382,7 @@
 			"branchId": {
 				"name": "branchId",
 				"in": "path",
-				"description": "Codigo da filial da ordem de produção do MRP",
+				"description": "Código da filial do estoque do MRP",
 				"required": true,
 				"schema": {
 					"type": "string",
@@ -347,7 +392,7 @@
 			"code": {
 				"name": "code",
 				"in": "path",
-				"description": "Codigo da ordem de produção do MRP",
+				"description": "Código do saldo em estoque do MRP",
 				"required": true,
 				"schema": {
 					"type": "string",

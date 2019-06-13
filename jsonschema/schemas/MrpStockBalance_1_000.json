@@ -1,27 +1,27 @@
 {
-	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpAllocations_1_000.json#",
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Mrpstockbalance_1_000.json#",
 	"info": {
 		"description": "",
 		"version": "1.000",
-		"title": "MRPAllocations",
+		"title": "MRPstockbalance",
 		"contact": {},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "MRPAllocations",
-				"description": "Empenho da Ordem de Produção do MRP",
+				"name": "MRPstockbalance",
+				"description": "Saldo em estoque do MRP",
 				"segment": ""
 			},
 			"transactionDefinition": {
 				"subType": "event",
 				"businessContentType": {
-					"$ref": "#/definitions/ListOfMRPAllocations",
+					"$ref": "#/definitions/ListOfMRPStockBalance",
 					"type": "object"
 				}
 			}
 		}
 	},
 	"definitions": {
-		"MRPAllocationsBase": {
+		"MRPStockBalanceBase": {
 			"type": "object",
 			"properties": {
 				"branchId": {
@@ -31,7 +31,7 @@
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_FILIAL",
+							"field": "T4V.T4V_FILIAL",
 							"required": true,
 							"type": "Char",
 							"length": "2",
@@ -41,13 +41,13 @@
 					]
 				},
 				"code": {
-					"description": "Código do empenho da ordem de produção",
+					"description": "Código do saldo em estoque do MRP",
 					"type": "string",
 					"maxLength": 200,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_IDREG",
+							"field": "T4V.T4V_IDREG",
 							"required": true,
 							"type": "Char",
 							"length": "200",
@@ -57,13 +57,13 @@
 					]
 				},
 				"product": {
-					"description": "Produto do empenho",
+					"description": "Código do Produto",
 					"type": "string",
 					"maxLength": 90,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_PROD",
+							"field": "T4V.T4V_PROD",
 							"required": true,
 							"type": "Char",
 							"length": "90",
@@ -72,46 +72,62 @@
 						}
 					]
 				},
-				"productionOrder": {
-					"description": "Ordem de produção",
+				"warehouse": {
+					"description": "Armazém do estoque",
 					"type": "string",
-					"maxLength": 14,
+					"maxLength": 10,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_OP",
-							"required": false,
+							"field": "T4V.T4V_ARMAZ",
 							"type": "Char",
-							"length": "14",
+							"length": "10",
+							"required": true,
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"productionOrderOrig": {
-					"description": "Ordem de produção origem",
+				"lot": {
+					"description": "Lote do saldo em estoque do MRP",
 					"type": "string",
-					"maxLength": 14,
+					"maxLength": 10,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_OPORIG",
+							"field": "T4V.T4V_LOTE",
+							"required": true,
+							"type": "Char",
+							"length": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"sublot": {
+					"description": "Sublote do saldo em estoque do MRP",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4V.T4V_SLOTE",
 							"required": false,
 							"type": "Char",
-							"length": "14",
+							"length": "06",
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"allocationDate": {
-					"description": "Data do Empenho",
+				"expirationDate": {
+					"description": "Data de validade do estoque do MRP",
 					"type": "string",
 					"format": "date",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_DT",
+							"field": "T4V.T4V_VALID",
 							"required": false,
 							"type": "Char",
 							"length": "8",
@@ -120,63 +136,61 @@
 						}
 					]
 				},
-				"sequence": {
-					"description": "Sequência do produto",
-					"type": "string",
-					"maxLength": 3,
-					"x-totvs": [
-						{
-							"product": "PROTHEUS",
-							"field": "T4S.T4S_SEQ",
-							"required": false,
-							"type": "Char",
-							"length": "3",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"quantity": {
-					"description": "Quantidade do Empenho",
+				"availableQuantity": {
+					"description": "Quantidade disponível em estoque no MRP",
 					"type": "number",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_QTD",
+							"field": "T4V.T4V_QTD",
 							"required": true,
 							"format": "double",
-							"length": 12.2,
+							"length": 14.2,
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"suspendedQuantity": {
-					"description": "Quantidade Suspensa do Empenho",
+				"consignedOut": {
+					"description": "Quantidade em terceiro",
 					"type": "number",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_QSUSP",
+							"field": "T4V.T4V_QNPT",
 							"required": true,
 							"format": "double",
-							"length": 11.2,
+							"length": 14.2,
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
-				"warehouse": {
-					"description": "Armazém de Consumo do Empenho",
-					"type": "string",
-					"maxLength": 10,
+				"consignedIn": {
+					"description": "Quantidade de terceiro",
+					"type": "number",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_LOCAL",
-							"type": "Char",
-							"length": "10",
+							"field": "T4V.T4V_QTNP",
 							"required": true,
+							"format": "double",
+							"length": 14.2,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"unavailableQuantity": {
+					"description": "Quantidade indisponível em estoque no MRP",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4V.T4V_QTIND",
+							"required": true,
+							"format": "double",
+							"length": 14.2,
 							"available": true,
 							"canUpdate": true
 						}
@@ -194,7 +208,7 @@
 					"type": "string"
 				},
 				"detailedMessage": {
-					"$ref": "#/definitions/MRPAllocationsBase"
+					"$ref": "#/definitions/MRPStockBalanceBase"
 				}
 			}
 		},
@@ -217,44 +231,36 @@
 				}
 			]
 		},
-		"ListOfMRPAllocations": {
+		"ListOfMRPStockBalance": {
 			"type": "object",
-			"allOf": [
-				{
-					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-				},
-				{
-					"type": "object",
-					"properties": {
-						"items": {
-							"type": "array",
-							"items": {
-								"$ref": "#/definitions/MRPAllocationsBase"
-							}
-						}
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPStockBalanceBase"
 					}
 				}
-			]
+			}
 		},
-		"MRPAllocationsMultiple": {
+		"MRPStockBalanceMultiple": {
 			"type": "object",
 			"allOf": [
 				{
-					"$ref": "#/definitions/ListOfMRPAllocations"
+					"$ref": "#/definitions/ListOfMRPStockBalance"
 				},
 				{
 					"$ref": "#/definitions/ListOfMessages"
 				}
 			]
 		},
-		"PagedMRPAllocations": {
+		"PagedMRPStockBalance": {
 			"type": "object",
 			"allOf": [
 				{
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
 				},
 				{
-					"$ref": "#/definitions/ListOfMRPAllocations"
+					"$ref": "#/definitions/ListOfMRPStockBalance"
 				}
 			]
 		}

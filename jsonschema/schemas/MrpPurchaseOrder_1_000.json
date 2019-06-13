@@ -1,27 +1,27 @@
 {
-	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MrpAllocations_1_000.json#",
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Mrppurchaseorder_1_000.json#",
 	"info": {
 		"description": "",
 		"version": "1.000",
-		"title": "MRPAllocations",
+		"title": "MRPpurchaseorder",
 		"contact": {},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "MRPAllocations",
-				"description": "Empenho da Ordem de Produção do MRP",
+				"name": "MRPpurchaseorder",
+				"description": "Solicitação de compra do MRP",
 				"segment": ""
 			},
 			"transactionDefinition": {
 				"subType": "event",
 				"businessContentType": {
-					"$ref": "#/definitions/ListOfMRPAllocations",
+					"$ref": "#/definitions/ListOfMRPPurchaseOrder",
 					"type": "object"
 				}
 			}
 		}
 	},
 	"definitions": {
-		"MRPAllocationsBase": {
+		"MRPPurchaseOrderBase": {
 			"type": "object",
 			"properties": {
 				"branchId": {
@@ -31,7 +31,7 @@
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_FILIAL",
+							"field": "T4T.T4T_FILIAL",
 							"required": true,
 							"type": "Char",
 							"length": "2",
@@ -41,13 +41,13 @@
 					]
 				},
 				"code": {
-					"description": "Código do empenho da ordem de produção",
+					"description": "Código da solicitação de compra",
 					"type": "string",
 					"maxLength": 200,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_IDREG",
+							"field": "T4T.T4T_IDREG",
 							"required": true,
 							"type": "Char",
 							"length": "200",
@@ -56,14 +56,46 @@
 						}
 					]
 				},
+				"purchase": {
+					"description": "Número da solicitação de compra",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4T.T4T_NUM",
+							"required": true,
+							"type": "Char",
+							"length": "06",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"sequence": {
+					"description": "Sequência da solicitação de compra",
+					"type": "string",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4T.T4T_SEQ",
+							"required": false,
+							"type": "Char",
+							"length": "04",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
 				"product": {
-					"description": "Produto do empenho",
+					"description": "Produto da solicitação de compra",
 					"type": "string",
 					"maxLength": 90,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_PROD",
+							"field": "T4T.T4T_PROD",
 							"required": true,
 							"type": "Char",
 							"length": "90",
@@ -73,13 +105,13 @@
 					]
 				},
 				"productionOrder": {
-					"description": "Ordem de produção",
+					"description": "Ordem de produção que gerou a solicitação de compra",
 					"type": "string",
 					"maxLength": 14,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_OP",
+							"field": "T4T.T4T_OP",
 							"required": false,
 							"type": "Char",
 							"length": "14",
@@ -88,30 +120,14 @@
 						}
 					]
 				},
-				"productionOrderOrig": {
-					"description": "Ordem de produção origem",
-					"type": "string",
-					"maxLength": 14,
-					"x-totvs": [
-						{
-							"product": "PROTHEUS",
-							"field": "T4S.T4S_OPORIG",
-							"required": false,
-							"type": "Char",
-							"length": "14",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
-				"allocationDate": {
-					"description": "Data do Empenho",
+				"deliveryDate": {
+					"description": "Data de entrega da solicitação de compra",
 					"type": "string",
 					"format": "date",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_DT",
+							"field": "T4T.T4T_DTENT",
 							"required": false,
 							"type": "Char",
 							"length": "8",
@@ -120,29 +136,13 @@
 						}
 					]
 				},
-				"sequence": {
-					"description": "Sequência do produto",
-					"type": "string",
-					"maxLength": 3,
-					"x-totvs": [
-						{
-							"product": "PROTHEUS",
-							"field": "T4S.T4S_SEQ",
-							"required": false,
-							"type": "Char",
-							"length": "3",
-							"available": true,
-							"canUpdate": true
-						}
-					]
-				},
 				"quantity": {
-					"description": "Quantidade do Empenho",
+					"description": "Quantidade da solicitação de compra",
 					"type": "number",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_QTD",
+							"field": "T4T.T4T_QTD",
 							"required": true,
 							"format": "double",
 							"length": 12.2,
@@ -151,31 +151,47 @@
 						}
 					]
 				},
-				"suspendedQuantity": {
-					"description": "Quantidade Suspensa do Empenho",
+				"receivedQuantity": {
+					"description": "Quantidade recebida da solicitação de compra",
 					"type": "number",
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_QSUSP",
+							"field": "T4T.T4T_QUJE",
 							"required": true,
 							"format": "double",
-							"length": 11.2,
+							"length": 12.2,
 							"available": true,
 							"canUpdate": true
 						}
 					]
 				},
 				"warehouse": {
-					"description": "Armazém de Consumo do Empenho",
+					"description": "Armazém da solicitação de compra",
 					"type": "string",
 					"maxLength": 10,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4S.T4S_LOCAL",
+							"field": "T4T.T4T_ARMAZ",
 							"type": "Char",
 							"length": "10",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"type": {
+					"description": "Tipo da solicitação de compra",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4T.T4T_TIPO",
+							"type": "Char",
+							"length": "01",
 							"required": true,
 							"available": true,
 							"canUpdate": true
@@ -194,7 +210,7 @@
 					"type": "string"
 				},
 				"detailedMessage": {
-					"$ref": "#/definitions/MRPAllocationsBase"
+					"$ref": "#/definitions/MRPPurchaseOrderBase"
 				}
 			}
 		},
@@ -217,44 +233,36 @@
 				}
 			]
 		},
-		"ListOfMRPAllocations": {
+		"ListOfMRPPurchaseOrder": {
 			"type": "object",
-			"allOf": [
-				{
-					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-				},
-				{
-					"type": "object",
-					"properties": {
-						"items": {
-							"type": "array",
-							"items": {
-								"$ref": "#/definitions/MRPAllocationsBase"
-							}
-						}
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPPurchaseOrderBase"
 					}
 				}
-			]
+			}
 		},
-		"MRPAllocationsMultiple": {
+		"MRPPurchaseOrderMultiple": {
 			"type": "object",
 			"allOf": [
 				{
-					"$ref": "#/definitions/ListOfMRPAllocations"
+					"$ref": "#/definitions/ListOfMRPPurchaseOrder"
 				},
 				{
 					"$ref": "#/definitions/ListOfMessages"
 				}
 			]
 		},
-		"PagedMRPAllocations": {
+		"PagedMRPPurchaseOrder": {
 			"type": "object",
 			"allOf": [
 				{
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
 				},
 				{
-					"$ref": "#/definitions/ListOfMRPAllocations"
+					"$ref": "#/definitions/ListOfMRPPurchaseOrder"
 				}
 			]
 		}
