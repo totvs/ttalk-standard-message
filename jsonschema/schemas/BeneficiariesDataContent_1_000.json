@@ -1,0 +1,1212 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/events/BeneficiariesDataContent_1_000.json#",
+  "info": {
+    "description": "Contrato de Mensagem Padronizada para beneficiários da linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+    "version": "1.000",
+    "title": "Funcionário e seus dependentes que possuem benefícios a eles concedidos",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "BeneficiariesDataContent",
+        "description": "Esta api tem por objetivos disponibilizar para o cliente interessado os dados do beneficiários, possibilitando consultar os dados de seus beneficiários.",
+        "segment": "Recursos Humanos"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "rplyra@totvs.com.br",
+          "description": "",
+          "adapter": "",
+          "helpUrl": "link aqui"
+        },
+        {
+          "product": "RM",
+          "contact": "wellington.vieira@totvs.com.br",
+          "description": "Consulta de beneficiários, funcionários e seus dependentes que possuem benefícios a eles vinculados e lançados",
+          "adapter": "FopBeneficiariosData",
+          "helpUrl": "link aqui",
+          "note": "No RM o beneficiário não é uma tabela fixa no banco de dados e sim a junção das tabelas: VBENEFTPOFORN, VBENEFFORNECEDORES, VBENEFCONTRATOS, VBENEFCONTRATOS, VBENEFICIOS, VBENEFVINCDEPEND, VBENEFVINCFUNC, PFUNC, VBENEFCARTAO e PFDEPEND por isso os seus fields não terão a informação de uma tabela"
+        },
+        {
+          "product": "Datasul",
+          "contact": "patricia.theilacker@totvs.com.br",
+          "description": "Consulta de funcionários e seus dependentes do Produto TOTVS Datasul HCM.",
+          "adapter": "prghur/fpp/apiBeneficiariesDataContent.p",
+          "helpUrl": "link aqui"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "PagedBeneficiariesDataContent": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "int32",
+              "format": "999.999",
+              "example": "1"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BeneficiariesDataContentItem"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BeneficiariesDataContentItem": {
+      "type": "object",
+      "description": "Descreve os dados de um registro do Beneficiário",
+      "properties": {
+        "companyKey": {
+          "description": "Agrupamento de Empresa, Unidade de negócio e Filial",
+          "type": "string",
+          "exemple": "T1|0101|MG",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODCOLIGADA",
+              "required": false,
+              "type": "integer",
+              "available": true,
+              "canUpdate": false,
+              "note": "No RM o conceito de empresa refere-se ao cadastro de Coligada na tabela.campo GCOLIGADA.CODCOLIGADA"
+            },
+            {
+              "product": "Datasul",
+              "field": "funcionario.cdn_empresa",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Informação referente ao código da Empresa do funcionário no Produto TOTVS Datasul HCM."
+            }
+          ]
+        },
+        "branch": {
+          "description": "Filial do Beneficiário",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "",
+              "required": false,
+              "type": "integer",
+              "available": true,
+              "canUpdate": false,
+              "note": "No RM o Uso de Filial é opcional, mas este dado encontra-se no cadastro de funcionário em PFUNC.CODFILIAL"
+            },
+            {
+              "product": "Datasul",
+              "field": "funcionario.cdn_empresa | funcionario.cdn_estab",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Informação referente a Empresa e Estabelecimento do lançamento da coparticipação do beneficiário."
+            }
+
+          ]
+        },
+        "code": {
+          "description": "Código do Beneficiário",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CHAPA|VBENEFICIARIOTMP.NRODEPEND",
+              "required": true,
+              "type": "string",
+              "available": false,
+              "canUpdate": false,
+              "note": "Beneficiário é o funcionário(titular) identificado pelo campo CHAPA ou seu dependente identificado pelo campo NRODEPEND, quando NRODEPEND for zero refere-se ao titular"
+            },
+            {
+              "product": "Datasul",
+              "field": "funcionario.cdn_matricula",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Informação referente a Matrícula do Funcionário no Produto TOTVS Datasul HCM."
+            }
+
+          ]
+        },
+        "id": {
+          "description": "Chave única do Beneficiário",
+          "type": "string",
+          "exemple": "1|1|1|1|001001|0|2018-07-03T00:00:00",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODCOLIGADA|VBENEFICIARIOTMP.CODBENEFICIO|VBENEFICIARIOTMP.CHAPA|VBENEFICIARIOTMP.NRODEPEND|VBENEFICIARIOTMP.DTINICIO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Criado o alias 'VBENEFICIARIOTMP' que é a junção das tabelas VBENEFVINCFUNC e VBENEFVINCDEPEND. No titular o campo NRODEPEND será o valor 00"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Campo não utilizado para a linha Datasul."
+            }
+          ]
+        },
+        "benefitsVendorCode": {
+          "description": "Identificador do Fornecedor de Benefícios",
+          "type": "string",
+          "exemple": "001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODFORNECEDORBENEFICIO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "O fornecedor de um benefício é acessado pelo vínculo do contrato 'VBENEFCONTRATOS' com o benefício 'VBENEFICIOS' lançado ao beneficiário 'VBENEFVINCFUNC' ou 'VBENEFVINCDEPEND'"
+            },
+            {
+              "product": "Datasul",
+              "field": "conven_benefic.cdn_prestdor_serv",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Informação referente ao Código do Prestador de Serviço do benefício do Funcionário no Produto TOTVS Datasul HCM."
+            }
+          ]
+        },
+        "benefitVendorInternalId": {
+          "description": "Identificador Interno do Fornecedor de Benefícios",
+          "type": "string",
+          "exemple": "1|001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODCOLIGADA|VBENEFICIARIOTMP.CODFORNECEDORBENEFICIO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "Datasul",
+              "field": "prestdor_contrat.cdn_empresa | prestdor_contrat.cdn_estab | prestdor_contrat.cdn_prestdor_serv | prestdor_contrat.idi_contrat_prestdor | prestdor_contrat.cod_contrat_prestdor",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Chave única do Cadastro de Prestador de Serviço no Datasul HCM."
+            }
+          ]
+        },
+        "benefitVendorSegmentCode": {
+          "description": "Código do tipo de segmento do fornecedor do Benefício: 1 - Assistência Médica | 2 - Assistência Odontológica ",
+          "type": "string",
+          "exemple": "1",
+          "enum": [ "1", "2" ],
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODTIPOFORNECEDORBENEFICIO",
+              "required": true,
+              "type": "smallint",
+              "available": true,
+              "canUpdate": false,
+              "note": "O tipo do segmento de um fornecedor é registrado na tabela dinamica 'VBENEFTPOFORN' vinculada ao fornecedor pelo campo VBENEFFORNECEDORES.CODTIPOFORNECEDORBENEFICIO"
+            },
+            {
+              "product": "Datasul",
+              "field": "prestdor_contrat.idi_contrat_prestdor",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do tipo de segmento do fornecedor do Benefício: 1 - Assistência Médica | 2 - Assistência Odontológica "
+            }
+          ]
+        },
+        "benefitCode": {
+          "description": "Código do Benefício",
+          "type": "string",
+          "exemple": "001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODBENEFICIO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do beneficio registrado na tabela VBENEFICIOS.CODBENEFICIO vinculados as tabelas VBENEFVINCFUNC ou VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "prestdor_contrat_benefic.cdn_beneficio",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do Benefício informado no Datasul HCM."
+            }
+          ]
+        },
+        "benefitInternalId": {
+          "description": "Identificador Interno do Benefício",
+          "type": "string",
+          "exemple": "001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODCOLIGADA|VBENEFICIARIOTMP.CODBENEFICIO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Identificado pelos campos VBENEFICIOS.CODCOLIGADA|VBENEFICIOS.CODBENEFICIO vinculados as tabelas VBENEFVINCFUNC ou VBENEFVINCDEPEND"
+
+            },
+            {
+              "product": "Datasul",
+              "field": "beneficio.cdn_beneficio",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Chave única do Cadastro de Benefício no Datasul HCM."
+            }
+          ]
+        },
+        "beginDate": {
+          "description": "Início da vigência do Benefício ao beneficiário",
+          "type": "string",
+          "format": "date-time",
+          "exemple": "2018-07-15T15:11:22",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.DTINICIO",
+              "required": true,
+              "type": "datetime2",
+              "available": true,
+              "canUpdate": false,
+              "note": "Data do inicio da vigência do benefício ao funcionário ou seu dependente nos campos VBENEFVINCFUNC.DTINICIO ou VBENEFVINCDEPEND.DTINICIO"
+            },
+            {
+              "product": "Datasul",
+              "field": "prestdor_contrat_benefic.num_ano_mes_inic_valid",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Data de início do benefício ao Funcionário."
+            }
+          ]
+        },
+        "finalDate": {
+          "description": "Fim da vigência do Benefício ao beneficiário",
+          "type": "string",
+          "format": "date-time",
+          "exemple": "2019-02-15T13:13:23",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.DTTERMINO",
+              "required": false,
+              "type": "datetime",
+              "available": true,
+              "canUpdate": false,
+              "note": "Data do Final da vigência do benefício ao funcionário ou seu dependente nos campos VBENEFVINCFUNC.DTTERMINO ou VBENEFVINCDEPEND.DTTERMINO"
+            },
+            {
+              "product": "Datasul",
+              "field": "prestdor_contrat_benefic.num_ano_mes_term_valid",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Data de fim do benefício ao Funcionário."
+            }
+          ]
+        },
+        "contractNumberCode": {
+          "description": "Código do Contrato",
+          "type": "string",
+          "exemple": "00001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODCONTRATO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "O contrato é acessado pelo vínculo do contrato 'VBENEFCONTRATOS' com o benefício 'VBENEFICIOS' lançado ao beneficiário 'VBENEFVINCFUNC' ou 'VBENEFVINCDEPEND'"
+            },
+            {
+              "product": "Datasul",
+              "field": "prestdor_contrat_benefic.cod_contrat_prestdor",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do Contrato referente ao benefício relacionado ao Funcionário."
+            }
+          ]
+        },
+        "contractNumberInternalId": {
+          "description": "Identificador interno do Contrato",
+          "type": "string",
+          "exemple": "1|00001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODCOLIGADA|VBENEFICIARIOTMP.CODCONTRATO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não se aplica ao Datasul."
+            }
+          ]
+        },
+        "employeeCode": {
+          "description": "Identificado do Funcionário",
+          "type": "string",
+          "exemple": "00001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CHAPA",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "valor do campo CHAPA registrado nas tabelas VBENEFVINCFUNC ou VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "prestdor_contrat_benefic.cdn_funcionario",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do Funcionário relacionado ao benefício."
+            }
+          ]
+        },
+        "employeeInternalId": {
+          "description": "Identificado interno do Funcionário",
+          "type": "string",
+          "exemple": "1|00001",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODCOLIGADA|VBENEFICIARIOTMP.CHAPA",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "Datasul",
+              "field": "funcionario.cdn_empresa | funcionario.cdn_estab | funcionario.cdn_funcionario",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Chave única do Funcionário no cadastro de Funcionários do Datasul (FP1500)."
+            }
+          ]
+        },
+        "registryType": {
+          "description": "Tipo do Registro do Beneficiário",
+          "type": "string",
+          "exemple": "00",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NRODEPEND",
+              "required": true,
+              "type": "smallint",
+              "available": true,
+              "canUpdate": false,
+              "note": "Quando for 00 representa o Titular e diferente de 00 será o identificador do Dependente campo NRODEPEND registrado na tabela VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "i_nro_dependentes",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Número de dependentes do Funcionário (Contagem da tabela depend_func)."
+            }
+          ]
+        },
+        "degreeOfRelatedness": {
+          "description": "Grau de parentesco do dependente com o Titular: T - Titular, C - Conjuge, F - Filho, E - Enteado, P - Pai/Mae, O - Outros",
+          "type": "string",
+          "enum": [ "T", "C", "F", "E", "P", "O" ],
+          "exemple": "T",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CODGRAUPARENTESCO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o de para da tabela PCODPARENT: 'T' para o titular, 'F' para 1 e 3, 'C' para 5, 'P' para 6 e 7, 'O' para os demais tipos"
+            },
+            {
+              "product": "Datasul",
+              "field": "depend_func.idi_grau_depen_func",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Grau de Parentesco do Beneficiário com o Funcionário."
+            }
+          ]
+        },
+        "name": {
+          "description": "Nome do beneficiário",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NOME",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Pode ser o nome do funcionário PFUNC.NOME como o nome do dependente PFDEPEND.NOME ambos vinculados as tabelas VBENEFVINCFUNC ou VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "depend_func.nom_depend_func",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Nome do Dependente do Funcionário no FP1760."
+            }
+          ]
+        },
+        "benefitCPF": {
+          "description": "CPF do Beneficiário",
+          "type": "string",
+          "exemple": "90730221008",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CPF",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "O CPF deverá ser informado somente com numeros sem os caracteres de formatação vinculados a (PPESSOA.CPF x PFUNC) ou PFDEPEND.CPF vinculados as tabelas VBENEFVINCFUNC ou VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "v_cpf_dependente",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "CPF do Dependente no FP1760 (depend_func.cod_livre_1,01,20)."
+            }
+          ]
+        },
+        "motherName": {
+          "description": "Nome da Mãe do beneficiário titular",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NOMEMAE",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "O nome da mãe só será informado no beneficiário titular e será o dependnete na PFDEPEND com o campo GRAUPARENTESCO '7' Mãe "
+            },
+            {
+              "product": "Datasul",
+              "field": "v_nome_mae_dependente",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Nome da mãe do Dependente no FP1760 (depend_func.cod_livre_2,01,100)."
+            }
+          ]
+        },
+        "gender": {
+          "description": "Sexo do beneficiário: M - Masculino, F - Feminino",
+          "type": "string",
+          "enum": [ "M", "F" ],
+          "exemple": "M",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.SEXO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "nome": "Será o campo PPESSOA.SEXO vinculada a PFUNC.CODPESSOA quando for tabela VBENEFVINCFUNC e PFDEPEND.SEXO quando vir da tabela VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "depend_func.idi_sexo",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Gênero (sexo) do Dependente no FP1760 (Default M)."
+            }
+          ]
+        },
+        "maritalState": {
+          "description": "Estado Civil C - Casado | D - Desquitado | E - União Estável | I - Divorciado | O - Outros | P - Separado | S - Solteiro | V - Viúvo",
+          "type": "string",
+          "enum": [ "C", "D", "E", "I", "O", "P", "S", "V" ],
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.ESTADOCIVIL",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o campo PPESSOA.ESTADOCIVIL vinculada a PFUNC.CODPESSOA quando for tabela VBENEFVINCFUNC e PFDEPEND.ESTADOCIVIL quando vir da tabela VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        },
+        "birth": {
+          "description": "Data de aniversário do beneficiário",
+          "type": "string",
+          "format": "datetime",
+          "exemple": "1969-02-15T13:13:23",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.DTNASCIMENTO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o campo PPESSOA. DTNASCIMENTO vinculada a PFUNC.CODPESSOA quando for tabela VBENEFVINCFUNC e PFDEPEND. DTNASCIMENTO quando vir da tabela VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "depend_func.dat_nascimento",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Data de Aniversário (nascimento) do Dependente do Funcionário no FP1760."
+            }
+          ]
+        },
+        "identityNumber": {
+          "description": "Identidade da pessoa (RG)",
+          "type": "string",
+          "exemple": "M 267392",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.CARTIDENTIDADE",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o campo PPESSOA.CARTIDENTIDADE vinculada a PFUNC.CODPESSOA quando for tabela VBENEFVINCFUNC e e Vazio quando vir da tabela VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        },
+        "identityNumberEmitterAgency": {
+          "description": "Orgão emissor da identidade da pessoa (RG)",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.ORGEMISSORIDENT",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o campo PPESSOA.ORGEMISSORIDENT vinculada a PFUNC.CODPESSOA quando for tabela VBENEFVINCFUNC e e Vazio quando vir da tabela VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        },
+        "medicalAssistanceCard": {
+          "description": "Numero do Cartão de Assistência Médica",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NUMEROCARTAOASSMEDICA",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o valor de VBENEFCARTAO.NUMEROCARTAO referente a ultima vigência em aberto VBENEFCARTAO.DTFIMVIGENCIA seja do Tiular vinculado (PFUNC x VBENEFVINCFUNC) Ou Dependente vinculado a (PFDEPEND x VBENEFVINCDEPEND) desde que o fornecedor de benefício VBENEFFORNECEDORES tenha o campo CODTIPOFORNECEDORBENEFICIO igual a '1' "
+            },
+            {
+              "product": "Datasul",
+              "field": "depend_func.cod_cartao_nac_saude",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Número da Carteira de Saúde do Dependente no FP1760."
+            }
+          ]
+        },
+        "dentalAssistanceCardCode": {
+          "description": "Numero do Cartão de Assistência Odontológica",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NUMEROCARTAOODONTOLOGICO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o valor de VBENEFCARTAO.NUMEROCARTAO referente a ultima vigência em aberto VBENEFCARTAO.DTFIMVIGENCIA seja do Tiular vinculado (PFUNC x VBENEFVINCFUNC) Ou Dependente vinculado a (PFDEPEND x VBENEFVINCDEPEND) desde que o fornecedor de benefício VBENEFFORNECEDORES tenha o campo CODTIPOFORNECEDORBENEFICIO igual a '2' "
+            },
+            {
+              "product": "Datasul",
+              "field": "depend_func.cod_cartao_nac_saude",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Numero do Cartão de Assistência Odontológica no FP1760."
+            }
+          ]
+        },
+        "foodCardsCode": {
+          "description": "Numero do Cartão para Alimentação",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NUMEROCARTAOALIMENTACAO",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será informado (Vazio)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        },
+        "mealCardsCode": {
+          "description": "Numero do Cartão para Refeição",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NUMEROCARTAOREFEICAO",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será informado (Vazio)"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        },
+        "SUSCardCode": {
+          "description": "Numero do Cartão do SUS",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NUMEROCARTAOSUS",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será o campo PFUNC.NUMEROCARTAOSUS quando for tabela VBENEFVINCFUNC e PFDEPEND.NUMEROCARTAOSUS quando vir da tabela VBENEFVINCDEPEND"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        },
+        "bornAlive": {
+          "description": "Flag que determina se o beneficiário foi nascido vivo: 1 - Nascido Vivo , 0 - Não Nascido Vivo",
+          "type": "string",
+          "enum": [ "1", "2" ],
+          "exemple": "1",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.NASCIDOVIVO",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Será um valor fixo '1' pois não se cadastra o dependente quando não Nasce Vivo"
+            },
+            {
+              "product": "Datasul",
+              "field": "v_nascido_vivo",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Para o Datasul será um valor fixo (1), pois não se cadastra um dependente quando ele não Nasce Vivo."
+            }
+          ]
+        },
+        "beneficiaryWeight": {
+          "description": "Peso em (gr) do Beneficiário",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.PESO",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Assumirá o valor fixo (0) zero"
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        },
+        "beneficiaryTall": {
+          "description": "Altura em (cm) do beneficiário",
+          "type": "string",
+          "exemple": "",
+          "x-totvs": [
+            {
+              "product": "Protheus",
+              "field": "",
+              "required": true,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": ""
+            },
+            {
+              "product": "RM",
+              "field": "VBENEFICIARIOTMP.ALTURA",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Assumirá o valor fixo (0) zero "
+            },
+            {
+              "product": "Datasul",
+              "field": "",
+              "required": false,
+              "type": "string",
+              "available": true,
+              "canUpdate": false,
+              "note": "Não utilizado no Datasul."
+            }
+          ]
+        }
+      }
+    }
+  }
+}
