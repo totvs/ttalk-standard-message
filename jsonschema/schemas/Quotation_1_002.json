@@ -37,12 +37,6 @@
 					"adapter": ""
 				},
 				{
-					"product": "LOGIX",
-					"contact": "Roberta P. Postai Vieira",
-					"note": "",
-					"adapter": ""
-				},
-				{
 					"product": "PROTHEUS",
 					"contact": "Rodrigo de Toledo",
 					"note": "",
@@ -52,7 +46,7 @@
 			"transactionDefinition": {
 				"subType": "event",
 				"businessContentType": {
-					"$ref": "#/definitions/BusinessContentType",
+					"$ref": "#/definitions/businessContentType",
 					"type": "object"
 				},
 				"returnContentType": {
@@ -63,9 +57,38 @@
 		}
 	},
 	"definitions": {
-		"BusinessContentType": {
+	    "PagedQuotation": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Quotation"
+				}
+			]
+		},
+		"Quotation": {
 			"type": "object",
 			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/businessContentType"
+					}
+				}
+			}
+		},
+		"businessContentType": {
+			"type": "object",
+			"properties": {
+			    "_expandables": {
+					"type": "array",
+					"description": "Expandable property/field list",
+					"items": {
+						"type": "string"
+					}
+				},
 				"InternalId": {
 					"description": "Identificacao unica da cotacao",
 					"type": "string",
@@ -106,7 +129,7 @@
 							"required": true,
 							"type": "",
 							"length": "",
-							"note": "Codigo unico da cotacao, como e recebimento o codigo unico da cotacao e o numero da cotacao do sistema interno, no caso Portal de Compras Paradigma.",
+							"note": "Codigo unico da cotacao eh o numero da cotacao do sistema interno.",
 							"available": true,
 							"canUpdate": false
 						}
@@ -194,13 +217,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "",
-							"required": false,
-							"type": "",
-							"length": "",
-							"note": "",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -240,13 +257,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "",
-							"required": false,
-							"type": "",
-							"length": "",
-							"note": "",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -286,13 +297,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "sup_par_cot_preco.parametro_texto onde parametro = 'cot_portal_compras'",
-							"required": false,
-							"type": "string",
-							"length": "70",
-							"note": "Codigo da cotacao na Paradigma, no caso desta integracao. Gravaremos para fins de rastreabilidade.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -336,7 +341,7 @@
 							"required": false,
 							"type": "decimal",
 							"length": "6",
-							"note": "Codigo da cotacao no ERP Logix. No caso desta integracao como é recebimento nao tera na mensagem, so depois que incluir.",
+							"note": "Codigo da cotacao no ERP Logix.",
 							"available": true,
 							"canUpdate": false
 						}
@@ -378,13 +383,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "sup_txt_cot_preco.texto",
-							"required": false,
-							"type": "string",
-							"length": "60",
-							"note": "Textos da cotacao.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -518,13 +517,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "cotacao_preco.cod_moeda",
-							"required": true,
-							"type": "decimal",
-							"length": "2",
-							"note": "Código único da moeda em que foi cotado",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -564,7 +557,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "Cotação_preco.cod_moeda",
+							"field": "cotação_preco.cod_moeda",
 							"required": true,
 							"type": "decimal",
 							"length": "2",
@@ -610,13 +603,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "cotacao_preco.cod_empresa|cotacao_preco.login",
-							"required": true,
-							"type": "decimal",
-							"length": "2",
-							"note": "Código da moeda em que foi cotado",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -689,6 +676,13 @@
 		"QuotationItemType": {
 			"type": "object",
 			"properties": {
+			    "_expandables": {
+					"type": "array",
+					"description": "Expandable property/field list",
+					"items": {
+						"type": "string"
+					}
+				},
 				"ExternalItemCode": {
 					"description": "Numeracao do item dentro da Cotacao no sistema externo",
 					"type": "string",
@@ -725,28 +719,52 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "sup_par_cot_preco.parametro_val(Onde parametro = 'cot_portal_compras')",
-							"required": false,
-							"type": "decimal",
-							"length": "",
-							"note": "Numero do item da cotacao na Paradigma, no caso desta integracao. Gravaremos para fins de rastreabilidade.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
 				"ItemCode": {
 					"description": "Código do Item",
-					"type": "string"
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "cotacao_preco.cod_item",
+							"required": true,
+							"type": "",
+							"length": "",
+							"note": "Codigo do item na cotacao",
+							"available": true,
+							"canUpdate": false
+						}
+					]
 				},
 				"RequestInternalId": {
 					"description": "InternalId da solicitação relacionada a esta cotação/item, no caso de cotação No caso de contrato fechado esta informação nao vem preenchida.",
-					"type": "string"
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "cotacao_preco.num_cotacao",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Numero da cotacao",
+							"available": true,
+							"canUpdate": false
+						}
+					]
 				},
 				"RequestCode": {
 					"description": "Codigo da solicitacao de compra no ERP a qual se refere cotacao em questao.",
 					"type": "string",
-					"maxLength": 9
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]
 				},
 				"ListOfQuotationProposal": {
 					"description": "Propostas da Cotacao",
@@ -894,13 +912,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "sup_par_cot_preco.parametro_texto onde parametro = 'cot_portal_compras'",
-							"required": false,
-							"type": "string",
-							"length": "70",
-							"note": "Codigo da cotacao na Paradigma, no caso desta integracao. Gravaremos para fins de rastreabilidade.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -991,7 +1003,7 @@
 							"required": false,
 							"type": "decimal",
 							"length": "6",
-							"note": "Codigo da cotacao no ERP Logix. No caso desta integracao como é recebimento nao tera na mensagem, so depois que incluir.",
+							"note": "Codigo da cotacao no ERP Logix.",
 							"available": true,
 							"canUpdate": false
 						}
@@ -1037,13 +1049,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "",
-							"required": true,
-							"type": "",
-							"length": "",
-							"note": "Indica se o fornecedor foi o vencedor da cotacao, neste caso sera o designado na ordem de compra.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1083,13 +1089,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "cotacao_preco.cod_moeda",
-							"required": true,
-							"type": "decimal",
-							"length": "2",
-							"note": "Código da moeda em que foi cotado",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1129,7 +1129,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "Cotação_preco.cod_moeda",
+							"field": "cotação_preco.cod_moeda",
 							"required": true,
 							"type": "decimal",
 							"length": "2",
@@ -1274,13 +1274,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "cotacao_preco.login",
-							"required": true,
-							"type": "string",
-							"length": "8",
-							"note": "Usuario que fez a cotacao no portal.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1320,13 +1314,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "cotacao_preco.cod_empresa|cotacao_preco.login",
-							"required": true,
-							"type": "decimal",
-							"length": "2",
-							"note": "Código da moeda em que foi cotado",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1366,13 +1354,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "sup_txt_cot_preco.texto",
-							"required": true,
-							"type": "string",
-							"length": "60",
-							"note": "Observacoes da cotacao.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1415,7 +1397,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "cotacao_preco.pre_unit_liquido",
+							"field": "cotacao_preco.pre_unit_base",
 							"required": true,
 							"type": "decimal",
 							"length": "17.6",
@@ -1461,13 +1443,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "texto_sup.tex_observ",
-							"required": false,
-							"type": "string",
-							"length": "60",
-							"note": "Sera guardado para depois gerar o pedido com este local.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1507,13 +1483,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "texto_sup.tex_observ",
-							"required": false,
-							"type": "string",
-							"length": "60",
-							"note": "Sera guardado para depois gerar o pedido com este local.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1553,13 +1523,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "",
-							"required": false,
-							"type": "",
-							"length": "",
-							"note": "Nao utilizado, informacao nao controlada.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1600,13 +1564,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "desc_acrescimos.val_desc_acres",
-							"required": false,
-							"type": "decimal",
-							"length": "17.6",
-							"note": "Valor do frete no Logix e gravado como encargo de frete(motivo taxa=5)ja que nao temos campo especifico",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1647,13 +1605,7 @@
 						},
 						{
 							"product": "LOGIX",
-							"field": "desc_acrescimos.val_desc_acres",
-							"required": false,
-							"type": "decimal",
-							"length": "17.6",
-							"note": "Valor do frete no Logix e gravado como encargo de frete(motivo taxa=5)ja que nao temos campo especifico",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1661,7 +1613,7 @@
 					"description": "Entregas propostas para Cotacao/item",
 					"type": "array",
 					"items": {
-						"$ref": "#/definitions/DeliveriesType",
+						"$ref": "",
 						"type": "object"
 					}
 				},
@@ -1677,6 +1629,13 @@
 		"DeliveriesType": {
 			"type": "object",
 			"properties": {
+			    "_expandables": {
+					"type": "array",
+					"description": "Expandable property/field list",
+					"items": {
+						"type": "string"
+					}
+				},
 				"DeliveryRequestItem": {
 					"description": "Numeração da entrega dentro da Requisição no ERP",
 					"type": "integer",
@@ -1718,7 +1677,7 @@
 							"required": false,
 							"type": "number",
 							"length": "3",
-							"note": "Numero da programacao de entrega da ordem de compra. Porem no caso da integracao   Paradigma nao utilizaremos esta secao visto que sera ligado parametro na Paradigma para nao permitir   alterar a data e quantidade na cotacao. Com isso nao vira na cotacao, valera a da requisicao.",
+							"note": "Numero da programacao de entrega da ordem de compra.",
 							"available": true,
 							"canUpdate": false
 						}
@@ -1811,7 +1770,7 @@
 							"required": false,
 							"type": "date",
 							"length": "",
-							"note": "Data de entrega prevista para a programcao de entrega.",
+							"note": "Data de entrega prevista para a programcao de entrega",
 							"available": true,
 							"canUpdate": false
 						}
@@ -1922,7 +1881,7 @@
 							"required": false,
 							"type": "string",
 							"length": "1",
-							"note": "Indica o motivo da taxa.",
+							"note": "Indica o motivo da taxa. 1- Embalagem 2- Despesa Financeira 3- Frete 4- Outros 5- ISS 6- Bonificação 7- Acréscimo valor de venda 8- ICMS 9- Negociado.",
 							"available": true,
 							"canUpdate": false
 						}
