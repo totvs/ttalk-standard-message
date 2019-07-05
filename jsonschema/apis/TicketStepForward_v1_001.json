@@ -1,0 +1,179 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para avanço de etapas de atendimentos do CRM",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/construction-projects/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8052"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para avanço de etapas de atendimentos do CRM",
+		"version": "1.001",
+		"title": "Avançar Etapas de Atendimentos",
+		"contact": {
+			"name": "T-Talk",
+			"url": "http://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "TicketStepForward",
+				"description": "Avançar Etapas de Atendimentos",
+				"segment": "Construção e Projetos"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "tribecp.squad.top.ce@totvs.com.br",
+					"description": "Avançar Etapas de Atendimentos",
+					"adapter": "",
+					"helpUrl": ""
+				}
+			]
+		}
+	},
+	"paths": {
+		"/tickets/step-forward-params/{internalId}": {
+			"get": {
+				"tags": [
+					"TicketStepForward"
+				],
+				"summary": "Informações para Execução do Avanço de Etapas",
+				"description": "Retornar as informações necessárias para utilização no processo de avanço de etapa de atendimento",
+				"operationId": "getTicketStepForward",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/TicketStepForward_1_001.json#/definitions/TicketGetInformationForward"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Nao existem informação para o avanço de etapa",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Não foram localizadas as informações",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/{internalId}/step-forward": {
+			"post": {
+				"tags": [
+					"TicketStepForward"
+				],
+				"summary": "Avançar etapa de um atendimento",
+				"description": "Excutar o processo de avanço de etapa de um tendimento",
+				"operationId": "Post",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos parametros",
+							"minimalVersion": "12.1.25"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					}
+				],
+				"requestBody": {
+					"description": "Parâmetros para o processo de avançar etapa de atendimento",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/TicketStepForward_1_001.json#/definitions/TicketStepForward"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Processo de avanço de etapas executado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/TicketStepForward_1_001.json#/definitions/TicketStepForwardProccess"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao avançar etapa de um atendimento",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"internalId": {
+				"name": "internalId",
+				"in": "path",
+				"description": "Identificador único do Atendimento",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
