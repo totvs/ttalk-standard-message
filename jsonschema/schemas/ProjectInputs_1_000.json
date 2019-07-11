@@ -1,662 +1,755 @@
 {
-    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ProjectInputs/V1/1_000/jsonschema/schemas/ProjectInputs_1_000.json#",
-    "info": {
-        "description": "Consulta Insumos para Projetos",
-        "version": "1.000",
-        "title": "Insumos para Projetos",
-        "contact": "TribeCP.Squad.TOP.OP@totvs.com.br",
-        "x-totvs": {
-            "messageDocumentation": {
-                "name": "ProjectInputs",
-                "description": "Insumos para Projetos",
-                "segment": "Construção e Projetos"
-            }
-        }
-    },
-    "definitions": {
-        "PagedProjectInputs": {
-            "type": "object",
-            "allOf": [{
-                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "items": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ProjectInputs"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "ProjectInputs": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "description": "Identificador do registro",
-                    "required": false,
-                    "type": "string",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "[MISM.CODCOLIGADA,MISM.IDPRJ,MISM.IDISM]",
-                        "required": false,
-                        "type": "String",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "companyId": {
-                    "description": "Identificador da empresa",
-                    "required": true,
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODCOLIGADA",
-                        "required": true,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "projectId": {
-                    "description": "Identificador do projeto",
-                    "type": "integer",
-                    "required": true,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.IDPRJ",
-                        "required": true,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "inputId": {
-                    "description": "Identificador do insumo",
-                    "type": "integer",
-                    "required": true,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.IDISM",
-                        "required": true,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "costGroupId": {
-                    "description": "Identificador do grupo de custo",
-                    "type": "integer",
-                    "required": true,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.IDGIS",
-                        "required": true,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "inputType": {
-                    "description": "Tipo do insumo: Normal = 0, Derivado = 1, Receita = 2",
-                    "type": "integer",
-                    "required": true,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.TIPO",
-                        "required": true,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "inputCode": {
-                    "description": "Código do insumo",
-                    "type": "string",
-                    "required": true,
-                    "maxLength": 30,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODISM",
-                        "required": true,
-                        "type": "String",
-                        "length": "30",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "description": {
-                    "description": "Descrição do insumo",
-                    "type": "string",
-                    "required": true,
-                    "maxLength": 254,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.DESCISM",
-                        "required": true,
-                        "type": "String",
-                        "length": "254",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "unitCode": {
-                    "description": "Código da unidade",
-                    "type": "string",
-                    "required": true,
-                    "maxLength": 5,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODUND",
-                        "required": true,
-                        "type": "String",
-                        "length": "5",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "groupDNER": {
-                    "description": "Grupo DNIT: Nenhum = 'N', Equipamento = 'A', Mão de Obra = 'B', Material = 'C', Atividades Auxiliares = 'D', Tempo Fixo = 'E', Transporte = 'F'",
-                    "type": "string",
-                    "maxLength": 1,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.GRUPODNER",
-                        "required": false,
-                        "type": "String",
-                        "length": "1",
-                        "note": "Não enviado",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "activeInputPriceId": {
-                    "description": "Identificador do preço ativo do insumo",
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.IDISMPRC",
-                        "required": false,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "value": {
-                    "description": "Valor do insumo",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.VALOR",
-                        "required": false,
-                        "type": "Decimal",
-                        "note": "Não enviado. Campo calculado.",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "valueWithoutLaws": {
-                    "description": "Valor do insumo sem leis",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.VALORSEMLEIS",
-                        "required": false,
-                        "type": "Decimal",
-                        "note": "Não enviado. Campo calculado.",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "unproductiveValue": {
-                    "description": "Valor improdutivo do insumo",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.VALORIMPRODUTIVO",
-                        "required": false,
-                        "type": "Decimal",
-                        "note": "Não enviado. Campo calculado.",
-                        "available": true,
-                        "canUpdate": false
-                    }]
-                },
-                "spreadsheetId": {
-                    "description": "Identificador da planilha",
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.VALORIMPRODUTIVO",
-                        "required": false,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "applicationCode": {
-                    "description": "Código da aplicação",
-                    "type": "string",
-                    "maxLength": 2,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODAPLIC",
-                        "required": false,
-                        "type": "String",
-                        "length": "2",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "productiveHourCostCell": {
-                    "description": "Célula do custo horário produtivo",
-                    "type": "string",
-                    "maxLength": 4,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CUSTOHORVALORPROD",
-                        "required": false,
-                        "type": "String",
-                        "length": "4",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "unproductiveHourCostCell": {
-                    "description": "Célula do custo horário improdutivo",
-                    "type": "string",
-                    "maxLength": 4,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CUSTOHORVALORIMPROD",
-                        "required": false,
-                        "type": "String",
-                        "length": "4",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "factorK": {
-                    "description": "Fator K",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.FATORK",
-                        "required": false,
-                        "type": "Decimal",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "codeEMOP": {
-                    "description": "Código EMOP",
-                    "type": "string",
-                    "maxLength": 20,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODEMOP",
-                        "required": false,
-                        "type": "String",
-                        "length": "20",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "codeFGV": {
-                    "description": "Código FGV",
-                    "type": "string",
-                    "maxLength": 20,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODFGV",
-                        "required": false,
-                        "type": "String",
-                        "length": "20",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "inputCodePINI": {
-                    "description": "Código PINI",
-                    "type": "string",
-                    "maxLength": 20,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODPINI",
-                        "required": false,
-                        "type": "String",
-                        "length": "20",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "paymentTerms": {
-                    "description": "Código da Condição de Pagamento",
-                    "type": "string",
-                    "maxLength": 5,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODCPG",
-                        "required": false,
-                        "type": "String",
-                        "length": "5",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "notFractioned": {
-                    "description": "Não fracionado",
-                    "type": "integer",
-                    "maxLength": 4,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.FLAGFRACIONARIO",
-                        "required": false,
-                        "type": "Int",
-                        "length": "4",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "journey": {
-                    "description": "Jornada",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.JORNADA",
-                        "required": false,
-                        "type": "Decimal",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "resupplyPeriod": {
-                    "description": "Prazo de Ressuprimento",
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.PRAZORESSUP",
-                        "required": false,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "calculationPriority": {
-                    "description": "Prioridade de cálculo",
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.PRIORIDADECALC",
-                        "required": false,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "derivationType": {
-                    "description": "Tipo de insumo derivado: Nenhum = 0, Quantidade = 1, Valor = 2, Tarefa = 3, Quantidade_Valor = 4",
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.TIPOISMDERIVADO",
-                        "required": false,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "formulaApplication": {
-                    "description": "Aplicativo da fórmula",
-                    "type": "string",
-                    "maxLength": 1,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.APLICFORMULA",
-                        "required": false,
-                        "type": "String",
-                        "length": "1",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "quantityFormula": {
-                    "description": "Fórmula de quantidade",
-                    "type": "string",
-                    "maxLength": 8,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.FORMULAQTDE",
-                        "required": false,
-                        "type": "String",
-                        "length": "8",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "valueFormula": {
-                    "description": "Fórmula de valor",
-                    "type": "string",
-                    "maxLength": 8,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.FORMULAVALOR",
-                        "required": false,
-                        "type": "String",
-                        "length": "8",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "taskFormula": {
-                    "description": "Fórmula de tarefa",
-                    "type": "string",
-                    "maxLength": 8,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.FORMULAQTDECRONOG",
-                        "required": false,
-                        "type": "String",
-                        "length": "8",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "minimumPercentage": {
-                    "description": "Percentual mínimo de hora extra",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.MINIMOHORAEXTRA",
-                        "required": false,
-                        "type": "Decimal",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "maximumPercentage": {
-                    "description": "Percentual máximo de hora extra",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.MAXIMOHORAEXTRA",
-                        "required": false,
-                        "type": "Decimal",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "percentageUnitValue": {
-                    "description": "Percentual do valor unitário de hora extra",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CUSTOUNITHORAEXTRA",
-                        "required": false,
-                        "type": "Decimal",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "budgetaryNature": {
-                    "description": "Natureza Orçamentária/Financeira",
-                    "type": "string",
-                    "maxLength": 40,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODTBORCAMENTO",
-                        "required": false,
-                        "type": "String",
-                        "length": "40",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "companyBudgetaryNature": {
-                    "description": "Coligada da Natureza Orçamentária/Financeira",
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODCOLTBORCAMENTO",
-                        "required": false,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "journeyPeriod": {
-                    "description": "Jornada período",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.JORNADAPERIODO",
-                        "required": false,
-                        "type": "Decimal",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "unproductivityPercentage": {
-                    "description": "Percentual improdutividade",
-                    "type": "number",
-                    "format": "decimal",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.IMPRODUTIVIDADE",
-                        "required": false,
-                        "type": "Decimal",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "detailedInput": {
-                    "description": "Insumo detalhado: Sim = 1, Não = 0",
-                    "type": "integer",
-                    "maxLength": 2,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.ISMDETALHADO",
-                        "required": false,
-                        "type": "Int",
-                        "length": "2",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "purchaseType": {
-                    "description": "Tipo de compra: Normal = 0, Não compra fracionado = 1, Compra única = 2",
-                    "type": "integer",
-                    "maxLength": 2,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.ARREDONDAQTDE",
-                        "required": false,
-                        "type": "Int",
-                        "length": "2",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "inputIdPINI": {
-                    "description": "Identificador do insumo da PINI",
-                    "type": "integer",
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.IDISMPINI",
-                        "required": false,
-                        "type": "Int",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "codePINI": {
-                    "description": "Código do insumo da PINI",
-                    "type": "string",
-                    "maxLength": 25,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.CODISMPINI",
-                        "required": false,
-                        "type": "String",
-                        "length": "5",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "inputTypeHiring": {
-                    "description": "Tipo do insumo para contratação: Não utiliza = 0, Orçamento ou Planejamento = 1, Contrato = 2",
-                    "type": "integer",
-                    "maxLength": 2,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.UTILIZADETISMCNT",
-                        "required": false,
-                        "type": "Int",
-                        "length": "2",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "efficiencyFactor": {
-                    "description": "Fator de eficiência: Nenhum = 0, FIC = 1, FIT = 2",
-                    "type": "integer",
-                    "maxLength": 2,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.FATOREFICIENCIA",
-                        "required": false,
-                        "type": "Int",
-                        "length": "2",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                },
-                "specialRetirement": {
-                    "description": "Aposentadoria especial: Não se aplica = 0, Após 15 anos = 1, Após 20 anos = 2, Após 25 anos = 3",
-                    "type": "integer",
-                    "maxLength": 2,
-                    "x-totvs": [{
-                        "product": "rm",
-                        "field": "MISM.APOSENTADORIAESPECIAL",
-                        "required": false,
-                        "type": "Int",
-                        "length": "2",
-                        "available": true,
-                        "canUpdate": true
-                    }]
-                }
-            }
-        }
-    }
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ProjectInputs_1_000.json#",
+	"info": {
+		"description": "Consulta Insumos para Projetos",
+		"version": "1.000",
+		"title": "Insumos para Projetos",
+		"contact": "TribeCP.Squad.TOP.OP@totvs.com.br",
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ProjectInputs",
+				"description": "Insumos para Projetos",
+				"segment": "Construção e Projetos"
+			}
+		}
+	},
+	"definitions": {
+		"PagedProjectInputs": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/ProjectInputs"
+							}
+						}
+					}
+				}
+			]
+		},
+		"ProjectInputs": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"description": "Identificador do registro",
+					"required": false,
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "[MISM.CODCOLIGADA,MISM.IDPRJ,MISM.IDISM]",
+							"required": true,
+							"type": "String",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"companyId": {
+					"description": "Identificador da empresa",
+					"required": true,
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODCOLIGADA",
+							"required": true,
+							"type": "Int",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"projectId": {
+					"description": "Identificador do projeto",
+					"type": "integer",
+					"required": true,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.IDPRJ",
+							"required": true,
+							"type": "Int",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"inputId": {
+					"description": "Identificador do insumo",
+					"type": "integer",
+					"required": true,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.IDISM",
+							"required": true,
+							"type": "Int",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"costGroupId": {
+					"description": "Identificador do grupo de custo",
+					"type": "integer",
+					"required": true,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.IDGIS",
+							"required": true,
+							"type": "Int",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"inputType": {
+					"description": "Tipo do insumo: Normal = 0, Derivado = 1, Receita = 2",
+					"type": "integer",
+					"required": true,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.TIPO",
+							"required": true,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"inputCode": {
+					"description": "Código do insumo",
+					"type": "string",
+					"required": true,
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODISM",
+							"required": true,
+							"type": "String",
+							"length": "30",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"description": {
+					"description": "Descrição do insumo",
+					"type": "string",
+					"required": true,
+					"maxLength": 254,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.DESCISM",
+							"required": true,
+							"type": "String",
+							"length": "254",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"unitCode": {
+					"description": "Código da unidade",
+					"type": "string",
+					"required": true,
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODUND",
+							"required": true,
+							"type": "String",
+							"length": "5",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"groupDNER": {
+					"description": "Grupo DNIT: Nenhum = 'N', Equipamento = 'A', Mão de Obra = 'B', Material = 'C', Atividades Auxiliares = 'D', Tempo Fixo = 'E', Transporte = 'F'",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.GRUPODNER",
+							"required": false,
+							"type": "String",
+							"length": "1",
+							"note": "Não enviado",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"activeInputPriceId": {
+					"description": "Identificador do preço ativo do insumo",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.IDISMPRC",
+							"required": false,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"value": {
+					"description": "Valor do insumo",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.VALOR",
+							"required": false,
+							"type": "Decimal",
+							"note": "Não enviado. Campo calculado.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"valueWithoutLaws": {
+					"description": "Valor do insumo sem leis",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.VALORSEMLEIS",
+							"required": false,
+							"type": "Decimal",
+							"note": "Não enviado. Campo calculado.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"unproductiveValue": {
+					"description": "Valor improdutivo do insumo",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.VALORIMPRODUTIVO",
+							"required": false,
+							"type": "Decimal",
+							"note": "Não enviado. Campo calculado.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"spreadsheetId": {
+					"description": "Identificador da planilha",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.VALORIMPRODUTIVO",
+							"required": false,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"applicationCode": {
+					"description": "Código da aplicação",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODAPLIC",
+							"required": false,
+							"type": "String",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"productiveHourCostCell": {
+					"description": "Célula do custo horário produtivo",
+					"type": "string",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CUSTOHORVALORPROD",
+							"required": false,
+							"type": "String",
+							"length": "4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"unproductiveHourCostCell": {
+					"description": "Célula do custo horário improdutivo",
+					"type": "string",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CUSTOHORVALORIMPROD",
+							"required": false,
+							"type": "String",
+							"length": "4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"factorK": {
+					"description": "Fator K",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.FATORK",
+							"required": false,
+							"type": "Decimal",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"codeEMOP": {
+					"description": "Código EMOP",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODEMOP",
+							"required": false,
+							"type": "String",
+							"length": "20",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"codeFGV": {
+					"description": "Código FGV",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODFGV",
+							"required": false,
+							"type": "String",
+							"length": "20",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"inputCodePINI": {
+					"description": "Código PINI",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODPINI",
+							"required": false,
+							"type": "String",
+							"length": "20",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"paymentTerms": {
+					"description": "Código da Condição de Pagamento",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODCPG",
+							"required": false,
+							"type": "String",
+							"length": "5",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"notFractioned": {
+					"description": "Não fracionado",
+					"type": "integer",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.FLAGFRACIONARIO",
+							"required": false,
+							"type": "Int",
+							"length": "4",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"journey": {
+					"description": "Jornada",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.JORNADA",
+							"required": false,
+							"type": "Decimal",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"resupplyPeriod": {
+					"description": "Prazo de Ressuprimento",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.PRAZORESSUP",
+							"required": false,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"calculationPriority": {
+					"description": "Prioridade de cálculo",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.PRIORIDADECALC",
+							"required": false,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"derivationType": {
+					"description": "Tipo de insumo derivado: Nenhum = 0, Quantidade = 1, Valor = 2, Tarefa = 3, Quantidade_Valor = 4",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.TIPOISMDERIVADO",
+							"required": false,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"formulaApplication": {
+					"description": "Aplicativo da fórmula",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.APLICFORMULA",
+							"required": false,
+							"type": "String",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"quantityFormula": {
+					"description": "Fórmula de quantidade",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.FORMULAQTDE",
+							"required": false,
+							"type": "String",
+							"length": "8",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"valueFormula": {
+					"description": "Fórmula de valor",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.FORMULAVALOR",
+							"required": false,
+							"type": "String",
+							"length": "8",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"taskFormula": {
+					"description": "Fórmula de tarefa",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.FORMULAQTDECRONOG",
+							"required": false,
+							"type": "String",
+							"length": "8",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"minimumPercentage": {
+					"description": "Percentual mínimo de hora extra",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.MINIMOHORAEXTRA",
+							"required": false,
+							"type": "Decimal",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"maximumPercentage": {
+					"description": "Percentual máximo de hora extra",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.MAXIMOHORAEXTRA",
+							"required": false,
+							"type": "Decimal",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"percentageUnitValue": {
+					"description": "Percentual do valor unitário de hora extra",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CUSTOUNITHORAEXTRA",
+							"required": false,
+							"type": "Decimal",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"budgetaryNature": {
+					"description": "Natureza Orçamentária/Financeira",
+					"type": "string",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODTBORCAMENTO",
+							"required": false,
+							"type": "String",
+							"length": "40",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"companyBudgetaryNature": {
+					"description": "Coligada da Natureza Orçamentária/Financeira",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODCOLTBORCAMENTO",
+							"required": false,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"journeyPeriod": {
+					"description": "Jornada período",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.JORNADAPERIODO",
+							"required": false,
+							"type": "Decimal",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"unproductivityPercentage": {
+					"description": "Percentual improdutividade",
+					"type": "number",
+					"format": "decimal",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.IMPRODUTIVIDADE",
+							"required": false,
+							"type": "Decimal",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"detailedInput": {
+					"description": "Insumo detalhado: Sim = 1, Não = 0",
+					"type": "integer",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.ISMDETALHADO",
+							"required": false,
+							"type": "Int",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"purchaseType": {
+					"description": "Tipo de compra: Normal = 0, Não compra fracionado = 1, Compra única = 2",
+					"type": "integer",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.ARREDONDAQTDE",
+							"required": false,
+							"type": "Int",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"inputIdPINI": {
+					"description": "Identificador do insumo da PINI",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.IDISMPINI",
+							"required": false,
+							"type": "Int",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"codePINI": {
+					"description": "Código do insumo da PINI",
+					"type": "string",
+					"maxLength": 25,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.CODISMPINI",
+							"required": false,
+							"type": "String",
+							"length": "5",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"inputTypeHiring": {
+					"description": "Tipo do insumo para contratação: Não utiliza = 0, Orçamento ou Planejamento = 1, Contrato = 2",
+					"type": "integer",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.UTILIZADETISMCNT",
+							"required": false,
+							"type": "Int",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"efficiencyFactor": {
+					"description": "Fator de eficiência: Nenhum = 0, FIC = 1, FIT = 2",
+					"type": "integer",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.FATOREFICIENCIA",
+							"required": false,
+							"type": "Int",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"specialRetirement": {
+					"description": "Aposentadoria especial: Não se aplica = 0, Após 15 anos = 1, Após 20 anos = 2, Após 25 anos = 3",
+					"type": "integer",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "MISM.APOSENTADORIAESPECIAL",
+							"required": false,
+							"type": "Int",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
 }

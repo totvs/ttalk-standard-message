@@ -1,0 +1,318 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade Vendedor (seller) para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/crm/v2",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8090"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade Vendedor (seller) para produtos TOTVS",
+		"version": "2.000",
+		"title": "Vendedor",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Seller",
+				"description": "API para a entidade Vendedor (seller) para produtos TOTVS",
+				"segment": "Serviços"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Cadastro de Vendedores",
+					"adapter": "mats040.prw"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/seller": {
+			"get": {
+				"tags": [
+					"Seller"
+				],
+				"summary": "Retorna lista de Vendedores",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo não está disponível com o parâmetro code",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"description": "Retorna lista completa de vendedores",
+				"operationId": "getseller",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Seller_3_001.json#/definitions/PagedSellers"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Seller"
+				],
+				"summary": "Inclui um vendedor",
+				"description": "Inclui um vendedor conforme dados enviados na requisição.",
+				"operationId": "postCode",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"requestBody": {
+					"description": "Vendedor a ser incluído.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Seller_3_001.json#/definitions/SellerInfo"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Seller_3_001.json#/definitions/PagedSellers"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro durante inclusão do vendedor!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/seller/{code}": {
+			"get": {
+				"tags": [
+					"Code"
+				],
+				"summary": "Retorna vendedor pelo seu Código",
+				"operationId": "getCode",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Authorization e Code.",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/Code"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Seller_3_001.json#/definitions/SellerInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Vendedor não localizado na base!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"Code"
+				],
+				"summary": "Altera um vendedor",
+				"description": "Atualiza cadastro de vendedor conforme dados enviados na requisição",
+				"operationId": "putCode",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/Code"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"requestBody": {
+					"description": "Vendedor a ser atualizado.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Seller_3_001.json#/definitions/SellerInfo"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Seller_3_001.json#/definitions/SellerInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro durante a alteração do vendedor!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Code"
+				],
+				"summary": "Exclui um vendedor",
+				"description": "Exclui cadastro de vendedor conforme dados enviados na requisição.",
+				"operationId": "deleteCode",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/Code"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"400": {
+						"description": "Erro durante a exclusão do vendedor!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"Code": {
+				"name": "code",
+				"in": "path",
+				"required": true,
+				"description": "Identificador único do vendedor",
+				"schema": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

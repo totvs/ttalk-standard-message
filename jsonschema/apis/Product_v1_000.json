@@ -1,333 +1,361 @@
 {
-  "openapi": "3.0.1",
-  "servers": [{
-    "description": "API para a entidade Products (Produtos) do segmento HealthCare para produtos TOTVS",
-    "url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1",
-    "variables": {
-      "serverUrl": {
-        "default": "localhost"
-      },
-      "serverHttpPort": {
-        "default": "4202"
-      }
-    }
-  }],
-  "info": {
-    "description": "API para a entidade Products (Produtos) do segmento HealthCare para produtos TOTVS",
-    "version": "1.000",
-    "title": "Products",
-    "contact": {
-      "name": "T-Talk",
-      "url": "api.Totvs.com.br",
-      "email": "comiteintegracao@totvs.com.br"
-    },
-    "x-totvs": {
-      "messageDocumentation": {
-        "name": "Products",
-        "description": "Products",
-        "segment": "HealthCare"
-      },
-      "productInformation": [{
-        "product": "central-obrigacoes",
-        "contact": "",
-        "description": "Products",
-        "adapter": "RestCenProd.prw"
-      }]
-    }
-  },
-  "paths": {
-    "/products": {
-      "get": {
-        "tags": [
-          "collection"
-        ],
-        "summary": "Retorna informacoes dos Produtos do plano de saude.",
-        "x-totvs": {
-          "productInformation": [{
-            "product": "central-obrigacoes",
-            "avaliable": true,
-            "minimalVersion": ""
-          }]
-        },
-        "description": "Retorna um lote de produtos.",
-        "operationId": "getLotBenef",
-        "parameters": [{
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-          },
-          {
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-          },
-          {
-            "$ref": "#/components/parameters/healthInsurerCode"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/PagedProduct"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Erro ao localizar produto",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "collection"
-        ],
-        "summary": "Inclusão de produtos",
-        "x-totvs": {
-          "productInformation": [{
-            "product": "central-obrigacoes",
-            "avaliable": true,
-            "minimalVersion": "",
-            "note": "É possivel a inclusão de um produto por requisição."
-          }]
-        },
-        "description": "Realiza a inclusão de um produto.",
-        "operationId": "procInsCenProd",
-        "parameters": [{
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-        }],
-        "requestBody": {
-          "description": "Produto a ser incluído.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Operação realizada com sucesso!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Erro durante inclusão do produtos",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/products/{healthInsurerCode}": {
-      "parameters": [{
-        "$ref": "#/components/parameters/healthInsurerCode"
-      }],
-      "get": {
-        "tags": [
-          "single"
-        ],
-        "summary": "Retorna informacoes do Produto",
-        "x-totvs": {
-          "productInformation": [{
-            "product": "central-obrigacoes",
-            "avaliable": true,
-            "minimalVersion": ""
-          }]
-        },
-        "description": "Retorna um produtos.",
-        "operationId": "getBenef",
-        "parameters": [{
-          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-        }],
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Erro ao localizar produto",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "single"
-        ],
-        "summary": "Altera informacoes do(s) produto(s)",
-        "x-totvs": {
-          "productInformation": [{
-            "product": "central-obrigacoes",
-            "avaliable": true,
-            "minimalVersion": ""
-          }]
-        },
-        "description": "Altera informações do produto.",
-        "operationId": "putBenef",
-        "parameters": [{
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/healthInsurerCode"
-          }
-        ],
-        "requestBody": {
-          "description": "Produto a ser incluído.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Operação realizada com sucesso!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Dados do produto invalido",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Produto(s) nao encontrado(s).",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "single"
-        ],
-        "summary": "Deleta um produto",
-        "x-totvs": {
-          "productInformation": [{
-            "product": "central-obrigacoes",
-            "avaliable": true,
-            "minimalVersion": "",
-            "note": ""
-          }]
-        },
-        "description": "Deleta um produto.",
-        "operationId": "deleteBenef",
-        "parameters": [{
-            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/healthInsurerCode"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Operação realizada com sucesso!"
-          },
-          "404": {
-            "description": "Produto não localizado.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "parameters": {
-      "healthInsuranceCode": {
-        "name": "healthInsuranceCode",
-        "in": "path",
-        "description": "Código do produto a ser retornado",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "x-totvs": [{
-          "product": "central-obrigacoes",
-          "field": "B3J.B3J_CODOPE",
-          "required": true,
-          "type": "string",
-          "note": "Código da operadora",
-          "available": true
-        }]
-      },
-      "healthInsurerCode": {
-        "name": "healthInsurerCode",
-        "in": "path",
-        "description": "Código da operadora",
-        "schema": {
-          "type": "string"
-        },
-        "x-totvs": [{
-          "product": "central-obrigacoes",
-          "field": "B3J.B3J_CODOPE",
-          "required": true,
-          "type": "string",
-          "note": "Código da operadora",
-          "available": true
-        }]
-      }
-    }
-  }
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade Products (Produtos) do segmento Saúde para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "4202"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade Products (Produtos) do segmento Saúde para produtos TOTVS",
+		"version": "1.000",
+		"title": "Products",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Products",
+				"description": "Products",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "Central-Obrigacoes",
+					"contact": "",
+					"description": "Products",
+					"adapter": "RestCenProd.prw"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/products": {
+			"get": {
+				"tags": [
+					"collection"
+				],
+				"summary": "Retorna informacoes dos Produtos do plano de saude.",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Central-Obrigacoes",
+							"available": true,
+							"minimalVersion": ""
+						}
+					]
+				},
+				"description": "Retorna um lote de produtos.",
+				"operationId": "getLotBenef",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/healthInsurerCode"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/PagedProduct"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Erro ao localizar produto",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"collection"
+				],
+				"summary": "Inclusão de produtos",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Central-Obrigacoes",
+							"available": true,
+							"minimalVersion": "",
+							"note": "É possivel a inclusão de um produto por requisição."
+						}
+					]
+				},
+				"description": "Realiza a inclusão de um produto.",
+				"operationId": "procInsCenProd",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"description": "Produto a ser incluído.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro durante inclusão do produtos",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/{healthInsurerCode}": {
+			"parameters": [
+				{
+					"$ref": "#/components/parameters/healthInsurerCode"
+				}
+			],
+			"get": {
+				"tags": [
+					"single"
+				],
+				"summary": "Retorna informacoes do Produto",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Central-Obrigacoes",
+							"available": true,
+							"minimalVersion": ""
+						}
+					]
+				},
+				"description": "Retorna um produtos.",
+				"operationId": "getBenef",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Erro ao localizar produto",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"single"
+				],
+				"summary": "Altera informacoes do(s) produto(s)",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Central-Obrigacoes",
+							"available": true,
+							"minimalVersion": ""
+						}
+					]
+				},
+				"description": "Altera informações do produto.",
+				"operationId": "putBenef",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/healthInsurerCode"
+					}
+				],
+				"requestBody": {
+					"description": "Produto a ser incluído.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Product_1_000.json#/definitions/product"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Dados do produto invalido",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Produto(s) nao encontrado(s).",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"single"
+				],
+				"summary": "Deleta um produto",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Central-Obrigacoes",
+							"available": true,
+							"minimalVersion": "",
+							"note": ""
+						}
+					]
+				},
+				"description": "Deleta um produto.",
+				"operationId": "deleteBenef",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/healthInsurerCode"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Produto não localizado.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"healthInsuranceCode": {
+				"name": "healthInsuranceCode",
+				"in": "path",
+				"description": "Código do produto a ser retornado",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Central-Obrigacoes",
+						"field": "B3J.B3J_CODOPE",
+						"required": true,
+						"type": "string",
+						"note": "Código da operadora",
+						"available": true
+					}
+				]
+			},
+			"healthInsurerCode": {
+				"name": "healthInsurerCode",
+				"in": "path",
+				"description": "Código da operadora",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Central-Obrigacoes",
+						"field": "B3J.B3J_CODOPE",
+						"required": true,
+						"type": "string",
+						"note": "Código da operadora",
+						"available": true
+					}
+				]
+			}
+		}
+	}
 }
