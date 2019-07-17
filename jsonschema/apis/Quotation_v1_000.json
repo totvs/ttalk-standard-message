@@ -1,0 +1,1625 @@
+{
+	"openapi": "3.0.0",
+	"servers": [{
+		"description": "API para produtos TOTVS",
+		"url": "http://{serverUrl}:{serverHttpPort}/api/supply/v1",
+		"variables": {
+			"domain": {
+				"default": "localhost"
+			},
+			"port": {
+				"default": "8090"
+			}
+		}
+	}],
+	"info": {
+		"description": "API para manutenção do cadastro de cotações de compra.",
+		"version": "1.000",
+		"title": "Cotação de Compra",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "quotation",
+				"description": "API para manutenção do cadastro de cotações de compra.",
+				"segment": "Supply Chain"
+			},
+			"productInformation": [{
+				"product": "Logix",
+				"contact": "SUPPLY.ML.MAN.SUP_L@totvs.com.br",
+				"description": "Cotação de Compra.",
+				"adapter": ""
+			}]
+		}
+	},
+	"paths": {
+		"/quotation": {
+			"get": {
+				"tags": [
+					"quotation"
+				],
+				"summary": "Buscas as cotações",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getquotation",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registro encontrado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/pagedQuotation"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta das cotações de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"quotation"
+				],
+				"summary": "Inclui uma cotação para uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "postquotation",
+				"parameters": [{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+				}],
+				"requestBody": {
+					"description": "Cotação de Compra a ser incluída",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "array",
+								"items": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/businessContentType"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro incluído com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/businessContentType"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a inclusão de cotação de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotation/{internalId}": {
+			"get": {
+				"tags": [
+					"quotation"
+				],
+				"summary": "Pesquisa as cotações de uma determinada ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getquotationId",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/businessContentType"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta de cotação de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"quotation"
+				],
+				"summary": "Modifica a cotação de uma determinada ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "putquotationId",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					}
+				],
+				"requestBody": {
+					"description": "Cotação de Compra a ser alterada",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/businessContentType"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/businessContentType"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração de cotação de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"quotation"
+				],
+				"summary": "Exclui a cotação de uma determinada ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "deletequotationId",
+				"parameters": [{
+					"$ref": "#/components/parameters/internalId"
+				}],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão de cotação de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotationItemType/{itemCode}": {
+			"get": {
+				"tags": [
+					"quotationItemCode"
+				],
+				"summary": "Pesquisa as cotações de um determinado item",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getquotationItemCode",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/itemCode"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registro encontrado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/quotationProposalType"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta das cotações do item",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"quotationItemCode"
+				],
+				"summary": "Inclui uma cotação para um determinado item",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "postquotationItemCode",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "#/components/parameters/itemCode"
+					}
+				],
+				"requestBody": {
+					"description": "Cotação de Compra a ser incluída",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "array",
+								"items": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/quotationProposalType"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro incluído com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/quotationProposalType"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a inclusão do item na cotação de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotationItemType/{itemCode}/quotationProposalType/{proposalInternalId}": {
+			"get": {
+				"tags": [
+					"quotationProposalType"
+				],
+				"summary": "Pesquisa uma cotação de um determinado item",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getquotationProposalType",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/itemCode"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					}
+
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta da cotação do item",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"quotationProposalType"
+				],
+				"summary": "Modifica a cotação de uma determinada ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "putquotationProposalType",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/itemCode"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					}
+				],
+				"requestBody": {
+					"description": "Cotação de Compra a ser alterado",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração da cotação de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"quotationProposalType"
+				],
+				"summary": "Exclui a cotação de uma determinada ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "deletequotationProposalType",
+				"parameters": [{
+						"$ref": "#/components/parameters/itemCode"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão dos dados da cotação da compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotationItemType/{itemCode}/quotationProposalType/{proposalInternalId}/listOfTaxesDocument/{taxesInternalId}": {
+			"put": {
+				"tags": [
+					"taxesInternalIdItemCode"
+				],
+				"summary": "Modifica uma taxa desconto ou acrescimo de uma cotação de um item",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "puttaxesInternalIdItemCode",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/itemCode"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/taxesInternalId"
+					}
+				],
+				"requestBody": {
+					"description": "Taxa de desconto ou acrescimo a ser alterado",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração da taxa de desconto ou acrescimo da compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"taxesInternalIdItemCode"
+				],
+				"summary": "Exclui uma taxa desconto ou acrescimo de uma cotação de um item",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "deletetaxesInternalIdItemCode",
+				"parameters": [{
+						"$ref": "#/components/parameters/itemCode"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/taxesInternalId"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão da taxa de desconto ou acrescimo da compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotation/{internalId}/quotationItemType/{itemCode}": {
+			"get": {
+				"tags": [
+					"quotationItemType"
+				],
+				"summary": "Pesquisa a cotação de um determinado item",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getquotationItemType",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/itemCode"
+					}
+
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/quotationProposalType"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta da cotação de um determinado item",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"quotationItemType"
+				],
+				"summary": "Modifica os dados de um item da cotação de Compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "putquotationItemType",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/itemCode"
+					}
+				],
+				"requestBody": {
+					"description": "Item da cotação de Compra a ser alterado",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/quotationProposalType"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/quotationProposalType"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração do item da cotação de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"quotationItemType"
+				],
+				"summary": "Exclui os dados do item de uma cotação de Compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "deletequotationItemType",
+				"parameters": [{
+						"$ref": "#/components/parameters/itemCode"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão dos dados do item da cotação de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotation/{internalId}/quotationProposalType/{proposalInternalId}": {
+			"put": {
+				"tags": [
+					"quotationProposalTypeId"
+				],
+				"summary": "Modifica uma cotação de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "putquotationProposalTypeId",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					}
+				],
+				"requestBody": {
+					"description": "Cotação de uma ordem de compra a ser alterado",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração da cotação da ordem de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"quotationProposalTypeId"
+				],
+				"summary": "Exclui uma cotação de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "deletequotationProposalTypeId",
+				"parameters": [{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão da cotação de uma ordem de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotation/{internalId}/quotationProposalType/{proposalInternalId}/listOfTaxesDocument": {
+			"get": {
+				"tags": [
+					"listOfTaxesDocument"
+				],
+				"summary": "Pesquisa as taxas de desconto/acrescimos de uma cotação de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getlistOfTaxesDocument",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/taxesInternalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registro encontrado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/pagedTcListOfTaxes"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta do desconto acrescimo de uma cotação de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"listOfTaxesDocument"
+				],
+				"summary": "Inclui taxas desconto/acrescimos de uma cotação de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "postlistOfTaxesDocument",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/taxesInternalId"
+					}
+				],
+				"requestBody": {
+					"description": "Desconto/acrescimo a ser incluído",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "array",
+								"items": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro incluído com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcListOfTaxes"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a inclusão da taxas desconto/acrescimos de uma cotação de uma ordem de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotation/{internalId}/quotationProposalType/{proposalInternalId}/listOfTaxesDocument/{taxesInternalId}": {
+			"put": {
+				"tags": [
+					"taxesInternalId"
+				],
+				"summary": "Modifica uma taxa desconto ou acrescimo de uma cotação de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "puttaxesInternalId",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/taxesInternalId"
+					}
+				],
+				"requestBody": {
+					"description": "Taxa de desconto ou acrescimo a ser alterado",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcValuesAndTaxes"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/tcValuesAndTaxes"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração da taxa de desconto ou acrescimo da compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"taxesInternalId"
+				],
+				"summary": "Exclui uma taxa desconto ou acrescimo de uma cotação de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "deletetaxesInternalId",
+				"parameters": [{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/proposalInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/taxesInternalId"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão da taxa de desconto ou acrescimo da compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotation/{internalId}/deliverysSchedule": {
+			"get": {
+				"tags": [
+					"deliverysSchedule"
+				],
+				"summary": "Pesquisa as programações de entrega de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getdeliverysSchedule",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registro encontrado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/pagedDeliverysSchedule"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta de uma programação de entrega da compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"deliverysSchedule"
+				],
+				"summary": "Inclui a programação de entrega de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "postdeliverysSchedule",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					}
+				],
+				"requestBody": {
+					"description": "Programação de entrega a ser incluída",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "array",
+								"items": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/deliveriesType"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro incluído com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/deliveriesType"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a inclusão da programação de entrega da compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/quotation/{internalId}/deliverysSchedule/{deliveryRequestItem}": {
+			"get": {
+				"tags": [
+					"deliveryRequestItem"
+				],
+				"summary": "Pesquisa uma programação de entrega de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true,
+						"minimalVersion": "12.1.26"
+					}]
+				},
+				"operationId": "getdeliveryRequestItem",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/deliveryRequestItem"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/deliveriesType"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta da programação de entrega da ordem de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"deliveryRequestItem"
+				],
+				"summary": "Modifica uma programação de entrega de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true
+					}]
+				},
+				"operationId": "putdeliveryRequestItem",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/deliveryRequestItem"
+					}
+				],
+				"requestBody": {
+					"description": "Programação de entrega da ordem de compra a ser alterada",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/deliveriesType"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Quotation_1_002/jsonschema/schemas/Quotation_1_002.json#/definitions/deliveriesType"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração da programação de entrega da ordem de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"deliveryRequestItem"
+				],
+				"summary": "Exclui uma programação de entrega de uma ordem de compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": true
+					}]
+				},
+				"operationId": "deletedeliveryRequestItem",
+				"parameters": [{
+						"$ref": "#/components/parameters/internalId"
+					},
+					{
+						"$ref": "#/components/parameters/deliveryRequestItem"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso!"
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão da programação de entrega da ordem de compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"internalId": {
+				"name": "internalId",
+				"in": "path",
+				"description": "Identificador único",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [{
+					"product": "LOGIX",
+					"description": "Identificador único do registro separado por pipe",
+					"field": "ordem_sup.cod_empresa|ordem_sup.num_oc",
+					"length": "12",
+					"note": "01|01234"
+				}]
+			},
+			"itemCode": {
+				"name": "itemCode",
+				"in": "path",
+				"description": "Código do Item",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},				
+				"x-totvs": [
+					{
+						"product": "LOGIX",
+						"description": "Código do Item",
+						"field": "ordem_sup.cod_item",
+						"length": "15"
+					}
+				]
+			},
+
+			"proposalInternalId": {
+				"name": "proposalInternalId",
+				"in": "path",
+				"description": "Identificador único",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [{
+					"product": "LOGIX",
+					"description": "Identificador único do registro separado por pipe",
+					"field": "cotacao_preco.cod_empresa|cotacao_preco.cod_fornecedor|cotacao_preco.num_cotacao|cotacao_preco.cod_item",
+					"length": "70",
+					"note": "Codigo único da proposta do item"
+				}]
+			},
+			"deliveryRequestItem": {
+				"name": "deliveryRequestItem",
+				"in": "path",
+				"description": "Identificador único",
+				"required": true,
+				"schema": {
+					"type": "number"
+				},
+				"x-totvs": [{
+					"product": "LOGIX",
+					"description": "Identificador único",
+					"field": "prog_ordem_sup.num_prog_entrega",
+					"length": "3",
+					"note": "Numero da programacao de entrega da ordem de compra."
+				}]
+			},
+			"taxesInternalId": {
+				"name": "taxesInternalId",
+				"in": "path",
+				"description": "Identificador único",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [{
+					"product": "LOGIX",
+					"description": "Identificador de descontou ou acrescimo",
+					"field": "desc_acrescimos.ies_desc_acres_2",
+					"length": "1",
+					"note": "Indica se e desconto ou acrescimo.1-Encargo/Acrescimo 2-Desconto"
+				}]
+			}
+		}
+	}
+}
