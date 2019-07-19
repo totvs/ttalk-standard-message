@@ -1,0 +1,418 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SelectionProcessExplorer/v1/1_000/jsonschema/schemas/SelectionProcessExplorer_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para recuperar os processos seletivos (venda online de cursos)",
+		"version": "1.000",
+		"title": "SelectionProcessExplorer",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "SelectionProcessExplorer",
+				"description": "Processos Seletivos (venda online de cursos)",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Processos Seletivos (venda online de cursos)"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"Explorer": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},			
+				{
+					"type": "object",
+					"properties": {
+						"SelectionProcessList": {
+							"type": "array",
+							"items": { 
+								"$ref": "#/definitions/SelectionProcess"
+							}
+						},
+						"CategoryList": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Category"
+							}
+						}
+					}
+				}
+			]
+		},
+		"SelectionProcess": {
+			"type": "object",
+			"properties": {
+				"CompanyCode": {
+					"description": "Código da empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.CODCOLIGADA",
+							"required": false,
+							"type": "integer",
+							"length": 2,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da empresa",
+					"type": "string",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Código da empresa",
+							"field": "GCOLIGADA.CODCOLIGADA",
+							"type": "string",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"BranchCode": {
+					"description": "Código da filial",
+					"type": "string",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "Código da filial",
+							"field": "CODFILIAL",
+							"type": "integer",
+							"available": true,
+							"required": false
+						}
+					]
+				},
+				"BranchInternalId": {
+					"description": "InternalId da filial",
+					"type": "string",
+					"example": "1|1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "GFILIAL.CODCOLIGADA|GFILIAL.CODFILIAL",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"SelectionProcessCode": {
+					"type": "integer",
+					"example": "2",
+					"description": "Código do processo seletivo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.IDPS",
+							"required": false,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SelectionProcessDescription": {
+					"description": "Descrição do processo seletivo",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.NOME",
+							"required": false,
+							"type": "varchar",
+							"length": 60,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InscriptionStartDate": {
+					"description": "Data de início da inscrição",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.DTINIINSCRICAO",
+							"required": false,
+							"type": "datetime",
+							"length": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InscriptionEndDate": {
+					"description": "Data final da inscrição",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.DTFIMINSCRICAO",
+							"required": false,
+							"type": "datetime",
+							"length": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Category": { 
+					"$ref": "#/definitions/Category"
+				},
+				"AvailableCourses": {
+					"type": "object",
+					"allOf": [
+						{
+							"type": "array",
+							"properties": {
+								"CourseCode": {
+									"type": "string",
+									"example": "11",
+									"description": "Código do curso",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SPSAREAOFERTADA.IDAREAINTERESSE",
+											"required": false,
+											"Type": "integer",
+											"length": 4,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								},
+								"CourseDescription": {
+									"type": "string",
+									"example": "Sistema de Informação",
+									"description": "Nome do curso",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SPSAREAINTERESSE.NOME",
+											"required": false,
+											"type": "varchar",
+											"length": 120,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								},
+								"CourseSumary": {
+									"type": "string",
+									"description": "Resumo do curso (venda online de cursos)",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SPSAREAOFERTADA.RESUMO",
+											"required": false,
+											"type": "text",
+											"length": 16,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								},
+								"Url": {
+									"type": "string",
+									"description": "Url de inscrição da área ofertada",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "URL montada a partir de uma combinação de valores"
+										}
+									]
+								},
+								"CourseValue": {
+									"type": "string",
+									"example": "100,00",
+									"description": "Valor a ser pago pelo curso",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Campo calculado a partir do plano de pagamento disponível na venda online de cursos."
+										}
+									]
+								},
+								"VacanciesNumber": {
+									"type": "string",
+									"description": "Número de vagas",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SPSAREAOFERTADA.NUMEROVAGAS",
+											"required": false,
+											"type": "integer",
+											"length": 4,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				"Banners": { 
+					"type": "object",
+					"allOf": [
+						{
+							"type": "array",
+							"properties": {
+								"BannerCode": {
+									"type": "string",
+									"example": "11",
+									"description": "Código do Banner",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SBANNER.IDBANNER",
+											"required": false,
+											"Type": "integer",
+											"length": 4,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								},
+								"BannerDescription": {
+									"type": "string",
+									"description": "Título do banner",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SBANNER.TITULO",
+											"required": false,
+											"type": "varchar",
+											"length": 100,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								},
+								"StartDate": {
+									"description": "Data de início da vigência",
+									"type": "string",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SBANNER.DTINICIAL",
+											"required": false,
+											"type": "datetime",
+											"length": "",
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								},
+								"EndDate": {
+									"description": "Data final da vigência",
+									"type": "string",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SBANNER.DTFINAL",
+											"required": false,
+											"type": "datetime",
+											"length": "",
+											"available": true,
+											"canUpdate": false
+										}
+									]							
+								},
+								"Image": {
+									"type": "string",
+									"description": "Imagem do banner em base64",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SBANNER.IMAGEM",
+											"required": false,
+											"type": "image",
+											"length": 16,
+											"available": true,
+											"canUpdate": true
+										}
+									]
+								},
+								"Link": {
+									"type": "string",
+									"description": "Link do banner",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SBANNER.LINK",
+											"required": false,
+											"type": "varchar",
+											"length": 200,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"Category": {
+			"type": "object",
+			"properties": {
+				"CategoryCode": {
+					"type": "integer",
+					"example": "1",
+					"description": "Código da Categoria",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSPROCESSOSELETIVO.IDCATEGORIAPS",
+							"required": false,
+							"type": "integer",
+							"length": 4,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CategoryDescription": {
+					"type": "string",
+					"example": "Direito",
+					"description": "Nome da categoria",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SPSCATEGORIAPS.NOME",
+							"required": false,
+							"type": "varchar",
+							"length": 60,
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}		
+		}
+	}
+}
