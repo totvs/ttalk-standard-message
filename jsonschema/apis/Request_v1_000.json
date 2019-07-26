@@ -125,11 +125,8 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"type": "array",
-								"items": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/Request_1_011.json#/definitions/RequestInfo"
-								}
-							}
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/Request_1_011.json#/definitions/RequestInfo"
+							}								
 						}
 					}
 				},
@@ -139,10 +136,8 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/Request_1_011.json#/definitions/RequestInfo"
-									}
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/Request_1_011.json#/definitions/RequestInfo"
+									
 								}
 							}
 						}
@@ -314,7 +309,68 @@
 				}
 			}
 		},
-		"/request/{RequestInternalId}/RequestItem/{ItemCode}": {
+		"/request/{RequestInternalId}/RequestItem/": {
+			"get": {
+				"tags": [
+					"ListOfRequestItem"
+				],
+				"summary": "Pesquisa os dados de vários itens de uma Solicitação de Compra",
+				"x-totvs": {
+					"productInformation": [{
+						"product": "Logix",
+						"available": false
+					}]
+				},
+				"operationId": "getListOfRequestItem",
+				"parameters": [{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+					},
+					{
+						"$ref": "#/components/parameters/RequestInternalId"
+					}
+
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+								"type": "array",
+								"items": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/Request_1_011.json#/definitions/RequestItemInfo"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta dos dados do item da Solicitação de Compra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},		
+		"/request/{RequestInternalId}/RequestItem/{ItemInternalId}": {
 			"get": {
 				"tags": [
 					"RequestItem"
@@ -338,7 +394,7 @@
 						"$ref": "#/components/parameters/RequestInternalId"
 					},
 					{
-						"$ref": "#/components/parameters/ItemCode"
+						"$ref": "#/components/parameters/ItemInternalId"
 					}
 
 				],
@@ -397,7 +453,7 @@
 						"$ref": "#/components/parameters/RequestInternalId"
 					},
 					{
-						"$ref": "#/components/parameters/ItemCode"
+						"$ref": "#/components/parameters/ItemInternalId"
 					}
 				],
 				"requestBody": {
@@ -446,7 +502,7 @@
 				},
 				"operationId": "deleteRequestItem",
 				"parameters": [{
-						"$ref": "#/components/parameters/ItemCode"
+						"$ref": "#/components/parameters/ItemInternalId"
 					},
 					{
 						"$ref": "#/components/parameters/RequestInternalId"
@@ -852,7 +908,10 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/ApportionType_3_000.json#/definitions/ApportionInfo"
+								"type": "array",
+								"items": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/ApportionType_3_000.json#/definitions/ApportionInfo"
+								}
 							}
 						}
 					}
@@ -1207,10 +1266,10 @@
 					"type": "string"
 				}
 			},
-			"ItemCode": {
-				"name": "ItemCode",
+			"ItemInternalId": {
+				"name": "ItemInternalId",
 				"in": "path",
-				"description": "Código do Item",
+				"description": "Código Identificador Único do Item",
 				"required": true,
 				"schema": {
 					"type": "string"
