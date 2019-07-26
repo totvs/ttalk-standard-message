@@ -1,0 +1,271 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/ApportionType_3_000.json#",
+	"info": {
+		"description": "Estrutura de Rateio Contábil",
+		"version": "3.000", 
+		"title": "ApportionType",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ApportionType",
+				"description": "Estrutura de Rateio contábil\r\n\t\t\t\tDefine uma estrutura de rateio genérica. Solicitação ao Almoxarifado, Solicitação de Compras etc).\r\n\t\t\t\tEm mensagens tipo mestre/detalhe, o rateio pode estar tanto no cabeçalho (mestre) quanto no item (detalhe).\r\n\t\t\t\tCaso o rateio seja informado por item o rateio geral (mestre) deve ser desconsiderado. \r\n\t\t\t\tA seleção da forma de rateio (por valor nominal ou percentual) deve ser parametrizada no sistema de destino e de origem.\r\n\t\t\t\tNo caso da linha RM segue a seguinte regra de parametrização:\r\n\t\t\t\t- Somente nominal: Desconsidera o valor percentual e calcula a partir do valor nominal.\r\n\t\t\t\t- Somente percentual: Desconsidera o valor nominal e calcula a partir do valor percentual.",
+				"segment": "BACKOFFICE"
+			},
+			"productInformation": [
+				{
+					"product": "LOGIX",
+					"contact": "SUPPLY.ML.MAN.ENT_L@totvs.com.br",
+					"note": "Solicitação de Compra"
+				}				
+			],
+			"transactionDefinition": {
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedApportions": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Apportions"
+				}
+			]
+		},
+		"Apportions": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ApportionInfo"
+					}
+				}
+			}
+		},
+		"ApportionInfo": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"description": "Identificação única do rateio",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Identificação única do rateio",
+							"field": "dest_ordem_sup.cod_empresa|dest_ordem_sup.num_oc|dest_ordem_sup.num_conta_deb_desp|dest_ordem_sup.cod_secao_receb",
+							"required": true,
+							"type": "string",
+							"length": "45",
+							"available": true,
+							"canUpdate": false
+						}
+					]					
+				},
+				"DepartamentCode": {
+					"description": "Codigo do departamento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Código seção recebedora",
+							"field": "dest_ordem_sup.cod_secao_receb",
+							"required": false,
+							"type": "string",
+							"length": "10",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				
+				"CostCenterCode": {
+					"description": "Código do Centro de Custo",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Código do Centro de Custo",
+							"field": "dest_ordem_sup.num_conta_deb_desp[1,4]",
+							"required": false,
+							"type": "string",
+							"length": "4",
+							"available": true,
+							"canUpdate": false
+						}
+					]					
+				},				
+				"AccountantAcount": {
+					"description": "Conta contábil",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Conta contábil",
+							"field": "dest_ordem_sup.num_conta_deb_desp",
+							"required": true,
+							"type": "string",
+							"length": "23",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"BusinessAreaCode": {
+					"description": "Código área de negócio",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Código área de negócio",
+							"field": "dest_ordem_sup.cod_area_negocio",
+							"required": false,
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"BusinessLineCode": {
+					"description": "Código linha de negócio",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Código linha de negócio",
+							"field": "dest_ordem_sup.cod_lin_negocio",
+							"required": false,
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},	
+				"MarketSegmentCode": {
+					"description": "Código segmento de mercado",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Código linha de negócio",
+							"field": "dest_ordem_sup4.cod_seg_merc",
+							"required": false,
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"ClassUseCode": {
+					"description": "Código classe de uso",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Código linha de negócio",
+							"field": "dest_ordem_sup4.cod_cla_uso",
+							"required": false,
+							"type": "number",
+							"format": "double",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"Quantity": {
+					"description": "Quantidade referente à entidade que influi neste rateio",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Quantidade participação de compra",
+							"field": "dest_ordem_sup.qtd_particip_comp",
+							"required": true,
+							"type": "number",
+							"format": "double",
+							"length": "12,3",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Percentual": {
+					"description": "Percentual do valor referente à entidade que influi neste rateio",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Percentual participação de compra",
+							"field": "dest_ordem_sup.pct_particip_comp",
+							"required": true,
+							"type": "number",
+							"format": "double",
+							"length": "10,7",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Value": {
+					"description": "Valor nominal referente à entidade que influi neste rateio",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]
+				},				
+				"DocumentNumber": {
+					"description": "Número de documento relacionado a este rateio",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Número de documento relacionado a este rateio",
+							"field": "dest_ordem_sup.num_docum",
+							"required": false,
+							"type": "string",
+							"length": "10",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},				
+				"Observation": {
+					"description": "Observação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]
+				}
+			}
+		},	
+		"ReturnContent": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

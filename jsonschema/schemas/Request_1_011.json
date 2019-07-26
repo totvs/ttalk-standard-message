@@ -1,0 +1,1134 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/Request_1_011.json#",
+	"info": {
+		"description": "Solicitação ao Armazém/Solicitação de Compra",
+		"version": "1.011",
+		"title": "Request",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Request",
+				"description": "Solicitação ao Armazém/Solicitação de Compra",
+				"segment": "BACKOFFICE"
+			},
+			"productInformation": [
+				{
+					"product": "LOGIX",
+					"contact": "SUPPLY.ML.MAN.ENT_L@totvs.com.br",
+					"note": "Módulo de Compras Logix"
+				}				
+			],
+			"transactionDefinition": {
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedRequests": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Requests"
+				}
+			]
+		},
+		"Requests": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RequestInfo"
+					}
+				}
+			}
+		},
+		"PagedDeliverysSchedule": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/DeliverysSchedule"
+				}
+			]
+		},
+		"DeliverysSchedule": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/DeliveryScheduleInfo"
+					}
+				}
+			}
+		},
+		"PagedItemGrids": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ItemGrids"
+				}
+			]
+		},
+		"ItemGrids": {
+			"type": "object",
+			"properties": {
+				"type": "array",
+				"items": {
+					"$ref": "#/definitions/ItemGridInfo"
+				}
+			}
+		},
+		"PagedMaterialsOrder": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/MaterialOrders"
+				}
+			]
+		},
+		"MaterialOrders": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MaterialOrderInfo"
+					}
+				}
+			}
+		},		
+		"RequestInfo": {
+			"type": "object",
+			"properties": {
+				"_expandables": {
+					"type": "array",
+					"description": "Expandable property/field list",
+					"items": {
+						"type": "string"
+					}
+				},			
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cod_empresa",
+							"description": "Código da Empresa",
+							"required": true,
+							"type": "string",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da Empresa",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]
+				},
+				"RequestInternalId": {
+					"description": "InternalId da Solicitação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cod_empresa|ordem_sup.num_oc",
+							"description": "Identificador único do registro separado por pipe",
+							"required": true,
+							"type": "string",
+							"length": "12",
+							"available": true,
+							"canUpdate": false,
+							"note": "01|01234"
+						}
+					]					
+				},
+				"Code": {
+					"description": "Código da Solicitação",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"Origin": {
+					"description": "Identificação da origem da mensagem (ex:APS, Chão de Fábrica).",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]	
+				},
+				"Number": {
+					"description": "Numero da Solicitação",
+					"type": "string",
+					"maxLength": "35",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.num_oc",
+							"description": "Número da ordem de compra",
+							"required": false,
+							"type": "number",
+							"length": "9",
+							"available": true,
+							"canUpdate": false
+						}
+					]										
+				},
+				"Type": {
+					"description": "Tipo da Solicitação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.ies_situa_oc",
+							"description": "Situação da ordem de compra",
+							"required": true,
+							"type": "string",
+							"length": "1",
+							"available": true,
+							"canUpdate": true,
+							"note": "Valores aceitos: P - Planejada, A - Aberta, S - Suspensa, R - Realizada, C - Cancelada, T - Tomada de preço, D - Condicional"
+						}
+					]					
+				},
+				"RequestNumberUniqueID": {
+					"description": "Identificador único do registro para controle de transação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"UserRequesterInternalId": {
+					"description": "InternalId do usuário",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"RequesterUserCode": {
+					"description": "Código do Usuário Solicitante",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cod_progr",
+							"description": "Código do solicitante da ordem de compra",
+							"required": true,
+							"length": "3",
+							"available": true,
+							"canUpdate": true
+							
+						}
+					]					
+				},
+				"BuyerUserCode": {
+					"description": "Código do Usuário Comprador",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cod_comprador",
+							"description": "Código do Comprador da ordem de compra",
+							"required": true,
+							"length": "3",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"Series": {
+					"description": "Série da Solicitação, utilizada como agrupador e é propagada no pedido e nota fiscal",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]
+				},
+				"RegisterDateTime": {
+					"description": "Data de Emissão da solicitação",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.dat_emis",
+							"description": "Data da abertura da ordem de compra",
+							"required": true,
+							"format": "date-time",
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note":"01/01/2019 00:00:00"
+						}
+					]					
+				},
+				"DeliveryDateTime": {
+					"description": "Data de Entrega ou Previsão de entrega",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.dat_entrega_prev",
+							"description": "Data de Entrega ou Previsão de entrega",
+							"required": true,
+							"format": "date-time",
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note":"01/01/2019 00:00:00"
+						}
+					]					
+				},
+				"AbatementDateTime": {
+					"description": "Data de Dedução no contrato (muito utilizado em integração com TOP)",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"PaymentConditionInternalId": {
+					"description": "InternalId da PaymentConditionCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"PaymentConditionCode": {
+					"description": "Código da Condição de Pagamento",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cnd_pgto",
+							"description": "Código da condição de pagamento",
+							"required": false,
+							"length": "3",
+							"available": true,
+							"canUpdate": false
+						}
+					]					
+				},
+				"ProjectInternalId": {
+					"description": "InternalId do ProjectCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"ProjectCode": {
+					"description": "Código do projeto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"MainOrderInternalId": {
+					"description": "InternalId da ordem (OP ou OS) que originou a Solicitação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"MainOrderCode": {
+					"description": "Código da ordem (OP ou OS) que originou a Solicitação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"EquipmentInternalId": {
+					"description": "Código do Equipamento (Bem) associado à OS.",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}						
+					]
+				},
+				"EquipmentCode": {
+					"description": "Código do Equipamento (Bem) associado à OS.",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}						
+					]
+				},
+				"Observation": {
+					"description": "Observação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"ListOfRequestItem": {
+					"description": "Lista de Itens da Requisição",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RequestItemInfo",
+						"type": "object"
+					}
+				},
+				"ListOfApportionRequest": {
+					"description": "Rateio da Requisição",
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/ApportionType_3_000.json#/definitions/ApportionInfo",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"RequestItemInfo": {
+			"type": "object",
+			"properties": {
+				"_expandables": {
+					"type": "array",
+					"description": "Expandable property/field list",
+					"items": {
+						"type": "string"
+					}
+				},				
+				"InternalId": {
+					"description": "InternalId do item da solicitação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"Code": {
+					"description": "Código do item da solicitação",
+					"type": "integer",
+					"format": "int32",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"Text": {
+					"description": "Textos da ordem de compra",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "Ordem_sup_txt.tex_observ_oc",
+							"required": false,
+							"type": "char",
+							"length": "180",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Application": {
+					"description": "Aplicação da ordem de compra",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "Ordem_sup_txt.tex_observ_oc",
+							"note": "Considerar como filtro o registro na tabela Ordem_sup_txt.ies_tip_texto = O e Ordem_sup_txt.num_seq = 1", 
+							"required": false,
+							"type": "char",
+							"length": "60",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},		
+                "ExpenseControlGroup": {
+					"description": "Grupo Controle de Despesa",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.gru_ctr_desp",
+							"required": true,
+							"type": "number",
+							"length": "4",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},				
+                "InputTarget": {
+					"description": "Objetivo de entrada da ordem de compra",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "Grupo_ctr_desp.ies_obj_entrada",
+							"required": false,
+							"type": "char",
+							"length": "20",
+							"note": "Industrialização Comercialização Ativo imobilizado Material de consumo Outros Ativo CIAP Material de processo Serviço",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemInternalId": {
+					"description": "InternalId do ItemCOde",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"required": true,
+							"available": true
+						}
+					]					
+				},
+				"ItemCode": {
+					"description": "Código do Item",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cod_item",
+							"required": true,
+							"type": "char",
+							"length": "15",
+							"available": true,
+							"canUpdate": false
+						}
+					]					
+				},
+				"ItemReferenceCode": {
+					"description": "Código de Referência do Produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"StockControl": {
+					"description": "Identificador de controle de estoque",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.ies_item_estoq",
+							"note": "S ou N",
+							"required": true,
+							"type": "char",
+							"length": "1",
+							"available": true,
+							"canUpdate": false
+						}
+					]					
+				},				
+				"UnitPrice": {
+					"description": "Preço Unitário",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.pre_unit_oc",
+							"required": true,
+							"type": "number",
+							"format": "double",
+							"length": "17,6",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TotalPrice": {
+					"description": "Preço Total do Item",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]
+				},
+				"Quantity": {
+					"description": "Quantidade Solicitada",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.qtd_solic",
+							"required": true,
+							"type": "number",
+							"format": "double",
+							"length": "12,3",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"QuantityReached": {
+					"description": "Quantidade Atendida",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.qtd_recebida",
+							"required": true,
+							"type": "number",
+							"format": "double",
+							"length": "12,3",
+							"available": true,
+							"canUpdate": false
+						}						
+					]
+				},
+				"UnitOfMeasureInternalId": {
+					"description": "InternalId da UnitOfMeasureCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"UnitOfMeasureCode": {
+					"description": "Código da Unidade de Medida",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cod_unid_med",
+							"required": true,
+							"type": "string",
+							"length": "3",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"WarehouseInternalId": {
+					"description": "InternalId do WarehouseCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"WarehouseCode": {
+					"description": "Código do Local de Estoque(Armazem)",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"DeliveryDateTime": {
+					"description": "Data de Entrega ou Previsão de entrega do item",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"CostCenterInternalId": {
+					"description": "InternalId do CostCenterCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"CostCenterCode": {
+					"description": "Código do Centro de Custo",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"ReceiverSectionCode": {
+					"description": "Código seção recebedora",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "ordem_sup.cod_secao_receb",
+							"required": false,
+							"type": "string",
+							"length": "10",
+							"available": true,
+							"canUpdate": false
+						}
+					]					
+				},				
+				"AccountantAcountInternalId": {
+					"description": "InternalId do AccountantAcountCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"AccountantAcountCode": {
+					"description": "Código da Conta contábil",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"MainOrderInternalId": {
+					"description": "InternalId da ordem (OP ou OS) que originou a Solicitação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"MainOrderCode": {
+					"description": "Código da ordem (OP ou OS) que originou a Solicitação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"ProjectInternalId": {
+					"description": "InternalId do ProjectCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"ProjectCode": {
+					"description": "Código do projeto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"TaskInternalId": {
+					"description": "InternalId da TaskCode",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"TaskCode": {
+					"description": "Codigo da Tarefa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+						}
+					]					
+				},
+				"Observation": {
+					"description": "Observação",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "Ordem_sup_txt.tex_observ_oc",
+							"note": "Considerar como filtro o registro na tabela Ordem_sup_txt.ies_tip_texto = O e Ordem_sup_txt.num_seq = 2", 
+							"required": false,
+							"type": "char",
+							"length": "60",
+							"available": true,
+							"canUpdate": true
+						}
+					]					
+				},
+				"OTHER": {
+					"$ref": "#/definitions/tcother",
+					"type": "object",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"available": false
+
+						}
+					]					
+				},
+				"ListOfApportionRequestItem": {
+					"description": "Rateio dos Itens da Requisição",
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/request/apportion/jsonschema/schemas/ApportionType_3_000.json#/definitions/ApportionInfo",
+						"type": "object"
+					}
+				},
+				"ListOfItemGrids": {
+					"description": "Grade do item",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ItemGridInfo",
+						"type": "object"
+					}
+				},
+				"ListOfMaterialOrder": {
+					"description": "Lista de componentes do item beneficiado",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MaterialOrderInfo",
+						"type": "object"
+					}
+				},
+				"ListOfDeliverySchedule": {
+					"description": "Programações de entrega",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/DeliveryScheduleInfo",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"DeliveryScheduleInfo": {
+			"type": "object",
+			"properties": {
+				"DeliveryID": {
+					"description": "Número sequencial da programação",
+					"type": "integer",				
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "prog_ordem_sup.num_prog_entrega",
+							"required": true,
+							"type": "integer",
+							"length": "3",
+							"note": "Número sequencial da programação dentro da ordem de compra.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EstimatedDeliveryDate": {
+					"description": "Data prevista de entrega da sequencia de programação",
+					"type": "string",				
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"field": "prog_ordem_sup.dat_entrega_prev",
+							"required": true,
+							"type": "string",
+							"format": "date",
+							"length": "99/99/9999",
+							"note": "Data prevista de entrega da sequencia de programação.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"QuantityRequested": {
+					"description": "Quantidade de material solicitado e previsto de entrega para a sequencia",
+					"type": "number",				
+					"x-totvs": [						
+						{
+							"product": "LOGIX",
+							"field": "prog_ordem_sup.qtd_solic",
+							"required": true,
+							"length": "12",
+							"note": "Quantidade de material solicitado e previsto de entrega para a sequencia.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AmountReceived": {
+					"description": "Quantidade de material recebido para a sequencia",
+					"type": "number",		
+					"x-totvs": [						
+						{
+							"product": "LOGIX",
+							"field": "prog_ordem_sup.qtd_recebida",
+							"required": true,
+							"type": "number",
+							"length": "12",
+							"note": "Quantidade de material recebido para a sequencia.",
+							"available": true,
+							"canUpdate": false
+						}
+					]					
+				},
+				"Observation": {
+					"description": "Observações da programação de entrega",
+					"type": "string",				
+					"x-totvs": [						
+						{
+							"product": "LOGIX",
+							"field": "prog_ordem_sup.tex_observacao",
+							"required": false,
+							"type": "string",
+							"length": "50",
+							"note": "Observações da programação de entrega",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"tcother": {
+			"type": "object",
+			"properties": {
+				"ADDFIELDS": {
+					"$ref": "#/definitions/tcaddfields",
+					"type": "object"
+				}
+			}
+		},
+		"tcaddfields": {
+			"type": "array",
+			"maxItems": 20,
+			"items": {
+				"type": "object",
+				"properties": {
+					"ADDFIELD": {
+						"$ref": "#/definitions/tcAddField",
+						"type": "object"
+					}
+				}
+			}
+		},
+		"tcAddField": {
+			"type": "object",
+			"properties": {
+				"field": {
+					"$ref": "#/definitions/tsfield",
+					"type": "object"
+				},
+				"value": {
+					"$ref": "#/definitions/tsvalue",
+					"type": "object"
+				}
+			}
+		},
+		"tsfield": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 12
+		},
+		"tsvalue": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 60
+		},
+		"ItemGridInfo": {
+			"type": "object",
+			"properties": {
+				"GridCode": {
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Grade da ordem de compra",
+							"field": "sup_oc_grade.grade_1,sup_oc_grade.grade_2,sup_oc_grade.grade_3,sup_oc_grade.grade_4,sup_oc_grade.grade_5",
+							"note": "Grades da ordem de compra", 
+							"required": false,
+							"type": "char",
+							"length": "15",
+							"available": true,
+							"canUpdate": true
+						}
+					]						
+				},
+				"GridSequence": {
+					"type": "integer",
+					"format": "int32",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Sequencia da grade da ordem de compra",
+							"field": "sup_oc_grade.seq_tabulacao",
+							"required": false,
+							"length": "1",
+							"available": true,
+							"canUpdate": false
+						}
+					]						
+				},
+				"QuantityRequested": {
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Quantidade solicitada da grade da ordem de compra",
+							"field": "sup_oc_grade.qtd_solicitada",
+							"required": false,
+							"length": "15,3",
+							"available": true,
+							"canUpdate": true
+						}
+					]						
+				},
+				"AmountReceived": {
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Quantidade recebida da grade da ordem de compra",
+							"field": "sup_oc_grade.qtd_receb",
+							"required": false,
+							"length": "15,3",
+							"available": true,
+							"canUpdate": false
+						}
+					]						
+				}
+			}
+			
+		},
+		"MaterialOrderInfo": {
+			"type": "object",
+			"properties": {
+				"MaterialCode": {
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Código Item Componente",
+							"field": "estrut_ordem_sup.cod_item_comp",
+							"note": "Código Item Componente", 
+							"required": false,
+							"type": "char",
+							"length": "15",
+							"available": true,
+							"canUpdate": true
+						}
+					]						
+				},
+				"MaterialQuantity": {
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "LOGIX",
+							"description": "Quantidade Necessária",
+							"field": "estrut_ordem_sup.qtd_necessaria",
+							"required": false,
+							"length": "14,7",
+							"available": true,
+							"canUpdate": false
+						}
+					]						
+				}
+			}
+		},		
+		"ReturnContentType": {
+			"type": "string"
+		},
+		"ReturnContent": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}
