@@ -1,0 +1,271 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para entidade de beneficiários para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/rh/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8051"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para beneficiários, funcionários e seus dependentes que possuem benefícios, geridos na linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+    "version": "1.000",
+    "title": "Relação de Benficiários - Global",
+    "contact": {
+      "name": "T-Talk",
+      "url": "https://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Relação de Beneficiários - Global",
+        "description": "Consulta de Beneficiários na base da TOTVS",
+        "segment": "Recursos Humanos"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "",
+          "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
+          "adapter": ""
+        },
+        {
+          "product": "RM",
+          "contact": "wellington.vieira@totvs.com.br",
+          "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
+          "adapter": "RhuBeneficiariosData"
+        },
+        {
+          "product": "Datasul",
+          "contact": "patricia.theilacker@totvs.com.br",
+          "description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
+          "adapter": "prghur/fpp/apiBeneficiariesDataContent.p"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/BeneficiariesDataContent": {
+      "get": {
+        "tags": [
+          "BeneficiariesDataContent"
+        ],
+        "summary": "Retorna todos os registros de beneficiários",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros.",
+              "minimalVersion": "12.1.25"
+            }
+          ]
+        },
+        "description": "Retorna todos os registros de beneficiários.",
+        "operationId": "beneficiariesDataContent",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "#/components/parameters/product"
+          },
+          {
+            "$ref": "#/components/parameters/dateModified"
+          },
+          {
+            "$ref": "#/components/parameters/companyId"
+          },
+          {
+            "$ref": "#/components/parameters/branchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/BeneficiariesDataContent/V1/1_000/jsonschema/schemas/BeneficiariesDataContent_1_000.json#/definitions/PagedBeneficiariesDataContent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da listagem dos registros de Beneficiários.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum registro localizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "product": {
+        "name": "product",
+        "in": "query",
+        "description": "Nome do produto que está sendo integrado no momento.",
+        "example": "DIVICOM",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Não irá gravar dados nas tabelas de origem linha RM.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Não irá gravar dados nas tabelas de origem linha RM.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Não irá gravar dados nas tabelas de origem linha Datasul.",
+              "minimalVersion": "12.1.25"
+            }
+          ]
+        }
+      },
+      "dateModified": {
+        "name": "dateModified",
+        "in": "query",
+        "required": false,
+        "description": "Data da ultima atualização do registro.",
+        "example": "YYYY-MM-DDThh:mm:ss",
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Data de atualização da ultima requisição.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Data de atualização da ultima requisição.",
+              "minimalVersion": "12.1.25"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Data de atualização da ultima requisição.",
+              "minimalVersion": "12.1.25"
+            }
+          ]
+        }
+      },
+      "companyId": {
+        "name": "companyid",
+        "in": "query",
+        "required": true,
+        "description": "Código da Empresa",
+        "example": "1",
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": [
+          {
+            "product": "RM",
+            "field": "",
+            "required": false,
+            "note": "será recebido o cádigo da empresa. Código da Coligada",
+            "available": true,
+            "canUpdate": false
+          },
+          {
+            "product": "Protheus",
+            "field": "",
+            "required": true,
+            "note": "será recebido o código da empresa, relacionado para ",
+            "available": true,
+            "canUpdate": false
+          }
+        ]
+      },
+      "branchId": {
+        "name": "branchId",
+        "in": "query",
+        "required": false,
+        "description": "Código da Filial",
+        "example": "1",
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": [
+          {
+            "product": "RM",
+            "field": "",
+            "required": false,
+            "note": "Será conceito de Filial que no RM não é obrigatório",
+            "available": true,
+            "canUpdate": false
+          },
+          {
+            "product": "Protheus",
+            "field": "",
+            "required": true,
+            "note": "Será recebido o cádigo da variável",
+            "available": true,
+            "canUpdate": false
+          }
+        ]
+      }
+    },
+    "schemas": {}
+  }
+}
