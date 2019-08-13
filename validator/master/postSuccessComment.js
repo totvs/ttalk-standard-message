@@ -1,6 +1,6 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-var pretext = "A validação foi concluída! Sua documentação foi aprovada em todos os casos de teste!";
+var pretext = "A validação foi concluída! \\n\\nSua documentação foi aprovada em todos os casos de teste!";
 var aftertext = "\\n\\nPara visualizar o log com detalhes da validação que foi realizada, acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
 var validationDetails = "\\n\\nCaso queira entender melhor cada uma das validações e formas de correção, visite nossa documentação: http://tdn.totvs.com/pages/viewpage.action?pageId=465388996"
 
