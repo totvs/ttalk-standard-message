@@ -2,7 +2,9 @@ git config --global user.email "TOTVS.TECNOLOGIA.INTEGRACOES@totvs.com.br"
 git config --global user.name "TTalkIntegracoes"
 
 git checkout ${TRAVIS_BRANCH}
-git pull                   
+git pull                  
+
+echo ${TRAVIS_JOB_ID}
 
 node validator/master/renameOpenApiRef.js
 node validator/master/renameSchemaRef.js
