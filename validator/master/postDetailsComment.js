@@ -21,7 +21,7 @@ function getFromUrl(logFile){
 }
 
 var substr = getFromUrl(logFile);
-var pretext = "A validação foi concluída! Favor verificar os erros encontrados. Abaixo está evidenciado o resultado do teste:";
+var pretext = "A validação foi concluída!\\n\\nFavor verificar os erros encontrados. \\n\\nAbaixo está evidenciado o resultado do teste:";
 var aftertext = "\\n\\nPara visualizar o log com detalhes da validação que foi realizada, acesse: https://travis-ci.org/totvs/ttalk-standard-message/builds/"+process.env.TRAVIS_BUILD_ID+"";
 var validationDetails = "\\n\\nCaso queira entender melhor cada uma das validações e formas de correção, visite nossa documentação: http://tdn.totvs.com/pages/viewpage.action?pageId=465388996"
 
