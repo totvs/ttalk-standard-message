@@ -1,10 +1,7 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-console.log("********** travisid **********");
-console.log(process.env.TRAVIS_JOB_ID);
-console.log("********************");
-
-var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
+// var logFile = "https://api.travis-ci.org/v3/job/"+ process.env.TRAVIS_JOB_ID + "/log.txt";
+var logFile = "https://api.travis-ci.org/v3/job/571278253/log.txt";
 function getFromUrl(logFile){
   var docReady = false;
   while (docReady!=true){
