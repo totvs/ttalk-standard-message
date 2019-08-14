@@ -24,19 +24,19 @@ var checkXtotvs = function (theObject, prop, currentObjectName, parent) {
                 CheckIfXTotvsIsAvailableWhileParentHasRequired(xTotvsArr[i], currentObjectName, parent);
                 CheckIfAvailableCanUpdateRequiredAreBoolean(xTotvsArr[i], currentObjectName);
                 CheckIfXTotvsContainMandatoryProperties(xTotvsArr[i], currentObjectName);
-                CheckIfNoteWordsHaveMaximumOf50Characteres(xTotvsArr[i], currentObjectName);
+                CheckIfNoteWordsHaveMaximumAllowedCharacteres(xTotvsArr[i], currentObjectName);
             }
         }
     }
 };
 
-var CheckIfNoteWordsHaveMaximumOf50Characteres = function (xTotvs, currentObjectName) {
+var CheckIfNoteWordsHaveMaximumAllowedCharacteres = function (xTotvs, currentObjectName) {
     if (results.hasSmallLengthNoteWords != false) {
         var note = xTotvs.note;
         if (note) {
             var words = note.match(/\S+/g); //Split words
             for (var i in words) {
-                if (words[i].length < 50) {
+                if (words[i].length <= 50) {
                     results.hasSmallLengthNoteWords = true;
                 } else {
                     results.hasSmallLengthNoteWords = false;
