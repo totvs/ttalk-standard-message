@@ -17,34 +17,53 @@ var checkIfObjectIsValid = function (theObject, prop) {
 
 var checkXtotvs = function (theObject, prop, currentObjectName, parent) {
     if (currentObjectName != "info") { //Skip INFO x-totvs
-        var xTotvs = theObject[prop];
-        CheckIfXTotvsIsAvailableWhileParentHasRequired(xTotvs, currentObjectName, parent);
-        CheckIfXTotvsIsArray(xTotvs, currentObjectName);
-        CheckIfXTotvsContainRequiredProperties(xTotvs, currentObjectName);
+        var xTotvsArr = theObject[prop];
+        CheckIfXTotvsIsArray(xTotvsArr, currentObjectName);
+        for (var i in xTotvsArr) {
+            if (checkIsControlProperty(i)) { //makes it not to walk through .parent or theObject.isAParent
+                CheckIfXTotvsIsAvailableWhileParentHasRequired(xTotvsArr[i], currentObjectName, parent);
+                CheckIfAvailableCanUpdateRequiredAreBoolean(xTotvsArr[i], currentObjectName);
+                CheckIfXTotvsContainMandatoryProperties(xTotvsArr[i], currentObjectName);
+                CheckIfNoteWordsHaveMaximumAllowedCharacteres(xTotvsArr[i], currentObjectName);
+            }
+        }
+    }
+};
+
+var CheckIfNoteWordsHaveMaximumAllowedCharacteres = function (xTotvs, currentObjectName) {
+    if (results.hasSmallLengthNoteWords != false) {
+        var note = xTotvs.note;
+        if (note) {
+            var words = note.match(/\S+/g); //Split words
+            for (var i in words) {
+                if (words[i].length <= 50) {
+                    results.hasSmallLengthNoteWords = true;
+                } else {
+                    results.hasSmallLengthNoteWords = false;
+                    results.wrongXTotvsNotesWordSize = "Object with invalid x-totvs (notes): '" + currentObjectName + "'. Max-Lenght(per word): 50"; 
+                }
+            }
+        }
     }
 };
 
 var CheckIfXTotvsIsAvailableWhileParentHasRequired = function (xTotvs, currentObjectName, parent) {
     if (results.hasAcceptableAvailable != false) {
-        for (var i in xTotvs) {
-            if (checkIsControlProperty(i)) { //makes it not to walk through .parent or theObject.isAParent
-                if (xTotvs[i].hasOwnProperty('available')) {
-                    if (xTotvs[i].available) { //if is available
-                        results.hasAcceptableAvailable = true; //no problem
-                    } else { //if it's not available, we have to check if it is required in the parent
-                        if (parent) {
-                            if (parent.hasOwnProperty('required')) {
-                                for (j in parent.required) {
-                                    if (checkIsControlProperty(j)) { //makes it not to walk through .parent or theObject.isAParent
-                                        if (parent.required[j] == currentObjectName) { //if the object name is inside the required array
-                                            results.hasAcceptableAvailable = false; //we have a problem
-                                            results.inconsistentAvailable = "Object '" + currentObjectName + "' is 'available:false', but is required at the same time.\n" +
-                                                "Please, change available to true or remove the object from the required array.\n";
-                                            return;
-                                        } else {
-                                            results.hasAcceptableAvailable = true;
-                                        }
-                                    }
+        if (xTotvs.hasOwnProperty('available')) {
+            if (xTotvs.available) { //if is available
+                results.hasAcceptableAvailable = true; //no problem
+            } else { //if it's not available, we have to check if it is required in the parent
+                if (parent) {
+                    if (parent.hasOwnProperty('required')) {
+                        for (j in parent.required) {
+                            if (checkIsControlProperty(j)) { //makes it not to walk through .parent or theObject.isAParent
+                                if (parent.required[j] == currentObjectName) { //if the object name is inside the required array
+                                    results.hasAcceptableAvailable = false; //we have a problem
+                                    results.inconsistentAvailable = "Object '" + currentObjectName + "' is 'available:false', but is required at the same time.\n" +
+                                        "Please, change available to true or remove the object from the required array.\n";
+                                    return;
+                                } else {
+                                    results.hasAcceptableAvailable = true;
                                 }
                             }
                         }
@@ -54,6 +73,36 @@ var CheckIfXTotvsIsAvailableWhileParentHasRequired = function (xTotvs, currentOb
         }
     }
 }
+
+var CheckIfRequiredMeetRequirements = function (theObject, currentObjectName) {
+    if (theObject.isAParent && theObject.hasOwnProperty('required') && results.requiredIsAnArray != false) {
+        if (theObject.required instanceof Array) {
+            results.requiredIsAnArray = true;
+            for (j in theObject.required) {
+                if (checkIsControlProperty(j) && results.requiredIsArrayOfStrings != false) { //makes it not to walk through .parent or parent.isAParent
+                    if (typeof (theObject.required[j]) == "string") {
+                        results.requiredIsArrayOfStrings = true;
+                        if (results.hasRequiredProperty != false) {
+                            if (theObject.properties.hasOwnProperty(theObject.required[j])) {
+                                results.hasRequiredProperty = true;
+                            } else {
+                                results.hasRequiredProperty = false;
+                                results.hasRequiredPropertyErrMsg = "Schema has '" + theObject.required[j] + "' as a required type (at '" + currentObjectName + "'), but it does not exist as a property.";
+                            }
+                        }
+                    } else {
+                        results.requiredIsArrayOfStrings = false;
+                        results.requiredIsArrayOfStringsErrMsg = "The array element '" + theObject.required[j] + "', at '" + currentObjectName + "' required field, must be a string.";
+                    }
+                }
+            }
+        } else {
+            results.requiredIsAnArray = false;
+            results.requiredIsAnArrayErrMsg = "The 'required' property of '" + currentObjectName + "' must be an array of strings.";
+        }
+    }
+}
+
 
 var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
     if (results.useXTotvsAsArray != false) {
@@ -66,20 +115,45 @@ var CheckIfXTotvsIsArray = function (xTotvs, currentObjectName) {
     }
 }
 
-var CheckIfXTotvsContainRequiredProperties = function (xTotvs, currentObjectName) {
-    if (results.XTotvsContainProduct != false && results.XTotvsContainAvailable != false) {
-        for (var i in xTotvs) {
-            if (checkIsControlProperty(i)) { //makes it not to walk through .parent or theObject.isAParent
-                if (!xTotvs[i].hasOwnProperty("product")) {
-                    results.XTotvsContainProduct = false;
-                    results.wrongXTotvsProduct = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'product'. If the property is there, please check if it's correclty spelled"
-                }
-                if (!xTotvs[i].hasOwnProperty("available")) {
-                    results.XTotvsContainAvailable = false;
-                    results.wrongXTotvsAvailable = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'available'. If the property is there, please check if it's correclty spelled"
-                }
+var CheckIfAvailableCanUpdateRequiredAreBoolean = function (xTotvs, currentObjectName) {
+    if (results.availableIsBoolean != false) {
+        if (typeof xTotvs.available == "boolean") {
+            results.availableIsBoolean = true;
+        } else {
+            results.availableIsBoolean = false;
+            results.availableIsBooleanMsg = "At object '" + currentObjectName + "', the property 'available' must be a boolean type.";
+        }
+    }
+    if (results.canUpdateIsBoolean != false) {
+        if (xTotvs.hasOwnProperty("canUpdate")) {
+            if (typeof xTotvs.canUpdate == "boolean") {
+                results.canUpdateIsBoolean = true;
+            } else {
+                results.canUpdateIsBoolean = false;
+                results.canUpdateIsBooleanMsg = "At object '" + currentObjectName + "', the property 'canUpdate' must be a boolean type.";
             }
         }
+    }
+    if (results.requiredIsBoolean != false) {
+        if (xTotvs.hasOwnProperty("required")) {
+            if (typeof xTotvs.required == "boolean") {
+                results.requiredIsBoolean = true;
+            } else {
+                results.requiredIsBoolean = false;
+                results.requiredIsBooleanMsg = "At object '" + currentObjectName + "', the property 'required' must be a boolean type.";
+            }
+        }
+    }
+}
+
+var CheckIfXTotvsContainMandatoryProperties = function (xTotvs, currentObjectName) {
+    if (!xTotvs.hasOwnProperty("product")) {
+        results.XTotvsContainProduct = false;
+        results.wrongXTotvsProduct = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'product'. If the property is there, please check if it's correclty spelled"
+    }
+    if (!xTotvs.hasOwnProperty("available")) {
+        results.XTotvsContainAvailable = false;
+        results.wrongXTotvsAvailable = "Object with invalid x-totvs: '" + currentObjectName + "'. Missing property 'available'. If the property is there, please check if it's correclty spelled"
     }
 }
 
@@ -152,6 +226,7 @@ var getObjectRecursive = function (theObject, currentObjectName, parent) {
 
                 if (theObject.hasOwnProperty("type") && (theObject.hasOwnProperty("properties")) || (theObject.hasOwnProperty("allOf")) || (theObject.hasOwnProperty("anyOf") || (theObject.hasOwnProperty("oneOf")))) { //I'll have to check if it's also allof anyof etc
                     theObject.isAParent = true;
+                    CheckIfRequiredMeetRequirements(theObject, currentObjectName);
                 }
 
                 if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) { //if theObject[prop] has elements

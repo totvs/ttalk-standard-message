@@ -1,54 +1,58 @@
 var fs = require('fs');
 var path = require('path');
-var dirname = "./jsonschema/apis/";
+var dirnames = ["./jsonschema/apis/", "./jsonschema/apis/types/"];
 var commons = require("./commons.js");
 
-fs.readdir(dirname, function (err, filenames) {
-  if (err) {
-    console.log(err);
-  }
 
-  //TODO: Run Through components/parameters looking for schema/$ref
+dirnames.forEach(function (dirname) {
 
-  filenames.forEach(function (filename) {
-    if (filename.includes(".json") && !filename.includes("package")) {
-      let openAPIPath = path.join(dirname, filename);
-      var file = fs.readFileSync(openAPIPath, {
-        encoding: 'utf-8'
-      });
-      parsedOpenAPI = JSON.parse(file);
-      for (var pathkey in parsedOpenAPI.paths) {
-        var httpVerbsList = parsedOpenAPI.paths[pathkey]
-        for (var httpVerbkey in httpVerbsList) {
-          if (httpVerbkey == "parameters") {
-            runThroughGeneralParams(httpVerbsList[httpVerbkey]);
-          } else {
-            var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
-            runThroughHttpVerbParams(parameters);
-            var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
-            var request = httpVerbInfo.requestBody;
-            if (request) {
-              renameRequestResponseHref(request);
-            }
-            var responses = httpVerbInfo.responses;
-            if (responses) {
-              for (var responseKey in responses) {
-                var response = responses[responseKey];
-                if (response.content) {
-                  renameRequestResponseHref(response);
+  fs.readdir(dirname, function (err, filenames) {
+    if (err) {
+      console.log(err);
+    }
+
+    //TODO: Run Through components/parameters looking for schema/$ref
+
+    filenames.forEach(function (filename) {
+      if (filename.includes(".json") && !filename.includes("package")) {
+        let openAPIPath = path.join(dirname, filename);
+        var file = fs.readFileSync(openAPIPath, {
+          encoding: 'utf-8'
+        });
+        parsedOpenAPI = JSON.parse(file);
+        for (var pathkey in parsedOpenAPI.paths) {
+          var httpVerbsList = parsedOpenAPI.paths[pathkey]
+          for (var httpVerbkey in httpVerbsList) {
+            if (httpVerbkey == "parameters") {
+              runThroughGeneralParams(httpVerbsList[httpVerbkey]);
+            } else {
+              var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
+              runThroughHttpVerbParams(parameters);
+              var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
+              var request = httpVerbInfo.requestBody;
+              if (request) {
+                renameRequestResponseHref(request);
+              }
+              var responses = httpVerbInfo.responses;
+              if (responses) {
+                for (var responseKey in responses) {
+                  var response = responses[responseKey];
+                  if (response.content) {
+                    renameRequestResponseHref(response);
+                  }
                 }
               }
             }
           }
+          if (parsedOpenAPI.components) {
+            renameComponentParameters();
+          }
+          stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
+          fs.writeFileSync(dirname + filename, stringOpenAPI);
         }
-        if (parsedOpenAPI.components) {
-          renameComponentParameters();
-        }
-        stringOpenAPI = JSON.stringify(parsedOpenAPI, null, '\t');
-        fs.writeFileSync(dirname + filename, stringOpenAPI);
+
       }
-      
-    }
+    })
   })
 })
 

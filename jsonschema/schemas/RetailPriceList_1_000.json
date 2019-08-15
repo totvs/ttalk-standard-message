@@ -1,0 +1,458 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RetailPriceList_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "retailPriceList",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Tabela de Preços de Produtos do Varejo",
+				"description": "Estrutura das Tabelas de Preços cabeçalho e itens",
+				"segment": "Varejo"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "rafael.tenorio@totvs.com.br",
+					"description": "Tabela de Preços de Produtos do Varejo",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedPriceListHeader": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/PriceListHeaderInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"PriceListHeaderInfo": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"type": "Char",
+							"length": "2",
+							"description": "Pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+							"available": true
+						}
+					]
+				},
+				"companyInternalId": {
+					"type": "string",
+					"description": "Chave completa da Empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"note": "É composto por EMPRESA|FILIAL. (cEmpAnt|DA0_FILIAL)",
+							"available": true
+						}
+					]
+				},
+				"code": {
+					"type": "string",
+					"description": "Código da tabela de preço",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_CODTAB",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"available": true
+						}
+					]
+				},
+				"internalId": {
+					"type": "string",
+					"description": "Chave completa da Tabela de Preço",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"note": "Formado pelos campos DA1_FILIAL|DA1_CODTAB",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"companyId": {
+					"type": "string",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": true,
+							"type": "varchar",
+							"length": "4",
+							"note": "Pode ter tamanho variável até 4 com Gestão de Empresa ativado",
+							"available": true
+						}
+					]
+				},
+				"name": {
+					"type": "string",
+					"description": "Descrição da Tabela",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_DESCRI",
+							"note": "Descrição",
+							"length": "30",
+							"available": true
+						}
+					]
+				},
+				"initialDate": {
+					"type": "string",
+					"format": "date",
+					"example": "20180719",
+					"description": "Data Inicial da Vigência",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_DATDE",
+							"required": true,
+							"type": "varchar",
+							"length": 10,
+							"description": "Formato do conteúdo AAAAMMDD",
+							"available": true
+						}
+					]
+				},
+				"finalDate": {
+					"type": "string",
+					"format": "date",
+					"example": "20180719",
+					"description": "Data Final da Vigência",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_DATATE",
+							"description": "Formato conteúdo AAAAMMDD",
+							"required": true,
+							"type": "varchar",
+							"length": 10,
+							"available": true
+						}
+					]
+				},
+				"initiaHour": {
+					"type": "string",
+					"format": "date-time",
+					"description": "Hora Inicial Vigencia",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_HORADE",
+							"description": "Hora inicial de vigência da tabela de preço. No protheus o formato deverá ser HH:MM",
+							"required": true,
+							"type": "varchar",
+							"length": 5,
+							"available": true
+						}
+					]
+				},
+				"finalHour": {
+					"type": "string",
+					"format": "date-time",
+					"description": "Hora Final Vigencia",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_HORATE",
+							"description": "Hora final de vigência da tabela de preço. No protheus o formato deverá ser HH:MM",
+							"required": true,
+							"type": "varchar",
+							"length": 5,
+							"available": true
+						}
+					]
+				},
+				"activeTablePrice": {
+					"type": "string",
+					"description": "Tabela de Preco Ativa?",
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA0.DA0_ATIVO",
+							"decription": "Tabela Ativa",
+							"note": "Define a situação da tabela: 1=Sim, 2=Não",
+							"type": "varchar",
+							"length": "1",
+							"available": true
+						}
+					]
+				}
+			}
+		},
+		"PagedPriceListItem": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/PriceListItemInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"PriceListItemInfo": {
+			"type": "object",
+			"properties": {
+				"companyId": {
+					"type": "string",
+					"description": "Código da Empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": true,
+							"type": "varchar",
+							"length": "4",
+							"note": "Pode ter tamanho variável até 4 com Gestão de Empresa ativado",
+							"available": true
+						}
+					]
+				},
+				"branchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": true,
+							"type": "varchar",
+							"length": "2",
+							"description": "Pode ter tamanho variável até 8 com Gestão de Empresa ativado",
+							"available": true
+						}
+					]
+				},
+				"companyInternalId": {
+					"type": "string",
+					"description": "Chave completa da Empresa",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"note": "É composto por EMPRESA|FILIAL. (cEmpAnt|DA1_FILIAL)",
+							"available": true
+						}
+					]
+				},
+				"code": {
+					"type": "string",
+					"description": "Código da Tabela de Preço",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA1.DA1_CODTAB",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"available": true
+						}
+					]
+				},
+				"internalId": {
+					"type": "string",
+					"description": "Chave completa da Tabela de Preço",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"note": "Formado pelos campos DA1_FILIAL|DA1_CODTAB",
+							"required": true,
+							"available": true
+						}
+					]
+				},
+				"itemList": {
+					"type": "string",
+					"description": "Item da Tabela",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"type": "varchar",
+							"field": "DA1.DA1_ITEM",
+							"description": "Item da Tabela de Preço",
+							"length": "4",
+							"available": true
+						}
+					]
+				},
+				"itemCode": {
+					"type": "string",
+					"description": "Código do Produto",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"type": "varchar",
+							"field": "DA1.DA1_CODPRO",
+							"description": "",
+							"length": "15",
+							"available": true
+						}
+					]
+				},
+				"itemInternalId": {
+					"type": "string",
+					"description": "Chave completa do Item da Tabela de Preço",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O itemInternalId é formado pelos campos DA1_FILIAL|DA1_CODTAB|DA1_ITEM|DA1_CODPRO",
+							"available": true
+						}
+					]
+				},
+				"minimumSalesPrice": {
+					"type": "number",
+					"format": "double",
+					"description": "Preco mínimo de venda do produto - Valor Sem Frete",
+					"maxLength": 12,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA1.DA1_PRCVEN",
+							"length": "12",
+							"description": "Preco Venda",
+							"note": "Campo com duas casas decimais",
+							"available": true
+						}
+					]
+				},
+				"discountValue": {
+					"type": "number",
+					"format": "double",
+					"description": "Valor de Desconto",
+					"maxLength": 12,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA1.DA1_VLRDES",
+							"length": "9",
+							"description": "Vlr.Desconto",
+							"note": "Campo com duas casas decimais",
+							"available": true
+						}
+					]
+				},
+				"discountFactor": {
+					"type": "number",
+					"format": "double",
+					"description": "Percentual Acrescimo/Desconto",
+					"maxLength": 11,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA1.DA1_PERDES",
+							"length": "6",
+							"description": "Percentual Acrescimo/Desconto aplicado ao preço de venda",
+							"note": "Campo com quatro casas decimais",
+							"available": true
+						}
+					]
+				},
+				"itemValidity": {
+					"type": "string",
+					"format": "date",
+					"example": "20180719",
+					"description": "Data Vigência do item",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA1.DA1_DATVIG",
+							"discription": "Vigencia do item",
+							"type": "varchar",
+							"required": true,
+							"length": 1,
+							"note": "Formato do retorno AAAAMMDD",
+							"available": true
+						}
+					]
+				},
+				"typePrice": {
+					"type": "string",
+					"description": "Tipo do Preço",
+					"maxLength": 1,
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA1.DA1_TIPPRE",
+							"description": "Tipo do Preço",
+							"note": "Tipo do Preço onde, 1=Preco Venda, 2=Venda Consumidor, 3=Atacado, 4=Varejo, 5 = Promocao",
+							"available": true
+						}
+					]
+				},
+				"activeItemPrice": {
+					"type": "string",
+					"description": "Status do Item",
+					"maxLength": 1,
+					"enum": [
+						"1",
+						"2"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "DA1.DA1_ATIVO",
+							"discription": "Ativo",
+							"type": "varchar",
+							"required": false,
+							"length": 1,
+							"note": "Define se o item está ativo, 1=Sim, 2=Não",
+							"available": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
