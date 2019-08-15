@@ -72,14 +72,14 @@
 						}
 					]
 				},
-				"wareHouse": {
+				"warehouse": {
 					"description": "Armazém do estoque",
 					"type": "string",
 					"maxLength": 10,
 					"x-totvs": [
 						{
 							"product": "PROTHEUS",
-							"field": "T4V.T4V_ARMAZ",
+							"field": "T4V.T4V_LOCAL",
 							"type": "Char",
 							"length": "10",
 							"required": true,
@@ -198,6 +198,59 @@
 				}
 			}
 		},
+		"MRPStockBalanceBaseClear": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"description": "Código da filial",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4V.T4V_FILIAL",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"product": {
+					"description": "Código do Produto",
+					"type": "string",
+					"maxLength": 90,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4V.T4V_PROD",
+							"required": true,
+							"type": "Char",
+							"length": "90",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"warehouse": {
+					"description": "Armazém do estoque",
+					"type": "string",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "T4V.T4V_LOCAL",
+							"type": "Char",
+							"length": "10",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
 		"MessageBase": {
 			"type": "object",
 			"properties": {
@@ -209,6 +262,20 @@
 				},
 				"detailedMessage": {
 					"$ref": "#/definitions/MRPStockBalanceBase"
+				}
+			}
+		},
+		"MessageBaseClear": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				},
+				"detailedMessage": {
+					"$ref": "#/definitions/MRPStockBalanceBaseClear"
 				}
 			}
 		},
@@ -231,6 +298,25 @@
 				}
 			]
 		},
+		"ListOfMessagesClear": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"_messages": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/MessageBaseClear"
+							}
+						}
+					}
+				}
+			]
+		},
 		"ListOfMRPStockBalance": {
 			"type": "object",
 			"properties": {
@@ -238,6 +324,17 @@
 					"type": "array",
 					"items": {
 						"$ref": "#/definitions/MRPStockBalanceBase"
+					}
+				}
+			}
+		},
+		"ListOfMRPStockBalanceClear": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPStockBalanceBaseClear"
 					}
 				}
 			}
@@ -250,6 +347,17 @@
 				},
 				{
 					"$ref": "#/definitions/ListOfMessages"
+				}
+			]
+		},
+		"MRPStockBalanceMultipleClear": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/ListOfMRPStockBalanceClear"
+				},
+				{
+					"$ref": "#/definitions/ListOfMessagesClear"
 				}
 			]
 		},

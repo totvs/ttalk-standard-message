@@ -47,13 +47,16 @@ describe("Validating OpenAPI files...", function () {
                 if (err) {
                   derefResult = false;
                   derefErroDetail = err;
+                  done();
                 } else {
                   derefResult = newSchema;
                   pathValidator.clear();
                   pathValidatorResult = pathValidator.runThroughPaths(filename, parsedOpenAPI, derefResult);
+                  //// Compatibilidade com versões anteriores
                   let latestMinorVersionFileResult = apiLatestMinorVersionService.lookForApiLatestMinorVersion(filenames, filename, fs, path, dirname);
                   if (latestMinorVersionFileResult) {
-                    var callbackDereferenceLatestMinorVersionFile = async function() {
+                    //Derreferencia versão anterior e manda para o serviço que avalia essas diferenças
+                    var callbackDereferenceLatestMinorVersionFile = async function () {
                       apiCompatibilityServiceResult = await apiCompatibilityService.getApisDiff(derefResult, latestMinorVersionFileResult);
                       done();
                     }
@@ -62,6 +65,7 @@ describe("Validating OpenAPI files...", function () {
                     apiCompatibilityServiceResult = apiCompatibilityService.getNoVersionToCompareOkResponse();
                     done();
                   }
+                  ////
                 }
               }
               dereferenceService.dereference(derefResult, callbackDereferenceResult);
@@ -112,10 +116,12 @@ describe("Validating OpenAPI files...", function () {
                 expect(fileNameVersion).to.equal(infoVersion);
               });
               it("should be backward compatible with minor versions", function () {
-                expect(apiCompatibilityServiceResult.isBackwardCompatible, "\r\n" + apiCompatibilityServiceResult.consoleRender).to.be.true;
+                if (apiCompatibilityServiceResult)
+                  expect(apiCompatibilityServiceResult.isBackwardCompatible, "\r\n" + apiCompatibilityServiceResult.consoleRender).to.be.true;
               });
               it("should have anything different from the previous minor version, beside x-totvs", function () {
-                expect(apiCompatibilityServiceResult.hadChanges, apiCompatibilityServiceResult.consoleRender).to.be.true;
+                if (apiCompatibilityServiceResult)
+                  expect(apiCompatibilityServiceResult.hadChanges, apiCompatibilityServiceResult.consoleRender).to.be.true;
               });
             });
 
@@ -260,10 +266,12 @@ describe("Validating OpenAPI files...", function () {
                   }
                 });
                 it("all products declared inside 'info' should also exist inside paths' x-totvs", function () {
-                  expect(pathValidatorResult.pathProdHasInfoElement, pathValidatorResult.pathProdHasInfoElementMsg).not.to.be.false;
+                  if (pathValidatorResult)
+                    expect(pathValidatorResult.pathProdHasInfoElement, pathValidatorResult.pathProdHasInfoElementMsg).not.to.be.false;
                 });
                 it("all 'available' properties must be boolean", function () {
-                  expect(pathValidatorResult.hasAvailableAsBoolean, pathValidatorResult.hasAvailableAsBooleanMsg).not.to.be.false;
+                  if (pathValidatorResult)
+                    expect(pathValidatorResult.hasAvailableAsBoolean, pathValidatorResult.hasAvailableAsBooleanMsg).not.to.be.false;
                 });
               })
               describe(" - info: ", function () {
@@ -300,7 +308,8 @@ describe("Validating OpenAPI files...", function () {
                   }
                 });
                 it("all products declared inside 'paths' should also exist inside 'info's' x-totvs", function () {
-                  expect(pathValidatorResult.infoProdHasPathElement, pathValidatorResult.infoProdHasPathElementMsg).not.to.be.false;
+                  if (pathValidatorResult)
+                    expect(pathValidatorResult.infoProdHasPathElement, pathValidatorResult.infoProdHasPathElementMsg).not.to.be.false;
                 });
               });
             });
