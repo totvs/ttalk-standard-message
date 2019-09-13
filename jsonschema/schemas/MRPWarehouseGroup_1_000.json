@@ -1,0 +1,197 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPWarehouseGroup_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "MRPWarehouseGroup",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "MRPWarehouseGroup",
+				"description": "Grupo de Armazém do MRP",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/ListOfMRPWarehouseGroup",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"MRPWarehouseGroup": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"description": "Código da filial",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW6.HW6_FILIAL",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"warehousegroup": {
+					"description": "Grupo de armazém",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW6.HW6_GRPARM",
+							"required": true,
+							"type": "Char",
+							"length": "15",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"typeGroup": {
+					"description": "Tipo do grupo de armazém",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW6.HW6_TPGRP",
+							"required": true,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": false,
+							"note": "1=Armazém; 2=Filial"
+						}
+					]
+				},
+				"code": {
+					"description": "Id Grupo armazém",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW6.HW6_IDREG",
+							"required": true,
+							"format": "char",
+							"length": "200",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfMRPWarehouse": {
+					"type": "array",
+					"description": "Armazéns do grupo",
+					"items": {
+						"$ref": "#/definitions/MRPWarehouseList"
+					}
+				}
+			}
+		},
+		"MRPWarehouseList": {
+			"type": "object",
+			"properties": {
+				"warehouse": {
+					"description": "Armazém",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW6.HW6_LOCAL",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},	
+				"warehouseDefault": {
+					"description": "Armazém default",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW6.HW6_DEFAUL",
+							"required": true,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": false,
+							"note": "1=Sim; 2=Não"							
+						}
+					]
+				}												
+			}
+		},
+		"MessageBase": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				},
+				"detailedMessage": {
+					"$ref": "#/definitions/MRPWarehouseGroup"
+				}
+			}
+		},
+		"ListOfMessages": {
+			"type": "object",
+			"properties": {
+				"_messages": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MessageBase"
+					}
+				}
+			}
+		},
+		"ListOfMRPWarehouseGroup": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPWarehouseGroup"
+					}
+				}
+			}
+		},
+		"MRPWarehouseGroupMultiple": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/PagedMRPWarehouseGroup"
+				},
+				{
+					"$ref": "#/definitions/ListOfMessages"
+				}
+			]
+		},
+		"PagedMRPWarehouseGroup": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ListOfMRPWarehouseGroup"
+				}
+			]
+		}
+	}
+}
