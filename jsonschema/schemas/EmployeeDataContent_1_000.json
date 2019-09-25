@@ -1,0 +1,2476 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/employeedatacontent/v1/1_000/jsonschema/schemas/events/EmployeeDataContent_1_000.json#",
+	"info": {
+		"description": "Schema para entidade de funcionarios para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+		"version": "1.000",
+		"title": "Relação de Funcionários - Global",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "EmployeeDataContent",
+				"description": "Esta api tem por objetivos disponibilizar para o cliente interessado em integrar seus dados de funcionários com sistemas de terceiros, possibilitando criar integrações dos mais variádos tipos que necessitem dos dados de seus colaboradores.",
+				"segment": "Recursos Humanos"
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "rplyra@totvs.com.br",
+					"description": "",
+					"adapter": "GPA010API",
+					"helpUrl": "link aqui"
+				},
+				{
+					"product": "RM",
+					"contact": "wellington.vieira@totvs.com.br",
+					"description": "Consulta de Funcionários",
+					"adapter": "FopConsultaFuncionarioData",
+					"helpUrl": "link aqui",
+					"note": "Está api na linha RM não irá gravar dados do funcionário apenas consulta-los."
+				},
+				{
+					"product": "Datasul",
+					"contact": "patricia.theilacker@totvs.com.br",
+					"description": "Consulta de Funcionários (FP1500)",
+					"adapter": "prghur/fpp/apiEmployeeDataContent.p",
+					"helpUrl": "Esta api na linha Datasul não irá gravar dados do Funcionário apenas consultá-los."
+				}
+			]
+		}
+	},
+	"definitions": {
+		"pagedEmployeeDataContent": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"total": {
+							"type": "int32",
+							"format": "999.999",
+							"example": "1"
+						}
+					}
+				},
+				{
+					"type": "object",
+					"properties": {
+						"employees": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/EmployeeDataContentItem"
+							}
+						}
+					}
+				}
+			]
+		},
+		"EmployeeDataContentItem": {
+			"type": "object",
+			"description": "Descreve os dados globais do Funcionário e de seus dependentes",
+			"properties": {
+				"companyKey": {
+					"description": "Agrupamento de Empresa, Unidade de negócio e Filial",
+					"type": "string",
+					"exemple": "T1|0101|MG",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "não possui campo físico na tabela"
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "No RM o conceito de empresa refere-se ao cadastro de Coligada na tabela GCOLIGADA."
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_empresa | funcionario.cdn_estab",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "No Datasul HCM esta informação é a junção de Empresa + Estabelecimento da tabela Funcionário (FP1500)."
+						}
+					]
+				},
+				"branch": {
+					"description": "Filial do Funcionario",
+					"type": "string",
+					"exemple": "D MG 01",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_FILIAL",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus"
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Será a filial vinculada ao funcionário, Filial no RM não é obrigatória"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_empresa | funcionario.cdn_estab",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "No Datasul HCM esta informação é a junção de Empresa + Estabelecimento da tabela Funcionário (FP1500)."
+						}
+					]
+				},
+				"code": {
+					"description": "Matricula do Funcionario",
+					"type": "string",
+					"exemple": "000100",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_MAT",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CHAPA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_empresa | funcionario.cdn_estab | funcionario.cdn_funcionario",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código do Funcionário cadastrado no programa FP1500."
+						}
+					]
+				},
+				"id": {
+					"description": "id do funcionário",
+					"type": "string",
+					"exemple": "T1||D MG 01|000100",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SM0.M0_CODIGO + SRAXX0.RA_FILIAL + SRAXX0.RA_MAT",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "o id da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15"
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODCOLIGADA | PFUNC.CHAPA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_empresa | funcionario.cdn_estab | funcionario.cdn_funcionario",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Chave única que identifica o Funcionário no programa FP1500."
+						}
+					]
+				},
+				"name": {
+					"description": "Nome do Funcionario",
+					"type": "string",
+					"exemple": "HENRIQUE ROBERTO A. DOS SANTOS",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NOME",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.NOME",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "no campo PFUNC.NOME é sempre o nome completo"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.nom_abrev_pessoa_fisic",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Nome abrevidado do Funcionário informado no programa FP1500."
+						}
+					]
+				},
+				"fullName": {
+					"description": "Nome Completo do Funcionário",
+					"type": "string",
+					"exemple": "HENRIQUE ROBERTO ALBUQUERQUE DOS SANTOS",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NOMECMP",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.NOME",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "no campo PFUNC.NOME é sempre o nome completo"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.nom_pessoa_fisic",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Nome completo do Funcionário informado no programa FP1500."
+						}
+					]
+				},
+				"badgeNumber": {
+					"description": "Número do Crachá",
+					"type": "string",
+					"exemple": "0000001000",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_CRACHA",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O RM retorna vazio"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"none": "Não se aplica ao Datasul."
+						}
+					]
+				},
+				"departmentCode": {
+					"description": "Codigo do departamento",
+					"type": "string",
+					"exemple": "000000001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_DEPTO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "GDEPTO.CODDEPARTAMENTO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O departamento (GDEPTO) está vinculado a seção (PSECAO) do funcionario (PFUNC). "
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_plano_lotac | funcionario.cod_unid_lotac",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Plano + Unidade de Lotação informado para o Funcionário no FP1500."
+						}
+					]
+				},
+				"departmentInternalId": {
+					"description": "InternalId do Departamento",
+					"type": "string",
+					"exemple": "T1||D MG 01|000000001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SM0.M0_CODIGO+SQBXX0.QB_FILIAL+SQBXX0.QB_DEPTO ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "GDEPTO.CODCOLIGADA | GDEPTO.CODFILIAL | GDEPTO.CODDEPARTAMENTO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O departamento (GDEPTO) está vinculado a seção (PSECAO) do funcionario (PFUNC). "
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_plano_lotac",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Plano de Lotação informado para o Funcionário no FP1500."
+						}
+					]
+				},
+				"departmentDescription": {
+					"description": "Descrição do Departamento",
+					"type": "string",
+					"exemple": "DEPARTAMENTO FINANCEIRO",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SQBXX0.QB_DESCRIC ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "GDEPTO.NOME",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O departamento (GDEPTO) está vinculado a seção (PSECAO) do funcionario (PFUNC). "
+						},
+						{
+							"product": "Datasul",
+							"field": "plano_lotac.des_plano_lotac",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Descrição do Plano de Lotação informado no FP0800."
+						}
+					]
+				},
+				"hiringDate": {
+					"description": "Data de Admissão",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_ADMISSA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.DATAADMISSAO",
+							"required": false,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.dat_admis_func",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Data de Admissão do Funcionário informada no programa FP1500."
+						}
+					]
+				},
+				"demissionDate": {
+					"description": "Data de Demissão",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_DEMISSA",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.DATADEMISSAO",
+							"required": false,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.dat_desligto_func",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Data de Desligamento do Funcionário indicada no programa FP1500."
+						}
+					]
+				},
+				"birthDate": {
+					"description": "Data de aniversário",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NASC",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.DTNASCIMENTO",
+							"required": false,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": false,
+							"note": "O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.dat_nascimento",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Data de Nascimento do Funcionário informada no programa FP1500."
+						}
+					]
+				},
+				"gender": {
+					"description": "Sexo",
+					"type": "string",
+					"exemple": "M",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_SEXO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "M-Masculino e F-Feminino"
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.SEXO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA (M - Masculino, F - Feminino)"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.idi_sexo",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Gênero do Funcionário informado no programa FP1440."
+						}
+					]
+				},
+				"street": {
+					"description": "Rua do funcionário",
+					"type": "string",
+					"exemple": "Avenida Braz Leme",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_ENDEREC",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.RUA",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Rua onde Mora. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.nom_ender_rh",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Nome da Rua onde reside o Funcionário indicado no FP1440."
+						}
+					]
+				},
+				"streetNumber": {
+					"description": "Número do endereço",
+					"type": "string",
+					"exemple": "1020",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NUMENDE ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.NUMERO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Número da Rua onde Mora. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "v_num_endereco_candidato",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Número da rua onde mora o Funcionário, conforme indicado no FP1440 (substr(rh_pessoa_fisic.cod_livre_1,66,08))."
+						}
+					]
+				},
+				"complement": {
+					"description": "Complemento do endereço",
+					"type": "string",
+					"exemple": "ap 110",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_COMPLEM",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.COMPLEMENTO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Complemento do endereço onde Mora. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.nom_pto_refer",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Complemento/Referência do endereço do Funcionário informado no FP1440."
+						}
+					]
+				},
+				"neighborhood": {
+					"description": "Bairro do Funcionário",
+					"type": "string",
+					"exemple": "Santana",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_BAIRRO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.BAIRRO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Bairro onde mora. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.nom_bairro_rh",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Bairro onde mora o Funcionário informado no FP1440."
+						}
+					]
+				},
+				"homeState": {
+					"description": "Estado do Funcionário",
+					"type": "string",
+					"exemple": "SP",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_ESTADO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.ESTADO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "UF onde mora. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.cod_unid_federac_rh",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Estado onde mora o Funcionário informado no FP1440."
+						}
+					]
+				},
+				"naturalCity": {
+					"description": "Naturalidade",
+					"type": "string",
+					"exemple": "SP",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NATURAL",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.NATURALIDADE",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "A cidade natal do funcionário neste campo é descrito como 'Belo Horizonte'"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.nom_naturalidade ",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Cidade natal do funcionário indicada no FP1440."
+						}
+					]
+				},
+				"employeeSituation": {
+					"description": "Situação do Funcionário na Folha",
+					"type": "string",
+					"exemple": "F",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_SITFOLH",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Situação do Funcionário na Folha, branco funcionario ativo, F-Ferias, A-Afastado "
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODSITUACAO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Situação Atual do funcionário no momento da consulta, não irá analisar histórico. Tipo de Situações: A-Ativo; C-Cont Trab Suspenso; D-Demitido; E-Licença Mater.; F-Férias; G-Recesso Remunerado de Estagio; I-Apos. Invalidez;K-Cessão / Requisição; L-Licença s/venc; M-Serv.Militar ; N-Mandato Sindical Ônus do Empregador; O-Doença Ocupacional; P-Af.Previdência; R-Licença Remun.; S-Mandato Sindical Ônus do Sindicato; T-Af.Ac.Trabalho; U-Outros; V-Aviso Prévio; W-Licença Mater. Compl. 180 dias; X-C/Dem.no mês; Y-Licença Paternidade; Z-Admissão prox.mês"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao Datasul."
+						}
+					]
+				},
+				"workCenterCode": {
+					"description": "Centro de Trabalho",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao "
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"city": {
+					"description": "Cidade do Funcionário",
+					"type": "string",
+					"exemple": "São Paulo",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_MUNICIP",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.CIDADE",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Cidade onde mora. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.nom_cidad_rh",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Cidade do funcionário indicada no FP1440."
+						}
+					]
+				},
+				"zipCode": {
+					"description": "Número do Cep",
+					"type": "string",
+					"exemple": "02535000",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_CEP",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.CEP",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "CEP onde mora. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.cod_cep_rh",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "CEP do funcionário indicado no FP1440."
+						}
+					]
+				},
+				"areaCode": {
+					"description": "Código de Área(DDD)",
+					"type": "string",
+					"exemple": "011",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_DDDFONE",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Vazio. O DDD e numero está junto e não há campo especifico para fixo e celular. A mascara no parâmetro 'Máscara para Telefone' em 'Folha de pagamento / Configurações / Parametrizador / RH - Máscara de Quebras'"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.num_ddd_contat",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "DDD do funcionário indicado no FP1440."
+						}
+					]
+				},
+				"telephone": {
+					"description": "Telefone",
+					"type": "string",
+					"exemple": "20997000",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_TELEFON",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.TELEFONE1",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "exemplo 3121229534 o ddd: 31 tel: 21229534. Se fixo ou celular é de acordo com a convenção do cliente. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.num_telef_contat",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Telefone do funcionário indicado no FP1440."
+						}
+					]
+				},
+				"areaCodeMobile": {
+					"description": "Código de Área(DDD)",
+					"type": "string",
+					"exemple": "011",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_DDDCELU",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Vazio. O DDD e numero está junto e não há campo especifico para fixo e celular. A mascara no parâmetro 'Máscara para Telefone' em 'Folha de pagamento / Configurações / Parametrizador / RH - Máscara de Quebras'"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.num_ddd",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "DDD do celular do funcionário indicado no FP1440."
+						}
+					]
+				},
+				"mobileNumber": {
+					"description": "Número do Telefone Celular",
+					"type": "string",
+					"exemple": "20997000",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NUMCELU",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.TELEFONE2",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "exemplo 3121229534 o ddd: 31 tel: 21229534. Se fixo ou celular é de acordo com a convenção do cliente. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.num_telefone",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Telefone do celular do funcionário indicado no FP1440."
+						}
+					]
+				},
+				"socialIntegProgCode": {
+					"description": "Numero do PIS do Funcionário",
+					"type": "string",
+					"exemple": "95375527156",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_PIS",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.PISPASEP",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cod_pis",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Número do PIS do funcionário, informado no FP1500."
+						}
+					]
+				},
+				"workCardNumber": {
+					"description": "Carteira de Trabalho do Funcionário",
+					"type": "string",
+					"exemple": "33000",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_NUMCP",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.CARTEIRATRAB",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cod_cart_trab",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Número da carteira de trabalho do funcionário, informado no FP1500."
+						}
+					]
+				},
+				"workCardSerie": {
+					"description": "Serie da Carteira de Trabalho Profissional",
+					"type": "string",
+					"exemple": "011",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_SERCP",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.SERIECARTTRAB",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este campo pode ter até 5 caracteres de livre digitação do usuário. O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cod_ser_cart_trab",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Série da carteira de trabalho do funcionário, informado no FP1500."
+						}
+					]
+				},
+				"workCardStateIssuing": {
+					"description": "Unidade da federação emitente da carteira de trabalho",
+					"type": "string",
+					"exemple": "SP",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_SERCP",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.UFCARTTRAB",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cod_unid_federac_cart_trab",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Unidade de Federação (Estado) referente a carteira de trabalho do funcionário, informado no FP1500."
+						}
+					]
+				},
+				"costCenterCode": {
+					"description": "Código do Centro de Custo",
+					"type": "string",
+					"exemple": "GPE000001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_CC",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PSECAO.NROCENCUSTOCONT",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O centro de custo (PCCUSTO) onde orifinalmente foi lotado funcionário (PFUNC). Centro de custo da seção (PSECAO) e não de seu rateio."
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cod_rh_ccusto",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Centro de Custo do funcionário, informado no FP1500."
+						}
+					]
+				},
+				"costCenterInternalId": {
+					"description": "InternalId do Centro de Custo",
+					"type": "string",
+					"exemple": "T1||D MG 01|GPE000001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SM0.M0_CODIGO+SM0.M0_UN+CTTXX0.CTT_FILIAL+CTTXX0.CTT_CUSTO ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PSECAO.CODCOLIGADA | PSECAO.NROCENCUSTOCONT",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O centro de custo (PCCUSTO) onde orifinalmente foi lotado funcionário (PFUNC). Centro de custo da seção (PSECAO) e não de seu rateio."
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cod_empresa | funcionario.cod_rh_ccusto",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Chave da tabela de Centro de Custo do RH (rh_ccusto)."
+						}
+					]
+				},
+				"costCenterDescription": {
+					"description": "Descrição do Centro de Custo",
+					"type": "string",
+					"exemple": "Departamento Pessoal",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " CTTXX0.CTT_DESC01",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PCCUSTO.NOME",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O centro de custo (PCCUSTO) onde orifinalmente foi lotado funcionário (PFUNC). Centro de custo da seção (PSECAO) e não de seu rateio."
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_ccusto.des_rh_ccusto",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Descrição do Centro de Custo, conforme indicado no cadastro de Centro de Custo do RH (FP0660)."
+						}
+					]
+				},
+				"employeePositionCode": {
+					"description": "Código do Cargo do Funcionário",
+					"type": "string",
+					"exemple": "00001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_CARGO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PCARGO.CODIGO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Um funcionário (PFUNC) possui uma função (PFUNCAO) e esta função está vinculada a um cargo (PCARGO)"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_cargo_basic",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Cargo do funcionário, informado no FP1500."
+						}
+					]
+				},
+				"employeePositionCodeInternalId": {
+					"description": "InternalId do Cargo do Funcionário",
+					"type": "string",
+					"exemple": "T1||D MG 01|00001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SM0.M0_CODIGO+SQ3XX0.Q3_FILIAL+SQ3XX0.Q3_CARGO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PCARGO.CODCOLIGADA | PCARGO.CODIGO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Um funcionário (PFUNC) possui uma função (PFUNCAO) e esta função está vinculada a um cargo (PCARGO)"
+						},
+						{
+							"product": "Datasul",
+							"field": "cargo.cdn_cargo_basic | cargo.niv_cargo",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Chave da tabela de Cargos do Datasul HCM (cargo)."
+						}
+					]
+				},
+				"employeePositionDescription": {
+					"description": "Descrição do Cargo do Funcionário",
+					"type": "string",
+					"exemple": "COORDENADOR DE SISTEMAS",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SQ3XX0.Q3_DESCSUM",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PCARGO.NOME",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Um funcionário (PFUNC) possui uma função (PFUNCAO) e esta função está vinculada a um cargo (PCARGO)"
+						},
+						{
+							"product": "Datasul",
+							"field": "cargo.des_cargo",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Descrição do Cargo do funcionário, conforme cadastrado no programa FP0720."
+						}
+					]
+				},
+				"salaryCategory": {
+					"description": "Categoria Salarial. Rever estas categorias quando  for utilizar com o RM. Produto Datasul também possui outras categorias (Semana, Quinzenal e Diarista)",
+					"type": "string",
+					"exemple": "M",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_CATFUNC",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODRECEBIMENTO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Tipo do rececimento do funcionário: D-Diarista; H-Horista; M-Mensalista; O-Outros; P-Horista (Professor); Q-Quinzenalista; S-Semanalista; T-Tarefeiro"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_tab_sal",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Tabela salarial atribuída ao funcionário no programa FP1500."
+						}
+					]
+				},
+				"workShiftCode": {
+					"description": "Turno de Trabalho",
+					"type": "string",
+					"exemple": "001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_TNOTRAB",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODHORARIO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código do Horário de trabalho vinculado ao funcionário"
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_turno_trab",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Turno de trabalho relacionado ao funcionário no FP1500."
+						}
+					]
+				},
+				"workShiftInternalId": {
+					"description": "InternalId do Turno de Trabalho",
+					"type": "string",
+					"exemple": "T1||D MG|001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SM0.M0_CODIGO+SR6XX0.R6_FILIAL+SR6XX0.R6_TURNO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODCOLIGADA | PFUNC.CODHORARIO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código do Horário de trabalho vinculado ao funcionário"
+						},
+						{
+							"product": "Datasul",
+							"field": "turno_trab.cdn_turno_trab",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Chave da tabela de Turno de Trabalho (turno_trab), conforme informado no FP1400."
+						}
+					]
+				},
+				"workshiftDescription": {
+					"description": "Descrição do Turno de Trabalho",
+					"type": "string",
+					"exemple": "TURNO UNICO",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SR6XX0.R6_DESC",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "AHORARIO.DESCRICAO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O funcionario (PFUNC) possui um quadro de horário na (AHORARIO)"
+						},
+						{
+							"product": "Datasul",
+							"field": "turno_trab.des_turno_trab",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Descrição do Turno de Trabalho, conforme informado no FP1400."
+						}
+					]
+				},
+				"workShiftSequence": {
+					"description": "Sequência de Turno do funcionário",
+					"type": "string",
+					"exemple": "01",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_SEQTURN",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.INDINICIOHOR",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Dentro do quadro de horário a sequencia indica quando iniciará"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica a linha Datasul"
+						}
+					]
+				},
+				"initialShiftSequenceDate": {
+					"description": "Data Inicial da Sequencia do Turno",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"roleCode": {
+					"description": "Código da Função do Funcionário",
+					"type": "string",
+					"exemple": "00001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_CODFUNC",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODFUNCAO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.cdn_cargo_basic",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Cargo do Funcionário no FP1500."
+						}
+					]
+				},
+				"roleInternalId": {
+					"description": "InternalId do Código da Função do Funcionário",
+					"type": "string",
+					"exemple": "T1||D MG|00001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SM0.M0_CODIGO+SRJXX0.RJ_FILIAL+SRJXX0.RJ_FUNCAO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODCOLIGADA | PFUNC.CODFUNCAO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao Datasul."
+						}
+					]
+				},
+				"roleDescription": {
+					"description": "Descrição da Função do Funcionário",
+					"type": "string",
+					"exemple": "00001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRJXX0.RJ_DESC",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNCAO.NOME",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O funcionário (PFUNC) possui uma função (PFUNCAO)"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao Datasul."
+						}
+					]
+				},
+				"roleLevel": {
+					"description": "Código Nivel Função",
+					"type": "integer",
+					"format": "int64",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"businessUnit": {
+					"description": "Unidade de Negócio",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"clockInCard": {
+					"description": "Número do cartão ponto do funcionário",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"laborType": {
+					"description": "Tipo de Mão de obra",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"unionCode": {
+					"description": "Código do Sindicato",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"workGroupCode": {
+					"description": "Turma  de Trabalho",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"employeeClassCode": {
+					"description": "Código da classe de funcionários para ponto eletrônico",
+					"type": "integer",
+					"format": "int64",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"locality": {
+					"description": "Localidade",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"allocationPlanCode": {
+					"description": "Código do Plano Lotacional",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"countryLocalityCode": {
+					"description": "Pais Localidade",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"workShiftChangeDate": {
+					"description": "Deverá ser enviado qdo ocorrer alteraçao de lotaçao de turno",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"timeTableCode": {
+					"description": "Código da jornada",
+					"type": "integer",
+					"format": "int64",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"carrierCode": {
+					"description": "Codigo do Transportador Rural",
+					"type": "integer",
+					"format": "int64",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": " ",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ruralGroupCode": {
+					"description": "Codigo Turma Rural",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_FILIAL",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Codigo Turma Rural"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"contractEnd": {
+					"description": "Data de término do contrato trabalho/experiência",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_DTFIMCT",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.FIMPRAZOCONTR",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "funcionario.dat_term_contrat_trab",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Data do Término do Contrato de Trabalho do Funcionário no FP1500."
+						}
+					]
+				},
+				"employeeType": {
+					"description": "Tipo de Funcionário",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"privateCitizen": {
+					"description": "Número da Pessoa Física",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"registrationDigit": {
+					"description": "Dígito Verificador do Funcionário",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"transferenceAdmissionDate": {
+					"description": "Data de Transferência",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"dateOfSalaryChange": {
+					"description": "Data de alteração salarial",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm:ss+|-hh:mm",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"email": {
+					"description": "Email do funcionário",
+					"type": "string",
+					"exemple": "xxx@totvs.com.br",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_EMAIL",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PPESSOA.EMAIL",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O funcionário (PFUNC) está vinculado a uma pessoa (PPESSOA) pelo campo PFUNC.CODPESSOA"
+						},
+						{
+							"product": "Datasul",
+							"field": "rh_pessoa_fisic.nom_e_mail",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "E-mail do Funcionário no FP1440."
+						}
+					]
+				},
+				"monthlyWorkingHours": {
+					"description": "Jornada de trabalho mensal (número de horas)",
+					"type": "integer",
+					"format": "int64",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"wageTableInternalId": {
+					"description": "Tabela de Faixa do Funcionario",
+					"type": "string",
+					"exemple": "",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"typeOfSalaryChange": {
+					"description": "Tipo da Alteração Salarial",
+					"type": "string",
+					"exemple": "001",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SRAXX0.RA_TIPOALT",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "obrigatorio quando há alteração salarial"
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTSAL.MOTIVO",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Funcionario (PFUNC) quando tem alteração salarial (PFHSTSAL) tem vinculado um motivo (PMOTMUDSAL) em uma data de mudança PFHSTSAL.DTMUDANCA "
+						},
+						{
+							"product": "Datasul",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não será enviado pelo Datasul."
+						}
+					]
+				}
+			}
+		}
+	}
+}
