@@ -1,0 +1,346 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para manipulação do Roteiro Produtivo do MRP",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/pcp/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8040"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade de Roteiro Produtivo do MRP",
+		"version": "1.000",
+		"title": "Roteiro Produtivo do MRP",
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "MRPRouting",
+				"description": "Roteiro Produtivo do MRP",
+				"segment": "Manufatura"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "robson.klug@totvs.com.br",
+					"description": "Cadastro de Roteiro Produtivo do MRP",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"paths": {
+		"/mrprouting": {
+			"post": {
+				"tags": [
+					"mrprouting"
+				],
+				"summary": "Inclui ou atualiza um ou mais roteiro do MRP",
+				"description": "",
+				"operationId": "postmrprouting",
+				"responses": {
+					"201": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#/definitions/PagedMRPRouting"
+								}
+							}
+						}
+					},
+					"207": {
+						"description": "Operação realizada parcialmente com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#/definitions/MRPRoutingMultiple"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "Servidor não conseguiu processar a requisição",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.27"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#/definitions/ListOfMRPRouting"
+							}
+						}
+					},
+					"description": "Objeto do roteiro do MRP que deve ser adicionado ou atualizado",
+					"required": true
+				}
+			},
+			"get": {
+				"tags": [
+					"mrprouting"
+				],
+				"summary": "Lista de roteiros do MRP",
+				"description": "Retorna lista de roteiros do MRP",
+				"operationId": "getmrprouting",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"name": "branchId",
+						"in": "query",
+						"description": "Código da filial",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "product",
+						"in": "query",
+						"description": "Código do produto",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "routing",
+						"in": "query",
+						"description": "Código do roteiro",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#/definitions/PagedMRPRouting"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Roteiro do MRP não localizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.27"
+						}
+					]
+				}
+			},
+			"delete": {
+				"tags": [
+					"mrprouting"
+				],
+				"summary": "Remove um ou mais roteiro do MRP",
+				"description": "Remove um ou mais roteiro do MRP",
+				"operationId": "deletemrprouting",
+				"responses": {
+					"204": {
+						"description": "Operação realizada com sucesso"
+					},
+					"207": {
+						"description": "Operação realizada parcialmente com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#/definitions/MRPRouting"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da exclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Roteiro do MRP não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#/definitions/ListOfMRPRouting"
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.27"
+						}
+					]
+				}
+			}
+		},
+		"/mrprouting/{branchId}/{product}/{routing}": {
+			"get": {
+				"tags": [
+					"mrprouting"
+				],
+				"summary": "Retorna um roteiro do MRP",
+				"description": "Retorna um roteiro do MRP",
+				"operationId": "getrouting",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/branchId"
+					},
+					{
+						"$ref": "#/components/parameters/product"
+					},
+					{
+						"$ref": "#/components/parameters/routing"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#/definitions/MRPRouting"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Roteiro do MRP não localizada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.27"
+						}
+					]
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"branchId": {
+				"name": "branchId",
+				"in": "path",
+				"description": "Codigo da filial do roteiro do MRP",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "char(2)"
+				}
+			},
+			"product": {
+				"name": "product",
+				"in": "path",
+				"description": "Codigo do produto relacionado ao roteiro do MRP",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "char(90)"
+				}
+			},
+			"routing": {
+				"name": "routing",
+				"in": "path",
+				"description": "Codigo do roteiro do MRP",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "char(90)"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
