@@ -14,10 +14,18 @@
 			"transactionDefinition": {
 				"subType": "event",
 				"businessContentType": {
-					"$ref": "#/definitions/JobExecution",
+					"$ref": "#/definitions/JobExecutionType",
 					"type": "object"
 				}
-			}
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "RM_FW@totvs.com.br",
+					"description": "Gerenciamento de agendamento de tarefas",
+					"helpUrl": "http://tdn.totvs.com/pages/viewpage.action?pageId=427049339"
+				}
+			]
 		}
 	},
 	"definitions": {
@@ -33,7 +41,7 @@
 						"items": {
 							"type": "array",
 							"items": {
-								"$ref": "#/definitions/JobExecution"
+								"$ref": "#/definitions/JobExecutionType"
 							}
 						}
 					}
@@ -52,14 +60,14 @@
 						"items": {
 							"type": "array",
 							"items": {
-								"$ref": "#/definitions/JobScheduleGET"
+								"$ref": "#/definitions/JobSchedulerType"
 							}
 						}
 					}
 				}
 			]
 		},
-		"JobScheduleGET": {
+		"JobSchedulerType": {
 			"type": "object",
 			"properties": {
 				"jobScheduleID": {
@@ -67,6 +75,16 @@
 					"type": "string",
 					"maxLength": 30,
 					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "gjobx.idjob",
+							"required": true,
+							"type": "integer",
+							"length": "4",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
 						{
 							"product": "Datasul",
 							"field": "AGENDA_RPW.COD_UNICO_IDENTIF",
@@ -95,6 +113,16 @@
 					],
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobxexecucao.status",
+							"required": true,
+							"type": "integer",
+							"length": "2",
+							"note": "Se o job for recorrente: 0,1=active; 2,4,5,6,7=completed; 3,8=inactive. Senão: 0,1=active; 2,3,4,5,6,7,8=inactive.",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "AGENDA_RPW.LOG_SIT_RPW",
 							"type": "logical",
@@ -117,6 +145,16 @@
 					"type": "string",
 					"format": "date",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.recmodifiedon",
+							"required": false,
+							"type": "datetime",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
 						{
 							"product": "Datasul",
 							"field": "AGENDA_RPW.DAT_LIVRE_1",
@@ -141,6 +179,16 @@
 					"maxLength": 100,
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobx.classeprocesso",
+							"required": true,
+							"type": "varchar",
+							"length": "128",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "AGENDA_RPW.COD_PROG_DTSUL",
 							"type": "string",
@@ -163,6 +211,16 @@
 					"type": "string",
 					"format": "dateTime",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.dataprogramada",
+							"required": true,
+							"type": "datetime",
+							"length": "8",
+							"note": "Data prevista para início da primeira execução do processo",
+							"available": true,
+							"canUpdate": false
+						},
 						{
 							"product": "Datasul",
 							"field": "PED_EXEC.DAT_EXEC_PED_EXEC",
@@ -187,6 +245,16 @@
 					"maxLength": 100,
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobx.reccreatedby",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
 							"product": "Datasul",
 							"field": "AGENDA_RPW.COD_USUAR_ULT_ATUALIZ",
 							"type": "string",
@@ -208,6 +276,16 @@
 					"description": "indica se a execução do job deve ocorrer mais de uma vez",
 					"type": "boolean",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.tiporecorrencia",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "1,2,3=true;0=false",
+							"available": true,
+							"canUpdate": true
+						},
 						{
 							"product": "Datasul",
 							"field": "PED_EXEC.LOG_RECOR",
@@ -231,6 +309,16 @@
 					"description": "Parâmetros para execução do processo",
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobx.valorparametros",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "PED_EXEC.DES_PARAM_EXEC",
 							"type": "string",
@@ -249,7 +337,7 @@
 					]
 				},
 				"daily": {
-					"$ref": "#/definitions/Daily",
+					"$ref": "#/definitions/DailyType",
 					"x-totvs": [
 						{
 							"product": "Datasul",
@@ -261,7 +349,7 @@
 					]
 				},
 				"weekly": {
-					"$ref": "#/definitions/Weekly",
+					"$ref": "#/definitions/WeeklyType",
 					"x-totvs": [
 						{
 							"product": "Datasul",
@@ -273,7 +361,7 @@
 					]
 				},
 				"monthly": {
-					"$ref": "#/definitions/Monthly",
+					"$ref": "#/definitions/MonthlyType",
 					"x-totvs": [
 						{
 							"product": "Datasul",
@@ -286,7 +374,7 @@
 				}
 			}
 		},
-		"Single": {
+		"DailyType": {
 			"type": "object",
 			"properties": {
 				"year": {
@@ -338,46 +426,16 @@
 							"uniqueness": "none",
 							"available": true,
 							"canUpdate": false
-						}
-					]
-				},
-				"minute": {
-					"format": "int32",
-					"type": "integer",
-					"x-totvs": [
-						{
-							"product": "Protheus",
-							"required": false,
-							"uniqueness": "none",
-							"available": true,
-							"canUpdate": false
-						}
-					]
-				}
-			}
-		},
-		"Daily": {
-			"type": "object",
-			"properties": {
-				"hour": {
-					"format": "int32",
-					"type": "integer",
-					"x-totvs": [
-						{
-							"product": "Datasul",
-							"field": "HORAR_RPW.HRA_EXEC",
-							"type": "string",
-							"required": true,
-							"uniqueness": "none",
-							"available": true,
-							"canUpdate": true
 						},
 						{
-							"product": "Protheus",
+							"product": "rm",
+							"field": "gjobx.horarecorrencia",
 							"required": false,
-							"uniqueness": "none",
+							"type": "integer",
+							"length": "2",
+							"note": "",
 							"available": true,
-							"canUpdate": false
+							"canUpdate": true
 						}
 					]
 				},
@@ -386,11 +444,12 @@
 					"type": "integer",
 					"x-totvs": [
 						{
-							"product": "Datasul",
-							"field": "HORAR_RPW.HRA_EXEC",
-							"type": "string",
-							"required": true,
-							"uniqueness": "none",
+							"product": "rm",
+							"field": "gjobx.minutorecorrencia",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "",
 							"available": true,
 							"canUpdate": true
 						},
@@ -405,7 +464,7 @@
 				}
 			}
 		},
-		"Weekly": {
+		"WeeklyType": {
 			"type": "object",
 			"properties": {
 				"daysOfWeek": {
@@ -424,6 +483,16 @@
 					},
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobx.diasdasemana",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "Somatório dos dias: domingo=1; segunda=2; terça=4; quarta=8; quinta=16; sexta=32 ;sábado=64",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "HORAR_RPW.NUM_DIA_EXEC",
 							"type": "integer",
@@ -446,6 +515,16 @@
 					"type": "integer",
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobx.horarecorrencia",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "HORAR_RPW.HRA_EXEC",
 							"type": "string",
@@ -467,6 +546,16 @@
 					"format": "int32",
 					"type": "integer",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.minutorecorrencia",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
 						{
 							"product": "Datasul",
 							"field": "HORAR_RPW.HRA_EXEC",
@@ -487,13 +576,23 @@
 				}
 			}
 		},
-		"Monthly": {
+		"MonthlyType": {
 			"type": "object",
 			"properties": {
 				"day": {
 					"format": "int32",
 					"type": "integer",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.diadomes",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
 						{
 							"product": "Datasul",
 							"field": "HORAR_RPW.NUM_DIA_EXEC",
@@ -517,6 +616,16 @@
 					"type": "integer",
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobx.horarecorrencia",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "HORAR_RPW.HRA_EXEC",
 							"type": "string",
@@ -538,6 +647,16 @@
 					"format": "int32",
 					"type": "integer",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.minutorecorrencia",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
 						{
 							"product": "Datasul",
 							"field": "HORAR_RPW.HRA_EXEC",
@@ -642,7 +761,7 @@
 							"product": "Datasul",
 							"field": "PED_EXEC.DES_PARAM_EXEC",
 							"type": "string",
-							"note": "Modelo da chamada dinâmica do link http://tdn.totvs.com/pages/viewpage.action?pageId=337360189",
+							"note": "Modelo da chamada dinâmica do link https://bit.ly/31K1cfn",
 							"required": true,
 							"uniqueness": "none",
 							"available": true,
@@ -658,7 +777,7 @@
 					]
 				},
 				"daily": {
-					"$ref": "#/definitions/Daily",
+					"$ref": "#/definitions/DailyType",
 					"x-totvs": [
 						{
 							"product": "Datasul",
@@ -670,7 +789,7 @@
 					]
 				},
 				"weekly": {
-					"$ref": "#/definitions/Weekly",
+					"$ref": "#/definitions/WeeklyType",
 					"x-totvs": [
 						{
 							"product": "Datasul",
@@ -682,7 +801,7 @@
 					]
 				},
 				"monthly": {
-					"$ref": "#/definitions/Monthly",
+					"$ref": "#/definitions/MonthlyType",
 					"x-totvs": [
 						{
 							"product": "Datasul",
@@ -705,7 +824,7 @@
 								"items": {
 									"type": "array",
 									"items": {
-										"$ref": "#/definitions/JobExecution"
+										"$ref": "#/definitions/JobExecutionType"
 									}
 								}
 							}
@@ -714,7 +833,7 @@
 				}
 			}
 		},
-		"JobExecution": {
+		"JobExecutionType": {
 			"type": "object",
 			"properties": {
 				"executionID": {
@@ -722,6 +841,16 @@
 					"type": "string",
 					"maxLength": 30,
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.idexecucao",
+							"required": true,
+							"type": "integer",
+							"length": "4",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
 						{
 							"product": "Datasul",
 							"field": "PED_EXEC.NUM_PED_EXEC",
@@ -745,6 +874,16 @@
 					"type": "string",
 					"maxLength": 30,
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.idjob",
+							"required": true,
+							"type": "integer",
+							"length": "4",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
 						{
 							"product": "Datasul",
 							"field": "PED_EXEC.COD_UNICO_IDENTIF_AGENDA",
@@ -775,6 +914,16 @@
 					],
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobxexecucao.status",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "0,8=pending;1=running;2,6=success;3,4,5,7=failure",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "PED_EXEC.IND_SIT_PED_EXEC",
 							"type": "string",
@@ -797,6 +946,16 @@
 					"type": "string",
 					"format": "date",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.reccreatedon",
+							"required": false,
+							"type": "datetime",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
 						{
 							"product": "Datasul",
 							"field": "PED_EXEC.DAT_CRIAC_PED_EXEC",
@@ -821,6 +980,16 @@
 					"format": "date",
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobxexecucao.datainiexec",
+							"required": false,
+							"type": "datetime",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"field": "PED_EXEC.DAT_INIC_EXEC_SERVID_EXEC",
 							"type": "date",
@@ -844,6 +1013,16 @@
 					"maxLength": 100,
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobx.reccreatedby",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
 							"product": "Datasul",
 							"field": "PED_EXEC.COD_USUARIO",
 							"type": "string",
@@ -866,6 +1045,16 @@
 					"description": "Resultado da execução do processo",
 					"x-totvs": [
 						{
+							"product": "rm",
+							"field": "gjobxexecucao.mensagemstatus",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
 							"product": "Datasul",
 							"required": false,
 							"uniqueness": "none",
@@ -878,6 +1067,16 @@
 					"type": "string",
 					"description": "Mensagem de erro na execução do processo",
 					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.mensagemstatus",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
 						{
 							"product": "Datasul",
 							"field": "PED_EXEC.DES_TEXT_ERRO",
