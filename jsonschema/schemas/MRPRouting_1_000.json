@@ -1,0 +1,195 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/MRPRouting_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "MRPRouting",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "MRPRouting",
+				"description": "Roteiro produtivo do MRP",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/ListOfMRPRouting",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"MRPRouting": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"description": "Código da filial",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW8.HW8_FILIAL",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"product": {
+					"description": "Produto",
+					"type": "string",
+					"maxLength": 90,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW8.HW8_PROD",
+							"required": true,
+							"type": "Char",
+							"length": "90",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"routing": {
+					"description": "Roteiro",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW8.HW8_ROTEIR",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"code": {
+					"description": "Id Roteiro",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW8.HW8_IDREG",
+							"required": true,
+							"format": "char",
+							"length": "200",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfMRPRouting": {
+					"type": "array",
+					"description": "Operações do roteiro",
+					"items": {
+						"$ref": "#/definitions/MRPOperationList"
+					}
+				}
+			}
+		},
+		"MRPOperationList": {
+			"type": "object",
+			"properties": {
+				"operation": {
+					"description": "Operação",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW8.HW8_OPERAC",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"workcenter": {
+					"description": "Centro de trabalho",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HW8.HW8_CTRAB",
+							"required": true,
+							"type": "Char",
+							"length": "6",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"MessageBase": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				},
+				"detailedMessage": {
+					"$ref": "#/definitions/MRPRouting"
+				}
+			}
+		},
+		"ListOfMessages": {
+			"type": "object",
+			"properties": {
+				"_messages": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MessageBase"
+					}
+				}
+			}
+		},
+		"ListOfMRPRouting": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPRouting"
+					}
+				}
+			}
+		},
+		"MRPRoutingMultiple": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/PagedMRPRouting"
+				},
+				{
+					"$ref": "#/definitions/ListOfMessages"
+				}
+			]
+		},
+		"PagedMRPRouting": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ListOfMRPRouting"
+				}
+			]
+		}
+	}
+}

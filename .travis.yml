@@ -12,10 +12,12 @@ script:
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then ./travis-refreshApiReferenceSearchIndex.sh;
     fi
+  - node validator/master/postSuccessComment.js
+after_failure:
+  - node validator/master/postDetailsComment.js
 after_script:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then ./travis-renameRef.sh;
-    fi
-  # - node validator/master/postDetailsComment.js
+    fi  
 env:
   global:
     - SEARCHINDEXHOST=https://api.totvs.com.br
