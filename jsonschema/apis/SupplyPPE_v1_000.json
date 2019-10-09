@@ -71,9 +71,6 @@
 					},
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-					},
-					{
-						"$ref": "#/components/parameters/SupplyPPEId"
 					}
 				],
 				"responses": {
@@ -88,52 +85,46 @@
 						}
 					}
 				}
-			},
-			"post": {
+			}			
+		},
+		"/supplyppe/{id}": {
+			"get": {
 				"tags": [
-					"Users"
+					"SupplyPPE"
 				],
-				"summary": "Inclui usuário passado na requisição",
-				"description": "Inclui usuário passado na requisição",
-				"operationId": "postUser",
+				"summary": "Retorna o fornecimento do sistema",
+				"description": "Retorna o fornecimento do sistema",
+				"operationId": "getUserId",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
+							"product": "RM",
+							"available": true,							
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/SupplyPPEId"
 					}
 				],
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
-							}
-						}
-					},
-					"description": "Usuário para ser incluido"
-				},
 				"responses": {
 					"200": {
 						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/PostUser"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
 								}
 							}
 						}
 					},
-					"400": {
-						"description": "erro no momento da Inclusão",
+					"404": {
+						"description": "Fornecimento de EPI não localizado na base",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -145,56 +136,46 @@
 				}
 			}
 		},
-		"/supplyppe/{id}": {
-			"get": {
+		"/supplyppe/ppeborrow": {
+			"post": {
 				"tags": [
-					"Users"
+					"BorrowPPE"
 				],
-				"summary": "Retorna o usuário do sistema indicado",
-				"description": "Retorna o usuário do sistema indicado",
-				"operationId": "getUserId",
+				"summary": "Fornece o EPI passado por parâmetro",
+				"description": "Fornece o EPI passado por parâmetro",
+				"operationId": "postBorrowPPE",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
-						},
-						{
-							"product": "Datasul",
-							"available": true,
-							"minimalVersion": "12.1.24"
-						},
-						{
 							"product": "RM",
-							"available": true,
-							"note": "Este verbo esta disponível com todos os parâmetros",
-							"minimalVersion": "12.1.23"
+							"available": true,							
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
-				"parameters": [
-					{
-						"$ref": "#/components/parameters/UserId"
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+							}
+						}
 					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					}
-				],
+					"description": "EPI a ser emprestado"
+				},
 				"responses": {
 					"200": {
 						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/UserInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
 								}
 							}
 						}
 					},
-					"404": {
-						"description": "Usuário não localizado na base",
+					"400": {
+						"description": "Erro no momento do empréstimo do EPI.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -204,52 +185,42 @@
 						}
 					}
 				}
-			},
-			"put": {
+			}
+		},
+		"/supplyppe/ppereturn/{id}": {
+			"post": {
 				"tags": [
-					"Users"
+					"ReturnPPE"
 				],
-				"summary": "Altera o usuário passado na requisição",
-				"description": "Altera o usuário passado na requisição",
-				"operationId": "postUserId",
+				"summary": "Devolve o EPI passado por parâmetro",
+				"description": "Devolve o EPI passado por parâmetro",
+				"operationId": "postReturnPPE",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros",
-							"minimalVersion": "12.1.21"
-						},
-						{
-							"product": "Datasul",
-							"available": true,
-							"minimalVersion": "12.1.24"
-						},
-						{
 							"product": "RM",
-							"available": true,
-							"note": "Este verbo esta disponível com todos os parâmetros",
-							"minimalVersion": "12.1.23"
+							"available": true,							
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/UserId"
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
 					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+						"$ref" : "#/components/parameters/SupplyPPEId"
 					}
 				],
 				"requestBody": {
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/UserInfo"
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
 							}
 						}
 					},
-					"description": "Usuário para ser incluído"
+					"description": "Deve ser informada a data de devolução do EPI, caso o mesmo não tenha sido devolvido na data em que é feita a requisição."
 				},
 				"responses": {
 					"200": {
@@ -257,23 +228,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/UserInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "erro no momento da Inclusão",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Usuário não localizado na base",
+						"description": "Erro no momento da devolução do EPI.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -283,55 +244,63 @@
 						}
 					}
 				}
-			},
-			"delete": {
+			}
+		},
+		"/supplyppe/ppedisposal/{id}": {
+			"post": {
 				"tags": [
-					"Users"
+					"DisposePPE"
 				],
-				"summary": "Exclusão de usuário da base",
-				"description": "Exclusão de usuário da base",
-				"operationId": "DeleteUserId",
+				"summary": "Descarta o EPI passado por parâmetro",
+				"description": "Descarta o EPI passado por parâmetro",
+				"operationId": "postDisposePPE",
 				"x-totvs": {
 					"productInformation": [
 						{
-							"product": "Protheus",
-							"available": true
-						},
-						{
-							"product": "Datasul",
-							"available": true,
-							"note": "Usuário será inativado (exclusão lógica)",
-							"minimalVersion": "12.1.24"
-						},
-						{
 							"product": "RM",
-							"available": true,
-							"note": "Este verbo esta disponível com todos os parâmetros",
-							"minimalVersion": "12.1.23"
+							"available": true,							
+							"minimalVersion": "12.1.24"
 						}
 					]
 				},
 				"parameters": [
 					{
-						"$ref": "#/components/parameters/UserId"
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
 					},
 					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+						"$ref" : "#/components/parameters/SupplyPPEId"
 					}
 				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+							}
+						}
+					},
+					"description": "Deve ser informada a data de descarte do EPI, caso o mesmo não tenha sido descartado na data em que é feita a requisição."
+				},
 				"responses": {
 					"200": {
 						"description": "Operação realizada com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/User_1_000.json#/definitions/UserInfo"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
 								}
 							}
 						}
 					},
-					"405": {
-						"description": "Não disponivel"
+					"400": {
+						"description": "Erro no momento do descarte do EPI.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
 					}
 				}
 			}
