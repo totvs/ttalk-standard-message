@@ -20,7 +20,7 @@
         "title": "Patient",
         "contact": {
             "name": "T-Talk",
-            "url": "api.totvs.com.br",
+            "url": "https://api.totvs.com.br",
             "email": "comiteintegracao@totvs.com.br"
         },
         "x-totvs": {
@@ -34,8 +34,7 @@
                     "product": "RM",
                     "contact": "TOTVS.SAUDE.SQUAD.GHASSIST@totvs.com.br",
                     "description": "Informações de Pacientes",
-                    "adapter": "",
-                    "helpUrl": ""
+                    "adapter": ""
                 }
             ]
         }
@@ -61,13 +60,7 @@
                 },
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "key",
-                        "description": "Código",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "$ref": "#/components/parameters/key"
                     }
                 ],
                 "responses": {
@@ -91,31 +84,101 @@
                             }
                         }
                     }
-                },
-                "post": {
-                    "tags": [
-                        "Patient"
-                    ],
-                    "summary": "Insere um registro",
-                    "description": "Insere um registro",
-                    "operationId": "Post",
-                    "x-totvs": {
-                        "productInformation": [
-                            {
-                                "product": "RM",
-                                "available": true,
-                                "note": "Este verbo esta disponivel com todos parametros",
-                                "minimalVersion": "12.1.26"
-                            }
-                        ]
-                    },
-                    "parameters": [
+                }   
+            }
+        },
+        "/patients": {
+            "get": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Recupera uma lista de registros",
+                "description": "Recupera uma lista de registros",
+                "operationId": "GetAllPatients",
+                "x-totvs": {
+                    "productInformation": [
                         {
-                            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                            "product": "RM",
+                            "available": true,
+                            "note": "Este verbo está disponível com todos os parâmetros.",
+                            "minimalVersion": "12.1.26"
                         }
-                    ],
-                    "requestBody": {
-                        "description": "Objeto para inserir um registro",
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registros recuperados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Patient/v1/1_000/jsonschema/schemas/Patient_1_000.json#/definitions/PagedPatient"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no momento da recuperação do registro.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Insere um registro",
+                "description": "Insere um registro",
+                "operationId": "Post",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "RM",
+                            "available": true,
+                            "note": "Este verbo esta disponivel com todos parametros",
+                            "minimalVersion": "12.1.26"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Objeto para inserir um registro",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Patient/v1/1_000/jsonschema/schemas/Patient_1_000.json#/definitions/Patient"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -124,82 +187,12 @@
                             }
                         }
                     },
-                    "responses": {
-                        "201": {
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Patient/v1/1_000/jsonschema/schemas/Patient_1_000.json#/definitions/Patient"
-                                    }
-                                }
-                            }
-                        },
-                        "400": {
-                            "description": "Erro no momento da alteração",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "/patients": {
-                "get": {
-                    "tags": [
-                        "Patient"
-                    ],
-                    "summary": "Recupera uma lista de registros",
-                    "description": "Recupera uma lista de registros",
-                    "operationId": "GetAllPatients",
-                    "x-totvs": {
-                        "productInformation": [
-                            {
-                                "product": "RM",
-                                "available": true,
-                                "note": "Este verbo está disponível com todos os parâmetros.",
-                                "minimalVersion": "12.1.26"
-                            }
-                        ]
-                    },
-                    "parameters": [
-                        {
-                            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-                        },
-                        {
-                            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-                        },
-                        {
-                            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-                        },
-                        {
-                            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-                        },
-                        {
-                            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Registros recuperados com sucesso",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Patient/v1/1_000/jsonschema/schemas/Patient_1_000.json#/definitions/PagedPatient"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Erro no momento da recuperação do registro.",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-                                    }
+                    "400": {
+                        "description": "Erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
                         }
@@ -218,6 +211,16 @@
                 "schema": {
                     "type": "string"
                 }
+            },
+            "x-totvs": {
+                "productInformation": [
+                    {
+                        "product": "RM",
+                        "available": true,
+                        "note": "Identificador único do paciente",
+                        "minimalVersion": "12.1.26"
+                    }                    
+                ]
             }
         },
         "schemas": {}
