@@ -1,0 +1,940 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "WinThor :: Compras :: Giro Dia :: Service",
+    "description": "Serviços responsáveis por gerar giro dia customizado",
+    "contact": {
+      "name": "TOTVS",
+      "url": "https://www.totvs.com",
+      "email": "winthor@totvs.com.br"
+    },
+    "version": "v1",
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "WinThor :: Compras :: Giro Dia",
+        "description": "Serviços responsáveis por gerar giro dia customizado",
+        "segment": "Compras"
+      },
+      "productInformation": [
+        {
+          "product": "Winthor",
+          "contact": "winthor@totvs.com.br",
+          "description": "Giro dia customizado",
+          "adapter": "",
+          "helpUrl": "https://tdn.totvs.com/pages/releaseview.action?pageId=516635001"
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "{serverProtocol}://{serverUrl}:{serverPort}/api/purchase/stock/v1",
+      "variables": {
+          "serverProtocol": {
+        "default": "http",
+        "description": "Protocolo http ou https, podem ser utilizados de acordo com a instalação local do Winthor Anywhere"
+      },
+      "serverUrl": {
+        "default": "localhost"
+      },
+      "serverPort": {
+        "default": "80",
+        "description": "Porta deve ser utilizada conforme seleção na instalação do Winthor Anywhere"
+      }
+    }
+    }
+  ],
+  "tags": [
+    {
+      "name": "compras-girodia-cenarios"
+    },
+    {
+      "name": "compras-girodia-curvas"
+    },
+    {
+      "name": "compras-girodia-figuras"
+    },
+    {
+      "name": "compras-girodia-giro"
+    }
+  ],
+  "paths": {
+    "/curves/consolidate": {
+      "post": {
+        "tags": [
+          "compras-girodia-curvas"
+        ],
+        "summary": "Consolidação dos dados de Curva ABC para giro customizado",
+        "operationId": "consolidarCurvasFiliais",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consolidação de Curva dos produtos finalizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/InfoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/curves/tables": {
+      "get": {
+        "tags": [
+          "compras-girodia-curvas"
+        ],
+        "summary": "Apresenta a tabela de Curva ABC disponivel para o giro dia customizado",
+        "operationId": "curvaTabela",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Tipo da curva",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subsidiary",
+            "in": "query",
+            "description": "Filial da curva",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tabela de Curva ABC disponiveis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/CurveDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum resultado encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/curves/{curveKey}/subcurves/{subcurveKey}/frequencies/{frequencyKey}": {
+      "get": {
+        "tags": [
+          "compras-girodia-curvas"
+        ],
+        "summary": "Lista de frequencia de compras para o conjunto de curva, sub-curva e frequencia",
+        "operationId": "frequencias",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "curveKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subcurveKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "frequencyKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subsidiary",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de frequencias encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/FrequencyDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum resultado encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/curves/{key}/subsidiaries/{subsidiary}": {
+      "get": {
+        "tags": [
+          "compras-girodia-curvas"
+        ],
+        "summary": "Obtem uma Curva ABC do giro customizado por identificador unico e filial",
+        "operationId": "obter",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Identificador da curva",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subsidiary",
+            "in": "path",
+            "description": "Código da Filial que pertence a curva",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Curva encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/CurveDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum resultado encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/figures" : {
+      "get" : {
+        "tags" : [ "compras-girodia-figuras" ],
+        "summary" : "Listagem de figuras disponiveis para giro dia customizado",
+        "description" : "",
+        "operationId" : "listarFiguras",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters" : [ 
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+            }
+         ],
+        "responses" : {
+          "200" : {
+            "description" : "Lista de figuras disponiveis",
+            "schema" : {
+              "$ref" : "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/definitions/FigureDto"
+            }
+          },
+          "400" : {
+            "description" : "A Requisição informada é inválida",
+            "schema" : {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+            }
+          },
+          "404" : {
+            "description" : "Nenhum resultado encontrado",
+            "schema" : {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+            }
+          },
+          "500" : {
+            "description" : "Ocorreu um erro no processamento da requisição",
+            "schema" : {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/figures/{id}": {
+      "get": {
+        "tags": [
+          "compras-girodia-figuras"
+        ],
+        "summary": "Obtem os dados de uma figura de acordo com o identificador unico",
+        "operationId": "obterFigura",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador da figura",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Figura encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/FigureDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A figura informada não foi encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scenarios" : {
+      "get" : {
+        "tags" : [ "compras-girodia-cenarios" ],
+        "summary" : "Lista os cenários para giro dia customizado",
+        "description" : "",
+        "operationId" : "listar",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters" : [
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }, 
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+            }
+         ],
+        "responses" : {
+          "200" : {
+            "description" : "Lista de cenários disponiveis",
+            "schema" : {
+              "$ref" : "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/definitions/ScenarioDto"
+            }
+          },
+          "400" : {
+            "description" : "A Requisição informada é inválida",
+            "schema" : {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+            }
+          },
+          "404" : {
+            "description" : "Nenhum cenário encontrado",
+            "schema" : {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+            }
+          },
+          "500" : {
+            "description" : "Ocorreu um erro no processamento da requisição",
+            "schema" : {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/scenarios/products/{productId}/subsidiaries/{subsidiaryId}": {
+      "get": {
+        "tags": [
+          "compras-girodia-cenarios"
+        ],
+        "summary": "Obtem um cenários através do codigo do produto e filial",
+        "operationId": "buscarCenarioPorProduto",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Identificação única do produto",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "subsidiaryId",
+            "in": "path",
+            "description": "Código da Filial",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cenário encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/ScenarioDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum cenário encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scenarios/{id}": {
+      "get": {
+        "tags": [
+          "compras-girodia-cenarios"
+        ],
+        "summary": "Obtem um cenários por identificador unico",
+        "operationId": "obterCenario",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificação única do cenário",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cenário encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/ScenarioDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum cenário encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/turnover-day/consolidate": {
+      "post": {
+        "tags": [
+          "compras-girodia-giro"
+        ],
+        "summary": "Realiza o processo de calculo de giro dia customizado, consolidando os valores de giro para cada produto.",
+        "operationId": "consolidarGiroDiaHoje",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Giro dia dos produtos consolidados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/InfoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/turnover-day/memories/products/{product}/subsidiaries/{subsidiary}": {
+      "get": {
+        "tags": [
+          "compras-girodia-giro"
+        ],
+        "summary": "Obtem a memoria de calculo do giro dia customizado, por produto e filial",
+        "operationId": "memoriaCalculoProdutoFilial",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "product",
+            "in": "path",
+            "description": "Identificador do produto",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "subsidiary",
+            "in": "path",
+            "description": "Código da filial",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Memória de calculo do giro dia encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/TurnoverDayMemoryDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A memória não foi encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/turnover-day/sales/consolidate": {
+      "post": {
+        "tags": [
+          "compras-girodia-giro"
+        ],
+        "summary": "Realiza a consolidação de dados de vendas (falta, transferencia, kits) para o giro dia customizado de acordo com o intervalo de dadas informado.",
+        "operationId": "consolidarDadosVenda",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "requestBody": {
+          "description": "Data referencia de inicio do periodo",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/ConsolidatePeriodDto"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Dados primarios de vendas consolidados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_1_000.json#/components/schemas/InfoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A Requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
