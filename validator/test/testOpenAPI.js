@@ -192,14 +192,14 @@ describe("Validating OpenAPI files...", function () {
                 }
               });
 
-              it("should have 'hasNext' when it's an 'getAll' endpoint", function () {
+              it("should have 'hasNext' when it's a 'getAll' endpoint", function () {
                 if (pathValidatorResult) {
                   var errorMessage = pathValidatorResult.hasNextInGetAllMsg;
                   expect(pathValidatorResult.hasNextInGetAll, errorMessage).not.to.be.false;
                 }
               });
 
-              it("shouldn't have 'hasNext' when it's an 'getOne' endpoint", function () {
+              it("shouldn't have 'hasNext' when it's a 'getOne' endpoint", function () {
                 if (pathValidatorResult) {
                   var errorMessage = pathValidatorResult.noHasNextInGetOneMsg;
                   expect(pathValidatorResult.noHasNextInGetOne, errorMessage).not.to.be.false;
