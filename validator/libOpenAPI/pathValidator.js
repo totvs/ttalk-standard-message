@@ -162,11 +162,11 @@ var checkHttpVerbInUrl = function (pathkey) {
 };
 
 /**
- * This method checks if schema is setted to external file
+ * This method checks if schema is set to external file
  * OpenAPI MUST reference schema from external file
  * @param {*} responseRequest Object (Of a request or a response - The internal structure is the same)
  */
-var checkIfSchemaIsSettedToExternaFile = function (responseRequest) {
+var checkIfSchemaIsSetToExternalFile = function (responseRequest) {
     if (responseRequest) {
         if (responseRequest.content) {
             if (responseRequest.content["application/json"].schema) {
@@ -235,7 +235,7 @@ var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
             if (properties.hasOwnProperty("items") || properties.hasOwnProperty("hasNext")) {
                 results.containsItemsAndHasNext = properties.hasOwnProperty("items") && properties.hasOwnProperty("hasNext");
                 if (results.containsItemsAndHasNext == false) {
-                    results.erroredPathMissingItemOrHasNext = pathkey;
+                    results.errorPathMissingItemOrHasNext = pathkey;
                 }
             }
         }
@@ -394,7 +394,7 @@ var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, path
             if (results.containsTheSameKeyInUrlAndBody != false) {
                 results.containsTheSameKeyInUrlAndBody = properties.hasOwnProperty(pathidkey);
                 if (results.containsTheSameKeyInUrlAndBody == false) {
-                    results.erroredPathWithoutSameKeyInUrlAndBody = pathkey;
+                    results.errorPathWithoutSameKeyInUrlAndBody = pathkey;
                 }
             }
         }
@@ -415,7 +415,7 @@ var runThroughResponses = function (filename, responses, dereferencedResponses, 
         if (dereferencedResponses) var dereferencedResponse = dereferencedResponses[responseKey];
         if (response.content) {
             checkCommonErrorSchema(response, responseKey);
-            checkIfSchemaIsSettedToExternaFile(response, true);
+            checkIfSchemaIsSetToExternalFile(response, true);
             if (responseKey < 400) { //Only success response 
                 if (dereferencedResponse) {
                     if (dereferencedResponse.content['application/json'].schema) {
@@ -644,7 +644,7 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
                 runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid, derefParams);
                 var request = httpVerbInfo.requestBody;
                 if (dereferenceHttpVerbInfo) var dereferencedRequest = dereferenceHttpVerbInfo.requestBody;
-                checkIfSchemaIsSettedToExternaFile(request);
+                checkIfSchemaIsSetToExternalFile(request);
                 // addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
                 var responses = httpVerbInfo.responses;
                 if (dereferenceHttpVerbInfo) var dereferencedResponses = dereferenceHttpVerbInfo.responses;
