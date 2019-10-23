@@ -1,0 +1,1126 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/stock/v1/1_000/jsonschema/schemas/Stock_v1_000.json#",
+  "info": {
+    "title": "WinThor :: Compras :: Giro Dia :: Service",
+    "description": "Serviços responsáveis por gerar giro dia customizado",
+    "contact": {
+      "name": "TOTVS",
+      "url": "https://www.totvs.com",
+      "email": "winthor@totvs.com.br"
+    },
+    "version": "1.000",
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "WinThor :: Compras :: Giro Dia",
+        "description": "Serviços responsáveis por gerar giro dia customizado",
+        "segment": "Compras"
+      },
+      "productInformation": [
+        {
+          "product": "Winthor",
+          "contact": "winthor@totvs.com.br",
+          "description": "Giro dia customizado",
+          "adapter": "",
+          "helpUrl": "https://tdn.totvs.com/pages/releaseview.action?pageId=516635001"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "ConsolidatePeriodDto": {
+      "type": "object",
+      "properties": {
+        "dateStart": {
+          "type": "string",
+          "description": "Data inicial do período",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Data inicial do período",
+              "field": "dtinicial",
+              "length": "10",
+              "type": "varchar",
+              "required": false
+            }
+          ]
+        },
+        "dateFinal": {
+          "type": "string",
+          "description": "Data final do período",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Data final do período",
+              "field": "dtfinal",
+              "length": "10",
+              "type": "varchar",
+              "required": false
+            }
+          ]
+        }
+      },
+      "description": "Período de consolidação"
+    },
+    "CurveDto": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Identificação unico da curva",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico da curva",
+              "field": "chave",
+              "length": "30",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Descrição",
+              "field": "descricao",
+              "length": "100",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "value": {
+          "type": "number",
+          "description": "Valor percentual de margem para curva",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Valor percentual de margem para curva",
+              "field": "valor",
+              "length": "22",
+              "type": "decimal",
+              "required": true
+            }
+          ]
+        },
+        "analysisDay": {
+          "type": "integer",
+          "description": "Quantidade de dias de análise da curva",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Quantidade de dias de análise da curva",
+              "field": "diasanalisecurva",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "curveType": {
+          "type": "string",
+          "description": "Tipo de curva ABC",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Tipo de curva ABC",
+              "field": "tipoCurva",
+              "length": "1",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "description": "Registro de ordem",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Registro de ordem",
+              "field": "ordem",
+              "length": "1",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "subsidiary": {
+          "type": "string",
+          "description": "Filial",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Filial",
+              "field": "codfilial",
+              "length": "2",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "lastConsolidation": {
+          "type": "string",
+          "description": "Data da ultima consolidação da curva",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Data da ultima consolidação da curva",
+              "field": "dtconsolidacao",
+              "length": "10",
+              "type": "varchar",
+              "required": false
+            }
+          ]
+        },
+        "subCurves": {
+          "type": "array",
+          "description": "Lista de sub-curvas pertencentes a curva",
+          "items": {
+            "$ref": "#/definitions/SubCurveDto"
+          }
+        }
+      },
+      "description": "Representa um nivel de Curva ABC"
+    },
+    "FigureDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Identificação unico da figura",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico da figura",
+              "field": "codigo",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Descrição",
+              "field": "descricao",
+              "length": "250",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "periodGroup": {
+          "$ref": "#/definitions/PeriodGroupDto"
+        },
+        "peak": {
+          "type": "number",
+          "description": "Porcentagem de Pico",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Porcentagem de Pico",
+              "field": "pico",
+              "length": "22",
+              "type": "decimal",
+              "required": true
+            }
+          ]
+        },
+        "valley": {
+          "type": "number",
+          "description": "Porcentagem de Vale",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Porcentagem de Vale",
+              "field": "vale",
+              "length": "22",
+              "type": "decimal",
+              "required": true
+            }
+          ]
+        },
+        "useTransfer": {
+          "type": "boolean",
+          "description": "Considerar Transferencias para giro dia",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Considerar Transferencias para giro dia",
+              "field": "usatransferencia",
+              "length": "1",
+              "type": "char",
+              "required": true
+            }
+          ]
+        },
+        "useKit": {
+          "type": "boolean",
+          "description": "Considerar Kit para giro dia",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Considerar Kit para giro dia",
+              "field": "usakit",
+              "length": "1",
+              "type": "char",
+              "required": true
+            }
+          ]
+        },
+        "useLack": {
+          "type": "boolean",
+          "description": "Considerar Faltas para giro dia",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Considerar Faltas para giro dia",
+              "field": "usafalta",
+              "length": "1",
+              "type": "char",
+              "required": true
+            }
+          ]
+        },
+        "typeStockDays": {
+          "type": "string",
+          "description": "Tipos de dias de estoque",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Tipos de dias de estoque",
+              "field": "tipoestoque",
+              "length": "250",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        }
+      },
+      "description": "Representa uma figura de configuração para giro customizado"
+    },
+    "FrequencyDto": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Identificação unico da frequencia",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico da frequencia",
+              "field": "chave",
+              "length": "30",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "curveKey": {
+          "type": "string",
+          "description": "Identificação unico da curva",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico da curva",
+              "field": "chavecurva",
+              "length": "30",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "subCurveKey": {
+          "type": "string",
+          "description": "Identificação unico da sub-curva",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico da sub-curva",
+              "field": "chavesubcurva",
+              "length": "30",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Descrição",
+              "field": "descricao",
+              "length": "100",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "value": {
+          "type": "number",
+          "description": "Valor percentual de margem",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Valor percentual de margem",
+              "field": "valor",
+              "length": "18,6",
+              "type": "decimal",
+              "required": true
+            }
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "description": "Registro de ordem",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Registro de ordem",
+              "field": "ordem",
+              "length": "8",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "subsidiary": {
+          "type": "string",
+          "description": "Filial",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Filial",
+              "field": "codfilial",
+              "length": "2",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "curveType": {
+          "type": "string",
+          "description": "Tipo de curva ABC",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Tipo de curva ABC",
+              "field": "tipomedida",
+              "length": "1",
+              "type": "char",
+              "required": true
+            }
+          ]
+        }
+      },
+      "description": "Frequencia de compra"
+    },
+    "InfoDto": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Mensagem",
+              "field": "mensagem",
+              "length": "300",
+              "type": "varchar",
+              "required": false
+            }
+          ]
+        }
+      }
+    },
+    "PeriodDto": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "type": "integer",
+          "description": "Identificação relacionado ao grupo",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação relacionado ao grupo",
+              "field": "codperiodo",
+              "length": "8",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "description": "Controle de ordem dos períodos",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Controle de ordem dos períodos",
+              "field": "item",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "description": "Fator de peso por período",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Fator de peso por período",
+              "field": "peso",
+              "length": "22,16",
+              "type": "decimal",
+              "required": true
+            }
+          ]
+        },
+        "dateStart": {
+          "type": "string",
+          "description": "Data inicial do período",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Data inicial do período",
+              "field": "dtInicial",
+              "length": "10",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        "dateFinal": {
+          "type": "string",
+          "description": "Data final do período",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Data final do período",
+              "field": "dtFinal",
+              "length": "10",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        "stockDay": {
+          "type": "integer",
+          "description": "Total de dias de estoque",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Total de dias de estoque",
+              "field": "diasEstoque",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "quantitySale": {
+          "type": "integer",
+          "description": "Quantidade total de venda",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Quantidade total de venda",
+              "field": "quantidadeVenda",
+              "length": "22",
+              "type": "number",
+              "required": false
+            }
+          ]
+        },
+        "quantityLack": {
+          "type": "integer",
+          "description": "Quantidade total de faltas",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Quantidade total de faltas",
+              "field": "quantidadeFalta",
+              "length": "22",
+              "type": "number",
+              "required": false
+            }
+          ]
+        },
+        "quantityTransfer": {
+          "type": "integer",
+          "description": "Quantidade total de transferencias",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Quantidade total de transferencias",
+              "field": "quantidadeTransferencia",
+              "length": "22",
+              "type": "number",
+              "required": false
+            }
+          ]
+        },
+        "quantityKit": {
+          "type": "integer",
+          "description": "Quantidade total de kits",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Quantidade total de kits",
+              "field": "quantidadeKit",
+              "length": "22",
+              "type": "number",
+              "required": false
+            }
+          ]
+        },
+        "quantitySaleAdjust": {
+          "type": "number",
+          "description": "Quantidade total de venda após ajustes de pico/vale",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Quantidade total de venda após ajustes de pico/vale",
+              "field": "qtVendaAjuste",
+              "length": "22",
+              "type": "number",
+              "required": false
+            }
+          ]
+        },
+        "typeAdjust": {
+          "type": "string",
+          "description": "Tipo de ajuste aplicado Pico, Vale, Normal",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Tipo de ajuste aplicado Pico, Vale, Normal",
+              "field": "ajuste",
+              "length": "255",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        }
+      },
+      "description": "Informações de venda para giro dia customizado de um período"
+    },
+    "PeriodGroupDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Identificação unico",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico",
+              "field": "codperiodo",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Descrição",
+              "field": "descricao",
+              "length": "100",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "totalDays": {
+          "type": "integer",
+          "description": "Período total de dias",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Período total de dias",
+              "field": "numdias",
+              "length": "22",
+              "type": "number",
+              "required": false
+            }
+          ]
+        },
+        "periods": {
+          "type": "array",
+          "description": "Lista de períodos",
+          "items": {
+            "$ref": "#/definitions/PeriodDto"
+          }
+        }
+      },
+      "description": "Agrupador de períodos utilizados para calculo de giro dia customizado"
+    },
+    "ScenarioDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Identificação do cenario de giro",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação do cenario de giro",
+              "field": "codigo",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "classification": {
+          "type": "string",
+          "description": "Classificação mercadologica",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Classificação mercadologica",
+              "field": "nivel",
+              "length": "250",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "item": {
+          "type": "integer",
+          "description": "Valor chave do item de acordo com o sua classificacao",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Valor chave do item de acordo com o sua classificacao",
+              "field": "nivelitem",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "figure": {
+          "$ref": "#/definitions/FigureDto"
+        },
+        "curveType": {
+          "type": "string",
+          "description": "Tipo de curva ABC",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Tipo de curva ABC",
+              "field": "tipocurva",
+              "length": "250",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "frequency": {
+          "$ref": "#/definitions/FrequencyDto"
+        },
+        "provider": {
+          "type": "integer",
+          "description": "Identificador do fornecedor",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificador do fornecedor",
+              "field": "fornecedor",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "subsidiary": {
+          "type": "string",
+          "description": "Filial",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Filial",
+              "field": "filial",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        }
+      },
+      "description": "Configuração de cenário de giro, para um grupo (departamento, seção) ou produto único"
+    },
+    "SubCurveDto": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Identificação unico da sub-curva",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico da sub-curva",
+              "field": "chave",
+              "length": "250",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        "curveKey": {
+          "type": "string",
+          "description": "Identificação unico da curva",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação unico da curva",
+              "field": "chavecurva",
+              "length": "250",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Descrição",
+              "field": "descricao",
+              "length": "250",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        "value": {
+          "type": "number",
+          "description": "Valor percentual de margem",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Valor percentual de margem",
+              "field": "valor",
+              "length": "22,16",
+              "type": "decimal",
+              "required": true
+            }
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "description": "Registro de ordem",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Registro de ordem",
+              "field": "ordem",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "subsidiary": {
+          "type": "integer",
+          "description": "Filial",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Filial",
+              "field": "codfilial",
+              "length": "2",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        }
+      },
+      "description": "Representa um sub-nivel de Curva ABC"
+    },
+    "TurnoverDayMemoryDto": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "type": "integer",
+          "description": "Identificação do produto",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificação do produto",
+              "field": "codprod",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "subsidiary": {
+          "type": "string",
+          "description": "Filial",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Filial",
+              "field": "codfilial",
+              "length": "2",
+              "type": "varchar",
+              "required": true
+            }
+          ]
+        },
+        "consolidationDate": {
+          "type": "string",
+          "description": "Data de consolidação do giro",
+          "format": "date",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Data de consolidação do giro",
+              "field": "dtconsolidacao",
+              "length": "10",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        "scenario": {
+          "type": "integer",
+          "description": "Identificador do Cenário",
+          "format": "int32",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Identificador do Cenário",
+              "field": "cenario",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        },
+        "turnoverDay": {
+          "type": "number",
+          "description": "Valor de giro dia calculado",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Valor de giro dia calculado",
+              "field": "girodia",
+              "length": "22,16",
+              "type": "decimal",
+              "required": true
+            }
+          ]
+        },
+        "figure": {
+          "$ref": "#/definitions/FigureDto"
+        },
+        "totalSales": {
+          "type": "number",
+          "description": "Quantidade total de vendas",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "WinThor",
+              "available": true,
+              "note": "Quantidade total de vendas",
+              "field": "qtvenda",
+              "length": "22",
+              "type": "number",
+              "required": true
+            }
+          ]
+        }
+      },
+      "description": "Registro de memória de cálculo, contendo os valores utilizados para o calculo de giro dia customizado do produto"
+    },
+    "PagedCurves": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CurveDto"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PagedFigures": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FigureDto"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PagedFrequency": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FrequencyDto"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PagedScenario": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ScenarioDto"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
