@@ -2,7 +2,7 @@
 name: Sugira uma API 
 about: Qual nova API TOTVS pode simplificar o seu negócio?
 title: ''
-labels: enhacement,API
+labels: enhancement,API
 assignees: ''
 
 ---
