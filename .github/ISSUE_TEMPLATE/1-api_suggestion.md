@@ -15,40 +15,40 @@ assignees: ''
 
 #### Agrupador de negócio
 
-[ ] Agroindústria
+- [ ]Agroindústria
 
-[ ] Serviços
+- [ ]Serviços
 
-[ ] Construção e Projetos
+- [ ]Construção e Projetos
 
-[ ] Saúde
+- [ ]Saúde
 
-[ ] Recursos Humanos
+- [ ]Recursos Humanos
 
-[ ] Educacional
+- [ ]Educacional
 
-[ ] Manufatura
+- [ ]Manufatura
 
-[ ] Distribuição e Logística
+- [ ]Distribuição e Logística
 
-[ ] Foundation
+- [ ] Foundation
 
-[ ] Varejo
+- [ ] Varejo
 
-[ ] E-Commerce
+- [ ] E-Commerce
 
-[ ] Supply Chain
+- [ ] Supply Chain
 
-[ ] Geral
+- [ ] Geral
 
-[ ] TMS
+- [ ] TMS
 
-[ ] BackOffice
+- [ ] BackOffice
 
-[ ] Compras
+- [ ] Compras
 
-[ ] Quality
+- [ ] Quality
 
-[ ] healthcare
+- [ ] healthcare
 
 #### Email (Opcional)
