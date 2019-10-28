@@ -15,21 +15,21 @@ assignees: ''
 
 #### Agrupador de negócio
 
-- [ ]Agroindústria
+- [ ] Agroindústria
 
-- [ ]Serviços
+- [ ] Serviços
 
-- [ ]Construção e Projetos
+- [ ] Construção e Projetos
 
-- [ ]Saúde
+- [ ] Saúde
 
-- [ ]Recursos Humanos
+- [ ] Recursos Humanos
 
-- [ ]Educacional
+- [ ] Educacional
 
-- [ ]Manufatura
+- [ ] Manufatura
 
-- [ ]Distribuição e Logística
+- [ ] Distribuição e Logística
 
 - [ ] Foundation
 
