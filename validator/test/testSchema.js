@@ -42,7 +42,7 @@ describe("Validating Schema files...", function () {
                 expect(filename[0]).to.equal(filename[0].toUpperCase());
               });
 
-              it("should contain version separtor (_)", function () {
+              it("should contain version separator (_)", function () {
                 let containsVersion = filename.includes("_");
                 expect(containsVersion).to.be.true;
               });
@@ -54,7 +54,7 @@ describe("Validating Schema files...", function () {
             });
 
             describe(" - Content Format: ", function () {
-              it("shouldn't contain weird special characteres", function () {
+              it("shouldn't contain weird special characters", function () {
                 expect(file.includes("�"), "Please check file encode").to.be.false;
               });
             });
@@ -62,14 +62,14 @@ describe("Validating Schema files...", function () {
             describe(" - Schemas: ", function () {
               it("should reference valid objects", function () {
                 var errorMessage = "";
-                if (schemaDefinitionsValidatorResult.erroredObjectName)
-                  errorMessage = "Could not find the object '" + schemaDefinitionsValidatorResult.erroredObjectName + "' inside 'definitions' property of this file '"
+                if (schemaDefinitionsValidatorResult.errorObjectName)
+                  errorMessage = "Could not find the object '" + schemaDefinitionsValidatorResult.errorObjectName + "' inside 'definitions' property of this file '"
                 expect(schemaDefinitionsValidatorResult.validObject, errorMessage).not.to.be.false;
               });
             });
 
             describe(" - xtotvs: ", function () {
-              it("should be an object in 'info' and may have a 'productInformation' porperty as an array", function () {
+              it("should be an object in 'info' and may have a 'productInformation' property as an array", function () {
                 expect(parsedSchema.info["x-totvs"]).to.be.an('object');
                 var productInformation = parsedSchema.info["x-totvs"].productInformation;
                 if (productInformation) {
