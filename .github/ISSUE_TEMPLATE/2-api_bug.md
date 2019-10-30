@@ -1,15 +1,12 @@
 ---
-name: Sugira uma API 
-about: Qual nova API TOTVS pode simplificar o seu negócio?
+name: Bug de API
+about: Encontrou um BUG em alguma API de nossos produtos?
 title: ''
-labels: enhacement
+labels: bug,API
 assignees: ''
 
 ---
-
 #### Nome da API
-
-#### Descrição da API
 
 #### Produto
 
@@ -50,5 +47,14 @@ assignees: ''
 [ ] Quality
 
 [ ] healthcare
+
+
+#### Qual o comportamento atual?
+
+#### Que comportamento você esperava ver?
+
+#### Passos para reprodução do bug
+1. 
+2. 
 
 #### Email (Opcional)
