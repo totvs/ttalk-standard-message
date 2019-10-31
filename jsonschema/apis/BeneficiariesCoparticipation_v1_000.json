@@ -2,7 +2,7 @@
 	"openapi": "3.0.1",
 	"servers": [
 		{
-			"description": "API para entidade de beneficiários para a linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+			"description": "Schema para retorno dos lançamentos das Coparticipações dos Beneficiários e seus dependentes referente aos benefícios a eles vinculados nas linhas do Produtos TOTVS - Mensagem global utilizando o conceito REST/JSON",
 			"url": "{{host}}/api/rh/v1",
 			"variables": {
 				"serverUrl": {
@@ -15,9 +15,9 @@
 		}
 	],
 	"info": {
-		"description": "API para beneficiários, funcionários e seus dependentes que possuem benefícios, geridos na linha de produtos Totvs - Mensagem global utilizando o conceito REST/JSON",
+		"description": "Esta API tem por objetivo disponibilizar ao chamador os lançamentos das Coparticipações dos Beneficiários e seus dependentes referente aos benefícios a eles vinculados.",
 		"version": "1.000",
-		"title": "Relação de Benficiários - Global",
+		"title": "Relação de Coparticipações dos Beneficiários e seus dependentes - Global",
 		"contact": {
 			"name": "T-Talk",
 			"url": "https://api.totvs.com.br",
@@ -25,45 +25,52 @@
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "Relação de Beneficiários - Global",
-				"description": "Consulta de Beneficiários na base da TOTVS",
+				"name": "Relação de Coparticipações dos Beneficiários e seus dependentes - Global",
+				"description": "Consulta de Coparticipações dos Beneficiários e seus dependentes na base da TOTVS",
 				"segment": "Recursos Humanos"
 			},
 			"productInformation": [
 				{
 					"product": "Protheus",
-					"contact": "",
-					"description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
-					"adapter": ""
+					"contact": "rplyra@totvs.com.br",
+					"description": "Cadastro de FuncionÃ¡rios na base da TOTVS",
+					"adapter": "GPA010API.prw"
+				},
+				{
+					"product": "Datasul",
+					"contact": "patricia.theilacker@totvs.com.br",
+					"description": "Consulta de Coparticipações dos Beneficiários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
+					"adapter": "ApiBeneficiariesCoparticipation",
+					"helpUrl": "link aqui"
 				},
 				{
 					"product": "RM",
 					"contact": "wellington.vieira@totvs.com.br",
 					"description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
-					"adapter": "RhuBeneficiariosData"
-				},
-				{
-					"product": "Datasul",
-					"contact": "patricia.theilacker@totvs.com.br",
-					"description": "Consulta de Beneficiários, funcionários e seus dependentes que tiveram benefícios a eles vinculados e lançados.",
-					"adapter": "prghur/fpp/apiBeneficiariesDataContent.p"
+					"adapter": "FopAssMedCopartData"
 				}
 			]
 		}
 	},
 	"paths": {
-		"/BeneficiariesDataContent": {
+		"/BeneficiariesCoparticipation": {
 			"get": {
 				"tags": [
-					"BeneficiariesDataContent"
+					"BeneficiariesCoparticipation"
 				],
-				"summary": "Retorna todos os registros de beneficiários",
+				"summary": "Retorna todos os registros de Coparticipações dos Beneficiários e seus dependentes.",
 				"x-totvs": {
 					"productInformation": [
 						{
 							"product": "Protheus",
 							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros.",
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.25"
+						},
+						{
+							"product": "Datasul",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
 							"minimalVersion": "12.1.25"
 						},
 						{
@@ -71,17 +78,11 @@
 							"available": true,
 							"note": "Este verbo esta disponivel com todos os parametros.",
 							"minimalVersion": "12.1.25"
-						},
-						{
-							"product": "Datasul",
-							"available": true,
-							"note": "Este verbo esta disponivel com todos os parametros.",
-							"minimalVersion": "12.1.25"
 						}
 					]
 				},
-				"description": "Retorna todos os registros de beneficiários.",
-				"operationId": "beneficiariesDataContent",
+				"description": "Retorna todos os registros de Coparticipações dos Beneficiários e seus dependentes.",
+				"operationId": "getBeneficiariesCoparticipation",
 				"parameters": [
 					{
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -114,13 +115,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/BeneficiariesDataContent_1_000.json#/definitions/PagedBeneficiariesDataContent"
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/BeneficiariesCoparticipation_1_000.json#/definitions/PagedBeneficiariesCoparticipation"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Erro no momento da listagem dos registros de Beneficiários.",
+						"description": "Erro no momento da listagem dos registros Coparticipações dos Beneficiários e seus dependentes.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -149,7 +150,7 @@
 				"name": "product",
 				"in": "query",
 				"description": "Nome do produto que está sendo integrado no momento.",
-				"example": "DIVICOM",
+				"example": "Protheus, RM, Datasul",
 				"required": true,
 				"schema": {
 					"type": "string"
@@ -159,7 +160,7 @@
 						{
 							"product": "Protheus",
 							"available": true,
-							"note": "Não irá gravar dados nas tabelas de origem linha RM.",
+							"note": "Produto Protheus,RM ou Datasul",
 							"minimalVersion": "12.1.25"
 						},
 						{
@@ -171,7 +172,7 @@
 						{
 							"product": "Datasul",
 							"available": true,
-							"note": "Não irá gravar dados nas tabelas de origem linha Datasul.",
+							"note": "Produto Protheus, RM ou Datasul",
 							"minimalVersion": "12.1.25"
 						}
 					]
@@ -180,9 +181,9 @@
 			"dateModified": {
 				"name": "dateModified",
 				"in": "query",
-				"required": false,
+				"required": true,
 				"description": "Data da ultima atualização do registro.",
-				"example": "YYYY-MM-DDThh:mm:ss",
+				"example": "YYYY-MM-DDThh:mm:ssZ",
 				"schema": {
 					"type": "string"
 				},
@@ -192,7 +193,7 @@
 							"product": "Protheus",
 							"available": true,
 							"note": "Data de atualização da ultima requisição.",
-							"minimalVersion": "12.1.25"
+							"minimalVersion": "12.1.23"
 						},
 						{
 							"product": "RM",
@@ -211,22 +212,13 @@
 			},
 			"companyId": {
 				"name": "companyid",
-				"in": "query",
-				"required": true,
 				"description": "Código da Empresa",
-				"example": "1",
+				"type": "string",
+				"required": true,
 				"schema": {
 					"type": "string"
 				},
 				"x-totvs": [
-					{
-						"product": "RM",
-						"field": "",
-						"required": false,
-						"note": "será recebido o cádigo da empresa. Código da Coligada",
-						"available": true,
-						"canUpdate": false
-					},
 					{
 						"product": "Protheus",
 						"field": "",
@@ -234,27 +226,31 @@
 						"note": "será recebido o código da empresa, relacionado para ",
 						"available": true,
 						"canUpdate": false
-					}
-				]
-			},
-			"branchId": {
-				"name": "branchId",
-				"in": "query",
-				"required": false,
-				"description": "Código da Filial",
-				"example": "1",
-				"schema": {
-					"type": "string"
-				},
-				"x-totvs": [
+					},
 					{
 						"product": "RM",
 						"field": "",
 						"required": false,
-						"note": "Será conceito de Filial que no RM não é obrigatório",
+						"note": "será recebido o cádigo da empresa, relacionado para ",
 						"available": true,
 						"canUpdate": false
 					},
+					{
+						"product": "Datasul",
+						"available": true,
+						"note": "Código da empresa no Datasul.",
+						"minimalVersion": "12.1.25"
+					}
+				]
+			},
+			"branchId": {
+				"description": "Código da Filial",
+				"type": "string",
+				"required": false,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
 					{
 						"product": "Protheus",
 						"field": "",
@@ -262,6 +258,20 @@
 						"note": "Será recebido o cádigo da variável",
 						"available": true,
 						"canUpdate": false
+					},
+					{
+						"product": "RM",
+						"field": "",
+						"required": false,
+						"note": "Não Será tratado pelo RM",
+						"available": true,
+						"canUpdate": false
+					},
+					{
+						"product": "Datasul",
+						"available": true,
+						"note": "Código do estabelecimento no Datasul.",
+						"minimalVersion": "12.1.25"
 					}
 				]
 			}
