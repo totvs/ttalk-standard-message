@@ -9,7 +9,7 @@ var checkIfObjectIsValid = function (theObject, prop) {
             results.validObject = (parsedSchema.definitions[objectName] != undefined &&
                 parsedSchema.definitions[objectName] != null);
             if (results.validObject == false) {
-                results.erroredObjectName = objectName;
+                results.errorObjectName = objectName;
             }
         }
     }
