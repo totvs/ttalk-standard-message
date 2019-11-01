@@ -7,6 +7,8 @@ All methods will first verify if that validation has failed before. If it did, i
 @author Francisco F. Cardoso | T-TALK
 */
 
+var multiContentHelper = require("../helper/multicontentHelper.js");
+
 var results;
 var foundorder;
 var foundpage;
@@ -138,7 +140,8 @@ var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, path
  */
 var checkCommonErrorSchema = function (response, responseKey) {
     if (results.useErrorSchema != false && (responseKey >= 400 && responseKey <= 599)) {
-        var ref = response.content["application/json"].schema.$ref;
+        const contentType = multiContentHelper.getContentType(response.content);
+        var ref = response.content[contentType].schema.$ref;
         results.useErrorSchema = ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel");
     }
 };
@@ -169,11 +172,12 @@ var checkHttpVerbInUrl = function (pathkey) {
 var checkIfSchemaIsSetToExternalFile = function (responseRequest) {
     if (responseRequest) {
         if (responseRequest.content) {
-            if (responseRequest.content["application/json"].schema) {
-                var ref = responseRequest.content["application/json"].schema.$ref;
+            const contentType = multiContentHelper.getContentType(responseRequest.content);
+            if (responseRequest.content[contentType].schema) {
+                var ref = responseRequest.content[contentType].schema.$ref;
                 if (!ref) {
-                    if (responseRequest.content["application/json"].schema.items) {
-                        ref = responseRequest.content["application/json"].schema.items.$ref;
+                    if (responseRequest.content[contentType].schema.items) {
+                        ref = responseRequest.content[contentType].schema.items.$ref;
                     }
                 }
                 if (results.useExternalSchema != false && ref) {
@@ -230,7 +234,8 @@ var checkIfOperationIdIsUnique = function (operationId) {
  */
 var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     if (results.containsItemsAndHasNext != false) {
-        let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
+        const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
+        let properties = dereferencedRequestResponse.content[contentType].schema.properties;
         if (properties) {
             if (properties.hasOwnProperty("items") || properties.hasOwnProperty("hasNext")) {
                 results.containsItemsAndHasNext = properties.hasOwnProperty("items") && properties.hasOwnProperty("hasNext");
@@ -332,28 +337,28 @@ var compareInfoPathsProducts = function (){
 
 var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
     if (dereferencedResponse.hasOwnProperty("content") &&
-        dereferencedResponse.content.hasOwnProperty("application/json") &&
-        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
-        dereferencedResponse.content['application/json'].schema.hasOwnProperty("properties")) {
-            var properties = dereferencedResponse.content['application/json'].schema.properties;
+        dereferencedResponse.content.hasOwnProperty() &&
+        dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
+        dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("properties")) {
+            var properties = dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.properties;
             return properties;
     } else {
         if (dereferencedResponse.hasOwnProperty("content") &&
         dereferencedResponse.content.hasOwnProperty("application/json") &&
-        dereferencedResponse.content['application/json'].hasOwnProperty("schema") &&
-        dereferencedResponse.content['application/json'].schema.hasOwnProperty("allOf")){
-            for(var i in dereferencedResponse.content['application/json'].schema.allOf){
-                if (dereferencedResponse.content['application/json'].schema.allOf[i].hasOwnProperty("properties") &&
-                    dereferencedResponse.content['application/json'].schema.allOf[i].properties.hasOwnProperty("hasNext")){
-                        var properties = dereferencedResponse.content['application/json'].schema.allOf[i].properties;
+        dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
+        dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("allOf")){
+            for(var i in dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf){
+                if (dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[i].hasOwnProperty("properties") &&
+                    dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[i].properties.hasOwnProperty("hasNext")){
+                        var properties = dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[i].properties;
                         var control = 1;
                         return properties;
                 }else{
                     var control = 0;
                 }
             }
-            if ((control==0) && (dereferencedResponse.content['application/json'].schema.allOf[0].hasOwnProperty("properties"))){
-                var properties = dereferencedResponse.content['application/json'].schema.allOf[0].properties;
+            if ((control==0) && (dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[0].hasOwnProperty("properties"))){
+                var properties = dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[0].properties;
                 return properties;
             }
         }
@@ -363,7 +368,8 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
 
 var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pathkey) {
     if (results.typeIsRequiredWhenPathId != false) {
-        let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
+        const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
+        let properties = dereferencedRequestResponse.content[contentType].schema.properties;
         if (properties) {
             if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
                 pathkey = pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length);
@@ -387,7 +393,8 @@ var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pat
 }
 
 var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, pathidkey, pathkey) {
-    let properties = dereferencedRequestResponse.content['application/json'].schema.properties;
+    const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
+    let properties = dereferencedRequestResponse.content[contentType].schema.properties;
     if (properties) {
         if (thisIsCollectionEndpoint && results.containsTheSameKeyInUrlAndBody != false) results.containsTheSameKeyInUrlAndBody = true; //No need to validate that. Collections don't have 'id' in URL
         else {
@@ -418,7 +425,8 @@ var runThroughResponses = function (filename, responses, dereferencedResponses, 
             checkIfSchemaIsSetToExternalFile(response, true);
             if (responseKey < 400) { //Only success response 
                 if (dereferencedResponse) {
-                    if (dereferencedResponse.content['application/json'].schema) {
+                    const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
+                    if (dereferencedResponse.content[contentType].schema) {
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
