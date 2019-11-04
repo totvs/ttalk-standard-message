@@ -18,11 +18,22 @@ var hasgetcollectionendpoint;
 var parsedOpenAPI;
 var derefOpenAPI;
 
-var idWasCorrecltyDefinedInGeneralParams;
+var idWasCorrectlyDefinedInGeneralParams;
 var operationIdList;
 
 var infoProducts = [];
 var pathsProducts = [];
+
+/**
+ * This method checks if the used contentType is allowed
+ * @param {*} contentType 
+ */
+var checkIfIsAllowedContentType = function (contentType) {
+    if (results.allowedContentType != false) {
+        results.allowedContentType = multiContentHelper.allowedContents.includes(contentType);
+        results.allowedContentTypeMsg = "The contentType + '" + contentType + "' was found. This is invalid or not allowed";
+    }
+}
 
 /**
  * This method checks if path 'x-totvs' has 'productInformation' as array
@@ -31,7 +42,7 @@ var pathsProducts = [];
  * @param {*} pathkey String (/endpoint)String (/endpoint)
  */
 var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
-    
+
     if (httpVerbInfo["x-totvs"]) {
         var productInfo = httpVerbInfo["x-totvs"].productInformation;
         if (results.useProductInfoAsArray != false) {
@@ -55,10 +66,10 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
             if (results.hasAvailableCorrectlySpelledInsidePaths != false) {
                 if (productInfo[i].hasOwnProperty("available")) {
                     results.hasAvailableCorrectlySpelledInsidePaths = true;
-                    if(results.hasAvailableAsBoolean != false){
+                    if (results.hasAvailableAsBoolean != false) {
                         if (typeof productInfo[i].available == "boolean") {
                             results.hasAvailableAsBoolean = true;
-                        } else{
+                        } else {
                             results.hasAvailableAsBoolean = false;
                             results.hasAvailableAsBooleanMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', the property 'available' must be a boolean type.";
                         }
@@ -141,6 +152,7 @@ var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, path
 var checkCommonErrorSchema = function (response, responseKey) {
     if (results.useErrorSchema != false && (responseKey >= 400 && responseKey <= 599)) {
         const contentType = multiContentHelper.getContentType(response.content);
+        checkIfIsAllowedContentType(contentType);
         var ref = response.content[contentType].schema.$ref;
         results.useErrorSchema = ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel");
     }
@@ -173,6 +185,7 @@ var checkIfSchemaIsSetToExternalFile = function (responseRequest) {
     if (responseRequest) {
         if (responseRequest.content) {
             const contentType = multiContentHelper.getContentType(responseRequest.content);
+            checkIfIsAllowedContentType(contentType);
             if (responseRequest.content[contentType].schema) {
                 var ref = responseRequest.content[contentType].schema.$ref;
                 if (!ref) {
@@ -201,7 +214,7 @@ var checkIfPutHaveId = function (thisIsCollectionEndpoint, httpVerbsList) { //Co
 }
 
 /**
- * This method checks that there is a successfull response for that endpoint
+ * This method checks that there is a successful response for that endpoint
  * @param {*} responses Object
  */
 var checkIfThereIsSuccessResponse = function (responses) {
@@ -235,6 +248,7 @@ var checkIfOperationIdIsUnique = function (operationId) {
 var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     if (results.containsItemsAndHasNext != false) {
         const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
+        checkIfIsAllowedContentType(contentType);
         let properties = dereferencedRequestResponse.content[contentType].schema.properties;
         if (properties) {
             if (properties.hasOwnProperty("items") || properties.hasOwnProperty("hasNext")) {
@@ -255,7 +269,7 @@ var checkIfHasNextInGetAll = function (filename, httpVerbkey, dereferencedRespon
                 results.hasNextInGetAll = true;
             } else {
                 if (hasNextGetAllWhitelist.hasOwnProperty(filename)) {
-                    if (hasNextGetAllWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetAllWhitelist[filename][pathkey]==httpVerbkey) {
+                    if (hasNextGetAllWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetAllWhitelist[filename][pathkey] == httpVerbkey) {
                         results.hasNextInGetAll = true;
                     } else {
                         results.hasNextInGetAll = false;
@@ -276,7 +290,7 @@ var checkIfNoHasNextInGetOne = function (filename, httpVerbkey, dereferencedResp
         if (properties) {
             if (properties.hasOwnProperty("hasNext")) {
                 if (hasNextGetOneWhitelist.hasOwnProperty(filename)) {
-                    if (hasNextGetOneWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetOneWhitelist[filename][pathkey]==httpVerbkey) {
+                    if (hasNextGetOneWhitelist[filename].hasOwnProperty(pathkey) && hasNextGetOneWhitelist[filename][pathkey] == httpVerbkey) {
                         results.noHasNextInGetOne = true;
                     } else {
                         results.noHasNextInGetOne = false;
@@ -298,36 +312,36 @@ var populateInfoProductArray = function (infoProductInfo) {
     for (var i in infoProductInfo) infoProducts.push(infoProductInfo[i].product);
 }
 
-var populatePathsProductArray = function (productInfo){
-    for (var j in productInfo){ 
+var populatePathsProductArray = function (productInfo) {
+    for (var j in productInfo) {
         var controlVar = 0;
-        for (var i in pathsProducts){
+        for (var i in pathsProducts) {
             if (productInfo[j].product == pathsProducts[i]) controlVar = 1;
         }
-        if (controlVar==0) pathsProducts.push(productInfo[j].product);
+        if (controlVar == 0) pathsProducts.push(productInfo[j].product);
     }
 }
 
-var compareInfoPathsProducts = function (){
-    for (var i in pathsProducts){
-        if(results.infoProdHasPathElement!=false){
-            if (infoProducts.includes(pathsProducts[i])){
+var compareInfoPathsProducts = function () {
+    for (var i in pathsProducts) {
+        if (results.infoProdHasPathElement != false) {
+            if (infoProducts.includes(pathsProducts[i])) {
                 results.infoProdHasPathElement = true;
             }
-            else{
+            else {
                 results.infoProdHasPathElement = false;
-                results.infoProdHasPathElementMsg = "X-Totvs inside 'paths' has '"+ pathsProducts[i]+"' as product, but it's not declared inside 'info'.";
+                results.infoProdHasPathElementMsg = "X-Totvs inside 'paths' has '" + pathsProducts[i] + "' as product, but it's not declared inside 'info'.";
             }
         }
     }
-    for (var i in infoProducts){
-        if(results.pathProdHasInfoElement!=false){
-            if (pathsProducts.includes(infoProducts[i])){
+    for (var i in infoProducts) {
+        if (results.pathProdHasInfoElement != false) {
+            if (pathsProducts.includes(infoProducts[i])) {
                 results.pathProdHasInfoElement = true;
             }
-            else{
+            else {
                 results.pathProdHasInfoElement = false;
-                results.pathProdHasInfoElementMsg = "X-Totvs inside 'info' has '"+ infoProducts[i]+"' as product, but it's not declared inside 'paths'.";
+                results.pathProdHasInfoElementMsg = "X-Totvs inside 'info' has '" + infoProducts[i] + "' as product, but it's not declared inside 'paths'.";
             }
         }
     }
@@ -340,25 +354,31 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
         dereferencedResponse.content.hasOwnProperty() &&
         dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
         dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("properties")) {
-            var properties = dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.properties;
-            return properties;
+        const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
+        checkIfIsAllowedContentType(contentType);
+        var properties = dereferencedResponse.content[contentType].schema.properties;
+        return properties;
     } else {
         if (dereferencedResponse.hasOwnProperty("content") &&
-        dereferencedResponse.content.hasOwnProperty(multiContentHelper.getContentType(dereferencedResponse.content)) &&
-        dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
-        dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("allOf")){
-            for(var i in dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf){
-                if (dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[i].hasOwnProperty("properties") &&
-                    dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[i].properties.hasOwnProperty("hasNext")){
-                        var properties = dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[i].properties;
-                        var control = 1;
-                        return properties;
-                }else{
+            dereferencedResponse.content.hasOwnProperty(multiContentHelper.getContentType(dereferencedResponse.content)) &&
+            dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
+            dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("allOf")) {
+            const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
+            checkIfIsAllowedContentType(contentType);
+            for (var i in dereferencedResponse.content[contentType].schema.allOf) {
+                if (dereferencedResponse.content[contentType].schema.allOf[i].hasOwnProperty("properties") &&
+                    dereferencedResponse.content[contentType].schema.allOf[i].properties.hasOwnProperty("hasNext")) {
+                    var properties = dereferencedResponse.content[contentType].schema.allOf[i].properties;
+                    var control = 1;
+                    return properties;
+                } else {
                     var control = 0;
                 }
             }
-            if ((control==0) && (dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[0].hasOwnProperty("properties"))){
-                var properties = dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[0].properties;
+            if ((control == 0) && (dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[0].hasOwnProperty("properties"))) {
+                const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
+                checkIfIsAllowedContentType(contentType);
+                var properties = dereferencedResponse.content[contentType].schema.allOf[0].properties;
                 return properties;
             }
         }
@@ -369,6 +389,7 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
 var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pathkey) {
     if (results.typeIsRequiredWhenPathId != false) {
         const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
+        checkIfIsAllowedContentType(contentType);
         let properties = dereferencedRequestResponse.content[contentType].schema.properties;
         if (properties) {
             if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
@@ -394,6 +415,7 @@ var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pat
 
 var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, pathidkey, pathkey) {
     const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
+    checkIfIsAllowedContentType(contentType);
     let properties = dereferencedRequestResponse.content[contentType].schema.properties;
     if (properties) {
         if (thisIsCollectionEndpoint && results.containsTheSameKeyInUrlAndBody != false) results.containsTheSameKeyInUrlAndBody = true; //No need to validate that. Collections don't have 'id' in URL
@@ -426,6 +448,7 @@ var runThroughResponses = function (filename, responses, dereferencedResponses, 
             if (responseKey < 400) { //Only success response 
                 if (dereferencedResponse) {
                     const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
+                    checkIfIsAllowedContentType(contentType);
                     if (dereferencedResponse.content[contentType].schema) {
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
@@ -583,11 +606,11 @@ var verifyIfThisIsThePathParameter = function (parameter, pathkey, alreadyfoundp
  * @param {*} parameter ObjectType 
  */
 var checkIfParametersContainPathId = function (alreadyfoundpathid, pathkey, parameterType) {
-    if (!thisIsCollectionEndpoint && !idWasCorrecltyDefinedInGeneralParams) { //If Id was already setted correctly in general, no need to validate this for httpVerb
+    if (!thisIsCollectionEndpoint && !idWasCorrectlyDefinedInGeneralParams) { //If Id was already setted correctly in general, no need to validate this for httpVerb
         if (alreadyfoundpathid == false && parameterType == "pathLevel") //If it isn't in general (pathlevel), I need to keep looking for it in the httpVerbs
             return;
         else if (alreadyfoundpathid == true && parameterType == "pathLevel") {
-            idWasCorrecltyDefinedInGeneralParams = true;
+            idWasCorrectlyDefinedInGeneralParams = true;
         }
         results.hasPathParamDefinedInParameters = alreadyfoundpathid;
 
@@ -614,7 +637,7 @@ exports.clear = function () {
     clearCollectionParamsValidation();
     hasgetcollectionendpoint = undefined;
     thisIsCollectionEndpoint = undefined;
-    idWasCorrecltyDefinedInGeneralParams = undefined;
+    idWasCorrectlyDefinedInGeneralParams = undefined;
     operationIdList = [];
 };
 
@@ -746,8 +769,8 @@ var hasNextGetAllWhitelist = {
         "/TotalInputDocument/canceled": "get"                                       //err, entrar em contato
     },
     "TotalOutputDocument_v1_000.json": {
-       "/TotalOutputDocument": "get",                                               //err, entrar em contato
-       "/TotalOutputDocument/canceled": "get",                                      //err, entrar em contato
+        "/TotalOutputDocument": "get",                                               //err, entrar em contato
+        "/TotalOutputDocument/canceled": "get",                                      //err, entrar em contato
     },
     "UnitOfMeasure_v2_000.json": {
         "/UnitOfMeasures": "get"                                                    //err, entrar em contato
@@ -787,7 +810,7 @@ var hasNextGetOneWhitelist = {
         "/prospects/{Code}": "get"                                                  //err, entrar em contato
     },
     "SalesCharge_v1_000.json": {
-        "/salesCharge/{InternalId}": "get" ,
+        "/salesCharge/{InternalId}": "get",
         "/salesCharge/{InternalId}/{AccountReceivableDocumentInternalId}": "get"    //err, entrar em contato
     },
     "Sellers_v2_000.json": {

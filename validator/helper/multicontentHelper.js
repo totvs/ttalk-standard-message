@@ -1,4 +1,4 @@
-var allowedContents = [ //https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Basico_sobre_HTTP/MIME_types/Complete_list_of_MIME_types
+exports.allowedContents = [ //https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Basico_sobre_HTTP/MIME_types/Complete_list_of_MIME_types
     "audio/aac",
     "application/x-abiword",
     "application/octet-stream",
