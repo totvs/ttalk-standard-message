@@ -62,6 +62,6 @@ var allowedContents = [ //https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Basi
     "application/x-7z-compressed",
 ];
 
-exports.getContentType(content) {
+exports.getContentType = function(content) {
     return Object.keys(content)[0];
 }

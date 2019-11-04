@@ -344,7 +344,7 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
             return properties;
     } else {
         if (dereferencedResponse.hasOwnProperty("content") &&
-        dereferencedResponse.content.hasOwnProperty("application/json") &&
+        dereferencedResponse.content.hasOwnProperty(multiContentHelper.getContentType(dereferencedResponse.content)) &&
         dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
         dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("allOf")){
             for(var i in dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf){
