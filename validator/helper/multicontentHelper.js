@@ -62,6 +62,24 @@ exports.allowedContents = [ //https://developer.mozilla.org/pt-BR/docs/Web/HTTP/
     "application/x-7z-compressed",
 ];
 
-exports.getContentType = function(content) {
+var checkIfThisIsJsonOrNoContent = function (contentType) {
+    // We always consider 'GET' without 'content/type' as JSON endpoint (default value).
+    // The 'hasNonJsonResponses' will be responsible for hidding examples in case is about XML.
+    return contentType ? checkIfThisIsEndpointOfType(contentType, 'json') : true;
+}
+
+var checkIfThisIsXmlEndpoint = function (contentType) {
+    return contentType ? checkIfThisIsEndpointOfType(contentType, 'xml') : false;
+}
+
+var checkIfThisIsEndpointOfType = function (receivedContentType, expectedContentType) {
+    return (receivedContentType ? (receivedContentType.endsWith(expectedContentType)) : false);
+}
+
+exports.checkIfThisIsFileEndpoint = function (contentType) {
+    return (contentType ? !(checkIfThisIsJsonOrNoContent(contentType)) && !(checkIfThisIsXmlEndpoint(contentType)) : false);
+}
+
+exports.getContentType = function (content) {
     return Object.keys(content)[0];
 }

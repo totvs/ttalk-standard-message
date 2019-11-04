@@ -25,14 +25,37 @@ var infoProducts = [];
 var pathsProducts = [];
 
 /**
- * This method checks if the used contentType is allowed
+ * This method checks if the used content type is allowed
  * @param {*} contentType 
  */
-var checkIfIsAllowedContentType = function (contentType) {
+var checkIfIsAllowedContentType = function (contentType, pathkey, httpVerbkey) {
     if (results.allowedContentType != false) {
         results.allowedContentType = multiContentHelper.allowedContents.includes(contentType);
-        results.allowedContentTypeMsg = "The contentType + '" + contentType + "' was found. This is invalid or not allowed";
+        results.allowedContentTypeMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', The contentType '" + contentType + "' was found. This is invalid or not allowed";
     }
+}
+
+var checkIfFileContentIsValid = function (contentType, contentBody, pathkey, httpVerbkey) {
+    results.contentBodyMatchesContentType = contentBody.type == 'string' && contentBody.format === 'binary'
+    results.contentBodyMatchesContentTypeMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', the contentType '" + contentType + "' must have schema properties as 'type: string, format: binary'";
+}
+
+var checkIfContentIsValid = function (contentType, contentBody, pathkey, httpVerbkey) {
+    if (results.contentBodyMatchesContentType != false && results.allowedContentType != false) {
+        if (multiContentHelper.checkIfThisIsFileEndpoint(contentType) && contentBody && !contentBody.$ref) {
+            checkIfFileContentIsValid(contentType, contentBody, pathkey, httpVerbkey);
+        }
+    }
+}
+
+/**
+ * Do all needed checks about content type
+ * @param {*} contentType 
+ * @param {*} contentBody 
+ */
+var checkAllAboutContentType = function (contentType, contentBody, pathkey, httpVerbkey) {
+    checkIfIsAllowedContentType(contentType, pathkey, httpVerbkey);
+    checkIfContentIsValid(contentType, contentBody, pathkey, httpVerbkey);
 }
 
 /**
@@ -127,7 +150,7 @@ var checkUseOfCommonsParams = function (parameter, httpVerbkey, pathkey) {
  * @param {*} httpVerbkey String ('get','put,'post','delete'...)  
  * @param {*} pathkey String (/endpoint)
  */
-var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, pathkey) {
+var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey) {
     if (thisIsCollectionEndpoint && httpVerbkey == 'get') {
         if (parameter.$ref) {
             if (parameter.$ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message") && parameter.$ref.includes("jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order")) {
@@ -152,7 +175,6 @@ var checkIfCollectionHasAllNeededParams = function (parameter, httpVerbkey, path
 var checkCommonErrorSchema = function (response, responseKey) {
     if (results.useErrorSchema != false && (responseKey >= 400 && responseKey <= 599)) {
         const contentType = multiContentHelper.getContentType(response.content);
-        checkIfIsAllowedContentType(contentType);
         var ref = response.content[contentType].schema.$ref;
         results.useErrorSchema = ref.includes("https://raw.githubusercontent.com/totvs/ttalk-standard-message/") && ref.includes("/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel");
     }
@@ -185,7 +207,6 @@ var checkIfSchemaIsSetToExternalFile = function (responseRequest) {
     if (responseRequest) {
         if (responseRequest.content) {
             const contentType = multiContentHelper.getContentType(responseRequest.content);
-            checkIfIsAllowedContentType(contentType);
             if (responseRequest.content[contentType].schema) {
                 var ref = responseRequest.content[contentType].schema.$ref;
                 if (!ref) {
@@ -248,7 +269,6 @@ var checkIfOperationIdIsUnique = function (operationId) {
 var checkIfHasNextAndItems = function (dereferencedRequestResponse, pathkey) {
     if (results.containsItemsAndHasNext != false) {
         const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
-        checkIfIsAllowedContentType(contentType);
         let properties = dereferencedRequestResponse.content[contentType].schema.properties;
         if (properties) {
             if (properties.hasOwnProperty("items") || properties.hasOwnProperty("hasNext")) {
@@ -355,7 +375,6 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
         dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
         dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("properties")) {
         const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
-        checkIfIsAllowedContentType(contentType);
         var properties = dereferencedResponse.content[contentType].schema.properties;
         return properties;
     } else {
@@ -364,7 +383,6 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
             dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].hasOwnProperty("schema") &&
             dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.hasOwnProperty("allOf")) {
             const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
-            checkIfIsAllowedContentType(contentType);
             for (var i in dereferencedResponse.content[contentType].schema.allOf) {
                 if (dereferencedResponse.content[contentType].schema.allOf[i].hasOwnProperty("properties") &&
                     dereferencedResponse.content[contentType].schema.allOf[i].properties.hasOwnProperty("hasNext")) {
@@ -377,7 +395,6 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
             }
             if ((control == 0) && (dereferencedResponse.content[multiContentHelper.getContentType(dereferencedResponse.content)].schema.allOf[0].hasOwnProperty("properties"))) {
                 const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
-                checkIfIsAllowedContentType(contentType);
                 var properties = dereferencedResponse.content[contentType].schema.allOf[0].properties;
                 return properties;
             }
@@ -389,7 +406,6 @@ var hasAllPropertiesUntilHasNext = function (dereferencedResponse) {
 var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pathkey) {
     if (results.typeIsRequiredWhenPathId != false) {
         const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
-        checkIfIsAllowedContentType(contentType);
         let properties = dereferencedRequestResponse.content[contentType].schema.properties;
         if (properties) {
             if (pathkey.substring(pathkey.lastIndexOf("/"), pathkey.length).includes("{")) {
@@ -415,7 +431,6 @@ var checkIfTypeIsRequiredWhenPathId = function (dereferencedRequestResponse, pat
 
 var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, pathidkey, pathkey) {
     const contentType = multiContentHelper.getContentType(dereferencedRequestResponse.content);
-    checkIfIsAllowedContentType(contentType);
     let properties = dereferencedRequestResponse.content[contentType].schema.properties;
     if (properties) {
         if (thisIsCollectionEndpoint && results.containsTheSameKeyInUrlAndBody != false) results.containsTheSameKeyInUrlAndBody = true; //No need to validate that. Collections don't have 'id' in URL
@@ -448,12 +463,12 @@ var runThroughResponses = function (filename, responses, dereferencedResponses, 
             if (responseKey < 400) { //Only success response 
                 if (dereferencedResponse) {
                     const contentType = multiContentHelper.getContentType(dereferencedResponse.content);
-                    checkIfIsAllowedContentType(contentType);
                     if (dereferencedResponse.content[contentType].schema) {
+                        checkAllAboutContentType(contentType, dereferencedResponse.content[contentType].schema, pathkey, httpVerbkey);
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
-                        if (httpVerbkey) { //(pathkey.replace(/[^/]/g, "").length==1)
+                        if (httpVerbkey) { 
                             if ((thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfHasNextInGetAll(filename, httpVerbkey, dereferencedResponse, pathkey);
                             if ((!thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfNoHasNextInGetOne(filename, httpVerbkey, dereferencedResponse, pathkey);
                         }
@@ -550,9 +565,6 @@ var checkIfPathIdIsRequired = function (pathId, httpVerbkey, derefParams) {
                         results.pathIdIsRequired = false;
                         results.pathIdIsNotRequired = "Path parameter '" + pathId + "', at method '" + httpVerbkey + "', does not have a 'required' property (must be 'required=true')."
                     }
-                    //if (derefParams[derefParamIndex].hasOwnProperty('x-totvs')){
-                    //    console.log("Tem x-totvs");
-                    //}
                 }
             }
         }
@@ -606,7 +618,7 @@ var verifyIfThisIsThePathParameter = function (parameter, pathkey, alreadyfoundp
  * @param {*} parameter ObjectType 
  */
 var checkIfParametersContainPathId = function (alreadyfoundpathid, pathkey, parameterType) {
-    if (!thisIsCollectionEndpoint && !idWasCorrectlyDefinedInGeneralParams) { //If Id was already setted correctly in general, no need to validate this for httpVerb
+    if (!thisIsCollectionEndpoint && !idWasCorrectlyDefinedInGeneralParams) { //If Id was already set correctly in general, no need to validate this for httpVerb
         if (alreadyfoundpathid == false && parameterType == "pathLevel") //If it isn't in general (pathlevel), I need to keep looking for it in the httpVerbs
             return;
         else if (alreadyfoundpathid == true && parameterType == "pathLevel") {
@@ -620,26 +632,6 @@ var checkIfParametersContainPathId = function (alreadyfoundpathid, pathkey, para
     }
 }
 
-/**
- * This method clears all objects before validating the next file
- */
-exports.clear = function () {
-    results = {
-        schemaObjList: [],
-        parametersDefinedInComponentList: [],
-        collectionsWithoutRequiredParams: "",
-        wrongXTotvs: "",
-        notUsingCommonParams: "",
-        useIdInAllPuts: true,
-        containsItemsAndHasNext: true,
-        containsTheSameKeyInUrlAndBody: true
-    };
-    clearCollectionParamsValidation();
-    hasgetcollectionendpoint = undefined;
-    thisIsCollectionEndpoint = undefined;
-    idWasCorrectlyDefinedInGeneralParams = undefined;
-    operationIdList = [];
-};
 
 /**
  * This method will iterate through 'paths'(endpoints) and it's http verbs
@@ -673,10 +665,11 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
                 var derefParams = derefOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid, derefParams);
-                var request = httpVerbInfo.requestBody;
-                if (dereferenceHttpVerbInfo) var dereferencedRequest = dereferenceHttpVerbInfo.requestBody;
-                checkIfSchemaIsSetToExternalFile(request);
-                // addSchema(request, "request", pathkey, thisIsCollectionEndpoint, httpVerbkey);
+                if (httpVerbInfo.requestBody) { //Has RequestBody
+                    const contentType = multiContentHelper.getContentType(httpVerbInfo.requestBody.content);
+                    checkIfSchemaIsSetToExternalFile(httpVerbInfo.requestBody);
+                    checkAllAboutContentType(contentType, derefOpenAPI.paths[pathkey][httpVerbkey].requestBody.content[contentType].schema, pathkey, httpVerbkey);
+                }
                 var responses = httpVerbInfo.responses;
                 if (dereferenceHttpVerbInfo) var dereferencedResponses = dereferenceHttpVerbInfo.responses;
                 runThroughResponses(filename, responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
@@ -694,6 +687,28 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
     }
     compareInfoPathsProducts();
     return results;
+};
+
+/**
+ * This method clears all objects before validating the next file
+ */
+exports.clear = function () {
+    results = {
+        schemaObjList: [],
+        parametersDefinedInComponentList: [],
+        collectionsWithoutRequiredParams: "",
+        wrongXTotvs: "",
+        notUsingCommonParams: "",
+        useIdInAllPuts: true,
+        containsItemsAndHasNext: true,
+        containsTheSameKeyInUrlAndBody: true,
+        contentBodyMatchesContentType: true
+    };
+    clearCollectionParamsValidation();
+    hasgetcollectionendpoint = undefined;
+    thisIsCollectionEndpoint = undefined;
+    idWasCorrectlyDefinedInGeneralParams = undefined;
+    operationIdList = [];
 };
 
 var hasNextGetAllWhitelist = {
@@ -820,3 +835,5 @@ var hasNextGetOneWhitelist = {
         "/suspects/{Code}": "get"                                                   //err, entrar em contato
     },
 };
+
+
