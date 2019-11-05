@@ -13,8 +13,10 @@ var results;
 var foundorder;
 var foundpage;
 var foundpagesize;
-var thisIsCollectionEndpoint;
 var hasgetcollectionendpoint;
+var thisIsCollectionEndpoint;
+var thisIsFileEndpoint;
+var fileEndpoint;
 var parsedOpenAPI;
 var derefOpenAPI;
 
@@ -27,6 +29,8 @@ var pathsProducts = [];
 /**
  * This method checks if the used content type is allowed
  * @param {*} contentType 
+ * @param {*} pathkey 
+ * @param {*} httpVerbkey 
  */
 var checkIfIsAllowedContentType = function (contentType, pathkey, httpVerbkey) {
     if (results.allowedContentType != false) {
@@ -36,13 +40,17 @@ var checkIfIsAllowedContentType = function (contentType, pathkey, httpVerbkey) {
 }
 
 var checkIfFileContentIsValid = function (contentType, contentBody, pathkey, httpVerbkey) {
-    results.contentBodyMatchesContentType = contentBody.type == 'string' && contentBody.format === 'binary'
-    results.contentBodyMatchesContentTypeMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', the contentType '" + contentType + "' must have schema properties as 'type: string, format: binary'";
+    if (contentBody.type == 'string' && contentBody.format === 'binary') {
+        thisIsFileEndpoint = true;    
+        results.contentBodyMatchesContentType = true;
+        results.contentBodyMatchesContentTypeMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', the contentType '" + contentType + "' must have schema properties as 'type: string, format: binary'";
+    }
 }
 
 var checkIfContentIsValid = function (contentType, contentBody, pathkey, httpVerbkey) {
     if (results.contentBodyMatchesContentType != false && results.allowedContentType != false) {
-        if (multiContentHelper.checkIfThisIsFileEndpoint(contentType) && contentBody && !contentBody.$ref) {
+        fileEndpoint = multiContentHelper.checkIfThisIsFileEndpoint(contentType) && contentBody && !contentBody.$ref;
+        if (fileEndpoint) {
             checkIfFileContentIsValid(contentType, contentBody, pathkey, httpVerbkey);
         }
     }
@@ -435,7 +443,7 @@ var containsTheSameKeyInUrlAndBody = function (dereferencedRequestResponse, path
     if (properties) {
         if (thisIsCollectionEndpoint && results.containsTheSameKeyInUrlAndBody != false) results.containsTheSameKeyInUrlAndBody = true; //No need to validate that. Collections don't have 'id' in URL
         else {
-            if (results.containsTheSameKeyInUrlAndBody != false) {
+            if (results.containsTheSameKeyInUrlAndBody != false && !thisIsFileEndpoint) {
                 results.containsTheSameKeyInUrlAndBody = properties.hasOwnProperty(pathidkey);
                 if (results.containsTheSameKeyInUrlAndBody == false) {
                     results.errorPathWithoutSameKeyInUrlAndBody = pathkey;
@@ -468,7 +476,7 @@ var runThroughResponses = function (filename, responses, dereferencedResponses, 
                         checkIfHasNextAndItems(dereferencedResponse, pathkey);
                         checkIfTypeIsRequiredWhenPathId(dereferencedResponse, pathkey);
                         containsTheSameKeyInUrlAndBody(dereferencedResponse, pathidkey, pathkey);
-                        if (httpVerbkey) { 
+                        if (httpVerbkey) {
                             if ((thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfHasNextInGetAll(filename, httpVerbkey, dereferencedResponse, pathkey);
                             if ((!thisIsCollectionEndpoint) && (httpVerbkey == 'get')) checkIfNoHasNextInGetOne(filename, httpVerbkey, dereferencedResponse, pathkey);
                         }
@@ -576,7 +584,7 @@ var checkIfPathIdIsRequired = function (pathId, httpVerbkey, derefParams) {
  * @param {*} httpVerbkey String ('get','put,'post','delete'...)  
  */
 var verifyIfThisIsGETCollectionRequest = function (httpVerbkey) {
-    if (thisIsCollectionEndpoint && httpVerbkey == 'get') {
+    if (thisIsCollectionEndpoint && httpVerbkey == 'get' && !thisIsFileEndpoint) {
         if (hasgetcollectionendpoint) { //Will be hit if there is more then one get collection endpoint
             clearCollectionParamsValidation();
         }
@@ -650,6 +658,7 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
         checkIfPutHaveId(thisIsCollectionEndpoint, httpVerbsList);
         var alreadyfoundpathid = false;
         for (var httpVerbkey in httpVerbsList) {
+            thisIsFileEndpoint = false;
             if (httpVerbkey == "parameters") {
                 if (derefOpenAPI.paths[pathkey].hasOwnProperty('parameters')) {
                     runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid, derefOpenAPI.paths[pathkey].parameters);
@@ -657,22 +666,23 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
                     runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid, derefOpenAPI.paths[pathkey]);
                 }
             } else {
-                verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 var httpVerbInfo = parsedOpenAPI.paths[pathkey][httpVerbkey];
+                checkIfOperationIdIsUnique(httpVerbInfo.operationId);
                 if (derefOpenAPI) var dereferenceHttpVerbInfo = derefOpenAPI.paths[pathkey][httpVerbkey];
                 checkXtotvs(httpVerbInfo, httpVerbkey, pathkey);
-                checkIfOperationIdIsUnique(httpVerbInfo.operationId);
-                var derefParams = derefOpenAPI.paths[pathkey][httpVerbkey].parameters;
                 var parameters = parsedOpenAPI.paths[pathkey][httpVerbkey].parameters;
+                var derefParams = derefOpenAPI.paths[pathkey][httpVerbkey].parameters;
+                var responses = httpVerbInfo.responses;
+                if (dereferenceHttpVerbInfo) var dereferencedResponses = dereferenceHttpVerbInfo.responses;
+                runThroughResponses(filename, responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
+                verifyIfThisIsGETCollectionRequest(httpVerbkey);
                 runThroughHttpVerbParams(parameters, httpVerbkey, pathkey, alreadyfoundpathid, derefParams);
                 if (httpVerbInfo.requestBody) { //Has RequestBody
                     const contentType = multiContentHelper.getContentType(httpVerbInfo.requestBody.content);
                     checkIfSchemaIsSetToExternalFile(httpVerbInfo.requestBody);
                     checkAllAboutContentType(contentType, derefOpenAPI.paths[pathkey][httpVerbkey].requestBody.content[contentType].schema, pathkey, httpVerbkey);
                 }
-                var responses = httpVerbInfo.responses;
-                if (dereferenceHttpVerbInfo) var dereferencedResponses = dereferenceHttpVerbInfo.responses;
-                runThroughResponses(filename, responses, dereferencedResponses, pathkey, thisIsCollectionEndpoint, httpVerbkey, pathidkey);
+
             }
         }
         if (!hasgetcollectionendpoint)
