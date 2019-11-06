@@ -41,14 +41,14 @@ var checkIfIsAllowedContentType = function (contentType, pathkey, httpVerbkey) {
 
 var checkIfFileContentIsValid = function (contentType, contentBody, pathkey, httpVerbkey) {
     if (contentBody.type == 'string' && contentBody.format === 'binary') {
-        thisIsFileEndpoint = true;    
+        thisIsFileEndpoint = true;
         results.contentBodyMatchesContentType = true;
         results.contentBodyMatchesContentTypeMsg = "At path '" + pathkey + "', method '" + httpVerbkey + "', the contentType '" + contentType + "' must have schema properties as 'type: string, format: binary'";
     }
 }
 
 var checkIfContentIsValid = function (contentType, contentBody, pathkey, httpVerbkey) {
-    if (results.contentBodyMatchesContentType != false && results.allowedContentType != false) {
+    if (results.contentBodyMatchesContentType != false) {
         fileEndpoint = multiContentHelper.checkIfThisIsFileEndpoint(contentType) && contentBody && !contentBody.$ref;
         if (fileEndpoint) {
             checkIfFileContentIsValid(contentType, contentBody, pathkey, httpVerbkey);
@@ -658,7 +658,6 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
         checkIfPutHaveId(thisIsCollectionEndpoint, httpVerbsList);
         var alreadyfoundpathid = false;
         for (var httpVerbkey in httpVerbsList) {
-            thisIsFileEndpoint = false;
             if (httpVerbkey == "parameters") {
                 if (derefOpenAPI.paths[pathkey].hasOwnProperty('parameters')) {
                     runThroughGeneralParams(httpVerbsList[httpVerbkey], pathkey, alreadyfoundpathid, derefOpenAPI.paths[pathkey].parameters);
@@ -685,13 +684,15 @@ exports.runThroughPaths = function (filename, _parsedOpenAPI, _derefOpenAPI) {
 
             }
         }
+        thisIsFileEndpoint = false;
         if (!hasgetcollectionendpoint)
             results.useAllRequiredParamsForCollection = true;
         else if (foundorder && foundpage && foundpagesize && results.useAllRequiredParamsForCollection != false)
             results.useAllRequiredParamsForCollection = true;
         else {
-            if (results.useAllRequiredParamsForCollection != false)
+            if (results.useAllRequiredParamsForCollection != false) {
                 results.collectionsWithoutRequiredParams += "'" + pathkey + "'";
+            }
             results.useAllRequiredParamsForCollection = false
         }
     }
