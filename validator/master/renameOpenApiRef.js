@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var dirnames = ["./jsonschema/apis/", "./jsonschema/apis/types/"];
 var commons = require("./commons.js");
+var multiContentHelper = require("../helper/multicontentHelper.js");
 
 
 dirnames.forEach(function (dirname) {
@@ -74,8 +75,9 @@ var runThroughParamsInternal = function (parameters) {
 var renameRequestResponseHref = function (responseRequest) {
   if (responseRequest) {
     if (responseRequest.content) {
-      if (responseRequest.content["application/json"].schema) {
-        var refObj = responseRequest.content["application/json"].schema;
+      const contentType = multiContentHelper.getContentType(responseRequest.content);
+      if (responseRequest.content[contentType].schema) {
+        var refObj = responseRequest.content[contentType].schema;
         if (refObj.$ref) {
           commons.renameRefInternals(refObj, "$ref");
         } else {
@@ -101,7 +103,8 @@ function renameComponentParameters() {
 }
 
 function lookForRefLevel(responseRequest, refObj) {
-  if (responseRequest.content["application/json"].schema.items) {
+  const contentType = multiContentHelper.getContentType(responseRequest.content);
+  if (responseRequest.content[contentType].schema.items) {
     renameSchemaItemsRef(refObj, responseRequest);
   } else {
     lookForAllOfAndOneOf(responseRequest);
@@ -109,14 +112,16 @@ function lookForRefLevel(responseRequest, refObj) {
 }
 
 function renameSchemaItemsRef(refObj, responseRequest) {
-  refObj = responseRequest.content["application/json"].schema.items;
+  const contentType = multiContentHelper.getContentType(responseRequest.content);
+  refObj = responseRequest.content[contentType].schema.items;
   commons.renameRefInternals(refObj, "$ref");
 }
 
 function lookForAllOfAndOneOf(responseRequest) {
-  let oneOfAllOfList = responseRequest.content["application/json"].schema.oneOf ? responseRequest.content["application/json"].schema.oneOf :
-    (responseRequest.content["application/json"].schema.allOf ?
-      responseRequest.content["application/json"].schema.allOf : []);
+  const contentType = multiContentHelper.getContentType(responseRequest.content);
+  let oneOfAllOfList = responseRequest.content[contentType].schema.oneOf ? responseRequest.content[contentType].schema.oneOf :
+    (responseRequest.content[contentType].schema.allOf ?
+      responseRequest.content[contentType].schema.allOf : []);
   for (var i in oneOfAllOfList) {
     commons.renameRefInternals(oneOfAllOfList[i], "$ref");
   }
