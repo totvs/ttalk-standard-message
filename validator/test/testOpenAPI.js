@@ -314,6 +314,19 @@ describe("Validating OpenAPI files...", function () {
                 });
               });
             });
+
+            describe(" - Content Type: ", function () {
+              it("should be one of the supported/allowed ContentTypes", function () {
+                if (pathValidatorResult) {
+                  expect(pathValidatorResult.allowedContentType, pathValidatorResult.allowedContentTypeMsg).to.be.true;
+                }
+              });
+              it("should have matching body content", function () {
+                if (pathValidatorResult) {
+                  expect(pathValidatorResult.contentBodyMatchesContentType, pathValidatorResult.contentBodyMatchesContentTypeMsg).to.be.true;
+                }
+              });
+            })
           });
         };
       });
