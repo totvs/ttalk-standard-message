@@ -1,0 +1,817 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/BeneficiariesCoparticipation_1_000.json#",
+	"info": {
+		"description": "Schema para retorno dos lançamentos referente ao uso de coparticipação dos beneficiários referente aos benefícios a eles vinculados nas linhas de Produtos TOTVS - Mensagem global utilizando o conceito REST/JSON",
+		"version": "1.000",
+		"title": "Coparticipação dos Beneficiários - Global",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "BeneficiariesCoparticipation",
+				"description": "Esta API tem por objetivo disponibilizar ao cliente chamador os lançamentos referente ao uso de coparticipação dos beneficiários referente aos benefícios a eles vinculados.",
+				"segment": "Recursos Humanos"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "",
+					"description": "",
+					"adapter": "",
+					"helpUrl": "link aqui"
+				},
+				{
+					"product": "RM",
+					"contact": "wellington.vieira@totvs.com.br",
+					"description": "Consulta dos lançamentos de coparticipação dos beneficiários referente aos benefícios a eles vinculados.",
+					"adapter": "FopAssMedCopartData",
+					"helpUrl": "link aqui"
+				},
+				{
+					"product": "DATASUL",
+					"contact": "patricia.theilacker@totvs.com.br",
+					"description": "Consulta dos lançamentos de coparticipação dos beneficiários referente aos benefícios a eles vinculados.",
+					"adapter": "prghur/fpp/apiBeneficiariesCoparticipation.p",
+					"helpUrl": "link aqui"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedBeneficiariesCoparticipation": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"total": {
+							"type": "int32",
+							"format": "999.999",
+							"example": "1"
+						}
+					}
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/BeneficiariesCoparticipationItem"
+							}
+						}
+					}
+				}
+			]
+		},
+		"BeneficiariesCoparticipationItem": {
+			"type": "object",
+			"description": "Descreve os dados de um registro de coparticipação do Beneficiário lançados dentro do Produto TOTVS.",
+			"properties": {
+				"Id": {
+					"description": "Chave única que identifica os registros dos lançamentos de coparticipações.",
+					"type": "string",
+					"exemple": "001|00010|12345678|001",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "CODCOLIGADA|CHAPA|ANOCOMP|MESCOMP|NROPERIODO|NRODEPEND|CODEVENTO|TIPOVALOR|DTATENDICMENTO|CODBENEFICIO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "chave da coparticipação tabela (PFHSTASSMEDCOPART) ligada ao histórico de assistência a saúde"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cdn_empresa | copart_func.cdn_estab | copart_func.cdn_funcionario | copart_func.cdn_depend_func",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Chave da tabela COPART_FUNC para localizar o registro que será retornado ao serviço chamador."
+						}
+					]
+				},
+				"CompanyKey": {
+					"description": "Empresa referente a coparticipação lançada no Datasul.",
+					"type": "string",
+					"exemple": "001",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "No RM o conceito de empresa refere-se ao cadastro de Coligada na tabela GCOLIGADA."
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cdn_empresa",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Informação referente a Empresa do lançamento da coparticipação do Beneficiário."
+						}
+					]
+				},
+				"Branch": {
+					"description": "Filial (Estabelecimento) referente a coparticipação lançada no Datasul.",
+					"type": "string",
+					"exemple": "00010",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFUNC.CODFILIAL",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "O conceito de filial é opcional no RM"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cdn_estab",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Informação referente a Filial (Estabelecimento) do lançamento da coparticipação do Beneficiário."
+						}
+					]
+				},
+				"EmployeeCode": {
+					"description": "Matrícula do Beneficiário dentro do Produto TOTVS.",
+					"type": "string",
+					"exemple": "12345678",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.CHAPA",
+							"required": true,
+							"type": "string",
+							"available": false,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cdn_funcionario",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Matrícula do funcionário refente ao lançamento da coparticipação do beneficiário."
+						}
+					]
+				},
+				"EmployeeName": {
+					"description": "Nome do Beneficiário do Funcionário dentro do Produto TOTVS.",
+					"type": "string",
+					"exemple": "João da Silva",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "NOMEBENEFICIARIO",
+							"required": true,
+							"type": "string",
+							"available": false,
+							"canUpdate": false,
+							"note": "Quando titular é obtido da PFUNC.NOME, sendo dependente PFDEPEND.NOME"
+						},
+						{
+							"product": "DATASUL",
+							"field": "funcionario.nom_pessoa_fisic",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Nome do Funcionário refente ao lançamento da coparticipação do Beneficiário."
+						}
+					]
+				},
+				"DependentCode": {
+					"description": "Matrícula do Dependente do Beneficiário dentro do Produto TOTVS.",
+					"type": "string",
+					"exemple": "001",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.NRODEPEND",
+							"required": true,
+							"type": "string",
+							"available": false,
+							"canUpdate": false,
+							"note": "Para o Titular o valor é fixo (0)zero, os dependetes segue a sequencia inciando em 1"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cdn_depend_func",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Matrícula do Dependente do Beneficiário refente ao lançamento da coparticipação."
+						}
+					]
+				},
+				"DependentName": {
+					"description": "Nome do Dependente do Beneficiário dentro do Produto TOTVS.",
+					"type": "string",
+					"exemple": "José da Silva",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": false,
+							"canUpdate": false,
+							"note": "O RM não informa esta tag pois o nome do dependente assim como do titular esta informado na tag EmployeeName"
+						},
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Não se aplica ao Datasul."
+						}
+					]
+				},
+				"DegreeEmployeeDependency": {
+					"description": "Grau de dependência do Funcionário no Datasul.",
+					"type": "string",
+					"exemple": "00",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": false,
+							"canUpdate": false,
+							"note": "Não se aplica ao RM"
+						},
+						{
+							"product": "DATASUL",
+							"field": "depend_func.idi_grau_depen_func",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Grau de dependência do Funcionário no Datasul."
+						}
+					]
+				},
+				"OccurrencyDate": {
+					"description": "Data de ocorrência do lançamento da coparticipação para o beneficiário.",
+					"type": "string",
+					"format": "date-time",
+					"exemple": "yyyy-mm-ddThh:mm",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.DTATENDIMENTO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": " Data que ocorreu o atendimento no provedor"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.dat_ocor",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Data em que ocorreu o lançamento do evento da coparticipação no Produto TOTVS."
+						}
+					]
+				},
+				"ServiceProvider": {
+					"description": "Identificador do Prestador de Serviço",
+					"type": "string",
+					"exemple": "000001",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "VBENEFFORNECEDORES.CODFORNECEDORBENEFICIO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Identificador do fornecedor do beneficio, correspondente a coligada informada"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cdn_prestdor_serv",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código do Prestador de Serviço dentro do Produto TOTVS."
+						}
+					]
+				},
+				"ServiceProviderContractType": {
+					"description": "Tipo de Contrato do Prestador de Serviço indicado no lançamento da Coparticipação do Beneficiário: 1 - Assistência Médica | 2 - Assistência Odontológica | 3 - VR | 4 - VA | 5 - VT | 9 - Outros",
+					"type": "string",
+					"exemple": "1",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"9"
+					],
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "VBENEFFORNECEDORES.CODTIPOFORNECEDORBENEFICIO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Tipo de Segmento do Fornecedor do Beneficio"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.idi_contrat_prestdor",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Tipo de Contrato da Prestadora de Serviço: 1 - Assistência Médica | 2 - Assistência Odontológica | 3 - VR | 4 - VA | 5 - VT | 9 - Outros"
+						}
+					]
+				},
+				"ServiceProviderContract": {
+					"description": "Número do Contrato do Prestador de Serviço indicado no lançamento da Coparticipação do Beneficiário.",
+					"type": "string",
+					"exemple": "contrato0000001",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "VBENEFCONTRATOS.CODCONTRATO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código do contrato vinculado ao beneficio correspondente a Coligada informada"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cod_contrat_prestdor",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Número do Contrato do Prestador de Serviço relacionado ao lançamento da coparticipação do beneficiário."
+						}
+					]
+				},
+				"CoparticipationValue": {
+					"description": "Valor referente ao lançamento da coparticipação do beneficiário no Produto TOTVS.",
+					"type": "int32",
+					"exemple": "110000",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.VALOR",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Valor da coparticipação no formato 9999999,99 sem pontos separando milhar e virgula separando casa decimal"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.val_copart",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Valor referente ao lançamento da coparticipação do beneficiário no Produto TOTVS."
+						}
+					]
+				},
+				"YearMonthReference": {
+					"description": "Ano e mês de referência do lançamento da coparticipação do beneficiário no Produto TOTVS.",
+					"type": "string",
+					"exemple": "201901",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.ANOCOMP + PFHSTASSMEDCOPART.MESCOMP",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Ano Mês da competência de lançamento da coparticipação ex.: 20191 ou 201912"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.num_ano_mes_refer",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Ano e mês de referência do lançamento da coparticipação do beneficiário no Produto TOTVS."
+						}
+					]
+				},
+				"ServiceProviderId": {
+					"description": "CNPJ do Prestador de Serviço referente ao lançamento da coparticipação do beneficiário no Produto TOTVS.",
+					"type": "string",
+					"exemple": "99.999.999/9999-99",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "ServiceProviderId",
+							"required": true,
+							"type": "datetime",
+							"available": true,
+							"canUpdate": false,
+							"note": "CNPJ do prestador do serviço sem caracteres especiais 99999999999999"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cod_id_feder_prestdor",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "CNPJ do Prestador de Serviço referente ao lançamento da coparticipação do beneficiário no Produto TOTVS."
+						}
+					]
+				},
+				"ServiceProviderName": {
+					"description": "Nome do Prestador de Serviço referente ao lançamento da coparticipação do beneficiário no Produto TOTVS.",
+					"type": "string",
+					"exemple": "Cooperativa Unimed",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "VENTIDADES.RAZAOSOCIAL",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "O prestador é obtido do conceito de entidade VENTIDADES do vitae que descreve clinicas, laboratórios e outros mais."
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.nom_prestdor",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Nome do Prestador de Serviço referente ao lançamento da coparticipação do beneficiário no Produto TOTVS."
+						}
+					]
+				},
+				"SpecialtyName": {
+					"description": "Nome da especialidade do Prestador de Serviço referente ao lançamento da coparticipação do beneficiário no Produto TOTVS.",
+					"type": "string",
+					"exemple": "Pediatria",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.ESPECIALIDADE",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Campo de texto livre que o usuário informa a especialidade"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.nom_especialid",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Nome da especialidade do Prestador de Serviço referente ao lançamento da coparticipação do beneficiário no Produto TOTVS."
+						}
+					]
+				},
+				"InternationalCodeDiseases": {
+					"description": "Código internacional de Doenças lançado da coparticipação do beneficiário no Produto TOTVS.",
+					"type": "string",
+					"exemple": "1",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.CODCID",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": " código vinculadao a tabela VCID"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.cod_cid",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código internacional de Doenças lançado da coparticipação do beneficiário no Produto TOTVS."
+						}
+					]
+				},
+				"ServiceType": {
+					"description": "Tipo de Atendimento informado pelo Prestador de Serviço no lançamento da Coparticipação do Beneficiário: 1 - Eletivo | 2 - PS | 3 - Exame | 4 - PAC | 5 - Material/Medicamento | 6 - Internação | 7 - Terapia | 8 - Taxa/Diária| 9 - Case | 10 - Reembolso | 11 - Remoção | 12 - Não Informado | 13 - Ambulatório",
+					"type": "string",
+					"exemple": "1",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7",
+						"8",
+						"9",
+						"10",
+						"11",
+						"12",
+						"13"
+					],
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.CODTPATENDIMENTO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código vinculado a tabela PTPATENDICOPART que segue a codificação aqui descrita"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.idi_tip_atend",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Tipo de Atendimento informado pelo Prestador de Serviço no lançamento da Coparticipação do Beneficiário: 1 - Eletivo | 2 - PS | 3 - Exame | 4 - PAC | 5 - Material/Medicamento | 6 - Internação | 7 - Terapia | 8 - Taxa/Diária| 9 - Case | 10 - Reembolso | 11 - Remoção | 12 - Não Informado | 13 - Ambulatório"
+						}
+					]
+				},
+				"AmountUse": {
+					"description": "Quantidade de utilização de coparticipação por parte do beneficiário e seus dependentes dentro do Produto TOTVS.",
+					"type": "string",
+					"exemple": "001",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.QTDEUTILIZADA",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Quantidade utilizada do serviço prestado"
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.qti_utiliz",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Quantidade de utilização de coparticipação por parte do beneficiário e seus dependentes dentro do Produto TOTVS."
+						}
+					]
+				},
+				"CoparticipationDescription": {
+					"description": "Descrição da Coparticipação referente ao lançamento no histórico do beneficiário no Produto TOTVS.",
+					"type": "string",
+					"exemple": "Descrição da coparticipação",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"field": "",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "RM",
+							"field": "PFHSTASSMEDCOPART.DESCATENDIMENTO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": ""
+						},
+						{
+							"product": "DATASUL",
+							"field": "copart_func.des_copart",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Descrição da Coparticipação referente ao lançamento no histórico do beneficiário no Produto TOTVS."
+						}
+					]
+				}
+			}
+		}
+	}
+}
