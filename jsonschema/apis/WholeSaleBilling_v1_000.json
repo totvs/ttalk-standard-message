@@ -1,0 +1,673 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para Faturamento de Pedidos de Venda TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/wholesale/billing/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "81"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para Faturamento de Pedidos de Venda TOTVS",
+    "version": "1.000",
+    "title": "Faturamentos",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Pedidos",
+        "description": "Pedidos de Venda do Sistema",
+        "segment": "Distribuição e Logística"
+      },
+      "productInformation": [
+        {
+          "product": "Winthor",
+          "contact": "winthor@totvs.com.br",
+          "description": "Faturamento de Pedidos de Venda",
+          "adapter": "",
+          "helpUrl": "link aqui"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/orders": {
+      "get": {
+        "tags": [
+          "Sale Order"
+        ],
+        "summary": "Retorna todos os Pedidos de Venda disponíveis",
+        "description": "Retorna todos os Pedidos de Venda disponíveis",
+        "operationId": "getSales",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/parameters/SaleType"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/parameters/SaleOrderStatus"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de pedidos de venda paginada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/PagedSalesOrders"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Sale Order"
+        ],
+        "summary": "Inicia o processo de faturamento da venda passada na requisição",
+        "description": "Inicia o processo de faturamento da venda passada na requisição",
+        "operationId": "postSales",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/SalesOrder"
+              }
+            }
+          },
+          "description": "Pedido de Venda para ser faturado"
+        },
+        "responses": {
+          "201": {
+            "description": "Retorna Pedido de Venda que acabou de ser iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/SalesOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada o Pedido de Venda com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Faturamento já foi iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "put": {
+        "tags": [
+          "Sale Order"
+        ],
+        "summary": "Inicia o processo de faturamento da venda passada na requisição",
+        "description": "Inicia o processo de faturamento da venda passada na requisição",
+        "operationId": "putSaleId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SaleId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/SalesOrder"
+              }
+            }
+          },
+          "description": "Pedido de Venda a ser faturado"
+        },
+        "responses": {
+          "200": {
+            "description": "Retorna o Pedido de Venda que acabou de ser iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/SalesOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada o Pedido de Venda com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Faturamento já foi iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sale Order"
+        ],
+        "summary": "Retorna um Pedido de Venda a partir de um código",
+        "description": "Retorna um Pedido de Venda a partir de um código",
+        "operationId": "getOrderId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SaleId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o Pedido de Venda com id informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/SalesOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada um Pedido de Venda com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shipments": {
+      "get": {
+        "tags": [
+          "Sale shipment"
+        ],
+        "summary": "Retorna todos os Carregamentos disponíveis",
+        "description": "Retorna todos os Carregamentos disponíveis",
+        "operationId": "getShipments",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/parameters/ShipmentStatus"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de Carregamentos paginada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/PagedShipments"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Sale shipment"
+        ],
+        "summary": "Inicia o processo de faturamento da venda passada na requisição",
+        "description": "Inicia o processo de faturamento da venda passada na requisição",
+        "operationId": "postShipments",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/Shipment"
+              }
+            }
+          },
+          "description": "Carregamento para ser faturado"
+        },
+        "responses": {
+          "201": {
+            "description": "Retorna Carregamento que acabou de ser iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/Shipment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada o Carregamento com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Faturamento já foi iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shipments/{id}": {
+      "put": {
+        "tags": [
+          "Sale shipment"
+        ],
+        "summary": "Inicia o processo de faturamento da venda passada na requisição",
+        "description": "Inicia o processo de faturamento da venda passada na requisição",
+        "operationId": "putShipmentId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ShipmentId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/Shipment"
+              }
+            }
+          },
+          "description": "Carregamento a ser faturado"
+        },
+        "responses": {
+          "200": {
+            "description": "Retorna o Carregamento que acabou de ser iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/Shipment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada o Carregamento com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Faturamento já foi iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sale shipment"
+        ],
+        "summary": "Retorna um Carregamento a partir de um código",
+        "description": "Retorna um Carregamento a partir de um código",
+        "operationId": "getShipmentId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponivel com todos os parametros",
+              "minimalVersion": "29.4"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ShipmentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o Carregamento com id informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/wholeSaleBilling/v1/1_000/jsonschema/schemas/WholeSaleBilling_1_000.json#/definitions/Shipment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição informada é inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi encontrada um Carregamento com o código informado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocorreu um erro no processamento da requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "SaleId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Identificador Único representando o Pedido de Venda",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "ShipmentId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Identificador Único representando o Carregamento",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
