@@ -36,17 +36,18 @@ describe("Validating OpenAPI files...", function () {
             var pathValidatorResult;
             var apiCompatibilityServiceResult;
             var derefResult;
-            var derefErroDetail;
+            var derefErrorDetail;
 
             before(async function (done) {
               this.timeout(120000);
+              file = file.trim(); //Removes unwanted bytes
               parsedOpenAPI = JSON.parse(file);
               derefResult = JSON.parse(file); //Need to have other obj reference than the previous one                       
 
               var callbackDereferenceResult = function (err, newSchema) {
                 if (err) {
                   derefResult = false;
-                  derefErroDetail = err;
+                  derefErrorDetail = err;
                   done();
                 } else {
                   derefResult = newSchema;
@@ -83,11 +84,11 @@ describe("Validating OpenAPI files...", function () {
             });
 
             describe(" - Content Format: ", function () {
-              it("shouldn't contain weird special characteres", function () {
+              it("shouldn't contain weird special characters", function () {
                 expect(file.includes("�"), "Please check file encode").to.be.false;
               });
 
-              it("should be complient with OpenAPI in version 3.0'", function () {
+              it("should be compliant with OpenAPI in version 3.0'", function () {
                 expect(parsedOpenAPI).to.have.property("openapi");
                 expect(parsedOpenAPI).to.not.have.property("swagger");
               });
@@ -164,14 +165,14 @@ describe("Validating OpenAPI files...", function () {
               });
 
               it("should be dereferenced. This means all external references are correct (FilePaths and Object property names)", function () {
-                expect(derefResult, derefErroDetail).to.be.ok;
+                expect(derefResult, derefErrorDetail).to.be.ok;
               });
 
               it("should contain the same Id property name in URL and body", function () {
                 let errorMessage = "";
                 if (pathValidatorResult) {
-                  if (pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody)
-                    errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathWithoutSameKeyInUrlAndBody + "'. It may be a typo or case sensitive difference";
+                  if (pathValidatorResult.errorPathWithoutSameKeyInUrlAndBody)
+                    errorMessage = "Check the endpoint '" + pathValidatorResult.errorPathWithoutSameKeyInUrlAndBody + "'. It may be a typo or case sensitive difference";
                   expect(pathValidatorResult.containsTheSameKeyInUrlAndBody, errorMessage).to.be.true;
                 }
               });
@@ -179,8 +180,8 @@ describe("Validating OpenAPI files...", function () {
               it("should contain 'hasNext' prop if there is 'items' prop and vice versa", function () {
                 let errorMessage = "";
                 if (pathValidatorResult) {
-                  if (pathValidatorResult.erroredPathMissingItemOrHasNext)
-                    errorMessage = "Check the endpoint '" + pathValidatorResult.erroredPathMissingItemOrHasNext + "'";
+                  if (pathValidatorResult.errorPathMissingItemOrHasNext)
+                    errorMessage = "Check the endpoint '" + pathValidatorResult.errorPathMissingItemOrHasNext + "'";
                   expect(pathValidatorResult.containsItemsAndHasNext, errorMessage).to.be.true;
                 }
               });
@@ -192,14 +193,14 @@ describe("Validating OpenAPI files...", function () {
                 }
               });
 
-              it("should have 'hasNext' when it's an 'getAll' endpoint", function () {
+              it("should have 'hasNext' when it's a 'getAll' endpoint", function () {
                 if (pathValidatorResult) {
                   var errorMessage = pathValidatorResult.hasNextInGetAllMsg;
                   expect(pathValidatorResult.hasNextInGetAll, errorMessage).not.to.be.false;
                 }
               });
 
-              it("shouldn't have 'hasNext' when it's an 'getOne' endpoint", function () {
+              it("shouldn't have 'hasNext' when it's a 'getOne' endpoint", function () {
                 if (pathValidatorResult) {
                   var errorMessage = pathValidatorResult.noHasNextInGetOneMsg;
                   expect(pathValidatorResult.noHasNextInGetOne, errorMessage).not.to.be.false;
@@ -313,6 +314,19 @@ describe("Validating OpenAPI files...", function () {
                 });
               });
             });
+
+            describe(" - Content Type: ", function () {
+              it("should be one of the supported/allowed ContentTypes", function () {
+                if (pathValidatorResult) {
+                  expect(pathValidatorResult.allowedContentType, pathValidatorResult.allowedContentTypeMsg).to.be.true;
+                }
+              });
+              it("should have matching body content", function () {
+                if (pathValidatorResult) {
+                  expect(pathValidatorResult.contentBodyMatchesContentType, pathValidatorResult.contentBodyMatchesContentTypeMsg).to.be.true;
+                }
+              });
+            })
           });
         };
       });
