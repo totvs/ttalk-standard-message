@@ -1,0 +1,927 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "Gerenciador de boletos",
+		"description": "Serviço de gerenciamento de boletos",
+		"contact": {
+			"name": "TOTVS",
+			"url": "http://www.totvs.com",
+			"email": "suporte@pcinformatica.com.br"
+		},
+		"version": "1.000",
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Payment Tickets",
+				"description": "API para gerenciar layouts de boletos",
+				"segment": "Financeiro",
+				"domain": "Contas a receber"
+			},
+			"productInformation": [
+				{
+					"product": "Winthor",
+					"contact": "winthor@totvs.com.br",
+					"description": "API para gerenciar layouts de boletos",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"servers": [
+		{
+			"url": "{serverProtocol}://{serverUrl}:{serverPort}/api/distribution/paymentTicket/v1",
+			"variables": {
+				"serverProtocol": {
+					"default": "http",
+					"description": "Protocolo http ou https, podem ser utilizados de acordo com a instalação local do Winthor Anywhere"
+				},
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverPort": {
+					"default": "80",
+					"description": "Porta deve ser utilizada conforme seleção na instalação do Winthor Anywhere"
+				}
+			}
+		}
+	],
+	"tags": [
+		{
+			"name": "Contas a receber"
+		},
+		{
+			"name": "Layout Boleto"
+		},
+		{
+			"name": "variavelBoleto"
+		}
+	],
+	"paths": {
+		"/incomingBills/digitableline": {
+			"post": {
+				"tags": [
+					"Contas a receber"
+				],
+				"summary": "Gera a linha digitável para a transação",
+				"operationId": "gerarLinhaDigitavel",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/DigitableLineDto"
+							}
+						}
+					},
+					"required": false
+				},
+				"responses": {
+					"200": {
+						"description": "Retorna a linha ditiável gerada",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/LineDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na geração",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "body"
+			}
+		},
+		"/layouts": {
+			"get": {
+				"tags": [
+					"Layout Boleto"
+				],
+				"summary": "Pesquisar layouts de códigos de barra, baseado nos dados informados que servirão como filtros e de maneira paginada.",
+				"operationId": "pesquisarLayouts",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "name",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "status",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"VALIDO",
+								"INVALIDO",
+								"TODOS"
+							]
+						}
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Layouts de códigos de barra pesquisados com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/PagedTicketLayout"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na pesquisa de layouts de códigos de barra",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Layout Boleto"
+				],
+				"summary": "Salva um Layout de boleto",
+				"operationId": "salvarLayout",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/TicketLayoutDto"
+							}
+						}
+					},
+					"required": false
+				},
+				"responses": {
+					"201": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/TicketLayoutDto"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "body"
+			}
+		},
+		"/layouts/build": {
+			"post": {
+				"tags": [
+					"Layout Boleto"
+				],
+				"summary": "Gera e persiste o código de barras, nosso número e linha digitavel",
+				"operationId": "gerarLayout",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/IncomingBillsFilterDto"
+							}
+						}
+					},
+					"required": false
+				},
+				"responses": {
+					"200": {
+						"description": "Gerado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/InfoDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na geração do código de barras",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "body"
+			}
+		},
+		"/layouts/parameters/validate": {
+			"post": {
+				"tags": [
+					"Layout Boleto"
+				],
+				"summary": "Validar parâmetro de uma variável",
+				"operationId": "validarParametro",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/VariableParametersDto"
+							}
+						}
+					},
+					"required": false
+				},
+				"responses": {
+					"200": {
+						"description": "parâmetro válidado com sucesso"
+					},
+					"400": {
+						"description": "parâmetro inválido",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "body"
+			}
+		},
+		"/layouts/parameters/variables/{id}": {
+			"get": {
+				"tags": [
+					"Layout Boleto"
+				],
+				"summary": "Listar parâmetros de uma variável",
+				"operationId": "listarParametrosVariavel",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Listagem de parâmetros da variável utilizada no layout feita com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/VariableParametersDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na listagem de parâmetros de uma variável utilizada no layout",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/layouts/{id}": {
+			"get": {
+				"tags": [
+					"Layout Boleto"
+				],
+				"summary": "Consultar layouts de códigos de barra",
+				"operationId": "consultarLayoutPorCodigo",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Layout consultado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/TicketLayoutDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na consulta da layout por código",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Layout Boleto"
+				],
+				"summary": "Exclui o registro de um layout",
+				"operationId": "excluirLayout",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Excluido com sucesso"
+					}
+				}
+			}
+		},
+		"/variables": {
+			"get": {
+				"tags": [
+					"variavelBoleto"
+				],
+				"summary": "Listar todas as variáveis cadastradas",
+				"operationId": "pesquisarVariaveis",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "status",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"VALIDO",
+								"INVALIDO",
+								"TODOS"
+							]
+						}
+					},
+					{
+						"name": "dataType",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"NUMERICO",
+								"ALFANUMERICO",
+								"DATA",
+								"TODOS"
+							]
+						}
+					},
+					{
+						"name": "variableType",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"PADRAO",
+								"CONFIGURAVEL",
+								"TODOS"
+							]
+						}
+					},
+					{
+						"name": "contentType",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"TABELA",
+								"SQL",
+								"FORMULA",
+								"FUNCAO",
+								"VALOR_FIXO"
+							]
+						}
+					},
+					{
+						"name": "ourNumber",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"ORIGINAL",
+								"CORRESPONDENTE",
+								"NAO_SE_APLICA"
+							]
+						}
+					},
+					{
+						"name": "name",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Variáveis listadas com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/PagedTicketVariable"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na lista de variáveis",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"variavelBoleto"
+				],
+				"summary": "Salvar uma variável que pode vim a compor um código de barras",
+				"operationId": "salvarVariavel",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/TicketVariableDto"
+							}
+						}
+					},
+					"required": false
+				},
+				"responses": {
+					"200": {
+						"description": "Variável salva com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/TicketVariableDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na inclusão/alteração da variável",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "body"
+			}
+		},
+		"/variables/compatibles": {
+			"get": {
+				"tags": [
+					"variavelBoleto"
+				],
+				"summary": "Pesquisar se as variáveis compatíveis com cada tipo de conteúdo(Fórmula, Função e Sql). Exemplo: Somente variáveis do tipo de dados númerico, são compatíveis comvariáveis do tipo de conteúdo Fórmula.",
+				"operationId": "pesquisarVariaveisCompativeis",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "entity",
+						"in": "query",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "contentType",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"TABELA",
+								"SQL",
+								"FORMULA",
+								"FUNCAO",
+								"VALOR_FIXO"
+							]
+						}
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Variáveis compatíveis pesquisadas com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/PagedTicketVariable"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na pesquisa de variáveis compatíveis",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/variables/validate": {
+			"post": {
+				"tags": [
+					"variavelBoleto"
+				],
+				"summary": "Validar conteúdo de uma variável",
+				"operationId": "validarVariavel",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/TicketVariableDto"
+							}
+						}
+					},
+					"required": false
+				},
+				"responses": {
+					"200": {
+						"description": "Variável válida"
+					},
+					"400": {
+						"description": "Variável inválida",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "body"
+			}
+		},
+		"/variables/{id}": {
+			"get": {
+				"tags": [
+					"variavelBoleto"
+				],
+				"summary": "Consultar variável por código",
+				"operationId": "consultarVariaveisPorCodigo",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Variável consultada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/TicketVariableDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Falha na consulta da variável por código",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"variavelBoleto"
+				],
+				"summary": "Excluir variável por código",
+				"operationId": "excluirVariavel",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Variável excluida com sucesso"
+					},
+					"400": {
+						"description": "Falha na exclusão da variável por código",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/variables/{id}/links": {
+			"get": {
+				"tags": [
+					"variavelBoleto"
+				],
+				"summary": "Consulta os layouts vinculados à variável",
+				"operationId": "layoutsVinculados",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Winthor",
+							"available": true,
+							"minimalVersion": "29.5"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PaymentTicket_1_000.json#/definitions/PagedNamedDto"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {}
+}
