@@ -1,0 +1,264 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para consulta de Equipamentos de Proteção nos produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/rh/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para consulta de Equipamentos de Proteção nos produtos TOTVS",
+		"version": "1.000",
+		"title": "Equipamentos de Proteção (EPI)",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "PPE",
+				"description": "Equipamentos de Proteção",
+				"segment": "RH"
+			},
+			"productInformation": [				
+				{
+					"product": "RM",
+					"contact": "RM_FW@totvs.com.br",
+					"description": "Equipamentos de Proteção"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/ppes": {
+			"get": {
+				"tags": [
+					"PPEs"
+				],
+				"summary": "Retorna todos os EPIs cadastrados no sistema",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"description": "Retorna todos os EPIs cadastrados no sistema",
+				"operationId": "getPPE",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/PPE/v1/1_000/jsonschema/schemas/PPE_1_000.json#/definitions/PPEGroups"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"PPE"
+				],
+				"summary": "Inclui EPI passado na requisição",
+				"description": "Inclui EPI passado na requisição",
+				"operationId": "postPPE",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/PPE/v1/1_000/jsonschema/schemas/PPE_1_000.json#/definitions/PPEInfo"
+							}
+						}
+					},
+					"description": "EPI para ser incluído"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/PPE/v1/1_000/jsonschema/schemas/PPE_1_000.json#/definitions/PPEInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/ppes/{id}": {
+			"get": {
+				"tags": [
+					"PPE"
+				],
+				"summary": "Retorna o EPI indicado",
+				"description": "Retorna o EPI indicado",
+				"operationId": "getPPEId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/PPEId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/PPE/v1/1_000/jsonschema/schemas/PPE_1_000.json#/definitions/PPEInfo"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "EPI não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"PPE"
+				],
+				"summary": "Altera o EPI passado na requisição",
+				"description": "Altera o EPI passado na requisição",
+				"operationId": "putPPEId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/PPEId"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/PPE/v1/1_000/jsonschema/schemas/PPE_1_000.json#/definitions/PPEInfo"
+							}
+						}
+					},
+					"description": "Usuário para ser incluído"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/PPE/v1/1_000/jsonschema/schemas/PPE_1_000.json#/definitions/PPEInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da atualização",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "EPI não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}			
+		}
+	},
+	"components": {
+		"parameters": {
+			"PPEId": {
+				"name": "id",
+				"in": "path",
+				"required": true,
+				"description": "Identificador Único representando o EPI",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
