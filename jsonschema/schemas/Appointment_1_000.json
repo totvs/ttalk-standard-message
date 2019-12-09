@@ -1,5 +1,5 @@
 {
-    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Patient/v1/1_000/jsonschema/schemas/Patient_1_000.json#",
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/appointments/V1/1_000/jsonschema/schemas/Aappointments_1_000.json#",
     "info": {
         "description": "API para a entidade Agendamento para produtos TOTVS",
         "version": "1.000",
@@ -26,6 +26,39 @@
         }
     },
     "definitions": {
+        "modelDelete": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Identificador do registro",
+                    "required": true,
+                    "type": "string",
+                    "example": "1$_$1",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDAMENTO.CODCOLIGADA|SZAGENDAMENTO.SEQAGENDAMENTO",
+                            "required": true,
+                            "type": "String",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Código da Coligada e sequencial do Agendamento"
+                        }
+                    ]
+                }
+            }
+        },
+        "modelComplete": {
+            "type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/AppointmentBaseInfo"
+				},
+				{
+					"$ref": "#/definitions/AppointmentInfo"
+				}
+			]
+        },
         "PagedAppointment": {
             "type": "object",
             "allOf": [
@@ -43,31 +76,14 @@
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/AppointmentInfo"
+                        "$ref": "#/definitions/modelComplete"
                     }
                 }
             }
         },
-        "AppointmentInfo": {
+        "AppointmentBaseInfo": {
             "type": "object",
             "properties": {
-                "key": {
-                    "description": "Identificador do registro",
-                    "required": true,
-                    "type": "string",
-                    "example": "1$_$1",
-                    "x-totvs": [
-                        {
-                            "product": "RM",
-                            "field": "SZAGENDAMENTO.CODCOLIGADA|SZAGENDAMENTO.SEQAGENDAMENTO",
-                            "required": true,
-                            "type": "String",
-                            "available": true,
-                            "canUpdate": false,
-                            "note": "Este dado e formado pelos campos Código da Coligada e sequencial do Agendamento"
-                        }
-                    ]
-                },
                 "companyId": {
                     "description": "Código da coligada",
                     "required": true,
@@ -119,7 +135,7 @@
                         }
                     ]
                 },
-                "ScheduleKey": {
+                "ScheduleCode": {
                     "description": "Identificador do registro da agenda",
                     "required": false,
                     "type": "string",
@@ -136,24 +152,7 @@
                         }
                     ]
                 },
-                "ScheduleName": {
-                    "description": "nome da agenda",
-                    "required": false,
-                    "type": "string",
-                    "exemple":  "consultas",
-                    "x-totvs": [
-                        {
-                            "product": "RM",
-                            "field": "SZAGENDA.NOME",
-                            "required": false,
-                            "type": "date",
-                            "available": true,
-                            "canUpdate": false,
-                            "note": "nome da agenda"
-                        }
-                    ]
-                },
-                "Date": {
+                "ScheduleDate": {
                     "description": "Nome da mãe",
                     "required": true,
                     "type": "date",
@@ -204,24 +203,7 @@
                         }
                     ]
                 },
-                "InsuranceCompany": {
-                    "description": "Convenio do agendamento",
-                    "required": true,
-                    "type": "string",
-                    "exemple": "33642548",
-                    "x-totvs": [
-                        {
-                            "product": "RM",
-                            "field": "SZAGENDAMENTO.CONVENIO",
-                            "required": true,
-                            "type": "string",
-                            "available": true,
-                            "canUpdate": true,
-                            "note":  "Convenio do agendamento"
-                        }
-                    ]
-                },
-                "InsuranceCompanyKey": {
+                "InsuranceCompanyCode": {
                     "description": "Identificador do registro convenio",
                     "required": false,
                     "type": "string",
@@ -255,7 +237,7 @@
                         }
                     ]
                 },
-                "InsurancePlanKey": {
+                "InsurancePlanCode": {
                     "description": "Identificador do registro plano",
                     "required": false,
                     "type": "string",
@@ -425,7 +407,7 @@
                         }
                     ]
                 },
-                "PatientKey": {
+                "PatientCode": {
                     "description": "Identificador do registro",
                     "required": false,
                     "type": "string",
@@ -595,7 +577,7 @@
                         }
                     ]
                 },
-                "Number": {
+                "AddressNumber": {
                     "description": "número do endereço",
                     "required": false,
                     "type": "string",
@@ -663,6 +645,79 @@
                         }
                     ]
                 },
+                "PractitionerCode": {
+                    "description": "Identificador do registro pelo prestador",
+                    "required": false,
+                    "type": "string",
+                    "example": "1$_$1",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDAMENTO.CODCOLIGADA|PRESTADOR.CODGERAL",
+                            "required": false,
+                            "type": "String",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Código da Coligada e Código do Prestador"
+                        }
+                    ]
+                }
+            }
+        },
+        "AppointmentInfo": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Identificador do registro",
+                    "required": true,
+                    "type": "string",
+                    "example": "1$_$1",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDAMENTO.CODCOLIGADA|SZAGENDAMENTO.SEQAGENDAMENTO",
+                            "required": true,
+                            "type": "String",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Código da Coligada e sequencial do Agendamento"
+                        }
+                    ]
+                },
+                "ScheduleName": {
+                    "description": "nome da agenda",
+                    "required": false,
+                    "type": "string",
+                    "exemple":  "consultas",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.NOME",
+                            "required": false,
+                            "type": "date",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "nome da agenda"
+                        }
+                    ]
+                },
+                "InsurancePlanName": {
+                    "description": "nome do plano",
+                    "required": false,
+                    "type": "string",
+                    "exemple": "Unimad",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZPLANOSCONVENIO.DESCPLANO",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true,
+                            "note":  "nome do plano"
+                        }
+                    ]
+                },
                 "PractitionerId": {
                     "description": "prestador do agendamento",
                     "required": false,
@@ -677,23 +732,6 @@
                             "available": true,
                             "canUpdate": true,
                             "note":  "prestador do agendamento"
-                        }
-                    ]
-                },
-                "PractitionerKey": {
-                    "description": "Identificador do registro pelo prestador",
-                    "required": false,
-                    "type": "string",
-                    "example": "1$_$1",
-                    "x-totvs": [
-                        {
-                            "product": "RM",
-                            "field": "SZAGENDAMENTO.CODCOLIGADA|PRESTADOR.CODGERAL",
-                            "required": false,
-                            "type": "String",
-                            "available": true,
-                            "canUpdate": false,
-                            "note": "Este dado e formado pelos campos Código da Coligada e Código do Prestador"
                         }
                     ]
                 },
