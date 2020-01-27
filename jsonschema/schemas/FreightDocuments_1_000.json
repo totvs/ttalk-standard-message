@@ -1,0 +1,1014 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/FreightDocuments/v1/1_000/jsonschema/schemas/FreightDocuments_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para o cadastro do documento de frete para produtos TOTVS",
+		"version": "1.000",
+		"title": "FreightDocuments",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/FreightDocumentsType"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "FreightDocuments",
+				"description": "Cadastro do documento de frete.",
+				"segment": "Gestão Frete Embarcador"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "Protheus_FW@totvs.com.br",
+					"description": "Cadastro do documento de frete.",
+					"adapter": "gfea065api.prw",
+					"helpUrl": "link aqui"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedFreightDocuments": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/FreightDocumentsType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"FreightDocumentsType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"type": "string",
+					"description": "Chave do documento de frete.",
+					"example": "99 |CTRC |77785         |UN   |0300901         |20180930",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3_FILIAL|GW3_CDESP|GW3_EMISDF|GW3_SERDF|GW3_NRDF|GW3_DTEMIS",
+							"type": "Char",
+							"length": "10",
+							"required": true,
+							"available": false,
+							"canUpdate": false,
+							"note": "Este dado é formado pelos campos: Filal, Espécie, Emissor, Série, Número e Data de Emissão."
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"example": "99",
+					"description": "Filial do Sistema",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"Field": "GW3.GW3_FILIAL",
+							"Required": true,
+							"Type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentSpecie": {
+					"type": "string",
+					"example": "CTRC",
+					"description": "Espécie do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_CDESP",
+							"required": true,
+							"type": "Char",
+							"length": "5",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IssuerCode": {
+					"type": "string",
+					"example": "77785",
+					"description": "Emissor do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_EMISDF",
+							"required": false,
+							"type": "Char",
+							"length": "14",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentSerie": {
+					"type": "string",
+					"example": "001",
+					"description": "Série do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_SERDF",
+							"required": true,
+							"type": "Char",
+							"length": "05",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentNumber": {
+					"type": "string",
+					"example": "9999999",
+					"description": "Número do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_NRDF",
+							"required": false,
+							"type": "Char",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IssueDate": {
+					"type": "string",
+					"example": "20191010",
+					"description": "Data de Emissão.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_DTEMIS",
+							"required": false,
+							"type": "Date",
+							"length": "08",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TypeofDocument": {
+					"type": "string",
+					"description": "Tipo do Documento.",
+					"example": "1",
+					"enum": [
+						"1 - Normal",
+						"2 - Complementar Valor",
+						"3 - Complementar Imposto",
+						"4 - Reentrega",
+						"5 - Devolução",
+						"6 - Redespacho",
+						"7 - Serviço"
+					],
+					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_TPDF",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"precision": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InputDate": {
+					"type": "string",
+					"description": "Data de Entrada.",
+					"example": "20191010",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_DTENT",
+							"required": true,
+							"type": "Date",
+							"length": "8",
+							"precision": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TaxOpCode": {
+					"type": "string",
+					"description": "CFOP.",
+					"example": "1232",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_CFOP",
+							"required": true,
+							"type": "Char",
+							"length": "6",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"InputUser": {
+					"type": "string",
+					"description": "Usuário de Entrada.",
+					"example": "admin",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_USUIMP",
+							"required": true,
+							"type": "Char",
+							"length": "50",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentValue": {
+					"type": "string",
+					"description": "Valor do Documento.",
+					"example": "48,00",
+					"minimum": "0",
+					"maximum": "999999999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_VLDF",
+							"required": true,
+							"type": "Number",
+							"length": "14",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"TollValue": {
+					"type": "string",
+					"description": "Valor do Pedágio.",
+					"example": "42,00",
+					"minimum": "0",
+					"maximum": "999999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_PEDAG",
+							"required": true,
+							"type": "Number",
+							"length": "10",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"FreightToll": {
+					"type": "string",
+					"example": 1,
+					"description": "Pedágio no Valor do Frete.",
+					"enum": [
+						"1 - Sim",
+						"2 - Não"
+					],					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_PDGFRT",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ICMSBaseToll": {
+					"type": "string",
+					"example": 1,
+					"description": "Pedágio na Base de ICMS.",
+					"enum": [
+						"1 - Sim",
+						"2 - Não"
+					],						
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_ICMPDG",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"PisCofinsBaseToll": {
+					"type": "string",
+					"example": 1,
+					"description": "Pedágio na Base PIS/COFINS.",
+					"enum": [
+						"1 - Sim",
+						"2 - Não"
+					],						
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_PDGPIS",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"TaxType": {
+					"type": "string",
+					"example": 1,
+					"description": "Tipo Imposto.",
+					"enum": [
+						"1 - ICMS",
+						"2 - ISS",
+						"3 - Nenhum"
+					],						
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GVT.GVT_TPIMP",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},	
+				"TaxationType": {
+					"type": "string",
+					"example": 1,
+					"description": "Tipo de Tributação.",
+					"enum": [
+						"1 - Tributado",
+						"2 - Isento/Não tributado",
+						"3 - Subs Tributária",
+						"4 - Diferido",
+						"5 - Reduzido",
+						"6 - Outros",
+						"7 - Presumido"
+					],						
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_TRBIMP",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},					
+				"TaxCalculationBase": {
+					"type": "string",
+					"description": "Base de Cálculo Imposto.",
+					"example": "48,00",
+					"minimum": "0",
+					"maximum": "999999999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_BASIMP",
+							"required": false,
+							"type": "Number",
+							"length": "14",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"TaxRate": {
+					"type": "string",
+					"description": "Alíquota Imposto.",
+					"example": "12,00",
+					"minimum": 0,
+					"maximum": 100.00,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_PCIMP",
+							"required": false,
+							"type": "Number",
+							"length": "5",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"TaxValue": {
+					"type": "string",
+					"description": "Valor do imposto.",
+					"example": "20,00",
+					"minimum": "0",
+					"maximum": "999999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_VLIMP",
+							"required": false,
+							"type": "Number",
+							"length": "10",
+							"precision": "0",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"WithheldTaxValue": {
+					"type": "string",
+					"description": "Valor Imposto Retido.",
+					"example": "20,00",
+					"minimum": "0",
+					"maximum": "999999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_IMPRET",
+							"required": false,
+							"type": "Number",
+							"length": "10",
+							"precision": "0",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"WithheldTaxRate": {
+					"type": "string",
+					"description": "Percentual Imposto Retido.",
+					"example": "20,00",
+					"minimum": 0,
+					"maximum": 100.00,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_PCRET",
+							"required": false,
+							"type": "Number",
+							"length": "6",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Note": {
+					"type": "string",
+					"description": "Observacoes",
+					"example": "Teste",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_OBS",
+							"required": false,
+							"type": "char",
+							"length": "253",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"TaxCredit": {
+					"type": "string",
+					"description": "Permite Crédito de ICMS",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1 - Sim",
+						"2 - Não"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_CRDICM",
+							"required": false,
+							"type": "char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ElectronicAccessKey": {
+					"type": "string",
+					"description": "Chave do Ct-e",
+					"example": "35170705248891000181570010000011831339972127",
+					"minimum": 1,
+					"maximum": 44,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_CTE",
+							"required": false,
+							"type": "char",
+							"length": "44",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},		
+				"IntegrationDate": {
+					"type": "string",
+					"description": "Data Integração Fiscal",
+					"example": "20191010",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_DTFIS",
+							"required": false,
+							"type": "date",
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},		
+				"CofinsBaseValue": {
+					"type": "string",
+					"description": "Valor Base Cofins",
+					"example": "20,00",
+					"minimum": "1",
+					"maximum": "999999999.99",					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_BASCOF",
+							"required": false,
+							"type": "number",
+							"length": "14",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},		
+				"CofinsValue": {
+					"type": "string",
+					"description": "Valor Cofins",
+					"example": "20,00",
+					"minimum": "1",
+					"maximum": "999999999.99",					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_VLCOF",
+							"required": false,
+							"type": "number",
+							"length": "14",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},			
+				"PisBaseValue": {
+					"type": "string",
+					"description": "Valor Base PIS",
+					"example": "20,00",
+					"minimum": "1",
+					"maximum": "999999999.99",					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_BASPIS",
+							"required": false,
+							"type": "number",
+							"length": "14",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},		
+				"PisValue": {
+					"type": "string",
+					"description": "Valor PIS",
+					"example": "20,00",
+					"minimum": "1",
+					"maximum": "999999999.99",					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_VLPIS",
+							"required": false,
+							"type": "number",
+							"length": "14",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},	
+				"GenerateCredit": {
+					"type": "string",
+					"description": "Gera crédito PIS/COFINS",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1 - Sim",
+						"2 - Não"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_CRDPC",
+							"required": false,
+							"type": "char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},		
+				"NaturSped": {
+					"type": "string",
+					"description": "Natur SPED",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"0 - Venda c/ ônus",
+						"1 - Vendas s/ ônus",
+						"2 - Compra c/ crédito",
+						"3 - Compra s/ crédito",
+						"4 - Trans Prod Acabado",
+						"5 - Transf Prod Elaboração",
+						"9 - Outras"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_NATFRE",
+							"required": false,
+							"type": "char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},	
+				"Purpose": {
+					"type": "string",
+					"description": "Tipo do CT-e",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"0 - Venda c/ ônus",
+						"1 - Vendas s/ ônus",
+						"2 - Compra c/ crédito",
+						"3 - Compra s/ crédito",
+						"4 - Trans Prod Acabado",
+						"5 - Transf Prod Elaboração",
+						"9 - Outras"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_TPCTE",
+							"required": false,
+							"type": "char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},	
+				"TaxRejectionReason": {
+					"type": "string",
+					"description": "Motivo de Rejeição Fiscal",
+					"example": "Teste",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_MOTFIS",
+							"required": false,
+							"type": "char",
+							"length": "253",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"ServiceType": {
+					"type": "string",
+					"description": "Código Tipo Serviço",
+					"example": "Teste",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_CDTPSE",
+							"required": false,
+							"type": "char",
+							"length": "253",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+
+				"cityOrigin": {
+					"type": "string",
+					"description": "Código da cidade de Origem.",
+					"example": "0000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GU7.GU7_NRCID",
+							"required": false,
+							"type": "char",
+							"length": "7",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+
+				"UFOrigin": {
+					"type": "string",
+					"description": "Codigo do Estado (UF) de Origem.",
+					"example": "SC",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GU7.GU7_CDUF",
+							"required": false,
+							"type": "char",
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+
+				"cityOriginName": {
+					"type": "string",
+					"description": "Nome da Cidade de Origem.",
+					"example": "JOINVILLE",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GU7.GU7_NMCID",
+							"required": false,
+							"type": "char",
+							"length": "60",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"cityDestination": {
+					"type": "string",
+					"description": "Código da cidade de destino.",
+					"example": "0000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GU7.GU7_NRCID",
+							"required": false,
+							"type": "char",
+							"length": "7",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"cityDestinationName": {
+					"type": "string",
+					"description": "Nome da Cidade de destino.",
+					"example": "JOINVILLE",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GU7.GU7_NMCID",
+							"required": false,
+							"type": "char",
+							"length": "60",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"UFDestination": {
+					"type": "string",
+					"description": "Nome da Cidade de destino.",
+					"example": "JOINVILLE",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GU7.GU7_NMCID",
+							"required": false,
+							"type": "char",
+							"length": "60",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Status": {
+					"type": "string",
+					"description": "Situação Fiscal",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1 - Não Enviado",
+						"2 - Pendente",
+						"3 - Rejeitado",
+						"4 - Atualizado",
+						"5 - Pendente Desatualização",
+						"6 - Não se aplica"
+					],					
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GW3.GW3_SITFIS",
+							"required": false,
+							"type": "char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},	
+				"AccountingMovements": {
+					"type": "object",
+					"description": "Movimentos Contábeis.",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AccountingMovements"
+							}
+						}
+					}
+				}
+			}
+		},
+		"AccountingMovements": {
+			"type": "object",
+			"properties": {
+				"Transaction": {
+					"type": "string",
+					"example": "310",
+					"description": "Transação ",
+					"enum": [
+						"310 - Despesa",
+						"311 - ICMS",
+						"312 - PIS",
+						"313 - COFINS"
+					],						
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"Field": "GWA.GWA_CDTRAN",
+							"Required": true,
+							"Type": "Char",
+							"length": "10",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Number": {
+					"type": "string",
+					"example": "0000000000000014",
+					"description": "Numero do Documento",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"Field": "GWA.GWA_NRDOC",
+							"Required": true,
+							"Type": "Char",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DebitAccount": {
+					"description": "Conta débito.",
+					"type": "string",
+					"example": "9999999",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWA.GWA_CTADEB",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CostCenter": {
+					"description": "Centro Custo débito.",
+					"type": "string",
+					"example": "9999999",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWA.GWA_CCDEB",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BusinessUnit": {
+					"description": "Unidade de negócio.",
+					"type": "string",
+					"example": "001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWA.GWA_UNINEG",
+							"required": false,
+							"type": "Char",
+							"length": "3",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Value": {
+					"type": "string",
+					"description": "Valor de movimento.",
+					"example": "30,00",
+					"minimum": "0",
+					"maximum": "999999999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWA.GWA_VLMOV",
+							"required": true,
+							"type": "Number",
+							"length": "14",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"ShippingIssuer": {
+			"type": "object",
+			"properties": {
+				"FederalID": {
+					"description": "Identificacao Federal.",
+					"type": "string",
+					"example": "111.333.555-55",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GU3.GU3_IDFED",
+							"required": false,
+							"type": "Char",
+							"length": "21",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		}
+	}
+}
