@@ -1,0 +1,631 @@
+{
+    "openapi": "3.0.1",
+    "servers": [{
+        "description": "API com informações sobre os ambientes do Protheus ",
+        "url": "{{host}}/api/framework/v1",
+        "variables": {
+            "serverUrl": {
+                "default": "localhost"
+            },
+            "serverHttpPort": {
+                "default": "8051"
+            }
+        }
+    }],
+    "info": {
+        "description": "API com informações sobre os ambientes do Protheus ",
+        "version": "1.000",
+        "title": "Discovery",
+        "contact": {
+            "name": "T-Talk",
+            "url": "API.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "Discovery",
+                "description": "Ambientes do Protheus",
+                "segment": "Foundation"
+            },
+            "productInformation": [{
+                "product": "Protheus",
+                "contact": "Protheus_FW@totvs.com.br",
+                "description": "Ambientes do Protheus",
+                "adapter": "FWRestEnvInfo.prw",
+                "helpUrl": "link aqui",
+                "note": "Essa API exige que seja configurada a segurança no servidor (SECURITY=1)."
+            }]
+        }
+    },
+    "paths": {
+        "/v1/config": {
+            "get": {
+                "tags": [
+                    "Configuration"
+                ],
+                "summary": "Retorna as configurações do monitor do TOTVS Discovery",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "description": "Retorna as configurações do monitor do TOTVS Discovery",
+                "operationId": "getconfig",
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedConfig"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Configuration"
+                ],
+                "summary": "Inclui as configurações do monitor passada na requisição",
+                "description": "Inclui as configurações do monitor passada na requisição",
+                "operationId": "Configuration",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel nessa versão",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "parameters": [{
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/ConfigType"
+                            }
+                        }
+                    },
+                    "description": "Configurações do monitor para serem incluidas"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedConfig"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/totvs": {
+            "get": {
+                "tags": [
+                    "Discovery"
+                ],
+                "summary": "Retorna se o backend esta sendo executado dentro da TOTVS",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "description": "Retorna se o backend esta sendo executado dentro da TOTVS",
+                "operationId": "gettotvs",
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedTotvs"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/isrefreshing{name}": {
+            "get": {
+                "tags": [
+                    "RefreshingMonitor"
+                ],
+                "summary": "Verifica se o monitoramento do ambiente passado na requisição esta em execução",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "description": "Verifica se o monitoramento do ambiente passado na requisição esta em execução",
+                "operationId": "RefreshingMonitor",
+                "parameters": [{
+                        "$ref": "#/components/parameters/name"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedRefreshing"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/ids/receiver": {
+            "get": {
+                "tags": [
+                    "Receiver"
+                ],
+                "summary": "Retorna os IDs de instalação da TOTVS",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "description": "Retorna os IDs de instalação da TOTVS",
+                "operationId": "getIds",
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedIdReceiver"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Receiver"
+                ],
+                "summary": "Inclui a informação de recepção de dados por TOTVS ID passado na requisição",
+                "description": "Inclui a informação de recepção de dados por TOTVS ID na requisição",
+                "operationId": "postIDReceiver",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel nessa versão",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "parameters": [{
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/IDReceiverType"
+                            }
+                        }
+                    },
+                    "description": "Ambiente para ser incluida"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedIdReceiver"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "erro no momento da Inclusão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/refresh{name}": {
+            "get": {
+                "tags": [
+                    "RefreshEnvironment"
+                ],
+                "summary": "Efetua um monitoramento no ambiente enviado na requisição",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "description": "Efetua um monitoramento no ambiente enviado na requisição",
+                "operationId": "RefreshEnvironment",
+                "parameters": [{
+                        "$ref": "#/components/parameters/name"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/RefreshingType"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/resources/{idTOTVS}{name}": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Retorna os recursos do ambiente solicitado na requisição",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "description": "Retorna os recursos do ambiente solicitado na requisição",
+                "operationId": "Resources",
+                "parameters": [{
+                        "$ref": "#/components/parameters/idtotvs"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedResources"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/offenvironments": {
+            "delete": {
+                "tags": [
+                    "DeleteEnvironments"
+                ],
+                "summary": "Apaga todos os ambientes Protheus que não estão disponíveis",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "description": "Apaga todos os ambientes Protheus que não estão disponíveis",
+                "operationId": "Resources",
+                "parameters": [{
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/DeletedType"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/environments/{idTOTVS}{hostip}{port}{name}{category}": {
+            "delete": {
+                "tags": [
+                    "DeleteEnvironments"
+                ],
+                "summary": "Exclusão do ambiente solicitado na requisição",
+                "description": "Exclusão do ambiente solicitado na requisição",
+                "operationId": "DeleteEnvironments",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel nessa versão",
+                        "minimalVersion": "12.1.27"
+                    }]
+                },
+                "parameters": [{
+                        "$ref": "#/components/parameters/idtotvs"
+                    },
+                    {
+                        "$ref": "#/components/parameters/hostip"
+                    },
+                    {
+                        "$ref": "#/components/parameters/port"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name"
+                    },
+                    {
+                        "$ref": "#/components/parameters/category"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OperaÃ§Ã£o realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/DeletedType"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "NÃ£o disponivel",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/environments/{idTOTVS}": {
+            "get": {
+                "tags": [
+                    "Environments"
+                ],
+                "summary": "Retorna os ambientes do Protheus.",
+                "description": "Retorna os ambientes do Protheus.",
+                "operationId": "Environments",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "parameters": [{
+                        "$ref": "#/components/parameters/idtotvs"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedEnvironments"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Environments"
+                ],
+                "summary": "Inclusão de novos ambientes no TOTVS Discovery",
+                "description": "Inclusão de novos ambientes no TOTVS Discovery",
+                "operationId": "Environments",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel nessa versão",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "parameters": [{
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PostEnvironmentType"
+                            }
+                        }
+                    },
+                    "description": "Usuário e senha para ser autenticado"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedEnvironments"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da autenticação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/authentication/": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Autenticação do usuário informado na requisição",
+                "description": "Autenticação do usuário informado na requisição",
+                "operationId": "postAuthentication",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel nessa versão",
+                        "minimalVersion": "12.1.17"
+                    }]
+                },
+                "parameters": [{
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/AuthenticationType"
+                            }
+                        }
+                    },
+                    "description": "Usuário e senha para ser autenticado"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Discovery_1_000.json#/definitions/PagedAuthentication"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no momento da autenticação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "idtotvs": {
+                "name": "idtotvs",
+                "in": "path",
+                "required": true,
+                "description": "Identificador Único do License",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "hostip": {
+                "name": "hostip",
+                "in": "path",
+                "required": true,
+                "description": "Host do ambiente Protheus",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "port": {
+                "name": "port",
+                "in": "path",
+                "required": true,
+                "description": "Porta do ambiente Protheus",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "name": {
+                "name": "name",
+                "in": "path",
+                "required": true,
+                "description": "Nome do ambiente Protheus",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "category": {
+                "name": "category",
+                "in": "path",
+                "required": true,
+                "description": "Category",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "schemas": {}
+    }
+}
