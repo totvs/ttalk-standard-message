@@ -1,0 +1,542 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CottonGinMachines_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para o cadastro do lote de provisão para produtos TOTVS",
+		"version": "1.000",
+		"title": "FreightAccountingBatches",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/FreightAccountingBatchesType"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "FreightAccountingBatches",
+				"description": "Cadastro do lote de provisão.",
+				"segment": "Gestão Frete Embarcador"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "Protheus_FW@totvs.com.br",
+					"description": "Cadastro do lote de provisão.",
+					"adapter": "gfea096api.prw",
+					"helpUrl": "link aqui"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedFreightAccountingBatches": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/FreightAccountingBatchesType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"FreightAccountingBatchesType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"type": "string",
+					"description": "Chave do lote de provisão.",
+					"example": "99 |00000025",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXE_FILIAL|GXE_CODLOT",
+							"type": "Char",
+							"length": "10",
+							"required": true,
+							"available": false,
+							"canUpdate": false,
+							"note": "Este dado é formado pelos campos: Filal, Codigo do Lote."
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"example": "99",
+					"description": "Filial do Sistema",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"Field": "GXE.GXE_FILIAL",
+							"Required": true,
+							"Type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IssuerCode": {
+					"type": "string",
+					"example": "77785",
+					"description": "Emissor do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXE.GXE_CDEMIT",
+							"required": false,
+							"type": "Char",
+							"length": "14",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AccountLotCode": {
+					"type": "string",
+					"example": "00000025",
+					"description": "Codigo do Lote",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXE.GXE_CODLOT",
+							"required": true,
+							"type": "Char",
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Period": {
+					"type": "string",
+					"example": "2019/10",
+					"description": "Periodo",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXE.GXE_PERIOD",
+							"required": true,
+							"type": "Char",
+							"length": "07",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinancialStatus": {
+					"type": "string",
+					"description": "Situacao da Integracao",
+					"example": "2",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1 - Não Enviado",
+						"2 - Pendente",
+						"3 - Rejeitado",
+						"4 - Atualizado",
+						"5 - Pendente Estorno",
+						"6 - Estornado",
+						"7 - Pendente Estorno Parcial",
+						"8 - Estornado Parcial"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXE.GXE_SIT",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"FinancialDate": {
+					"type": "string",
+					"example": "20191010",
+					"description": "Data Envio Financeiro",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXE.GXE_DTSIT",
+							"required": false,
+							"type": "Date",
+							"length": "08",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinancialRejectionReason": {
+					"type": "string",
+					"description": "Motivo Rejeição Financeiro",
+					"example": "Teste",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXE.GXE_MOTIVO",
+							"required": false,
+							"type": "char",
+							"length": "253",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"AccountingProvisionEntry": {
+					"type": "object",
+					"description": "Lançamento Provisão Contábil",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AccountingProvisionEntry"
+							}
+						}
+					}
+				},
+				"ReversalProvisionSubBatch": {
+					"type": "object",
+					"description": "Sublote Estorno de Provisão",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/ReversalProvisionSubBatch"
+							}
+						}
+					}
+				},
+				"ReversalEntry": {
+					"type": "object",
+					"description": "Lançamento de estornos",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/ReversalEntry"
+							}
+						}
+					}
+				}
+			}
+		},
+		"AccountingProvisionEntry": {
+			"type": "object",
+			"properties": {
+				"CostCenter": {
+					"description": "Centro Custo Debito",
+					"type": "string",
+					"example": "9999999",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXF.GXF_CCUSTO",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"LedgerAccount": {
+					"description": "Conta Contabil",
+					"type": "string",
+					"example": "4132301",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXF.GXF_CONTA",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BusinessUnit": {
+					"description": "Unidade de Negocio.",
+					"type": "string",
+					"example": "001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXF.GXF_UNINEG",
+							"required": false,
+							"type": "Char",
+							"length": "3",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Value ": {
+					"type": "string",
+					"description": "Valor do Lancamento",
+					"example": "30,00",
+					"minimum": "0",
+					"maximum": "999,999,999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXF.GXF_VALOR",
+							"required": true,
+							"type": "Number",
+							"length": "12",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EntryType": {
+					"description": "Tipo de Lancamento",
+					"type": "string",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1 - DB",
+						"2 - CR"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXF.GXF_TPLANC",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ReversalProvisionSubBatch": {
+			"type": "object",
+			"properties": {
+				"Code": {
+					"description": "Codigo Sublote de Estorno",
+					"type": "string",
+					"example": "99999999",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXN.GXN_CODEST",
+							"required": false,
+							"type": "Char",
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Period": {
+					"type": "string",
+					"example": "2019/10",
+					"description": "Periodo",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXN.GXN_PERIES",
+							"required": true,
+							"type": "Char",
+							"length": "07",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CreationDate": {
+					"description": "Data Criacao",
+					"type": "Date",
+					"example": "20191010",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXN.GXN_DTCRIA",
+							"required": false,
+							"type": "Char",
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinancialStatus": {
+					"type": "string",
+					"description": "Situacao da Integracao",
+					"example": "2",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1 - Não Enviado",
+						"2 - Pendente",
+						"3 - Rejeitado",
+						"4 - Atualizado",
+						"5 - Pendente Desatualização",
+						"6 - Estornado"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXN.GXN_SIT",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"CreationUser": {
+					"description": "Usuario de Criacao",
+					"type": "string",
+					"example": "Administrador",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXN.GXN_USUCRI",
+							"required": false,
+							"type": "Char",
+							"length": "50",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ReversalEntry": {
+			"type": "object",
+			"properties": {
+				"EntryDate": {
+					"description": "Data do Lançamento",
+					"type": "Date",
+					"example": "20191010",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXO.GXO_DATA",
+							"required": false,
+							"type": "Char",
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CostCenter": {
+					"description": "Centro Custo Debito",
+					"type": "string",
+					"example": "9999999",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXO.GXO_CCUSTO",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"LedgerAccount": {
+					"description": "Conta Contabil",
+					"type": "string",
+					"example": "4132301",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXO.GXO_CONTA",
+							"required": false,
+							"type": "Char",
+							"length": "20",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BusinessUnit": {
+					"description": "Unidade de Negocio.",
+					"type": "string",
+					"example": "001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXO.GXO_UNINEG",
+							"required": false,
+							"type": "Char",
+							"length": "3",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Value": {
+					"type": "string",
+					"description": "Valor do Lancamento",
+					"example": "30,00",
+					"minimum": "0",
+					"maximum": "999,999,999.99",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXO.GXO_VALOR",
+							"required": true,
+							"type": "Number",
+							"length": "12",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EntryType": {
+					"description": "Tipo de Lancamento",
+					"type": "string",
+					"example": "1",
+					"minimum": 1,
+					"maximum": 2,
+					"enum": [
+						"1 - DB",
+						"2 - CR"
+					],
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GXO.GXO_TPLANC",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		}
+	}
+}
