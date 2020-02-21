@@ -1,0 +1,201 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a entidade Locais de Estoque (Item) para Produtos TOTVS",
+			"url": "{{host}}/api/wms/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8012"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para informações de Locais de Estoque para Produtos TOTVS",
+		"version": "1.000",
+		"title": "Locais de Estoque",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Item",
+				"description": "Cadastro de Locais de Estoque",
+				"segment": "Serviços"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "squad.entradas@totvs.com.br",
+					"description": "Cadastro de Locais de Estoque",
+					"adapter": "AGRS030.prw"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/Items": {
+			"get": {
+				"tags": [
+					"Item"
+				],
+				"summary": "Retorna lista de Locais de Estoque",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"description": "Retorna lista completa de Locais de Estoque",
+				"operationId": "getItems",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Item_4_005.json#/definitions/BusinessContentType"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na listagem dos Locais de Estoque",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Item"
+				],
+				"summary": "Inclui um Local de Estoque",
+				"operationId": "postItem",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.21"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Item_1_002.json#/definitions/ItemsInfo"
+							}
+						}
+					},
+					"description": "Inclui um Local de Estoque"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Item_1_002.json#/definitions/ItemsInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"Code": {
+				"name": "Code",
+				"in": "path",
+				"required": true,
+				"description": "Identificador Único representando a Locais de Estoque",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"Items": {
+				"name": "Items",
+				"in": "query",
+				"description": "Códigos de Locais de Estoque retornados pelo get separado por vírgula (,) ",
+				"required": false,
+				"example": "param1,param2",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"Names": {
+				"name": "name",
+				"in": "query",
+				"description": "Busca Locais de Estoque por descrição",
+				"required": false,
+				"example": "Usuário de busca",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
