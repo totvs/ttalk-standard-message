@@ -1,0 +1,219 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/appointment/V1/1_000/jsonschema/schemas/SchedulePeriod_1_000.json#",
+    "info": {
+        "description": "API para a entidade de períodos para Agenda Médica dos produtos TOTVS",
+        "version": "1.000",
+        "title": "SchedulePeriod",
+        "contact": {
+            "name": "T-Talk",
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "SchedulePeriod",
+                "description": "Informações de períodos das Agendas Médicas",
+                "segment": "Saúde"
+            },
+            "productInformation": [
+                {
+                    "product": "RM",
+                    "contact": "TOTVS.SAUDE.SQUAD.GHASSIST@totvs.com.br",
+                    "description": "Cadastro de períodos das Agendas médicas",
+                    "adapter": ""
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "PagedSchedulePeriod": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref": "#/definitions/SchedulePeriod"
+                }
+            ]
+        },
+        "SchedulePeriod": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SchedulePeriodInfo"
+                    }
+                }
+            }
+        },
+		"SchedulePeriodInfo": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/SchedulePeriodCode"
+                },
+                {
+                    "$ref": "#/definitions/SchedulePeriodPost"
+                },
+				{
+				    "$ref": "#/definitions/SchedulePeriodCreateDate"
+				}
+            ]
+        },
+		"SchedulePeriodCode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Identificador do registro",
+                    "required": true,
+                    "type": "string",
+                    "example": "1$_$1",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZPERIODO.CODCOLIGADA|SZPERIODO.IDPERIODO",
+                            "required": true,
+                            "type": "String",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Código da Coligada e Código do periodo"
+                        }
+                    ]
+                }
+			}
+        },
+		"SchedulePeriodCreateDate": {
+            "type": "object",
+		    "CreateDate": {
+                    "name": "EndDate",
+                    "description": "Data final",
+                    "in": "query",
+                    "exemple": "2020-10-10T10:00:00Z",
+                    "required": false,
+                    "schema": {
+                        "type": "date"
+                    },
+                    "x-totvs": [
+                    {
+                      "product": "RM",
+                      "type": "date",
+                      "note": "Utiliza data atual",
+                      "available": true
+                    }
+                ]
+            }
+	    },		
+        "SchedulePeriodPost": {
+            "type": "object",
+            "properties": {               
+                "companyId": {
+                    "description": "Código da coligada",
+                    "required": true,
+                    "type": "integer",
+                    "exemple":  1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZPERIODO.CODCOLIGADA",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código da Coligada"
+                        }
+                    ]
+                },
+                "periodId": {
+                    "description": "Código da Agenda",
+                    "required": true,
+                    "type": "integer",
+                    "exemple": 100,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZPERIODO.IDPERIODO",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código do período"
+                        }
+                    ]
+                },                           
+				"scheduleId": {
+                    "description": "Código da agenda",
+                    "required": false,
+                    "type": "integer",
+                    "exemple": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZPERIODO.CODIGO",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código da agenda"
+                        }
+                    ]
+                },  
+				"scheduleCode": {
+                    "description": "Identificador da agenda",
+                    "required": true,
+                    "type": "string",
+                    "example": "1$_$1",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODCOLIGADA|SZAGENDA.CODIGO",
+                            "required": true,
+                            "type": "String",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Código da Coligada e Código da agenda"
+                        }
+                    ]
+                },				
+				"StartDate": {
+                    "name": "EndDate",
+                    "description": "Data final",
+                    "in": "query",
+                    "exemple": "2020-10-05T03:00:00Z",
+                    "required": true,
+                    "schema": {
+                        "type": "date"
+                    },
+                    "x-totvs": [
+                    {
+                      "product": "RM",
+                      "type": "date",
+                      "note": "Data inicial para o período da agenda (UTC)",
+                      "available": true
+                    }
+                    ]
+                },
+				"EndDate": {
+                    "name": "EndDate",
+                    "description": "Data final",
+                    "in": "query",
+                    "exemple": "2020-10-10T03:00:00Z",
+                    "required": true,
+                    "schema": {
+                        "type": "date"
+                    },
+                    "x-totvs": [
+                    {
+                      "product": "RM",
+                      "type": "date",
+                      "note": "Data final do filtro  para o período da agenda (UTC)",
+                      "available": true
+                    }
+					
+                    ]
+                }
+            }
+        }
+    }
+}

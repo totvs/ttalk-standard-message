@@ -1,0 +1,260 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/appointment/V1/1_000/jsonschema/schemas/Schedule_1_000.json#",
+    "info": {
+        "description": "API para a entidade Agenda Médica para produtos TOTVS",
+        "version": "1.000",
+        "title": "Schedule",
+        "contact": {
+            "name": "T-Talk",
+            "url": "https://api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "Schedule",
+                "description": "Informações de Agendas Médicas",
+                "segment": "Saúde"
+            },
+            "productInformation": [
+                {
+                    "product": "RM",
+                    "contact": "TOTVS.SAUDE.SQUAD.GHASSIST@totvs.com.br",
+                    "description": "Cadastro de Agendas médicas",
+                    "adapter": ""
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "PagedSchedule": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref": "#/definitions/Schedule"
+                }
+            ]
+        },
+        "Schedule": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ScheduleInfo"
+                    }
+                }
+            }
+        },
+		"ScheduleInfo": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ScheduleCode"
+                },
+                {
+                    "$ref": "#/definitions/SchedulePost"
+                }
+            ]
+        },
+		"ScheduleCode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Identificador do registro",
+                    "required": true,
+                    "type": "string",
+                    "example": "1$_$1",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODCOLIGADA|SZAGENDA.CODIGO",
+                            "required": true,
+                            "type": "String",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Este dado e formado pelos campos Código da Coligada e Código da Agenda"
+                        }
+                    ]
+                }
+			}
+        },
+        "SchedulePost": {
+            "type": "object",
+            "properties": {               
+                "companyId": {
+                    "description": "Código da coligada",
+                    "required": true,
+                    "type": "integer",
+                    "exemple":  1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODCOLIGADA",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código da Coligada"
+                        }
+                    ]
+                },
+                "scheduleId": {
+                    "description": "Código da Agenda",
+                    "required": true,
+                    "type": "integer",
+                    "exemple": 100,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODIGO",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código da Agenda"
+                        }
+                    ]
+                },              
+                "description": {
+                    "description": "Nome da Agenda",
+                    "required": false,
+                    "type": "string",
+                    "exemple": "José Augusto",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.NOME",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true,
+                            "note": "Nome da Agenda"
+                        }
+                    ]
+                },         
+                "sheduleType": {
+                    "description": "Tipo Item Agenda",
+                    "required": true,
+                    "type": "string",
+                    "exemple":  "M",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.TIPOITEMAGENDA",
+                            "required": true,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true,
+                            "note": "(N=>Sem Tipo, M=>Médico, S=>Sala, C=>Grupo, E=>Emfermeira"
+                        }
+                    ]
+                },
+				"parentId": {
+                    "description": "Código do tipo da agenda",
+                    "required": true,
+                    "type": "integer",
+                    "exemple": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODIGOPARENT",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true,
+                            "note": "1:Médico, 2:Sala ,5:SalaGrupo, 6:Plantonista, 8:Enfermagem, 9:Téc. Enfermagem, 10:Outros"
+                        }
+                    ]
+                },  
+				"unitAttendanceId": {
+                    "description": "Código da unidade de atendimento",
+                    "required": true,
+                    "type": "integer",
+                    "exemple": 5,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.IDUNIDATEND",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true,
+                            "note": "Código da Unidade de atendimento"
+                        }
+                    ]
+                },
+				"ownerId": {
+                    "description": "Código do médico",
+                    "required": true,
+                    "type": "integer",
+                    "exemple": 100,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODITEMAGENDA",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true,
+                            "note": "Código no cadastro geral (médico, sala, especialidade)"
+                        }
+                    ]
+                },
+				"notes": {
+                    "description": "Observações da agenda",
+                    "required": false,
+                    "type": "string",
+                    "exemple": "Agenda médica para testes de API",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.OBSAGENDA",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true,
+                            "note": "Observações da agenda"
+                        }
+                    ]
+                },                
+                "visible": {
+                    "description": "Indica se agenda está visivel",
+                    "required": false,
+                    "type": "string",
+                    "exemple":  "T",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.ITEMVISIVEL",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true,
+                            "note":  "T:Visível F:Não Visivel, (Default T)"
+                        }
+                    ]
+                },
+				"active": {
+                    "description": "Indica se agenda está ativa",
+                    "required": false,
+                    "type": "string",
+                    "exemple":  "T",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.ATIVO",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true,
+                            "note":  "T:Ativa, F:Inativa (Default T)"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
