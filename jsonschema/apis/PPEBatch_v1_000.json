@@ -1,0 +1,264 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para consulta de Lote de Equipamentos de Proteção nos produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/rh/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para consulta de Lote de Equipamentos de Proteção nos produtos TOTVS",
+		"version": "1.000",
+		"title": "Lote de Equipamentos de Proteção (EPI)",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "PPEBatch",
+				"description": "Lote de Equipamentos de Proteção",
+				"segment": "RH"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "RM_FW@totvs.com.br",
+					"description": "Lote de Equipamentos de Proteção"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/ppebatchs": {
+			"get": {
+				"tags": [
+					"PPEBatch"
+				],
+				"summary": "Retorna todos os Lotes de EPIs cadastrados no sistema",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"description": "Retorna todos os Lotes de EPIs cadastrados no sistema",
+				"operationId": "getPPEBatch",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PPEBatch_1_000.json#/definitions/PPEBatchGroups"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"PPEBatch"
+				],
+				"summary": "Inclui o Lote de EPI passado na requisição",
+				"description": "Inclui o Lote de EPI passado na requisição",
+				"operationId": "postPPEBatch",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PPEBatch_1_000.json#/definitions/PPEBatchInfo"
+							}
+						}
+					},
+					"description": "Lote de EPIs para ser incluído"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PPEBatch_1_000.json#/definitions/PPEBatchInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/ppebatchs/{id}": {
+			"get": {
+				"tags": [
+					"PPEBatch"
+				],
+				"summary": "Retorna o Lote de EPIs indicado e uma lista dos itens do Lote.",
+				"description": "Retorna o Lote de EPIs indicado e uma lista dos itens do Lote.",
+				"operationId": "getPPEBatchId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/PPEBatchId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PPEBatch_1_000.json#/definitions/PPEBatchInfo"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Lote de EPIs não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"PPEBatch"
+				],
+				"summary": "Altera o Lote de EPIs passado na requisição",
+				"description": "Altera o Lote de EPIs passado na requisição",
+				"operationId": "putPPEBatchId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/PPEBatchId"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PPEBatch_1_000.json#/definitions/PPEBatchInfo"
+							}
+						}
+					},
+					"description": "Lote de EPIs para ser alterado"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/PPEBatch_1_000.json#/definitions/PPEBatchInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da atualização",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "EPI não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"PPEBatchId": {
+				"name": "id",
+				"in": "path",
+				"required": true,
+				"description": "Identificador Único representando o Lote de EPIs",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
