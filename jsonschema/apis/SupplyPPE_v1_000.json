@@ -1,0 +1,323 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para fornecimento de Equipamentos de Proteção nos produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/rh/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para fornecimento de Equipamentos de Proteção nos produtos TOTVS",
+		"version": "1.000",
+		"title": "Fornecimento de Equipamentos de Proteção",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Supply PPE",
+				"description": "Fornecimento de Equipamentos de Proteção",
+				"segment": "HR"
+			},
+			"productInformation": [				
+				{
+					"product": "RM",
+					"contact": "RM_FW@totvs.com.br",
+					"description": "Fornecimento de Equipamentos de Proteção"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/supplyppes": {
+			"get": {
+				"tags": [
+					"SupplyPPE"
+				],
+				"summary": "Retorna todos os fornecimentos/devoluções/descartes cadastrados no sistema",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"description": "Retorna todos os fornecimentos/devoluções/descartes cadastrados no sistema",
+				"operationId": "getSupplyPPE",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEGroups"
+								}
+							}
+						}
+					}
+				}
+			}			
+		},
+		"/supplyppes/{id}": {
+			"get": {
+				"tags": [
+					"SupplyPPE"
+				],
+				"summary": "Retorna o fornecimento do sistema",
+				"description": "Retorna o fornecimento do sistema",
+				"operationId": "getUserId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,							
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/SupplyPPEId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Fornecimento de EPI não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/supplyppes/ppeborrow": {
+			"post": {
+				"tags": [
+					"BorrowPPE"
+				],
+				"summary": "Fornece o EPI passado por parâmetro",
+				"description": "Fornece o EPI passado por parâmetro",
+				"operationId": "postBorrowPPE",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,							
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+							}
+						}
+					},
+					"description": "EPI a ser emprestado"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento do empréstimo do EPI.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/supplyppes/ppereturn/{id}": {
+			"post": {
+				"tags": [
+					"ReturnPPE"
+				],
+				"summary": "Devolve o EPI passado por parâmetro",
+				"description": "Devolve o EPI passado por parâmetro",
+				"operationId": "postReturnPPE",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,							
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref" : "#/components/parameters/SupplyPPEId"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+							}
+						}
+					},
+					"description": "Deve ser informada a data de devolução do EPI, caso o mesmo não tenha sido devolvido na data em que é feita a requisição."
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da devolução do EPI.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/supplyppes/ppedisposal/{id}": {
+			"post": {
+				"tags": [
+					"DisposePPE"
+				],
+				"summary": "Descarta o EPI passado por parâmetro",
+				"description": "Descarta o EPI passado por parâmetro",
+				"operationId": "postDisposePPE",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,							
+							"minimalVersion": "12.1.24"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref" : "#/components/parameters/SupplyPPEId"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+							}
+						}
+					},
+					"description": "Deve ser informada a data de descarte do EPI, caso o mesmo não tenha sido descartado na data em que é feita a requisição."
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SupplyPPE/v1/1_000/jsonschema/schemas/SupplyPPE_1_000.json#/definitions/SupplyPPEInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento do descarte do EPI.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"SupplyPPEId": {
+				"name": "id",
+				"in": "path",
+				"required": true,
+				"description": "Identificador Único representando o fornecimento de EPI",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
