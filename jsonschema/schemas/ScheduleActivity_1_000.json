@@ -1,0 +1,212 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ScheduleActivity/V1/1_000/jsonschema/schemas/ScheduleActivity_1_000.json#",
+	"info": { 
+		"description": "API para a entidade de Atividades da Agenda para os produtos TOTVS",
+		"version": "1.000",
+		"title": "Atividades da Agenda",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		}, 
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ScheduleActivity",
+				"description": "Informações dos Atividades da Agenda",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeSau.Squad.Assistencial@totvs.com.br",
+					"description": "Atividades da Agenda",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedScheduleActivity": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ScheduleActivity"
+				}
+			]
+		},
+		"ScheduleActivity": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ScheduleActivityInfo"
+					}
+				}
+			}
+		},
+		"ScheduleActivityInfo": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"description": "Identificador do registro",
+					"required": false,
+					"type": "string",
+					"example": "1$_$1$_$3",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADES.CODCOLIGADA|SZATIVIDADESAG.CODIGO|SZATIVIDADES.CODATIVIDADE",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este dado e formado pelos campos Código da Coligada, Código da agenda, Código da Atividade"
+						}
+					]
+				},
+				"companyId": {
+					"description": "Código da coligada",
+					"required": true,
+					"type": "integer",
+					"exemple": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADES.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Coligada"
+						}
+					]
+				},
+				"scheduleId": {
+					"description": "Código da Agenda",
+					"required": true,
+					"type": "integer",
+					"exemple": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADESAG.CODIGO",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Agenda"
+						}
+					]
+                },
+                "scheduleCode": {
+					"description": "Código da Agenda",
+					"required": false,
+					"type": "string",
+					"example": "1$_$1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADES.CODCOLIGADA|SZATIVIDADESAG.CODIGO",
+							"required": false,
+							"type": "String",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este dado e formado pelos campos Código da Coligada e Código da Agenda"
+						}
+					]
+				},
+                "activityId": {
+                    "description": "Código da Atividade",
+					"required": true,
+                    "type": "integer",                    
+					"exemple": 10,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADES.CODATIVIDADE",
+                            "required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Atividade"
+						}
+					]
+                },
+				"activityDescription": {
+					"description": "Descrição da Atividade",
+                    "required": false,
+                    "maxLength": 255,
+					"type": "string",
+					"exemple": "Consulta",
+					"x-totvs": [
+						{
+							"product": "RM",
+                            "field": "SZATIVIDADES.DESCATIVIDADE",
+                            "maxLength": 255,
+							"required": false,
+							"type": "string",
+							"available": true,
+                            "canUpdate": true,
+							"note": "Descrição da Atividade"
+						}
+					]
+				},
+				"qtdMax": {
+					"description": "Quantidade Máxima no Dia",
+					"required": false,
+					"type": "integer",
+					"exemple": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADESAG.DIA",
+							"required": false,
+							"type": "integer",
+							"available": true,
+                            "canUpdate": true,                            
+							"note": "Quantidade Máxima no Dia"
+						}
+					]
+                },
+                "qtdMaxGroup": {
+					"description": "Quantidade Máxima por Grupo",
+					"required": true,
+					"type": "integer",
+					"exemple": 2,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADESAG.QTDMAXGRUPO",
+							"required": true,
+							"type": "integer",
+							"available": true,
+                            "canUpdate": true,                            
+							"note": "Quantidade Máxima por Grupo"
+						}
+					]
+                },
+                "blockScheduleExceedingLimit": {
+					"description": "Bloqueia Agendamentos após Exceder Limite de Atividades da Agenda",
+					"required": true,
+					"type": "boolean",
+					"exemple": true,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZATIVIDADESAG.BLOQAGLIMITEEXC",
+							"required": true,
+							"type": "boolean",
+							"available": true,
+                            "canUpdate": true,                            
+							"note": "Bloqueia Agendamentos após Exceder Limite de Atividades da Agenda"
+						}
+					]
+                }
+			}
+		}
+	}
+}
