@@ -1,9 +1,9 @@
 {
-	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/SchedulePeriod/V1/1_000/jsonschema/schemas/SchedulePeriod_1_000.json#",
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ScheduleSpecialty/V1/1_000/jsonschema/schemas/ScheduleSpecialty_1_000.json#",
 	"info": { 
-		"description": "API para a entidade de Períodos de Agenda para produtos TOTVS",
+		"description": "API para a entidade de Especialidade da Agenda para produtos TOTVS",
 		"version": "1.000",
-		"title": "Vigência da Agenda",
+		"title": "Especialidade de Agenda",
 		"contact": {
 			"name": "T-Talk",
 			"url": "https://api.totvs.com.br",
@@ -11,60 +11,60 @@
 		},
 		"x-totvs": {
 			"messageDocumentation": {
-				"name": "SchedulePeriod",
-				"description": "Informações das Vigências da Agenda",
+				"name": "ScheduleSpecialty",
+				"description": "Informações das Especialidades da Agenda",
 				"segment": "Saúde"
 			},
 			"productInformation": [
 				{
 					"product": "RM",
 					"contact": "TribeSau.Squad.Assistencial@totvs.com.br",
-					"description": "Vigência da Agenda.",
+					"description": "Especialidade da Agenda.",
 					"adapter": ""
 				}
 			]
 		}
 	},
 	"definitions": {
-		"PagedSchedulePeriod": {
+		"PagedScheduleSpecialty": {
 			"type": "object",
 			"allOf": [
 				{
 					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
 				},
 				{
-					"$ref": "#/definitions/SchedulePeriod"
+					"$ref": "#/definitions/ScheduleSpecialty"
 				}
 			]
 		},
-		"SchedulePeriod": {
+		"ScheduleSpecialty": {
 			"type": "object",
 			"properties": {
 				"items": {
 					"type": "array",
 					"items": {
-						"$ref": "#/definitions/SchedulePeriodInfo"
+						"$ref": "#/definitions/ScheduleSpecialtyInfo"
 					}
 				}
 			}
 		},
-		"SchedulePeriodInfo": {
+		"ScheduleSpecialtyInfo": {
 			"type": "object",
 			"properties": {
 				"code": {
 					"description": "Identificador do registro",
 					"required": true,
 					"type": "string",
-					"example": "1$_$1",
+					"example": "1$_$2_$3",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "SZPERIODO.CODCOLIGADA|SZPERIODO.IDPERIODO",
+							"field": "SZESPECAG.CODCOLIGADA|SZESPECAG.CODIGOPROPRIETARIO|SZESPECAG.CODESPECPRESTADOR",
 							"required": true,
-							"type": "String",
+							"type": "string",
 							"available": true,
 							"canUpdate": false,
-							"note": "Este dado e formado pelos campos Código da Coligada e Código do Período"
+							"note": "Este dado e formado pelos campos Código da Coligada, Código da Agenda e Código da Especialidade"
 						}
 					]
 				},
@@ -76,7 +76,7 @@
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "SZPERIODO.CODCOLIGADA",
+							"field": "SZESPECAG.CODCOLIGADA",
 							"required": true,
 							"type": "integer",
 							"available": true,
@@ -93,29 +93,12 @@
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "SZPERIODO.CODIGO",
+							"field": "SZESPECAG.CODIGOPROPRIETARIO",
 							"required": true,
 							"type": "integer",
 							"available": true,
 							"canUpdate": false,
 							"note": "Código da Agenda"
-						}
-					]
-                },
-                "periodId": {
-                    "description": "Identificador do Período",
-					"required": true,
-					"type": "integer",
-					"exemple": 100,
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "SZPERIODO.IDPERIODO",
-							"required": true,
-							"type": "integer",
-							"available": true,
-							"canUpdate": false,
-							"note": "Identificador do Período"
 						}
 					]
                 },
@@ -127,7 +110,7 @@
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "SZPERIODO.CODCOLIGADA|SZPERIODO.CODIGO",
+							"field": "SZESPECAG.CODCOLIGADA|SZESPECAG.CODIGOPROPRIETARIO",
 							"required": true,
 							"type": "String",
 							"available": true,
@@ -136,55 +119,41 @@
 						}
 					]
 				},
-				"startDate": {
-					"description": "Data Inicial da Vigência",
+                "specialtyId": {
+                    "description": "Código da Especialidade",
 					"required": true,
-					"type": "dateTime",
-					"exemple": "2020-03-09",
+                    "type": "string",
+                    "maxLength": 4,
+					"exemple": "ENFE",
 					"x-totvs": [
 						{
 							"product": "RM",
-							"field": "SZPERIODO.DATAINI",
+							"field": "SZESPECAG.CODESPECPRESTADOR",
+                            "required": true,
+                            "maxLength": 4,
+							"type": "string",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Especialidade"
+						}
+					]
+                },
+				"specialtyDescription": {
+					"description": "Descrição da Especialidade",
+					"required": true,
+					"maxLength": 100,
+					"type": "string",
+					"exemple": "Gastroenterologia",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZESPECIALIDADE.DESCESPECGRUPO",
 							"required": true,
 							"type": "dateTime",
 							"available": true,
                             "canUpdate": true,
                             "maxLength": 24,
-							"note": "Data Inicial da Vigência"
-						}
-					]
-				},
-				"endDate": {
-					"description": "Data Final da Vigência",
-					"required": true,
-					"type": "dateTime",
-					"exemple": "2020-03-09",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "SZPERIODO.DATAFIM",
-							"required": true,
-							"type": "dateTime",
-							"available": true,
-                            "canUpdate": true,                            
-							"note": "Data Final da Vigência"
-						}
-					]
-				},
-				"createDate": {
-					"description": "Data do Registro do Período",
-					"required": true,
-					"type": "dateTime",
-					"exemple": "2020-03-09",
-					"x-totvs": [
-						{
-							"product": "RM",
-							"field": "SZPERIODO.DATAREGISTRO",
-							"required": true,
-							"type": "dateTime",
-							"available": true,
-                            "canUpdate": true,                            
-							"note": "Data do Registro do Período"
+							"note": "Descrição da Especialidade"
 						}
 					]
 				}
