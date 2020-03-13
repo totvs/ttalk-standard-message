@@ -1,0 +1,247 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedules/V1/1_000/jsonschema/schemas/Schedule_1_000.json#",
+	"info": {
+		"description": "API para a entidade Agenda para produtos TOTVS",
+		"version": "1.000",
+		"title": "Agenda",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Schedule",
+				"description": "Informações de Agenda",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeSau.Squad.Assistencial@totvs.com.br",
+					"description": "Cadastro de Agendas",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedSchedule": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/Schedule"
+				}
+			]
+		},
+		"Schedule": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ScheduleInfo"
+					}
+				}
+			}
+		},
+		"ScheduleInfo": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"description": "Identificador do registro",
+					"required": false,
+					"type": "string",
+					"example": "1$_$1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.CODCOLIGADA|SZAGENDA.CODIGO",
+							"required": true,
+							"type": "String",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este dado e formado pelos campos Código da Coligada e Código da Agenda"
+						}
+					]
+				},
+				"companyId": {
+					"description": "Código da coligada",
+					"required": true,
+					"type": "integer",
+					"exemple": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Coligada"
+						}
+					]
+				},
+				"scheduleId": {
+					"description": "Código do paciente",
+					"required": false,
+					"type": "integer",
+					"exemple": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.CODIGO",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Agenda"
+						}
+					]
+				},
+				"description": {
+					"description": "Descrição da Agenda",
+					"required": false,
+					"type": "string",
+					"exemple": "Enfermagem",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.NOME",
+							"required": false,
+							"type": "string",
+							"available": true,
+                            "canUpdate": true,
+                            "maxLength": 50,
+							"note": "Usuário da Agenda"
+						}
+					]
+				},
+				"scheduleType": {
+					"description": "Tipo de Agenda N: None, M: Medical, S: Room, C: CollectionAgent, E: Nursing",
+					"required": true,
+					"type": "string",
+                    "exemple": "M",
+                    "enum": ["N", "M", "S", "C", "E"],
+                    "maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.TIPOITEMAGENDA",
+							"required": true,
+                            "type": "string",
+                            "enum": ["N", "M", "S", "C", "E"],
+                            "maxLength": 1,
+							"available": true,
+							"canUpdate": true,
+							"note": "Tipo de agenda"
+						}
+					]
+				},
+				"parentId": {
+					"description": "Código do Tipo de Agenda -1: Médico, -2: Sala,-5: Sala,-6: Plantonista, -8: Enfermagem, -9: Téc. Enfermagem, -10: Outros",
+					"required": true,
+					"type": "integer",
+                    "exemple": -6,                    
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENA.CODIGOPARENT",
+                            "required": true,                            
+							"type": "integer",
+							"available": true,
+							"canUpdate": true,
+							"note": "Código do tipo de Agenda"
+						}
+					]
+				},
+				"unitAttendanceId": {
+					"description": "Código da Unidade ",
+					"required": true,
+					"type": "integer",
+					"exemple": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.IDUNIDATEND",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": true,
+							"note": "Unidade de Atendimento"
+						}
+					]
+				},
+				"ownerId": {
+					"description": "Código no Cadastro Geral",
+					"required": true,
+					"type": "string",
+                    "exemple": "30",
+                    "maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.CODITEMAGENDA",
+							"required": true,
+                            "type": "string",
+                            "maxLength": 10,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"notes": {
+					"description": "Observações da Agenda",
+					"required": false,
+					"type": "string",
+					"exemple": "Agenda liberada a partir de toda segunda-feira.",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.OBSAGENDA",
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"visible": {
+					"description": "Item Visível",
+					"required": false,
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.ITEMVISIVEL",
+							"required": false,
+                            "type": "string",
+                            "maxLength": 1,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"active": {
+					"description": "Agenda Ativa",
+					"required": false,
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZAGENDA.ATIVO",
+							"required": false,
+                            "type": "string",
+                            "maxLength": 1,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
