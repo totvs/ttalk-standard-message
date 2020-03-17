@@ -1,0 +1,265 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ScheduleLock_1_000.json#",
+	"info": {
+		"description": "API para a entidade de Bloqueio de Agenda para produtos TOTVS",
+		"version": "1.000",
+		"title": "Bloqueio de Agenda",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "ScheduleLock",
+				"description": "Informações de Bloqueio de Agenda",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeSau.Squad.Assistencial@totvs.com.br",
+					"description": "Bloqueio de Agendas",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedScheduleLock": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ScheduleLock"
+				}
+			]
+		},
+		"ScheduleLock": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ScheduleLockInfo"
+					}
+				}
+			}
+		},
+		"ScheduleLockInfo": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"description": "Identificador do registro",
+					"required": false,
+					"type": "string",
+					"example": "1$_$1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.CODCOLIGADA|SZBLOQUEIO.CODIGO",
+							"required": true,
+							"type": "String",
+							"available": true,
+							"canUpdate": false,
+							"note": "Este dado e formado pelos campos Código da Coligada e Código do Bloqueio"
+						}
+					]
+				},
+				"companyId": {
+					"description": "Código da coligada",
+					"required": true,
+					"type": "integer",
+					"exemple": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.CODCOLIGADA",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Coligada"
+						}
+					]
+				},
+				"scheduleId": {
+					"description": "Código do Proprietário da Agenda",
+					"required": true,
+					"type": "integer",
+					"exemple": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.CODIGO",
+							"required": true,
+							"type": "integer",
+							"available": true,
+							"canUpdate": false,
+							"note": "Código da Agenda"
+						}
+					]
+				},
+				"startDate": {
+					"description": "Data de Início do Bloqueio",
+					"required": true,
+					"type": "dateTime",
+					"exemple": "2020-03-09",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.DATAINI",
+							"required": true,
+							"type": "dateTime",
+							"available": true,
+							"canUpdate": true,
+							"maxLength": 24,
+							"note": "Data de Início do Bloqueio da Agenda"
+						}
+					]
+				},
+				"endDate": {
+					"description": "Data Final do Bloqueio",
+					"required": true,
+					"type": "dateTime",
+					"exemple": "2020-03-09",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.DATAFIM",
+							"required": true,
+							"type": "dateTime",
+							"available": true,
+							"canUpdate": true,
+							"note": "Data Final do Bloqueio da Agenda"
+						}
+					]
+				},
+				"startPeriod": {
+					"description": "Hora de Início do Bloqueio",
+					"required": true,
+					"type": "string",
+					"exemple": "12:01",
+					"maxLength": "5",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.PERIODOINI",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": true,
+							"maxLength": "5",
+							"note": "Hora de Início do Bloqueio"
+						}
+					]
+				},
+				"endPeriod": {
+					"description": "Hora Final do Bloqueio",
+					"required": true,
+					"type": "string",
+					"exemple": "13:01",
+					"maxLength": "5",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.PERIODOFIM",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": true,
+							"maxLength": "5",
+							"note": "Hora Final do Bloqueio"
+						}
+					]
+				},
+				"reason": {
+					"description": "Motivo do Bloqueio",
+					"required": false,
+					"type": "string",
+					"exemple": "Bloquear agenda antes de o 12:00",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.MOTIVO",
+							"required": false,
+							"type": "string",
+							"maxLength": 100,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"holiday": {
+					"description": "Marcar o Bloqueio como Feriado",
+					"required": false,
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.FERIADO",
+							"required": false,
+							"type": "string",
+							"maxLength": 1,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"scheduleExceptionReasonCod": {
+					"description": "Código do Motivo da Exceção",
+					"required": false,
+					"type": "integer",
+					"exemple": 10,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.CODMOTIVOEXCECAOAGENDA",
+							"required": false,
+							"type": "integer",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"lockDate": {
+					"description": "Data do Bloqueio",
+					"required": false,
+					"type": "dateTime",
+					"exemple": "2020-10-01",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.DATABLOQUEIO",
+							"required": false,
+							"type": "dateTime",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"lockUser": {
+					"description": "Usuário que Efetuou o Bloqueio",
+					"required": false,
+					"type": "string",
+					"maxLength": 20,
+					"exemple": "marco",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "SZBLOQUEIO.CODUSUARIO",
+							"maxLength": 20,
+							"required": false,
+							"type": "string",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
