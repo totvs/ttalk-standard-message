@@ -74,7 +74,7 @@
 						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
 					},
 					{
-						"$ref": "#/components/parameters/healthInsurerCode"
+						"$ref": "#/components/parameters/healthInsurerCodeOpcional"
 					}
 				],
 				"responses": {
@@ -115,7 +115,7 @@
 						}
 					]
 				},
-				"description": "Realiza a inclusão de um beneficiario conforme body da requisição.",
+				"description": "Insere e/ou gera uma movimentação de inclusão para o SIB, através de um body.",
 				"operationId": "insCenBenefi",
 				"parameters": [
 					{
@@ -145,6 +145,63 @@
 					},
 					"400": {
 						"description": "Erro durante inclusão do beneficiario",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/beneficiaries/batch": {
+			"post": {
+				"tags": [
+					"collection"
+				],
+				"summary": "Inclusão de lote de beneficiarios",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Central-Obrigacoes",
+							"available": true,
+							"minimalVersion": "",
+							"note": "É possivél inserir um lote de até 100 beneficiarios por requisisão."
+						}
+					]
+				},
+				"description": "Insere e/ou gera uma movimentção de inclusão para o SIB, através de um body que pode ser um array, inserindo até 100 beneficiarios.",
+				"operationId": "insLoteBeneficiario",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"description": "Beneficiarios a serem incluídos.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Beneficiary_1_000.json#/definitions/beneficiary"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Beneficiary_1_000.json#/definitions/beneficiary"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro durante inclusão dos beneficiarios",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -227,7 +284,7 @@
 						}
 					]
 				},
-				"description": "Altera informações do beneficiario de acordo com o ID informado",
+				"description": "Altera e/ou gera uma movimentação de retificação para o SIB, de acordo com o ID informado.",
 				"operationId": "altBenefi",
 				"parameters": [
 					{
@@ -336,7 +393,7 @@
 		},
 		"/beneficiaries/{subscriberId}/block": {
 			"post": {
-				"summary": "Altera informacoes do Beneficiarios",
+				"summary": "Bloqueia um beneficiario",
 				"tags": [
 					"actions"
 				],
@@ -349,7 +406,7 @@
 						}
 					]
 				},
-				"description": "Bloqueia um beneficiario",
+				"description": "Gera uma movimanetação da action de bloqueio de um beneficiario.",
 				"operationId": "cancelBenefi",
 				"parameters": [
 					{
@@ -405,7 +462,7 @@
 		},
 		"/beneficiaries/{subscriberId}/unblock": {
 			"post": {
-				"summary": "Altera informações do Beneficiário",
+				"summary": "Desbloqueia um beneficiario",
 				"tags": [
 					"actions"
 				],
@@ -418,7 +475,7 @@
 						}
 					]
 				},
-				"description": "Reativa um Beneficiário.",
+				"description": "Gera uma movimanetação da action de desbloqueio de um beneficiario.",
 				"operationId": "reactBenefi",
 				"parameters": [
 					{
@@ -474,7 +531,7 @@
 		},
 		"/beneficiaries/{subscriberId}/changerContract": {
 			"post": {
-				"summary": "Altera informacoes do Beneficiarios",
+				"summary": "Mudança Contratual",
 				"tags": [
 					"actions"
 				],
@@ -487,7 +544,7 @@
 						}
 					]
 				},
-				"description": "Alteração contratual do Beneficiário.",
+				"description": "Gera uma movimanetação da action de mudança contratual de um beneficiario.",
 				"operationId": "changContrBene",
 				"parameters": [
 					{
@@ -548,6 +605,7 @@
 				"name": "healthInsurerCode",
 				"in": "query",
 				"description": "Código da operadora",
+				"required": true,
 				"schema": {
 					"type": "integer",
 					"format": "int32",
@@ -558,6 +616,28 @@
 						"product": "Central-Obrigacoes",
 						"field": "B3K.B3K_CODOPE",
 						"required": true,
+						"type": "string",
+						"length": "6",
+						"note": "Código da operadora",
+						"available": true
+					}
+				]
+			},
+			"healthInsurerCodeOpcional": {
+				"name": "healthInsurerCode",
+				"in": "query",
+				"description": "Código da operadora",
+				"required": false,
+				"schema": {
+					"type": "integer",
+					"format": "int32",
+					"default": 20
+				},
+				"x-totvs": [
+					{
+						"product": "Central-Obrigacoes",
+						"field": "B3K.B3K_CODOPE",
+						"required": false,
 						"type": "string",
 						"length": "6",
 						"note": "Código da operadora",
