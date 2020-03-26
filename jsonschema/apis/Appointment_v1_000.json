@@ -1,0 +1,249 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a Agendamento de Atendimentos para os produtos TOTVS",
+			"url": "http://{domain}:{port}/api/hcg/v1",
+			"variables": {
+				"domain": {
+					"default": "localhost"
+				},
+				"port": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a Agendamento de Atendimentos para os produtos TOTVS",
+		"version": "1.000",
+		"title": "Appointment",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Appointment",
+				"description": "Registro de Agendamento de Atendimentos",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeSau.Squad.Assistencial@totvs.com.br",
+					"description": "Registro de Agendamento de Atendimentos",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"paths": {
+		"/appointments/{code}": {
+			"get": {
+				"tags": [
+					"Appointment"
+				],
+				"summary": "Retorna um Atendimento",
+				"description": "Retorna um Atendimento",
+				"operationId": "GetAppointment",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros",
+							"minimalVersion": "12.1.27"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/code"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registro recuperado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Appointment_1_000.json#/definitions/AppointmentInfo"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro na execução da operação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Appointment"
+				],
+				"summary": "Exclui um Agendamento",
+				"description": "Exclui um Agendamento",
+				"operationId": "Delete",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/code"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Agenda excluída com sucesso."
+					}
+				}
+			}
+		},
+		"/appointments": {
+			"get": {
+				"tags": [
+					"Appointment"
+				],
+				"summary": "Recupera uma lista com todos os Agendamentos",
+				"description": "Recupera uma lista com todos os Agendamentos",
+				"operationId": "GetAllAppointments",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo está disponível com todos os parâmetros.",
+							"minimalVersion": "12.1.27"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registros recuperados com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Appointment_1_000.json#/definitions/PagedAppointment"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro no momento da recuperação do registro.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Appointment"
+				],
+				"summary": "Insere um registro",
+				"description": "Insere um registro",
+				"operationId": "Post",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos parametros",
+							"minimalVersion": "12.1.27"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"description": "Objeto para inserir um registro",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Appointment_1_000.json#/definitions/AppointmentInfo"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Appointment_1_000.json#/definitions/AppointmentInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da alteração",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"code": {
+				"name": "code",
+				"in": "path",
+				"description": "Identicador do registro",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"x-totvs": {
+				"productInformation": [
+					{
+						"product": "RM",
+						"available": true,
+						"note": "Identificador Único de uma Especialidade",
+						"minimalVersion": "12.1.27"
+					}
+				]
+			}
+		},
+		"schemas": {}
+	}
+}
