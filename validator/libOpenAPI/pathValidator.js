@@ -82,7 +82,7 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
                 populatePathsProductArray(productInfo);
             } else {
                 results.useProductInfoAsArray = false;
-                results.wrongXTotvs = pathkey + "|" + httpVerbkey;
+                results.wrongXTotvsProductInfo = pathkey + "|" + httpVerbkey;
             }
         }
         for (var i in productInfo) {
@@ -113,7 +113,8 @@ var checkXtotvs = function (httpVerbInfo, httpVerbkey, pathkey) {
         }
 
     } else {
-        results.useProductInfoAsArray = true;
+        results.hasPathXTotvs = false;
+        results.wrongXTotvs = pathkey + "|" + httpVerbkey;
     }
 };
 
@@ -709,7 +710,9 @@ exports.clear = function () {
         parametersDefinedInComponentList: [],
         collectionsWithoutRequiredParams: "",
         wrongXTotvs: "",
+        wrongXTotvsProductInfo: "",
         notUsingCommonParams: "",
+        hasPathXTotvs: true,
         useIdInAllPuts: true,
         containsItemsAndHasNext: true,
         containsTheSameKeyInUrlAndBody: true,

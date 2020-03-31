@@ -248,10 +248,16 @@ describe("Validating OpenAPI files...", function () {
 
             describe(" - xtotvs: ", function () {
               describe(" - paths: ", function () {
-                it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
+                it("should contain xtotvs inside 'paths'", function () {
                   if (pathValidatorResult) {
                     var wrongXTotvs = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
-                    expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvs).to.be.true;
+                    expect(pathValidatorResult.hasPathXTotvs, wrongXTotvs).to.be.true;
+                  }
+                });
+                it("should contain xtotvs/productinformation as an array inside 'paths'", function () {
+                  if (pathValidatorResult) {
+                    var wrongXTotvsProductInfo = "Please check this endpoint|httpverb: " + pathValidatorResult.wrongXTotvs;
+                    expect(pathValidatorResult.useProductInfoAsArray, wrongXTotvsProductInfo).to.be.true;
                   }
                 });
                 it("should contain 'product' as a key in productInformation, inside 'paths'", function () {
