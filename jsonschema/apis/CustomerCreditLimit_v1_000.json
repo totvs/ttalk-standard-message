@@ -1,0 +1,181 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API para Consulta do Limite de credito de Cliente (CustomerCreditLimit) para produtos TOTVS",
+			"url": "{{host}}/api/fat/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8080"
+				}
+			}
+        }
+    ],
+    "info": {
+        "title": "Limite de credito do Cliente",
+		"description": "API para consulta do Limite de credito do Cliente (CustomerCreditLimit) para produtos TOTVS",
+		"version": "1.00",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+			"messageDocumentation": {
+				"name": "CustomerCreditLimit",
+				"description": "Consulta de Limite de credito do Cliente",
+				"segment": "Backoffice"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Consulta de Limite de credito do Cliente",
+					"adapter": "FATS900.prw"
+				}
+			]
+		}
+    },
+    "paths": {
+        "/CustomerCreditLimit": {
+            "get": {
+                "tags": [
+					"CustomerCreditLimit"
+                ],
+                "operationId": "getCustomerCreditLimit",
+				"summary": "Consultar o limite de credito de todos os Clientes",
+                "description": "Retorna uma lista com o Limite de credito de todos os Clientes",
+                "x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponível com os parâmetros Authorization, Order, Page, PageSize e Fields",
+							"minimalVersion": "12.1.23"
+						}
+					]
+                },
+                "parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialProposal_1_000.json#/definitions/PagedCommercialProposal"
+								}
+							}
+						}
+                    },
+                    "404": {
+                        "description": "Erro no momento da alteração",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+                    }
+                }
+            }
+        },
+        "/CustomerCreditLimit/{CustomerInternalId}":{
+            "get": {
+                "tags": [
+					"CustomerInternalId"
+                ],
+                "summary": "Consultar o Limite de crédito de um Cliente especifico",
+				"description": "Retorna o Limite de credito de um Cliente",
+                "operationId": "getCustomerInternalId",
+                "x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponível com os parâmetros Authorization, Fields e CustomerInternalId",
+							"minimalVersion": "12.1.23"
+						}
+					]
+                },
+                "parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/CustomerInternalId"
+					}
+                ],
+                "responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CommercialProposal_1_000.json#/definitions/CommercialProposalInfo"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "CustomerInternalId": {
+                "name": "CustomerInternalId",
+				"in": "path",
+				"description": "Identificador único do Cliente",
+				"required": true,
+				"example": "D MG    00000101",
+				"schema": {
+					"type": "string"
+                },
+                "x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Informar os campos Filial (A1_FILIAL) Codigo (A1_COD) e Loja (A1_LOJA).",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				}
+            }
+        },
+        "schemas": {}
+    }
+}
