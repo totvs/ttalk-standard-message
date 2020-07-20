@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para pedidos de venda nos produtos TOTVS",
+      "url": "{{host}}/api/wholesale/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8080"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API de Pedidos de Venda TOTVS",
+    "version": "1.000",
+    "title": "Pedidos",
+    "contact": {
+      "name": "T-Talk",
+      "url": "API.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Pedidos",
+        "description": "Pedidos de Venda do Sistema",
+        "segment": "Distribuição e Logística"
+      },
+      "productInformation": [
+        {
+          "product": "Winthor",
+          "contact": "winthor@totvs.com.br",
+          "description": "Cancelamento de Pedidos de Venda",
+          "adapter": "",
+          "helpUrl": ""
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/orders": {
+      "delete": {
+        "tags": [
+          "Cancel Order"
+        ],
+        "summary": "Cancela um pedido de venda",
+        "description": "Cancela um pedido de venda não faturado",
+        "operationId": "postCancelOrder",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Winthor",
+              "available": true,
+              "note": "Este verbo esta disponível com todos os parâmetros",
+              "minimalVersion": "30.0"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          },
+          {
+            "$ref": "#/components/parameters/productCode"
+          },
+          {
+            "$ref": "#/components/parameters/sequence"
+          },
+          {
+            "$ref": "#/components/parameters/sendMessageRca"
+          },
+          {
+            "$ref": "#/components/parameters/reasonCancellation"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pedido cancelado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Cancelamento de Pedido Faturado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pedido de Venda não Localizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "id": {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Identificador Único representando o Pedido de Venda",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "productCode": {
+        "name": "productCode",
+        "in": "query",
+        "required": false,
+        "description": "Identificador de código do produto",
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "sequence": {
+        "name": "sequence",
+        "in": "query",
+        "required": false,
+        "description": "Identificador da sequência do produto no pedido",
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "sendMessageRca": {
+        "name": "sendMessageRca",
+        "in": "query",
+        "required": true,
+        "description": "Indica se irá enviar mensagem ao vendedor informando do cancelamento do pedido.",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "reasonCancellation": {
+        "name": "reasonCancellation",
+        "in": "query",
+        "required": true,
+        "description": "Indica o motivo do cancelamento.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
