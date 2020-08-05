@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "servers": [
         {
-            "description": "API com acesso exclusivo ao ambiente",
+            "description": "API dos ambientes do Totvs Discovery em modo exclusivo",
             "url": "{{host}}/api/framework/v1",
             "variables": {
                 "serverUrl": {
@@ -15,9 +15,9 @@
         }
     ],
     "info": {
-        "description": "API com acesso exclusivo ao ambiente",
+        "description": "API dos ambientes do Totvs Discovery em modo exclusivo",
         "version": "1.000",
-        "title": "DiscoveryEnvExclusive",
+        "title": "DiscoveryEnvironments",
         "contact": {
             "name": "T-Talk",
             "url": "API.Totvs.com.br",
@@ -25,8 +25,8 @@
         },
         "x-totvs": {
             "messageDocumentation": {
-                "name": "DiscoveryEnvExclusive",
-                "description": "Acesso exclusivo ao ambiente",
+                "name": "DiscoveryEnvironments",
+                "description": "Ambientes do Discovery",
                 "segment": "Foundation"
             },
             "productInformation": [
@@ -47,19 +47,19 @@
                 "tags": [
                     "DiscoveryEnvExclusive"
                 ],
-                "summary": "Verifica se o ambiente pode ser exclusivo.",
-                "description": "Verifica se o ambiente pode ser exclusivo.",
-                "operationId": "getdiscoveryenvironmentid",
+                "summary": "Retorna se o ambiente pode ser exclusivo",
                 "x-totvs": {
                     "productInformation": [
                         {
                             "product": "Protheus",
                             "available": true,
                             "note": "Este verbo esta disponivel com todos os parametros",
-                            "minimalVersion": "12.1.23"
+                            "minimalVersion": "12.1.27"
                         }
                     ]
                 },
+                "description": "Retorna se o ambiente pode ser exclusivo",
+                "operationId": "getEnvironments",
                 "parameters": [
                     {
                         "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
@@ -80,17 +80,62 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "C:/ttalk-standard-message/jsonschema/schemas/DiscoveryEnvironment_1_000.json#/definitions/DiscoveryEnvironmentType"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/DiscoveryEnvironment_1_000.json#/definitions/PagedDiscoveryEnvironments"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "DiscoveryEnvironment"
+                ],
+                "summary": "Inclui o ambiente passado na requisição",
+                "description": "Inclui a ambiente passada na requisição",
+                "operationId": "postDiscoveryEnvironment",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "Protheus",
+                            "available": true,
+                            "note": "Este verbo esta disponivel nessa versão",
+                            "minimalVersion": "12.1.27"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/DiscoveryEnvironment_1_000.json#/definitions/DiscoveryEnvironmentType"
+                            }
+                        }
+                    },
+                    "description": "Ambiente para ser incluida"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/DiscoveryEnvironment_1_000.json#/definitions/PagedDiscoveryEnvironments"
                                 }
                             }
                         }
                     },
-                    "404": {
-                        "description": "Ambiente não localizado na base",
+                    "400": {
+                        "description": "erro no momento da Inclusão",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "C:/ttalk-standard-message/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
                                 }
                             }
                         }
@@ -98,5 +143,19 @@
                 }
             }
         }
+    },
+    "components": {
+        "parameters": {
+            "discoveryenvironmentid": {
+                "name": "discoveryenvironmentid",
+                "in": "path",
+                "required": true,
+                "description": "Identificador Único representando o Ambiente",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "schemas": {}
     }
 }
