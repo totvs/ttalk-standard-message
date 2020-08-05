@@ -1,0 +1,176 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/MRPWarehouse/v1/1_000/jsonschema/schemas/MRPWarehouse_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "MRPWarehouse",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "MRPWarehouse",
+				"description": "Armazém",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/ListOfMRPWarehouse",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"MRPWarehouseBase": {
+			"type": "object",
+			"properties": {
+				"branchId": {
+					"description": "Código da filial",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWY.HWY_FILIAL",
+							"required": false,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"code": {
+					"description": "Id único do Armazém no MRP",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWY.HWY_IDREG",
+							"required": true,
+							"type": "Char",
+							"length": "200",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"warehouse": {
+					"description": "Código do Armazém",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWY.HWY_COD",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"type": {
+					"description": "Tipo do armazém",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWY.HWY_TIPO",
+							"required": true,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"useMrp": {
+					"description": "Usado no MRP",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "HWY.HWY_MRP",
+							"required": true,
+							"type": "Char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		},
+		"MessageBase": {
+			"type": "object",
+			"properties": {
+				"code": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				},
+				"detailedMessage": {
+					"$ref": "#/definitions/MRPWarehouseBase"
+				}
+			}
+		},
+		"ListOfMessages": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"_messages": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/MessageBase"
+							}
+						}
+					}
+				}
+			]
+		},
+		"ListOfMRPWarehouse": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/MRPWarehouseBase"
+					}
+				}
+			}
+		},
+		"MRPWarehouseMultiple": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/ListOfMRPWarehouse"
+				},
+				{
+					"$ref": "#/definitions/ListOfMessages"
+				}
+			]
+		},
+		"PagedMRPWarehouse": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/ListOfMRPWarehouse"
+				}
+			]
+		}
+	}
+}
