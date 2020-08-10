@@ -19,8 +19,6 @@ describe("Validating Schema files...", function () {
       if (err) {
         console.log(err);
       }
-      // console.log('SCHEMA files');
-      // console.log(filenames);
       if (changed_files) {
         filenames.forEach(function (filename) {
           if (filename.includes(".json") && !filename.includes("package") && changed_files.includes(dirname + filename)) {
