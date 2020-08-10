@@ -4,12 +4,15 @@ node_js:
   - node
 before_install:
   - chmod +x travis-renameRef.sh
-  - chmod +x travis-refreshApiReferenceSearchIndex.sh
-  - export DIFF_FILES=git diff --name-only --diff-filter=AM HEAD $(git merge-base HEAD $TRAVIS_BRANCH)
+  - chmod +x travis-refreshApiReferenceSearchIndex.sh  
 install:  
   - npm install
+before_script:
+    # - git remote set-branches --add origin $TRAVIS_BRANCH
+    # - git fetch
+    - export CHANGED_FILES=`git diff --name-only master`
 script:
-  echo $DIFF_FILES
+  echo $CHANGED_FILES
   # - travis_wait 30 npm test
 # after_success:
 #   - if [ "$TRAVIS_BRANCH" == "master" ]; then ./travis-refreshApiReferenceSearchIndex.sh;
