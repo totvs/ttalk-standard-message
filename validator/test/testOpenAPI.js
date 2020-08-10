@@ -14,18 +14,19 @@ var dereferenceService = require("../libOpenAPI/dereferenceService");
 var expect = require("chai").expect;
 var segmentDictionary = {};
 var productDictionary = {};
+var changed_files = process.env.CHANGED_FILES;
 
 describe("Validating OpenAPI files...", function () {
   it("test suite started", function (done) {
     //OPENAPIS //
-    var dirname = "./jsonschema/apis/";
+    var dirname = "jsonschema/apis/";
     fs.readdir(dirname, function (err, filenames) {
       if (err) {
         console.log(err);
       }
 
-      filenames.forEach(function (filename) {
-        if (filename.includes(".json") && !filename.includes("package")) {
+      filenames.forEach(function (filename) {        
+        if (filename.includes(".json") && !filename.includes("package") && changed_files.includes(dirname + filename)) {
           let openAPIPath = path.join(dirname, filename);
 
           describe("OpenAPI - " + filename, function () {
