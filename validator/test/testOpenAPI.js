@@ -39,7 +39,7 @@ describe("Validating OpenAPI files...", function () {
             var derefErrorDetail;
 
             before(async function (done) {
-              this.timeout(120000);
+              this.timeout(360000);
               file = file.trim(); //Removes unwanted bytes
               parsedOpenAPI = JSON.parse(file);
               derefResult = JSON.parse(file); //Need to have other obj reference than the previous one
