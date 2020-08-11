@@ -496,7 +496,8 @@ describe("Validating OpenAPI files...", function () {
         });
         done();
       } else {
-        console.error('Could not regonize any file changes or new files');
+        console.log('Could not regonize any file changes or new files');
+        done();
       }
     });
   });
