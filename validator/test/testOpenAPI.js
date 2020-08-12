@@ -16,6 +16,8 @@ var segmentDictionary = {};
 var productDictionary = {};
 var changed_files = process.env.CHANGED_FILES;
 var pull_request = process.env.TRAVIS_PULL_REQUEST;
+var branch = process.env.TRAVIS_BRANCH
+var enableRunAll = (pull_request === "false" && branch === "master")
 
 describe("Validating OpenAPI files...", function () {
   it("test suite started", function (done) {
@@ -27,7 +29,9 @@ describe("Validating OpenAPI files...", function () {
       }
       if (changed_files) {
         filenames.forEach(function (filename) {
-          if (filename.includes(".json") && !filename.includes("package") && (changed_files.includes(dirname + filename) || pull_request === "false")) {
+          if (filename.includes(".json") 
+          && !filename.includes("package") 
+          && (enableRunAll || changed_files.includes(dirname + filename))) {
             let openAPIPath = path.join(dirname, filename);
 
             describe("OpenAPI - " + filename, function () {
