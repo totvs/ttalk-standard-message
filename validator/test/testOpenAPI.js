@@ -15,9 +15,7 @@ var expect = require("chai").expect;
 var segmentDictionary = {};
 var productDictionary = {};
 var changed_files = process.env.CHANGED_FILES;
-var pull_request = process.env.TRAVIS_PULL_REQUEST;
-var branch = process.env.TRAVIS_BRANCH
-var enableRunAll = (pull_request === "false" && branch === "master")
+var enableRunAll = process.env.ENABLE_RUN_ALL;
 
 describe("Validating OpenAPI files...", function () {
   it("test suite started", function (done) {
@@ -27,7 +25,7 @@ describe("Validating OpenAPI files...", function () {
       if (err) {
         console.log(err);
       }
-      if (changed_files) {
+      if (changed_files || enableRunAll) {
         filenames.forEach(function (filename) {
           if (filename.includes(".json") 
           && !filename.includes("package") 
@@ -45,7 +43,7 @@ describe("Validating OpenAPI files...", function () {
               var derefErrorDetail;
 
               before(async function (done) {
-                this.timeout(120000);
+                this.timeout(240000);
                 file = file.trim(); //Removes unwanted bytes
                 parsedOpenAPI = JSON.parse(file);
                 derefResult = JSON.parse(file); //Need to have other obj reference than the previous one

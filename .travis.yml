@@ -11,12 +11,11 @@ before_script:
     - git config pull.rebase false
     - git remote set-branches --add origin $TRAVIS_BRANCH
     - git fetch
-    # Usa COMMIT_RANGE quando na master, e HEAD quando no PULL REQUEST
-    - if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
-         export CHANGED_FILES=`git diff --name-only $TRAVIS_COMMIT_RANGE`;
-      else
-        export CHANGED_FILES=`git diff --name-only $TRAVIS_BRANCH..HEAD`;
-      fi
+    - export CHANGED_FILES=`git diff --name-only $TRAVIS_BRANCH..HEAD`;
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; 
+      then
+          export ENABLE_RUN_ALL=true;
+      fi    
 script:
   - echo $TRAVIS_PULL_REQUEST
   - echo $CHANGED_FILES
