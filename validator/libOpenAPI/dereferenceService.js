@@ -10,7 +10,7 @@ exports.dereference = async function (derefResult, callbackDereferenceResult) {
           external: true,
           http: {
             redirects: 0,
-            timeout: 50000
+            timeout: 10000
           }
         }
       }
