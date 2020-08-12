@@ -12,9 +12,14 @@ before_script:
     - git remote set-branches --add origin $TRAVIS_BRANCH
     - git fetch
     # - export CHANGED_FILES=`git diff --name-only --diff-filter=AM $TRAVIS_BRANCH...HEAD`
-    - export CHANGED_FILES=`git diff --name-only $TRAVIS_COMMIT_RANGE`
+    # - export CHANGED_FILES=`git diff --name-only $TRAVIS_COMMIT_RANGE`
+    - if [ "$TRAVIS_BRANCH" == "master" ]; 
+      then 
+        export CHANGED_FILES=`git show --name-only --oneline HEAD`
+      else
+        export CHANGED_FILES=`git diff --name-only master`
+      fi
 script:
-  - echo $TRAVIS_BRANCH
   - echo $CHANGED_FILES
   - npm test
 after_success:
