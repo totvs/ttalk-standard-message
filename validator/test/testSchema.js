@@ -8,9 +8,8 @@ var fs = require('fs');
 var path = require('path');
 var schemaDefinitionsValidator = require('../libSchema/schemaDefinitionsValidator.js');
 var changed_files = process.env.CHANGED_FILES;
-var pull_request = process.env.TRAVIS_PULL_REQUEST;
-var branch = process.env.TRAVIS_BRANCH
-var enableRunAll = (pull_request === "false" && branch === "master")
+var changed_files = process.env.CHANGED_FILES;
+var enableRunAll = process.env.ENABLE_RUN_ALL;
 
 var expect = require('chai').expect;
 
@@ -22,7 +21,7 @@ describe("Validating Schema files...", function () {
       if (err) {
         console.log(err);
       }
-      if (changed_files) {
+      if (changed_files || enableRunAll) {
         filenames.forEach(function (filename) {
           if (filename.includes(".json")
             && !filename.includes("package")
