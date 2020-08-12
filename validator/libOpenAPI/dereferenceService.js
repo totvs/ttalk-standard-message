@@ -9,11 +9,7 @@ exports.dereference = async function (derefResult, callbackDereferenceResult) {
         resolve: {
           external: true,
           http: {
-<<<<<<< HEAD
             timeout: 5000
-=======
-            timeout: 10000
->>>>>>> master
           }
         }
       }
