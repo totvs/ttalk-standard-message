@@ -11,20 +11,12 @@ before_script:
     - git config pull.rebase false
     - git remote set-branches --add origin $TRAVIS_BRANCH
     - git fetch
-    # - export CHANGED_FILES=`git diff --name-only --diff-filter=AM $TRAVIS_BRANCH...HEAD`
+    # Usa COMMIT_RANGE quando na master, e HEAD quando no PULL REQUEST
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
          export CHANGED_FILES=`git diff --name-only $TRAVIS_COMMIT_RANGE`;
       else
         export CHANGED_FILES=`git diff --name-only $TRAVIS_BRANCH..HEAD`;
       fi
-    # - if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
-    #       # This isn't a PR build.
-    #       COMMIT_RANGE="$(echo $TRAVIS_COMMIT_RANGE | cut -d '.' -f 1,4 --output-delimiter '..')"
-    #       CHANGED_FILES="$(git diff --name-only $COMMIT_RANGE --)"
-    #   else
-    #       # This is a PR build.
-    #       CHANGED_FILES="$(git diff --name-only $TRAVIS_BRANCH..HEAD --)"
-    #   fi
 script:
   - echo $TRAVIS_PULL_REQUEST
   - echo $CHANGED_FILES
