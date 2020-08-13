@@ -210,11 +210,12 @@ describe("Validating OpenAPI files...", function () {
                   }
                 });
 
-                if (pathValidatorResult) {
-                  it("should use external schemas for all requests and responses ", function () {
+                it("should use external schemas for all requests and responses ", function () {
+                  if (pathValidatorResult) {
                     expect(pathValidatorResult.useExternalSchema).to.be.true;
-                  });
-                }
+                  }
+                });
+
 
                 it("should be dereferenced. This means all external references are correct (FilePaths and Object property names)", function () {
                   if (!derefErrorDetail || !derefErrorDetail.ioErrorCode || (typeof derefErrorDetail.ioErrorCode === "string" && !derefErrorDetail.ioErrorCode.includes("ETIMEDOUT"))) { //Não contar como erro de dereference casos de timeout que podem ter sido ocasionados pela rede no Travis
