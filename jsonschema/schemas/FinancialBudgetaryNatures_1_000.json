@@ -1,0 +1,220 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/FinancialBudgetaryNatures_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "Financial Budgetary Natures",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "FinancialBudgetaryNatures",
+				"description": "Mensagem para Integração de Naturezas Orçamentárias/Financeiras",
+				"segment": "Backoffice"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeCP.Squad.ComprasFaturamento",
+					"note": "Cadastro de Naturezas Orçamentárias/Financeiras"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/FinancialBudgetaryNaturesInfo",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedFinancialBudgetaryNatures": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/FinancialBudgetaryNaturesInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"FinancialBudgetaryNaturesInfo": {
+			"description": "Lista de Naturezas Orçamentárias/Financeiras",
+			"properties": {
+				"CompanyId": {
+					"description": "Código da empresa/coligada",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": true,
+							"note": "Código da Coligada",
+							"field": "TTBORCAMENTO.CODCOLIGADA",
+							"type": "integer"
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa da empresa/coligada",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "O InternalID do Local de Estoque é formado por GCOLIGADA.CODCOLGIADA",
+							"field": "GCOLIGADA.CODCOLGIADA",
+							"available": true,
+							"type": "string"
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId de Integração para Natureza Orçamentária/Financeira",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "O InternalID da Natureza Orçamentária/Financeira",
+							"field": "TTBORCAMENTO.CODCOLGIADA|TTBORCAMENTO.CODTBORCAMENTO",
+							"available": true,
+							"type": "string"
+						}
+					]
+				},
+				"Code": {
+					"description": "Código da Natureza Orçamentária/Financeira",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": true,
+							"note": "Código da Natureza Orçamentária/Financeira",
+							"field": "TTBORCAMENTO.CODTBORCAMENTO",
+							"length": "40",
+							"type": "string"
+						}
+					]
+				},
+				"Description": {
+					"description": "Descrição da Natureza Orçamentária/Financeira",
+					"type": "string",
+					"example": "Material de Consumo",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Descrição do Local de Estoque(armazém/almoxarifado/depósito)",
+							"field": "TTBORCAMENTO.DESCRICAO",
+							"length": "100",
+							"type": "string"
+						}
+					]
+				},
+				"FreeTextField": {
+					"description": "Campo Livre",
+					"type": "string",
+					"example": "Texto livre",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Campo texto livre",
+							"field": "TTBORCAMENTO.CAMPOLIVRE",
+							"length": "20",
+							"type": "string"
+						}
+					]
+				},
+				"DontAllowTransfer": {
+					"description": "Não permite transferir valores entre naturezas financeiras",
+					"type": "boolean",
+					"example": "false",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Não permite transferir valores entre naturezas financeiras",
+							"field": "TTBORCAMENTO.NAOPERMITETRANSF",
+							"type": "boolean"
+						}
+					]
+				},
+				"Nature": {
+					"description": "Natureza a pagar / a receber",
+					"type": "string",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Natureza '0' - A Pagar / '1' - A Receber / '2' - Ambos",
+							"field": "TLOC.COMPLEMENTO",
+							"length": "1",
+							"type": "string"
+						}
+					]
+				},
+				"NatureType": {
+					"description": "Tipo de Natureza (Analítica / Sintética) ",
+					"type": "string",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Analítica / Sintética",
+							"field": "TLOC.CEP",
+							"length": "1",
+							"type": "string"
+						}
+					]
+				},
+				"Inactive": {
+					"description": "Identificador de natureza orçamentária inativa",
+					"type": "boolean",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Identificador de natureza orçamentária inativa",
+							"field": "TLOC.INATIVO",
+							"type": "boolean"
+						}
+					]
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

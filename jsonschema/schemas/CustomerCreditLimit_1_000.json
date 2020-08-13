@@ -1,0 +1,130 @@
+{
+	"info": {
+		"description": "API para consulta do Limite de credito do Cliente (CustomerCreditLimit) para produtos TOTVS",
+		"version": "1.000",
+		"title": "CustomerCreditLimit",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/CustomerCreditLimitInfo"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "CustomerCreditLimit",
+				"description": "Consulta do Limite de credito do Cliente (CustomerCreditLimit) para produtos TOTVS",
+				"segment": "Backoffice"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Consulta de Limite de credito do Cliente",
+					"adapter": "FATS900.PRW"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedCustomerCreditLimit": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/CustomerCreditLimit"
+				}
+			]
+		},
+		"CustomerCreditLimit": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CustomerCreditLimitInfo"
+					}
+				}
+			}
+		},
+		"CustomerCreditLimitInfo": {
+			"description": "Descreve as Propriedades do Limite de credito do Cliente",
+			"type": "object",
+			"properties": {
+				"CustomerInternalId": {
+					"type": "string",
+					"example": "D MG    00000101",
+					"description": "Código interno da Cliente no ERP",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA1.A1_FILIAL|SA1.A1_COD|SA1.A1_LOJA",
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"canUpdate": false,
+							"note": "Formado pelos campos Filial (A1_FILIAL), Codigo (A1_COD) e Loja (A1_LOJA)",
+							"required": true
+						}
+					]
+				},
+				"Description": {
+					"type": "string",
+					"example": "Saldo disponivel do Cliente",
+					"description": "Campo informativo"
+				},
+				"DocumentType": {
+					"type": "string",
+					"example": "",
+					"description": "Tipo do Documento"
+				},
+				"LimitDate": {
+					"type": "string",
+					"description": "Vencimento do Lim. Credit",
+					"format": "date-time",
+					"example": "1900-01-01T12:00:00Z",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA1.A1_VENCLC",
+							"type": "date-time",
+							"length": "08",
+							"required": false,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"CreditLimit": {
+					"description": "Limite de Credito do cliente",
+					"example": 5162.81,
+					"type": "number",
+					"minimum": 0,
+					"maximum": 999999999.99,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "SA1.A1_LC - SA1.A1_SALDUPM - SA1.A1_SALPEDL",
+							"type": "number",
+							"length": "12",
+							"required": true,
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}

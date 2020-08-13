@@ -1,14 +1,28 @@
 language: node_js
 sudo: false
 node_js:
-  - node
+  - 14
 before_install:
   - chmod +x travis-renameRef.sh
-  - chmod +x travis-refreshApiReferenceSearchIndex.sh
+  - chmod +x travis-refreshApiReferenceSearchIndex.sh  
 install:  
   - npm install
+before_script:
+    - git config pull.rebase false
+    - git remote set-branches --add origin $TRAVIS_BRANCH
+    - git fetch
+    - export CHANGED_FILES=`git diff --name-only $TRAVIS_BRANCH..HEAD`;
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; 
+      then
+          export ENABLE_RUN_ALL=true;
+      fi    
 script:
+  - |
+    while sleep 9m; do
+      echo "====[ $SECONDS seconds still running ]===="
+    done &
   - npm test
+  - kill %1
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then ./travis-refreshApiReferenceSearchIndex.sh;
     fi
