@@ -217,7 +217,7 @@ describe("Validating OpenAPI files...", function () {
                 }
 
                 it("should be dereferenced. This means all external references are correct (FilePaths and Object property names)", function () {
-                  if (derefErrorDetail && !(derefErrorDetail.includes("ETIMEDOUT"))) { //Não contar como erro de dereference casos de timeout que podem ter sido ocasionados pela rede no Travis
+                  if (!derefErrorDetail?.includes("ETIMEDOUT")) { //Não contar como erro de dereference casos de timeout que podem ter sido ocasionados pela rede no Travis
                     expect(derefResult, derefErrorDetail).to.be.ok;
                   }
                 });
