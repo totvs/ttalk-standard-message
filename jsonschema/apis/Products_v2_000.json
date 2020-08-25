@@ -1,0 +1,355 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para manutenção da entidade de Produtos(Products) para Produtos TOTVS",
+			"url": "{{host}}/api/est/v2",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8052"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para informações de Produtos/Serviços para Produtos TOTVS",
+		"version": "2.000",
+		"title": "Produtos/Serviços",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Products",
+				"description": "Cadastro de Produtos/Serviços",
+				"segment": "Backoffice"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": " tribecp.squad.estoquecontratos@totvs.com.br",
+					"description": "Cadastro de Produtos/Serviços",
+					"adapter": "EstProductsServer"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/Products": {
+			"get": {
+				"tags": [
+					"Products"
+				],
+				"summary": "Retorna lista de Produtos/Serviços",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parametros",
+							"minimalVersion": "12.1.29"
+						}
+					]
+				},
+				"description": "Retorna lista completa de Produtos/Serviços",
+				"operationId": "getProducts",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/schemas/Products_2_000.json#/definitions/PagedProducts"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na listagem de Produtos/Serviços",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Products"
+				],
+				"summary": "Inclui um novo Produto/Serviço",
+				"operationId": "postProduct",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.29"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/schemas/Products_2_000.json#/definitions/ProductsInfo"
+							}
+						}
+					},
+					"description": "Inclui um novo Produto/Serviço"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/schemas/Products_2_000.json#/definitions/ProductsInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Products/{Code}": {
+			"get": {
+				"tags": [
+					"Products"
+				],
+				"summary": "Retorna um Produto/Serviço a partir de sua Chave",
+				"description": "Retorna uma Produto/Serviço a partir de sua chave",
+				"operationId": "getProduct",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.29"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/Code"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/schemas/Products_2_000.json#/definitions/ProductsInfo"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Produto/Serviço não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"Products"
+				],
+				"summary": "Atualiza o cadastro de um Produto/Serviço conforme dados enviados no corpo da requisição",
+				"description": "Atualiza o cadastro de um Produto/Serviço conforme dados enviados no corpo da requisição",
+				"operationId": "putProduct",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": "12.1.29"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/Code"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/schemas/Products_2_000.json#/definitions/ProductsInfo"
+							}
+						}
+					},
+					"description": "Produto/Serviço a ser atualizado"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/schemas/Products_2_000.json#/definitions/ProductsInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da atualização",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Produto/Serviço não localizada na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Product"
+				],
+				"summary": "Exclui um Produto/Serviço conforme dados enviados no corpo da requisição",
+				"description": "Exclui um Produto/Serviço conforme dados enviados no corpo da requisição",
+				"operationId": "DeleteProduct",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/Code"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/schemas/Products_2_000.json#/definitions/ProductsInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da Exclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Produto/Serviço não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Products/v2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"Code": {
+				"name": "Code",
+				"in": "path",
+				"required": true,
+				"description": "Identificador Único representando o Produto/Serviço",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
