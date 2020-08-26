@@ -1,0 +1,405 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+      {
+        "description": "API para a entidade de Movimento (Movements) para Produtos TOTVS.",
+        "url": "{{host}}/api/mov/v1",
+        "variables": {
+          "serverUrl": {
+            "default": "localhost"
+          },
+          "serverHttpPort": {
+            "default": "8051"
+          }
+        }
+      }
+    ],
+    "info": {
+      "description": "API para informações de Movimentos para Produtos TOTVS",
+      "version": "1.002",
+      "title": "Movimentos",
+      "contact": {
+        "name": "T-Talk",
+        "url": "api.totvs.com.br",
+        "email": "comiteintegracao@totvs.com.br"
+      },
+      "x-totvs": {
+        "messageDocumentation": {
+          "name": "movement",
+          "description": "Cadastro de Movimentos",
+          "segment": "Serviços"
+        },
+        "productInformation": [
+          {
+            "product": "RM",
+            "contact": " tribecp.squad.ComprasFaturamento@totvs.com.br",
+            "description": "Cadastro de Movimentos",
+            "adapter": "MovMovementServer"
+          }
+        ]
+      }
+    },
+    "paths": {
+      "/movements": {
+        "get": {
+          "tags": [
+            "Movimentos"
+          ],
+          "summary": "Retorna lista de movimentos",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true,
+                "note": "Este verbo esta disponivel com todos os parametros",
+                "minimalVersion": "12.1.31"
+              }
+            ]
+          },
+          "description": "Retorna lista completa de Movimentos",
+          "operationId": "getMovements",
+          "parameters": [
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/PagedMovement"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na listagem dos Movimentos",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Registro não encontrado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Movimentos"
+          ],
+          "summary": "Inclui um Movimento",
+          "operationId": "postMovement",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true,
+                "note": "Este verbo esta disponivel com todos os parametros",
+                "minimalVersion": "12.1.31"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/Movement"
+                }
+              }
+            },
+            "description": "Inclui um Movimento"
+          },
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/Movement"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "erro no momento da Inclusão",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/Movements/{InternalId}": {
+        "get": {
+          "tags": [
+            "Movimentos"
+          ],
+          "summary": "Retorna o movimento com base no InternalId",
+          "description": "Retorna o movimento com base no InternalId",
+          "operationId": "getMovement",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true,
+                "note": "Este verbo esta disponivel com todos os parametros",
+                "minimalVersion": "12.1.31"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/InternalId"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/Movement"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Movimento não localizado na base",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Movimentos"
+          ],
+          "summary": "Atualiza cadastro de movimento conforme dados enviados na requisição",
+          "description": "Atualiza cadastro de movimento conforme dados enviados na requisição",
+          "operationId": "putMovement",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true,
+                "note": "Este verbo esta disponivel com todos os parametros",
+                "minimalVersion": "12.1.31"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/InternalId"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/Movement"
+                }
+              }
+            },
+            "description": "Movimento a ser atualizado"
+          },
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/Movement"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "erro no momento da Inclusão",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Movimento não localizado na base",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Movimentos"
+          ],
+          "summary": "Exclui o movimento cadastrado com base no InternalId",
+          "description": "Exclui movimento cadastrado com base no InternalId",
+          "operationId": "DeleteMovement",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/InternalId"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/Movement"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "erro no momento da Inclusão",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Movimento não localizado na base",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/movements/Cancel": null,
+      "/Movements/Cancel/{InternalId}": {
+        "post": {
+          "tags": [
+            "Cancelamento de Movimentos"
+          ],
+          "summary": "Cancela um Movimento",
+          "operationId": "postMovementCancel",
+          "x-totvs": {
+            "productInformation": [
+              {
+                "product": "RM",
+                "available": true,
+                "note": "Este verbo esta disponivel com todos os parametros",
+                "minimalVersion": "12.1.31"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/InternalId"
+            },
+            {
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/movements/v1/1_000/jsonschema/schemas/Movements_1_000.json#/definitions/Movement"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro no momento do cancelamento",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "parameters": {
+        "InternalId": {
+          "name": "InternalId",
+          "in": "path",
+          "required": true,
+          "description": "Identificador Único representando o movimento (CompanyId|MovementId)",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {}
+    }
+  }
