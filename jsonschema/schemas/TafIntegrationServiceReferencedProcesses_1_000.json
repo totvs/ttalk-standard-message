@@ -1,0 +1,333 @@
+{
+	"$schema": "./TafIntegrationServiceReferencedProcesses_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "TafIntegrationService",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Taf Integration Service",
+				"description": "API de Inclusão de cadastros ao TAF",
+				"segment": ""
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "henrique.pereira@totvs.com.br",
+					"description": "Cadastro de Conta Contábil",
+					"adapter": "WSTAF026.prw"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedItens": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/referencedProcesses"
+				}
+			]
+		},
+		"InclusionItens": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/definitions/referencedProcesses"
+				}
+			]
+		},
+		"referencedProcesses": {
+			"type": "object",
+			"properties": {
+				"referencedProcesses": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/referencedProcessesInfo" 
+					}
+				}
+			}
+		},
+		"referencedProcessesInfo": {
+		"description": "Cadastro ao TAF",
+		"type": "object",
+		"properties": {
+				"processNumber": {
+					"name": "processNumber",
+					"description": "Identificação do processo ou ato concessório",
+					"type": "string",
+					"maxLength": 21,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_NUMERO",
+							"required": true,
+							"length": "10",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"processOriginIndicator": {
+					"name": "processOriginIndicator",
+					"description": "Identificação do processo ou ato concessório",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_TIPO",
+							"required": true,
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"lawsuitAuthorship": {
+					"name": "lawsuitAuthorship",
+					"description": "Código de Indicador da Natureza da Ação Judicial impetrada na Justiça Federal",
+					"type": "string",
+					"required": true,
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_INDAUT",
+							"required": false,
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"proceduralStart": {
+					"name": "proceduralStart",
+					"description": "Período Inicial da Validade",
+					"type": "date",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_DTINI",
+							"required": false,
+							"length": "8",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"proceduralEnd": {
+					"name": "proceduralEnd",
+					"description": "Período Final da Validade",
+					"type": "date",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_DTFIN",
+							"required": false,
+							"length": "8",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"state": {
+					"name": "state",
+					"description": "UF da Vara",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_UF",
+							"required": false,
+							"length": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"cityCode": {
+					"name": "cityCode",
+					"description": "Código do Município da Vara",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_CODMUN",
+							"required": false,
+							"length": "5",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"processType": {
+					"name": "processType",
+					"description": "Tipo Processo ECF",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CCF.CCF_TPCOMP",
+							"required": false,
+							"length": "5",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"suspension": {
+					"type": "array",
+					"items": {
+						"type": "object",
+							"properties": {
+								"fullAmount": {
+									"name": "fullAmount",
+									"description": "Indicador de Depósito",
+									"type": "string",
+									"maxLength": 1,
+									"x-totvs": [
+										{
+											"product": "protheus",
+											"field": "CCF.CCF_MONINT",
+											"required": false,
+											"length": "1",
+											"available": true,
+											"canUpdate": true
+										}
+									]
+								},
+								"suspensionIndicativeCode": {
+									"name": "suspensionIndicativeCode",
+									"description": "Código de Suspensão",
+									"type": "string",
+									"maxLength": 14,
+									"x-totvs": [
+										{
+											"product": "protheus",
+											"field": "CCF.CCF_INDSUS",
+											"required": false,
+											"length": "14",
+											"available": true,
+											"canUpdate": true
+										}
+									]
+								},
+								"decisionDate": {
+									"name": "decisionDate",
+									"description": "Data da Decisão",
+									"type": "date",
+									"maxLength": 8,
+									"x-totvs": [
+										{
+											"product": "protheus",
+											"field": "CCF.CCF_DTADM OR CCF.CCF_DTSENT",
+											"required": false,
+											"length": "8",
+											"available": true,
+											"canUpdate": true
+										}
+									]
+								},
+								"suspensionIndicativeInfo": {
+									"name": "suspensionIndicativeInfo",
+									"description": "Código de Indicativo de Suspensão",
+									"type": "string",
+									"maxLength": 6,
+									"x-totvs": [
+										{
+											"product": "protheus",
+											"field": "CCF.CCF_SUSEXI",
+											"required": false,
+											"length": "2",
+											"available": true,
+											"canUpdate": true
+										}
+									]
+								}
+
+							}
+					}
+				}
+			}
+
+		},
+		"Sucess":{
+			"description": "Cadastro ao TAF",
+			"type": "object",
+			"properties": {
+				"referencedProcesses":{
+				"type":"object",	
+					"properties": {	
+						"sucess": {
+							"description": "Código da conta contábil no TAF",
+							"type": "string", 
+							"maxLength": 1
+						}
+					}
+				},
+				"id": {
+					"type": "string",
+					"description": "Identifier"
+				}
+			}
+		},
+		"referencedProcessesDelete": {
+			"description": "Deleta conta contábil do TAF",
+			"type": "object",
+			"properties": {		
+				"referencedProcesses":{
+					"type":"object",	
+					"properties": {												
+						"referencedProcessesId": {
+							"description": "Código da conta contábil no TAF",
+							"type": "string",
+							"maxLength": 60
+							}
+						}
+				
+					}
+			}
+		}
+			
+	},
+	
+	"parameters": {
+		"sourceBranch": {
+			"name": "sourceBranch",
+			"description": "Códigos da Empresa/Filaial no TAF, correspondente a C1E_CODFIL",
+			"in": "query",
+			"required": false,
+			"schema": {
+				"type": "string"
+			}
+		},
+		"referencedProcessesOf": {
+			"name": "referencedProcessesOf",
+			"description": "Código inicial do range de Conta Contábil a ser listado",
+			"in": "query",
+			"required": false,
+			"schema": {
+				"type": "string"
+			}
+		},
+		"referencedProcessesUp": {
+			"name": "referencedProcessesUp",
+			"description": "Código Final do range de Conta Contábil a ser listado",
+			"in": "query",
+			"required": false,
+			"schema": {
+				"type": "string"
+			}
+		}
+	}
+}
