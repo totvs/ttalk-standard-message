@@ -1,0 +1,411 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CostCenter_2_002.json#",
+	"info": {
+		"description": "",
+		"version": "2.002",
+		"title": "CostCenter",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "CostCenter",
+				"description": "Cadastro de centro de custo - TYPE centraliza as informações para uso das mensagens CostCenter e ListOfCostCenter",
+				"segment": "Manufatura"
+			},
+			"productInformation": [
+				{
+					"product": "Logix",
+					"contact": "Lediel Eleutério",
+					"note": "INOVAÇÃO LOGIX",
+					"adapter": "EAIADAPTERCOSTCENTER2.4GL"
+				},
+				{
+					"product": "RM",
+					"contact": "TribeCP.Squad.CtbPat@totvs.com.br",
+					"note": "SQUAD CONTROLADORIA",
+					"adapter": ""
+				},
+				{
+					"product": "protheus",
+					"contact": "squad.control@totvs.com.br",
+					"description": "Cadastro de Centro de Custo",
+					"adapter": "CTBA030.prw"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/CostCenterType_2_002.json#/definitions/CostCenterType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedCostCenters": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/CostCenters"
+				}
+			]
+		},
+		"CostCenters": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CostCentersInfo"
+					}
+				}
+			}
+		},
+		"CostCentersInfo": {
+			"description": "Cadastro de Centro de Custo",
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"type": "string",
+					"description": "Código da empresa",
+					"example": "T1",
+					"maxLength": 3
+				},
+				"BranchId": {
+					"type": "string",
+					"description": "Código da Filial",
+					"example": "D MG 01 ",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_FILIAL",
+							"required": true,
+							"length": "8",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"type": "string",
+					"description": "InternalId da chave completa de empresa do produto",
+					"example": "T1D MG 01 000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "EMPRESA|CTT.CTT_FILIAL|CTT.CTT_CUSTO",
+							"required": true,
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"available": false,
+							"required": false,
+							"canUpdate": false,
+							"note": "Tag não utilizada no RM"
+						}
+					]
+				},
+				"Id": {
+					"type": "string",
+					"description": "Id, chave formada por Codigo da Coligada e Codigo do Centro de custo separados por '|'",
+					"example": "1|01.7",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"available": false,
+							"canUpdate": false,
+							"note": "Tag não utilizada no Protheus"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.CODCOLIGADA|GCCUSTO.CODCUSTO",
+							"required": true,
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Code": {
+					"type": "string",
+					"description": "Código do Centro de Custo",
+					"example": "000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_CUSTO",
+							"type": "varchar",
+							"length": "9",
+							"required": true,
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.CODCCUSTO",
+							"required": true,
+							"type": "string",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"type": "string",
+					"description": "InternalId de Integração",
+					"example": "D MG 01 000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_FILIAL|CTT.CTT_CUSTO",
+							"type": "varchar",
+							"length": "17",
+							"available": true,
+							"note": "O internalID da anotação é formado por CTT.CTT_FILIAL|CTT.CTT_CUSTO",
+							"required": true
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.CODCOLIGADA|GCCUSTO.CODCUSTO",
+							"required": true,
+							"type": "varchar",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"RegisterSituation": {
+					"type": "string",
+					"description": "Situação do Centro de Custo (Ativo ou Inativo)",
+					"example": "2",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_BLOQ",
+							"type": "varchar",
+							"length": "1",
+							"required": true,
+							"available": true,
+							"note": "Situação do Centro de Custo (2 - Ativo ou 1 - Inativo)"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.ATIVO",
+							"type": "varchar",
+							"length": "T",
+							"required": false,
+							"available": true,
+							"note": "Situação do Centro de Custo (T - Ativo ou F - Inativo)"
+						}
+					]
+				},
+				"Name": {
+					"type": "string",
+					"description": "Descrição do Centro de Custo",
+					"example": "Centro de Custo",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_DESC01",
+							"type": "varchar",
+							"length": "40",
+							"required": true,
+							"available": true,
+							"note": "Descrição do Centro de Custo"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.NOME",
+							"type": "varchar",
+							"length": "60",
+							"required": true,
+							"available": true,
+							"note": "Descrição do Centro de Custo"
+						}
+					]
+				},
+				"ShortCode": {
+					"type": "string",
+					"description": "Código Reduzido",
+					"example": "C001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_RES",
+							"type": "varchar",
+							"length": "10",
+							"required": true,
+							"available": true,
+							"note": "Código do Centro de Custo reduzido"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.CODREDUZIDO",
+							"type": "varchar",
+							"length": "25",
+							"required": false,
+							"available": true,
+							"note": "Código do Centro de Custo reduzido"
+						}
+					]
+				},
+				"SPED": {
+					"type": "string",
+					"description": "Define se Centro de Custo será enviado para SPED",
+					"example": "",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"available": false,
+							"note": "Tag não utilizada no Protheus"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.ENVIASPED",
+							"type": "varchar",
+							"length": "1",
+							"required": false,
+							"available": true,
+							"note": "Situação do envio do SPED (T - Envia ou F - Não Envia)"
+						}
+					]
+				},
+				"AllowEntry": {
+					"type": "string",
+					"description": "Define se Centro de Custo permite lançamento",
+					"example": "",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"available": false,
+							"note": "Tag não utilizada no Protheus"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.PERMITELANC",
+							"type": "boolean",
+							"length": "1",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"Class": {
+					"type": "string",
+					"description": "Classe",
+					"example": "1",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_CLASS",
+							"type": "varchar",
+							"required": true,
+							"available": true,
+							"note": "Classe (1 - Analítico ou 2 - Sintético)"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.CODCLASSIFICA",
+							"type": "varchar",
+							"length": "10",
+							"required": false,
+							"available": true,
+							"note": ""
+						}
+					]
+				},
+				"TopCode": {
+					"type": "string",
+					"description": "Código do Centro de Custo Superior",
+					"example": "000000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "CTT.CTT_CCSUP",
+							"type": "varchar",
+							"required": false,
+							"available": true,
+							"length": "9"
+						},
+						{
+							"product": "RM",
+							"required": false,
+							"available": false,
+							"note": "Tag não utilizada no RM"
+						}
+					]
+				},
+				"CreateDate": {
+					"type": "string",
+					"description": "Data de inclusão do centro de custo",
+					"example": "",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"available": false,
+							"note": "Tag não utilizada no Protheus"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.DATAINCLUSAO",
+							"type": "date",
+							"length": "8",
+							"required": false,
+							"available": true
+						}
+					]
+				},
+				"Accountable": {
+					"type": "string",
+					"description": "Código do responsável do centro de custo",
+					"example": "",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"required": false,
+							"available": false,
+							"note": "Tag não utilizada no Protheus"
+						},
+						{
+							"product": "RM",
+							"field": "GCCUSTO.RESPONSAVEL",
+							"type": "int",
+							"length": "4",
+							"required": false,
+							"available": true
+						}
+					]
+				}
+			}
+		},
+		"ReturnContent": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}
