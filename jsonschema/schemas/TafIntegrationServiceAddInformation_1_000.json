@@ -1,0 +1,168 @@
+{
+    "$schema":"./TafIntegrationServiceAddInformation_1_000.json#",
+    "info":{
+       "description":"",
+       "version":"1.000",
+       "title":"TafIntegrationService",
+       "contact":{
+          
+       },
+       "x-totvs":{
+          "messageDocumentation":{
+             "name":"Taf Integration Service",
+             "description":"API de Inclusão de cadastros ao TAF",
+             "segment":""
+          },
+          "productInformation":[
+             {
+                "product":"protheus",
+                "contact":"henrique.pereira@totvs.com.br",
+                "description":"Cadastro de Informações Complementares",
+                "adapter":"WSTAF035.prw"
+             }
+          ]
+       }
+    },
+    "definitions":{
+       "name":{
+          "type":"object",
+          "properties":{
+             "property":{
+                "type":"integer"
+             }
+          }
+       },
+       "PagedAddInformation":{
+          "type":"object",
+          "allOf":[
+             {
+                "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+             },
+             {
+                "$ref":"#/definitions/AddInformation"
+             }
+          ]
+       },
+       "InclusionAddInformation":{
+          "type":"object",
+          "allOf":[
+             {
+                "$ref":"#/definitions/AddInformation"
+             }
+          ]
+       },
+       "AddInformation":{
+          "type":"object",
+          "properties":{
+             "AddInformations":{
+                "type":"array",
+                "items":{
+                   "$ref":"#/definitions/AddInformationInfo"
+                }
+             }
+          }
+       },
+       "AddInformationInfo":{
+          "description":"Cadastro TAF",
+          "type":"object",
+          "properties":{
+             "AddInformationId":{
+                "name":"AddInformationId",
+                "description":"Código",
+                "type":"string",
+                "required":true,
+                "maxLength":6,
+                "example":"INFC01"
+             },
+             "name":{
+                "description":"Descrição",
+                "type":"string",
+                "maxLength":100,
+                "example":"Informac. Complemen 001"
+             },
+             "stamp":{
+                "description":"TimeStamp da última integração da informação complementar",
+                "type":"string",
+                "maxlength":23
+             }
+          }
+       },
+       "Sucess":{
+          "description":"Cadastro TAF",
+          "type":"object",
+          "properties":{
+             "item":{
+                "type":"object",
+                "properties":{
+                   "sucess":{
+                      "description":"Código do Item no TAF",
+                      "type":"string",
+                      "maxLength":1
+                   }
+                }
+             },
+             "id":{
+                "type":"string",
+                "description":"Identifier"
+             }
+          }
+       },
+       "AddInformationDelete":{
+          "description":"Deleta o cadastro de informações complementares",
+          "type":"object",
+          "properties":{
+             "AddInformations":{
+                "type":"array",
+                "items":{
+                   "properties":{
+                      "AddInformationId":{
+                         "description":"Código da informação complementar",
+                         "type":"string",
+                         "maxLength":60,
+                         "example":"INFC01"
+                      }
+                   }
+                }
+             }
+          }
+       }
+    },
+    "parameters":{
+       "sourceBranch":{
+          "name":"sourceBranch",
+          "description":"Código da Empresa/Filial no TAF, correspondente a C1E_CODFIL",
+          "in":"query",
+          "required":true,
+          "schema":{
+             "type":"string"
+          }
+       },
+       "idFrom":{
+          "name":"idFrom",
+          "description":"Código inicial do range de informações complementares a ser listado",
+          "in":"query",
+          "required":false,
+          "schema":{
+             "type":"string"
+          }
+       },
+       "idTo":{
+          "name":"idTo",
+          "description":"Código Final do range de informações complementares a ser listado",
+          "in":"query",
+          "required":false,
+          "schema":{
+             "type":"string"
+          }
+       },
+       "id":{
+          "name":"id",
+          "description":"Código da informação complementar a ser listado",
+          "in":"path",
+          "required":true,
+          "schema":{
+             "type":"string"
+          }
+       }
+    }
+}
