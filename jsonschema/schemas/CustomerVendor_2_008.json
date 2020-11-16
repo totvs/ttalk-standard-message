@@ -1,0 +1,1842 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#",
+  "info": {
+    "description": "API para a entidade cliente/fornecedor (customerVendor) para produtos TOTVS",
+    "version": "2.008",
+    "title": "CustomerVendor",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "transactionDefinition": {
+        "subType": "event",
+        "businessContentType": {
+          "type": "object",
+          "$ref": "#/definitions/customerVendorInfo"
+        },
+        "returnContentType": {
+          "type": "object",
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+        }
+      },
+      "messageDocumentation": {
+        "name": "Customervendor",
+        "description": "Cliente/Fornecedor",
+        "segment": "Serviços"
+      },
+      "productInformation": [
+        {
+          "product": "protheus",
+          "contact": "squad.crm@totvs.com.br",
+          "description": "Cadastro de Cliente/Fornecedor",
+          "adapter": "crms980.prw"
+        },
+        {
+          "product": "RM",
+          "contact": "TribeBO.Squad.Financeiro",
+          "description": "Cadastro de Tabela de Cliente/Fornecedor",
+          "adapter": ""
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "PagedCustomerVendors": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Paging"
+        },
+        {
+          "$ref": "#/definitions/CustomerVendors"
+        }
+      ]
+    },
+    "CustomerVendors": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/customerVendorInfo"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "customerVendorInfo": {
+      "type": "object",
+      "properties": {
+        "customerVendorId": {
+          "description": "customerVendorId",
+          "type": "string"
+        },
+        "companyId": {
+          "type": "string",
+          "description": "Empresa",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Código da Coligada",
+              "field": "FCFO.CODCOLIGADA",
+              "type": "integer"
+            }
+          ]
+        },
+        "branchId": {
+          "type": "string",
+          "example": "D MG 01",
+          "description": "Filial",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_FILIAL / SA2.A2_FILIAL",
+              "required": true,
+              "type": "Char",
+              "length": "12",
+              "available": true,
+              "canUpdate": false
+            }
+          ]
+        },
+        "companyInternalId": {
+          "type": "string",
+          "description": "InternalId da chave completa de empresa do produto",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "EMPRESA|A1_FILIAL|SA1.A1_COD|SA1.A_LOJA / EMPRESA|A2_FILIAL|SA2.A2_COD|SA2.A2_LOJA",
+              "required": true,
+              "type": "Char",
+              "length": "12",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "field": "FCFO.CODCOLIGADA | FCFO.CODCFO",
+              "type": "string",
+              "required": true,
+              "available": true
+            }
+          ]
+        },
+        "code": {
+          "type": "string",
+          "example": "000001",
+          "description": "Código do Cliente/Fornecedor",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_COD/SA2.A2_COD",
+              "required": true,
+              "type": "varChar",
+              "length": "6",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "datasul",
+              "field": "emitente.cod-emitente",
+              "required": true,
+              "type": "integer",
+              "length": "9",
+              "available": true,
+              "canUpdate": false,
+              "note": "Código do Cliente/Fornecedor Formato do Campo: >>>>>>>>9"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Código do Cliente Fornecedor",
+              "field": "FCFO.CODCFO",
+              "type": "string"
+            }
+          ]
+        },
+        "storeId": {
+          "type": "string",
+          "example": "01",
+          "description": "Loja do cliente/fornecedor",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_LOJA / SA2.A2_LOJA",
+              "required": true,
+              "type": "Char",
+              "length": "02",
+              "available": true,
+              "canUpdate": false
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Código da Loja",
+              "field": "FCFO.CODLOJA",
+              "type": "integer"
+            }
+          ]
+        },
+        "internalId": {
+          "type": "string",
+          "description": "InternalId da entidade"
+        },
+        "shortName": {
+          "type": "string",
+          "example": "JOHN M. CO",
+          "description": "Nome reduzido ",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_NREDUZ / SA2.A2_NREDUZ",
+              "required": false,
+              "type": "Char",
+              "length": "20",
+              "available": true,
+              "canUpdate": true
+            },
+            {
+              "product": "datasul",
+              "field": "emitente.nome-abrev",
+              "required": true,
+              "type": "String",
+              "length": "12",
+              "available": true
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Nome Fantasia do Cliente Fornecedor",
+              "field": "FCFO.NOMEFANTASIA",
+              "type": "string"
+            }
+          ]
+        },
+        "name": {
+          "type": "string",
+          "example": "JOHN & MARY CO",
+          "description": "Nome da entidade",
+          "maxLength": 40,
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_NOME / SA2.A2_NOME",
+              "required": true,
+              "type": "Char",
+              "length": "40",
+              "available": true,
+              "canUpdate": true
+            },
+            {
+              "product": "datasul",
+              "field": "emitente.nome-emit",
+              "note": "Nome Completo do Cliente/Fornecedor",
+              "required": true,
+              "available": true,
+              "type": "String",
+              "length": "60"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Razão Social do Cliente Fornecedor",
+              "field": "FCFO.NOME",
+              "type": "string"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "example": "1",
+          "description": "Tipo de Entidade",
+          "enum": ["1", "2", "3"],
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "required": true,
+              "type": "Char",
+              "length": "1",
+              "available": true,
+              "canUpdate": false,
+              "note": "1=CUSTOMER; 2=VENDOR; 3=BOTH"
+            },
+            {
+              "product": "datasul",
+              "field": "emitente.identific",
+              "required": true,
+              "type": "integer",
+              "length": "9",
+              "note": "Identifica se o emitente é apenas Cliente, apenas Fornecedor ou Ambos 1 – Cliente / 2 – Fornecedor / 3 – Ambos",
+              "available": true
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "field": "FCFO.TIPOCLIENTE",
+              "type": "integer",
+              "note": "1=CUSTOMER; 2=VENDOR; 3=BOTH"
+            }
+          ]
+        },
+        "entityType": {
+          "type": "string",
+          "example": "1-Company",
+          "description": "Situação Jurídica da Entidade",
+          "enum": ["1", "2", "3", "4"],
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_PESSOA",
+              "required": false,
+              "type": "Char",
+              "length": "1",
+              "available": true,
+              "canUpdate": true,
+              "note": "1=Company; 2=Person; 3=Foreign; 4-Trading"
+            },
+            {
+              "product": "datasul",
+              "field": "emitente.natureza",
+              "note": "Identifica se o emitente é Pessoa Física, Jurídica, Estrangeiro ou Trading. 1 – Pessoa Física / 2 – Pessoa Jurídica / 3 – Estrangeiro / 4 – Trading",
+              "required": true,
+              "type": "integer",
+              "length": ">9",
+              "available": true
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Identifica se o emitente é Pessoa Física, Jurídica",
+              "field": "FCFO.PESSOAFISOUJUR",
+              "type": "char"
+            }
+          ]
+        },
+        "marketsegment": {
+          "type": "object",
+          "description": "Segmento de Mercado",
+          "properties": {
+            "marketSegmentCode": {
+              "type": "string",
+              "description": "Código do segmento",
+              "x-totvs": [
+                {
+                  "product": "protheus",
+                  "field": "A1_CODSEG",
+                  "required": false,
+                  "type": "varchar",
+                  "length": "6",
+                  "note": "Segmento Principal",
+                  "available": true
+                }
+              ]
+            },
+            "marketSegmentInternalId": {
+              "type": "string",
+              "description": "InternalId do MarketSegmentCode"
+            },
+            "marketSegmentDescription": {
+              "type": "string",
+              "description": "Descrição do segmento",
+              "x-totvs": [
+                {
+                  "product": "protheus",
+                  "field": "A1_DESSEG",
+                  "required": false,
+                  "type": "varchar",
+                  "length": "40",
+                  "note": "Segmento Principal",
+                  "available": true
+                }
+              ]
+            }
+          }
+        },
+        "registerdate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-06-29T09:34:30Z",
+          "description": "Data da implantação do registro",
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "emitente.data-implant",
+              "required": true,
+              "type": "date",
+              "length": "99/99/9999",
+              "available": true,
+              "canUpdate": true,
+              "note": "Data em que o Cliente/Fornecedor foi cadastrado no sistema"
+            },
+            {
+              "type": "string",
+              "format": "date-time",
+              "example": "2018-06-29T09:34:30Z",
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Data de Criação",
+              "field": "FCFO.DATACRIACAO"
+            }
+          ]
+        },
+        "registerSituation": {
+          "type": "string",
+          "example": "1",
+          "description": "Status: 1 - Ativo, 2 - Inativo, 3 - Cancelado, 4 - Pendente, 5 -Suspenso",
+          "enum": ["1", "2", "3", "4", "5"],
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "A1_MSBLQL / A2_MSBLQL",
+              "required": false,
+              "type": "char",
+              "available": true,
+              "canUpdate": true,
+              "note": "No Protheus Status active/inactive serão convertidos em: active='2',inactive='1'"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Situação do Cliente Fornecedor 0 = inativo, 1 = ativo",
+              "field": "FCFO.ATIVO",
+              "type": "integer"
+            }
+          ]
+        },
+        "comments": {
+          "type": "string",
+          "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          "description": "Observações",
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "emitente.observacoes",
+              "required": true,
+              "type": "string",
+              "length": "2000",
+              "available": true,
+              "canUpdate": true,
+              "note": "Informações adicionais relacionadas ao Cliente/Fornecedor"
+            }
+          ]
+        },
+        "governmentalInformation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/GovernmentalInformation_1_000.json#/definitions/GovernmentalInformationType"
+          }
+        },
+        "address": {
+          "type": "object",
+          "description": "Endereço Principal",
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_2_000.json#/definitions/AddressType"
+        },
+        "shippingAddress": {
+          "type": "object",
+          "description": "Endereço de entrega",
+          "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_2_000.json#/definitions/AddressType"
+        },
+        "listOfCommunicationInformation": {
+          "type": "array",
+          "description": "Informações de comunicação",
+          "items": {
+            "type": "object",
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/CommunicationInformation_1_002.json#/definitions/CommunicationInformationType"
+          }
+        },
+        "listOfContacts": {
+          "type": "array",
+          "description": "Informações de Contato",
+          "items": {
+            "type": "object",
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ContactInformation_1_000.json#/definitions/ContactInformationType"
+          }
+        },
+        "listOfBankingInformation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/bankingInformation"
+          }
+        },
+        "billingInformation": {
+          "type": "object",
+          "properties": {
+            "billingCustomerCode": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Código do usuário de cobrança",
+              "x-totvs": [
+                {
+                  "product": "datasul",
+                  "field": "emitente.cod-cobranca ou pessoa_jurid.num_pessoa_jurid_cobr",
+                  "available": true
+                }
+              ]
+            },
+            "billingCustomerInternalId": {
+              "type": "string",
+              "description": "Billing Customer InternalId"
+            },
+            "address": {
+              "type": "object",
+              "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Address_2_000.json#/definitions/AddressType"
+            }
+          }
+        },
+        "vendorInformation": {
+          "type": "object",
+          "description": "Dados do Vendedor vinculado ao Cliente",
+          "properties": {
+            "vendorClassification": {
+              "type": "string",
+              "description": "1 - Raw Material, 2 - Service, 3 - Both, 4 - Generic",
+              "enum": ["1", "2", "3", "4"]
+            },
+            "vendorTypeCode": {
+              "type": "string",
+              "description": "Código do Vendedor",
+              "x-totvs": [
+                {
+                  "product": "protheus",
+                  "field": "SA1.A1_VEND",
+                  "required": false,
+                  "type": "string",
+                  "length": "06",
+                  "note": "Código do Vendedor vinculado ao Cliente",
+                  "available": true,
+                  "canUpdate": true
+                }
+              ]
+            },
+            "vendorTypeInternalId": {
+              "type": "string",
+              "description": "InternalId do VendorTypeCode"
+            },
+            "vendorTypeDescription": {
+              "type": "string",
+              "description": "Nome/Descrição do Vendedor"
+            }
+          },
+          "required": ["vendorTypeCode", "vendorTypeInternalId"]
+        },
+        "fiscalInformation": {
+          "type": "object",
+          "description": "Informações Fiscais",
+          "properties": {
+            "category": {
+              "type": "string",
+              "maxLength": 3,
+              "description": "Categoria da informação fiscal"
+            },
+            "isRetentionAgent": {
+              "type": "boolean",
+              "description": "Retem impostos"
+            },
+            "taxPayer": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "#/definitions/taxPayerType"
+              }
+            }
+          }
+        },
+        "creditInformation": {
+          "type": "object",
+          "description": "Informações de Crédito",
+          "properties": {
+            "creditIndicator": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Indicador de Crédito"
+            },
+            "creditEvaluation": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Avaliação de Crédito"
+            },
+            "shipmentCreditEvaluation": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Avaliação de Crédito para venda"
+            },
+            "creditLimit": {
+              "type": "number",
+              "format": "double",
+              "description": "Limite de Crédito",
+              "x-totvs": [
+                {
+                  "product": "protheus",
+                  "field": "SA1.A1_LC",
+                  "required": false,
+                  "type": "Integer",
+                  "format": "int32",
+                  "length": "14",
+                  "note": "Lim. Credito",
+                  "available": true,
+                  "canUpdate": true
+                }
+              ]
+            },
+            "creditLimitCurrency": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Moeda do Limite de Crédito",
+              "x-totvs": [
+                {
+                  "product": "protheus",
+                  "field": "SA1.A1_MOEDALC",
+                  "required": false,
+                  "type": "Integer",
+                  "length": "02",
+                  "note": "Moeda do LC",
+                  "available": true,
+                  "canUpdate": true
+                }
+              ]
+            },
+            "creditLimitDate": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2018-06-29T09:34:30Z",
+              "description": "Data de vencimento do Limite de Crédito",
+              "x-totvs": [
+                {
+                  "product": "protheus",
+                  "field": "SA1.A1_VENCLC",
+                  "required": false,
+                  "type": "Date-Time",
+                  "length": "08",
+                  "note": "Moeda do LC",
+                  "available": true,
+                  "canUpdate": true
+                }
+              ]
+            },
+            "additionalCreditLimit": {
+              "type": "number",
+              "format": "double",
+              "description": "Limite de Crédito adicional",
+              "x-totvs": [
+                {
+                  "product": "protheus",
+                  "field": "SA1.A1_LCFIN",
+                  "required": false,
+                  "type": "Integer",
+                  "format": "int32",
+                  "length": "14",
+                  "note": "Lim Credito Secundário",
+                  "available": true,
+                  "canUpdate": true
+                }
+              ]
+            },
+            "additionalCreditLimitCurrency": {
+              "type": "string",
+              "description": "Moeda do Limite de Crédito adicional"
+            },
+            "additionalCreditLimitDate": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2018-06-29T09:34:30Z",
+              "description": "Data de vencimento do Limite de Crédito adicional"
+            },
+            "latePeriods": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "balanceOfCredit": {
+              "type": "number",
+              "format": "double",
+              "description": "Valor do saldo restante do Cliente"
+            }
+          }
+        },
+        "paymentConditionCode": {
+          "type": "string",
+          "description": "Código do Prazo de Pagamento",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_COND | SA2.A2_COND",
+              "required": false,
+              "type": "Char",
+              "length": "03",
+              "note": "Condição de Pagamento",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "paymentConditionInternalId": {
+          "type": "string",
+          "description": "InternalId do PaymentConditionCode"
+        },
+        "priceListHeaderItemCode": {
+          "type": "string",
+          "description": "Código da Tabela de Preço",
+          "maxLength": 3,
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_TABELA",
+              "required": false,
+              "type": "Char",
+              "length": "03",
+              "note": "Tabela de preço padrão",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "priceListHeaderItemInternalId": {
+          "type": "string",
+          "description": "InternalId do PriceListHeaderItemCode"
+        },
+        "carrierCode": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Código da Transportadora default do Cliente",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_TRANSP | SA2.A2_TRANSP",
+              "required": false,
+              "type": "Char",
+              "length": "06",
+              "note": "Transportadora Padrão",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "strategicCustomerType": {
+          "type": "string",
+          "example": "3=Revendedor",
+          "description": "Tipo estratégico da Entidade",
+          "enum": ["1", "2", "3", "4", "5"],
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "SA1.A1_TIPO / SA2.A2_TIPO",
+              "required": false,
+              "type": "Char",
+              "length": "1",
+              "available": true,
+              "canUpdate": true,
+              "note": "1=Cons.Final; 2=ProdutorRural; 3=Revendedor; 4=Solidario; 5=Exportação"
+            }
+          ]
+        },
+        "rateDiscount": {
+          "type": "number",
+          "format": "double",
+          "description": "Percentual de Desconto|Bonificação",
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "Bonificacao",
+              "required": false,
+              "type": "decimal",
+              "length": "9",
+              "note": "Desconto Padrão",
+              "available": true
+            }
+          ]
+        },
+        "sellerCode": {
+          "type": "string",
+          "description": "Código do representante",
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "clien_financ.cdn_repre",
+              "required": true,
+              "type": "integer",
+              "length": "7",
+              "available": true
+            }
+          ]
+        },
+        "sellerInternalId": {
+          "type": "string",
+          "description": "InternalId do SellerCode",
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "clien_financ.cod_empresa|string(clien_financ.cdn_repres)",
+              "available": true
+            }
+          ]
+        },
+        "classification": {
+          "description": "Classificação do tipo de Lançamento Cliente Fornecedor",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Classificação do tipo de Lançamento Cliente Fornecedor",
+              "field": "FCFO.CODTCF",
+              "type": "string"
+            }
+          ]
+        },
+        "recCreatedBy": {
+          "description": "Usuário criador do registro",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Usuário criador do registro",
+              "field": "FCFO.RECCREATEDBY",
+              "type": "string"
+            }
+          ]
+        },
+        "recCreatedOn": {
+          "description": "Data de criação do registro",
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-06-29T09:34:30Z",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Data de criação do registro",
+              "field": "FCFO.RECCREATEDON",
+              "type": "date-time"
+            }
+          ]
+        },
+        "recModifiedBy": {
+          "description": "Usuário modificador do registro",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Usuário modificador do registro",
+              "field": "FCFO.RECMODIFIEDBY",
+              "type": "string"
+            }
+          ]
+        },
+        "recModifiedOn": {
+          "description": "Data de modificação do registro",
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-06-29T09:34:30Z",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Data de modificação do registro",
+              "field": "FCFO.RECMODIFIEDON",
+              "type": "date-time"
+            }
+          ]
+        },
+        "creditLimit": {
+          "description": "Limite de Crédito",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Limite de Crédito",
+              "field": "FCFO.LIMITECREDITO",
+              "type": "number"
+            }
+          ]
+        },
+        "lastChangeDate": {
+          "description": "Data da Útima Alteração",
+          "type": "string",
+          "format": "date-time",
+          "example": "2018-06-29T09:34:30Z",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Data da Útima Alteração",
+              "field": "FCFO.DATAULTALTERACAO",
+              "type": "date-time"
+            }
+          ]
+        },
+        "optionalValue1": {
+          "description": "Valor Opcional 1",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Valor Opcional 1 ",
+              "field": "FCFO.VALOROP1",
+              "type": "number"
+            }
+          ]
+        },
+        "optionalValue2": {
+          "description": "Valor Opcional 2",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Valor Opcional 2 ",
+              "field": "FCFO.VALOROP2",
+              "type": "number"
+            }
+          ]
+        },
+        "optionalValue3": {
+          "description": "Valor Opcional 3",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Valor Opcional 3 ",
+              "field": "FCFO.VALOROP3",
+              "type": "number"
+            }
+          ]
+        },
+        "patrimony": {
+          "description": "Valor Patrimonial",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Valor Patrimonial ",
+              "field": "FCFO.PATRIMONIO",
+              "type": "number"
+            }
+          ]
+        },
+        "employeesNumber": {
+          "description": "Número de Funcionários",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Número de Funcionários ",
+              "field": "FCFO.NUMFUNCIONARIOS  ",
+              "type": "integer"
+            }
+          ]
+        },
+        "classificationCompanyId": {
+          "description": "Coligada do Tipo de Cliente Fornecedor",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Coligada do Tipo de Cliente Fornecedor",
+              "field": "FCFO.CODCOLTCF ",
+              "type": "integer"
+            }
+          ]
+        },
+        "contributor": {
+          "description": "Contribuinte",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "",
+              "field": "FCFO.CONTRIBUINTE  ",
+              "type": "integer"
+            }
+          ]
+        },
+        "blocked": {
+          "description": "Bloqueado",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "",
+              "field": "FCFO.CFOIMOB  ",
+              "type": "integer"
+            }
+          ]
+        },
+        "providerShippingPrice": {
+          "description": "Valor do Frete",
+          "type": "number",
+          "format": "double",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "",
+              "field": "FCFO.VALFRETE",
+              "type": "number"
+            }
+          ]
+        },
+        "takerType": {
+          "description": "Tomador",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "",
+              "field": "FCFO.TPTOMADOR  ",
+              "type": "integer"
+            }
+          ]
+        },
+        "issContributor": {
+          "description": "Contribuinte ISS",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Contribuinte ISS",
+              "field": "FCFO.CONTRIBUINTEISS",
+              "type": "integer"
+            }
+          ]
+        },
+        "dependentsNumber": {
+          "description": "Número de Dependentes",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Número de Dependentes",
+              "field": "FCFO.NUMDEPENDENTES",
+              "type": "integer"
+            }
+          ]
+        },
+        "publicBody": {
+          "description": "Orgão Público",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Orgão Público",
+              "field": "FCFO.ORGAOPUBLICO",
+              "type": "integer"
+            }
+          ]
+        },
+        "selfEmployedCategory": {
+          "description": "Categoria do Autonômo",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Categoria do Autonômo",
+              "field": "FCFO.CATEGORIAAUTONOMO",
+              "type": "integer"
+            }
+          ]
+        },
+        "customerVendorIdentityId": {
+          "description": "ID do Cliente/Fornecedor com auto incremento na base",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "ID do Cliente/Fornecedor com auto incremento na base",
+              "field": "FCFO.IDCFO",
+              "type": "integer"
+            }
+          ]
+        },
+        "otherDeductionsIRRFCalculations": {
+          "description": "Valor de outras deduções para cálculo de IRRF",
+          "type": "number",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Valor de outras deduções para cálculo de IRRF",
+              "field": "FCFO.VROUTRASDEDUCOESIRRF",
+              "type": "number"
+            }
+          ]
+        },
+        "issRegime": {
+          "description": "Regime de ISS",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Regime de ISS",
+              "field": "FCFO.REGIMEISS",
+              "type": "string"
+            }
+          ]
+        },
+        "issRetentionResponsible": {
+          "description": "Retenção de ISS",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Retenção de ISS",
+              "field": "FCFO.RETENCAOISS",
+              "type": "string"
+            }
+          ]
+        },
+        "fuelOperationType": {
+          "description": "Tipo de Operação com Combustível",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Tipo de Operação com Combustível",
+              "field": "FCFO.TIPOOPCOMBUSTIVEL",
+              "type": "integer"
+            }
+          ]
+        },
+        "size": {
+          "description": "Porte da Empresa",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Porte da Empresa",
+              "field": "FCFO.PORTE",
+              "type": "integer"
+            }
+          ]
+        },
+        "activityBranch": {
+          "description": "Ramo de Atividade",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Ramo de Atividade",
+              "field": "FCFO.RAMOATIV",
+              "type": "integer"
+            }
+          ]
+        },
+        "typeContributorINSS": {
+          "description": "Tipo de Contribuinte de INSS",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Tipo de Contribuinte de INSS",
+              "field": "FCFO.TIPOCONTRIBUINTEINSS",
+              "type": "integer"
+            }
+          ]
+        },
+        "nationality": {
+          "description": "Nacionalidade do Cliente Fornecedor",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Nacionalidade do Cliente Fornecedor",
+              "field": "FCFO.NACIONALIDADE",
+              "type": "integer"
+            }
+          ]
+        },
+        "taxCodeColcfo": {
+          "description": "Coligada da Classificação Fiscal",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Coligada da Classificação Fiscal",
+              "field": "",
+              "type": "integer"
+            }
+          ]
+        },
+        "calculatesAVP": {
+          "description": "Calcula AVP",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Calcula AVP",
+              "field": "FCFO.CALCULAAVP",
+              "type": "integer"
+            }
+          ]
+        },
+        "nif": {
+          "description": "Classificação fiscal",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Classificação fiscal",
+              "field": "FCFO.NIF",
+              "type": "string"
+            }
+          ]
+        },
+        "nifSituation": {
+          "description": "Situação do NIF",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Classificação fiscal",
+              "field": "FCFO.SITUACAONIF",
+              "type": "integer"
+            }
+          ]
+        },
+        "incomeType": {
+          "description": "Tipo de Rendimento",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Tipo de Rendimento",
+              "field": "FCFO.TIPORENDIMENTO",
+              "type": "string"
+            }
+          ]
+        },
+        "taxationForm": {
+          "description": "Forma de Tributação",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Forma de Tributação",
+              "field": "FCFO.FORMATRIBUTACAO",
+              "type": "string"
+            }
+          ]
+        },
+        "innovate_auto": {
+          "description": "Campo para a geração da rotina Inovar Auto, implementado no Aplicativos Gestão Fiscal",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Campo para a geração da rotina Inovar Auto, implementado no Aplicativos Gestão Fiscal",
+              "field": "FCFO.INOVAR_AUTO",
+              "type": "integer"
+            }
+          ]
+        },
+        "formulaApplication": {
+          "description": "Código da Aplicação da Fórmula",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Código da Aplicação da Fórmula",
+              "field": "FCFO.APLICFORMULA",
+              "type": "string"
+            }
+          ]
+        },
+        "automaticDebitCheckerType": {
+          "description": "Dígito verificador do identificador de débito automático",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Dígito verificador do identificador de débito automático",
+              "field": "FCFO.DIGVERIFICDEBAUTOMATICO",
+              "type": "string"
+            }
+          ]
+        },
+        "executingEntityPaa": {
+          "description": "Entidade é executora do Programa de Aquisição de Alimentos – PAA (Sim ou Não)",
+          "type": "string",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Entidade é executora do Programa de Aquisição de Alimentos – PAA (Sim ou Não)",
+              "field": "FCFO.OBRAPROPRIA",
+              "type": "string"
+            }
+          ]
+        },
+        "ownWork": {
+          "description": "Obra Própria",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Obra Própria",
+              "field": "FCFO.ENTIDADEEXECUTORAPAA",
+              "type": "integer"
+            }
+          ]
+        },
+        "retiredPensioner": {
+          "description": "Identifica o aposentado ou pensionista",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Identifica o aposentado ou pensionista",
+              "field": "FCFO.CODCATEGORIAESOCIAL",
+              "type": "integer"
+            }
+          ]
+        },
+        "socialCategoryId": {
+          "description": "Categoria e-Social",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Categoria e-Social",
+              "field": "FCFO.APOSENTADOOUPENSIONISTA",
+              "type": "integer"
+            }
+          ]
+        },
+        "cooperativePartner": {
+          "description": "Sócio Cooperado",
+          "type": "integer",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Sócio Cooperado",
+              "field": "FCFO.SOCIOCOOPERADO",
+              "type": "integer"
+            }
+          ]
+        },
+        "complementaryFields": {
+          "description": "Campos Complementares",
+          "type": "object",
+          "x-totvs": [
+            {
+              "product": "RM",
+              "available": true,
+              "required": false,
+              "note": "Campos Complementares"
+            }
+          ],
+          "properties": {
+            "codcoligada": {
+              "description": "Código da Coligada",
+              "type": "integer",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": false,
+                  "note": "Código da Coligada",
+                  "field": "FCFO.CODCOLIGADA",
+                  "type": "integer"
+                }
+              ]
+            },
+            "codCfo": {
+              "description": "Código Cliente Fornecedor",
+              "type": "string",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": false,
+                  "note": "Código Cliente Fornecedor",
+                  "field": "FCFO.CODCFO",
+                  "type": "string"
+                }
+              ]
+            },
+            "vendedor": {
+              "description": "Nome do Vendedor",
+              "type": "string",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": false,
+                  "note": "Nome do Vendedor",
+                  "field": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "comprador": {
+              "description": "Nome do Comprador",
+              "type": "string",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": false,
+                  "note": "Nome do Comprador",
+                  "field": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "diasAtraso": {
+              "description": "Número de Dias em Atraso",
+              "type": "integer",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": false,
+                  "note": "Número de Dias em Atraso",
+                  "field": "",
+                  "type": "integer"
+                }
+              ]
+            },
+            "recCreatedBy": {
+              "description": "Usuário criador do registro",
+              "type": "string",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": true,
+                  "note": "Usuário criador do registro",
+                  "field": "FCFO.RECCREATEDBY",
+                  "type": "string"
+                }
+              ]
+            },
+            "recCreatedOn": {
+              "description": "Data de criação do registro",
+              "type": "string",
+              "format": "date-time",
+              "example": "2018-06-29T09:34:30Z",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": true,
+                  "note": "Data de criação do registro",
+                  "field": "FCFO.RECCREATEDON",
+                  "type": "date-time"
+                }
+              ]
+            },
+            "recModifiedBy": {
+              "description": "Usuário modificador do registro",
+              "type": "string",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": true,
+                  "note": "Usuário modificador do registro",
+                  "field": "FCFO.RECMODIFIEDBY",
+                  "type": "string"
+                }
+              ]
+            },
+            "recModifiedOn": {
+              "description": "Data de modificação do registro",
+              "type": "string",
+              "format": "date-time",
+              "example": "2018-06-29T09:34:30Z",
+              "x-totvs": [
+                {
+                  "product": "RM",
+                  "available": true,
+                  "required": true,
+                  "note": "Data de modificação do registro",
+                  "field": "FCFO.RECMODIFIEDON",
+                  "type": "date-time"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "bankingInformation": {
+      "type": "object",
+      "description": "Lista de contas Bancárias da Entidade Cliente/Fornecedor",
+      "properties": {
+        "bankCode": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Código do Banco",
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "emitente.cod-banco",
+              "required": true,
+              "type": "integer",
+              "format": "int32",
+              "length": "999",
+              "note": "Código do banco junto a FEBRABAN",
+              "available": true,
+              "canUpdate": true
+            },
+            {
+              "product": "protheus",
+              "field": "FIL_BANCO",
+              "required": false,
+              "type": "string",
+              "length": "3",
+              "note": "Banco",
+              "available": true,
+              "canUpdate": true
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "required": true,
+              "note": "Código do banco junto a FEBRABAN",
+              "field": ""
+            }
+          ]
+        },
+        "bankInternalId": {
+          "type": "string",
+          "description": "InternalId do BankCode"
+        },
+        "bankName": {
+          "type": "string",
+          "description": "Nome do Banco",
+          "example": "Caixa Econômica Federal",
+          "maxLength": 30
+        },
+        "branchCode": {
+          "type": "string",
+          "maxLength": 8,
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "emitente.agencia",
+              "required": true,
+              "type": "string",
+              "length": "8",
+              "note": "Agência bancária do Cliente/Fornecedor",
+              "available": true
+            },
+            {
+              "product": "protheus",
+              "field": "FIL_AGENCI",
+              "required": false,
+              "type": "string",
+              "length": "5",
+              "note": "Agência",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "branchKey": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "Dígito Verificador da Agência Bancária",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "FIL_DVAGE",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "DV Agência",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "checkingAccountNumber": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "Conta Bancária do Cliente/Fornecedor",
+          "x-totvs": [
+            {
+              "product": "datasul",
+              "field": "emitente.conta-corren",
+              "required": true,
+              "type": "string",
+              "length": "20",
+              "note": "Conta corrente do Cliente/Fornecedor ",
+              "available": true
+            },
+            {
+              "product": "protheus",
+              "field": "FIL_CONTA",
+              "required": false,
+              "type": "string",
+              "length": "10",
+              "note": "Conta",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "checkingAccountNumberKey": {
+          "type": "string",
+          "description": "Digito Conta Bancária do Cliente/Fornecedor",
+          "maxLength": 2,
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "FIL_DVCTA",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "DV Conta",
+              "available": true,
+              "canUpdate": true
+            }
+          ]
+        },
+        "checkingAccountType": {
+          "type": "string",
+          "description": "Tipo da Conta Bancária do Cliente/Fornecedor",
+          "enum": ["1", "2"],
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "FIL_TIPCTA|A2_TIPCTA",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Tipo de Conta Bancária a ser gravada na tabela de Contas do Fornecedor (FIL) Se for a conta principal, também salva a informação na tabela de Fornecedor (SA2)",
+              "available": true
+            },
+            {
+              "product": "-tfs",
+              "field": "id_tp_cta",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Tipo de conta do cliente: 'P'=Poupança; 'C'=Conta Corrente",
+              "available": true
+            }
+          ]
+        },
+        "mainAccount": {
+          "type": "string",
+          "description": "Conta Bancária Principal",
+          "enum": ["1", "2"],
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "FIL_TIPO",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Indica se é uma conta principal ou uma conta normal, sendo 1=Principal e 2=Normal",
+              "available": true
+            },
+            {
+              "product": "-tfs",
+              "field": "nr_seq_ref",
+              "required": false,
+              "type": "string",
+              "length": "1",
+              "note": "Numero sequencial da conta do cliente, onde 1 = Principal e maior que 1 = Normal",
+              "available": true
+            }
+          ]
+        },
+        "currencyAccount": {
+          "type": "string",
+          "description": "Moeda utilizada para os processos com a conta Bancária",
+          "x-totvs": [
+            {
+              "product": "protheus",
+              "field": "FIL_MOEDA",
+              "required": false,
+              "type": "string",
+              "length": "2",
+              "available": true
+            },
+            {
+              "product": "-tfs",
+              "field": "Nao se aplica",
+              "required": false,
+              "note": "É enviado o valor fixo '01' para a moeda utilizada nos processos com a conta Bancária",
+              "available": true
+            }
+          ]
+        }
+      }
+    },
+    "taxPayerType": {
+      "type": "object",
+      "properties": {
+        "taxName": {
+          "type": "string"
+        },
+        "isPayer": {
+          "type": "boolean"
+        },
+        "mode": {
+          "type": "string"
+        }
+      }
+    },
+    "Paging": {
+      "type": "object",
+      "properties": {
+        "hasNext": {
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "ErrorDetails": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ErrorModel"
+        },
+        {
+          "$ref": "#/definitions/ErrorDetail"
+        }
+      ]
+    },
+    "ErrorModel": {
+      "type": "object",
+      "required": ["code", "message", "detailedMessage"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Código identificador do erro."
+        },
+        "message": {
+          "type": "string",
+          "description": "Literal no idioma da requisição descrevendo o erro para o usuário."
+        },
+        "detailedMessage": {
+          "type": "string",
+          "format": "uri",
+          "description": "Mensagem técnica e mais detalhada do erro."
+        },
+        "helpUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI para documentação do erro."
+        }
+      }
+    },
+    "ErrorDetail": {
+      "type": "object",
+      "properties": {
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorModel"
+          }
+        }
+      }
+    }
+  }
+}

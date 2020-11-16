@@ -1,468 +1,498 @@
 {
-	"openapi": "3.0.1",
-	"servers": [
-		{
-			"description": "API para a entidade cliente/fornecedor (x-totv) para produtos TOTVS",
-			"url": "{{host}}/api/fin/v1",
-			"variables": {
-				"serverUrl": {
-					"default": "localhost"
-				},
-				"serverHttpPort": {
-					"default": "8090"
-				}
-			}
-		}
-	],
-	"info": {
-		"description": "API para a entidade cliente/fornecedor (customerVendor) para produtos TOTVS",
-		"version": "1.000",
-		"title": "Cliente/Fornecedor",
-		"contact": {
-			"name": "T-Talk",
-			"url": "api.Totvs.com.br",
-			"email": "comiteintegracao@totvs.com.br"
-		},
-		"x-totvs": {
-			"messageDocumentation": {
-				"name": "Customervendor",
-				"description": "Cliente/Fornecedor",
-				"segment": "Serviços"
-			},
-			"productInformation": [
-				{
-					"product": "Protheus",
-					"contact": "squad.crm@totvs.com.br",
-					"description": "Cadastro de Cliente/Fornecedor",
-					"adapter": "crms980.prw"
-				}
-			]
-		}
-	},
-	"paths": {
-		"/customerVendor": {
-			"get": {
-				"tags": [
-					"customerVendor"
-				],
-				"summary": "Retorna todos Clientes/Fornecedores",
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo não está diponível no protheus. Utilize a consulta CustomerVendorEntity",
-							"minimalVersion": "12.1.21"
-						}
-					]
-				},
-				"description": "Retorna todos clientes e/ou fornecedores",
-				"operationId": "getcustomerVendor",
-				"parameters": [
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Erro na requisição!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
-			},
-			"post": {
-				"tags": [
-					"customerVendor"
-				],
-				"summary": "Inclui Cliente/Fornecedor passada na requisição",
-				"description": "Inclui a entidade Cliente/Fornecedor passada na requisição",
-				"operationId": "postcustomerVendor",
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo está disponível com os parâmetros Authorization e Fields. O protheus não é compatível com a opção Both. Cadastre o cliente e vendedor separadamente."
-						}
-					]
-				},
-				"parameters": [
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-					}
-				],
-				"requestBody": {
-					"description": "Entidade para ser incluida",
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/customerVendorInfo"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "erro na Inclusão!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
-			}
-		},
-		"/customerVendor/{entityType}": {
-			"get": {
-				"tags": [
-					"customerVendorEntity"
-				],
-				"summary": "Retorna todos os registros de uma entidade específica",
-				"description": "Retorna todos os registros de uma entidade específica - Customer ou Vendor",
-				"operationId": "getentityType",
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo está disponível com os parâmetros EntityType, Authorization, Fields, Order, Page e PageSize",
-							"minimalVersion": "12.1.21"
-						}
-					]
-				},
-				"parameters": [
-					{
-						"$ref": "#/components/parameters/EntityType"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Entidade não localizada na base!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
-			}
-		},
-		"/customerVendor/{entityType}/{customerVendorId}": {
-			"get": {
-				"tags": [
-					"customerVendorId"
-				],
-				"summary": "Retorna Cliente/Fornecedor",
-				"description": "Retorna  Cliente ou Fornecedor com base no código da entidade",
-				"operationId": "getcustomerVendorId",
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo está disponível com os parâmetros CustomerVendorId,EntityType, Fields e Authorization",
-							"minimalVersion": "12.1.21"
-						}
-					]
-				},
-				"parameters": [
-					{
-						"$ref": "#/components/parameters/CustomerVendorId"
-					},
-					{
-						"$ref": "#/components/parameters/EntityType"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/customerVendorInfo"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Cliente/Vendedor não localizado na base!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
-			},
-			"put": {
-				"tags": [
-					"customerVendorId"
-				],
-				"summary": "Atualiza Cliente/Fornecedor informado na requisição",
-				"description": "Atualiza a entidade Cliente/Fornecedor informada na requisição",
-				"operationId": "putcustomerVendorId",
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com os parâmetros authorization, customervendorID e Fields",
-							"minimalVersion": "12.1.21"
-						}
-					]
-				},
-				"parameters": [
-					{
-						"$ref": "#/components/parameters/CustomerVendorId"
-					},
-					{
-						"$ref": "#/components/parameters/EntityType"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					}
-				],
-				"requestBody": {
-					"description": "Entidade para ser Alterada",
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/customerVendorInfo"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Alteração realizada com sucesso!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Erro no momento da alteração!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Entidade não localizada na base!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
-			},
-			"delete": {
-				"tags": [
-					"customerVendorId"
-				],
-				"summary": "Exclui o Cliente/Fornecedor passada na requisição",
-				"description": "Exclui a entidade Cliente/Fornecedor passada na requisição",
-				"operationId": "deletecustomerVendorId",
-				"x-totvs": {
-					"productInformation": [
-						{
-							"product": "Protheus",
-							"available": true,
-							"note": "Este verbo esta disponivel com os parâmetros Authorization e CustomerVendorId ",
-							"minimalVersion": "12.1.21"
-						}
-					]
-				},
-				"parameters": [
-					{
-						"$ref": "#/components/parameters/CustomerVendorId"
-					},
-					{
-						"$ref": "#/components/parameters/EntityType"
-					},
-					{
-						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Operação realizada com sucesso",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Erro no momento da exclusão!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Entidade não localizada na base!",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				]
-			}
-		}
-	},
-	"components": {
-		"parameters": {
-			"CustomerVendorId": {
-				"name": "customerVendorId",
-				"in": "path",
-				"required": true,
-				"description": "Identificador único representando a entidade",
-				"schema": {
-					"type": "string"
-				}
-			},
-			"EntityType": {
-				"name": "entityType",
-				"in": "path",
-				"description": "Tipo da Entidade",
-				"required": true,
-				"schema": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				}
-			}
-		}
-	}
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API para a entidade cliente/fornecedor (x-totv) para produtos TOTVS",
+      "url": "{{host}}/api/fin/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8090"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para a entidade cliente/fornecedor (customerVendor) para produtos TOTVS",
+    "version": "1.000",
+    "title": "Cliente/Fornecedor",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Customervendor",
+        "description": "Cliente/Fornecedor",
+        "segment": "Serviços"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "squad.crm@totvs.com.br",
+          "description": "Cadastro de Cliente/Fornecedor",
+          "adapter": "crms980.prw"
+        },
+        {
+          "product": "RM",
+          "contact": "TribeBO.Squad.Financeiro",
+          "description": "Cadastro de Tabela de Cliente/Fornecedor",
+          "adapter": ""
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/customerVendor": {
+      "get": {
+        "tags": ["customerVendor"],
+        "summary": "Retorna todos Clientes/Fornecedores",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo não está diponível no protheus. Utilize a consulta CustomerVendorEntity",
+              "minimalVersion": "12.1.21"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.29"
+            }
+          ]
+        },
+        "description": "Retorna todos clientes e/ou fornecedores",
+        "operationId": "getcustomerVendor",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro na requisição!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["customerVendor"],
+        "summary": "Inclui Cliente/Fornecedor passada na requisição",
+        "description": "Inclui a entidade Cliente/Fornecedor passada na requisição",
+        "operationId": "postcustomerVendor",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros Authorization e Fields. O protheus não é compatível com a opção Both. Cadastre o cliente e vendedor separadamente."
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.29"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          }
+        ],
+        "requestBody": {
+          "description": "Entidade para ser incluida",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/customerVendorInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "erro na Inclusão!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/customerVendor/{entityType}": {
+      "get": {
+        "tags": ["customerVendorEntity"],
+        "summary": "Retorna todos os registros de uma entidade específica",
+        "description": "Retorna todos os registros de uma entidade específica - Customer ou Vendor",
+        "operationId": "getentityType",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros EntityType, Authorization, Fields, Order, Page e PageSize",
+              "minimalVersion": "12.1.21"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.29"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EntityType"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entidade não localizada na base!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/customerVendor/{entityType}/{customerVendorId}": {
+      "get": {
+        "tags": ["customerVendorId"],
+        "summary": "Retorna Cliente/Fornecedor",
+        "description": "Retorna  Cliente ou Fornecedor com base no código da entidade",
+        "operationId": "getcustomerVendorId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com os parâmetros CustomerVendorId,EntityType, Fields e Authorization",
+              "minimalVersion": "12.1.21"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.29"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CustomerVendorId"
+          },
+          {
+            "$ref": "#/components/parameters/EntityType"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/customerVendorInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente/Vendedor não localizado na base!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["customerVendorId"],
+        "summary": "Atualiza Cliente/Fornecedor informado na requisição",
+        "description": "Atualiza a entidade Cliente/Fornecedor informada na requisição",
+        "operationId": "putcustomerVendorId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo esta disponivel com os parâmetros authorization, customervendorID e Fields",
+              "minimalVersion": "12.1.21"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.29"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CustomerVendorId"
+          },
+          {
+            "$ref": "#/components/parameters/EntityType"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "requestBody": {
+          "description": "Entidade para ser Alterada",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/customerVendorInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Alteração realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da alteração!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entidade não localizada na base!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["customerVendorId"],
+        "summary": "Exclui o Cliente/Fornecedor passada na requisição",
+        "description": "Exclui a entidade Cliente/Fornecedor passada na requisição",
+        "operationId": "deletecustomerVendorId",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo esta disponivel com os parâmetros Authorization e CustomerVendorId ",
+              "minimalVersion": "12.1.21"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "12.1.29"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CustomerVendorId"
+          },
+          {
+            "$ref": "#/components/parameters/EntityType"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/CustomerVendor_2_006.json#/definitions/PagedCustomerVendors"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro no momento da exclusão!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entidade não localizada na base!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "CustomerVendorId": {
+        "name": "customerVendorId",
+        "in": "path",
+        "required": true,
+        "description": "Identificador único representando a entidade",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "EntityType": {
+        "name": "entityType",
+        "in": "path",
+        "description": "Tipo da Entidade",
+        "required": true,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
 }
