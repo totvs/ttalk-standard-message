@@ -19,7 +19,7 @@ var doHttpRequest = function (requestObject) {
 	return new Promise(function (resolve, reject) {
 		var xhr = new XMLHttpRequest();
 		var _strReturn;
-		xhr.open("POST", "https://oa3diff.dev.totvs.io/totvseai/openapicomparator/v1/json", true);
+		xhr.open("POST", "https://oa3diff.totvs.io/totvseai/openapicomparator/v1/json", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
 		xhr.onload = function () {
 			if (xhr.status === 200 || xhr.status == 0) {
