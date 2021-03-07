@@ -1,0 +1,370 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API de usuários do segmento HealthCare para produtos TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "4202"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API de usuários do segmento HealthCare para produtos TOTVS",
+    "version": "1.000",
+    "title": "HealthCare Users",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "HealthCare Users",
+        "description": "HealthCare Users",
+        "segment": "HealthCare"
+      },
+      "productInformation": [
+        {
+          "product": "hat",
+          "contact": "hat@totvs.com.br",
+          "description": "Usuários",
+          "adapter": "RestUser.prw"
+        },
+        {
+          "product": "ProSaude",
+          "contact": "healthcare.mobile@totvs.com.br",
+          "description": "Aplicativo dos beneficiários de plano de saúde"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/healthCareUsers": {
+      "get": {
+        "tags": [
+          "healthCareUsers"
+        ],
+        "summary": "Retorna informações dos Usuários",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            },
+            {
+              "product": "ProSaude",
+              "available": false
+            }
+          ]
+        },
+        "description": "Retorna um lote de usuário de acordo com os parametros enviados. É possivel filtrar o resultado através de todas as propriedades com excessão do CBOS",
+        "operationId": "getLotUser",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthCareUser/V1/1_000/jsonschema/schemas/HealthCareUser_1_000.json#/definitions/PagedUser"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro ao localizar usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "healthCareUsers"
+        ],
+        "summary": "Inclusão de usuário",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            },
+            {
+              "product": "ProSaude",
+              "available": true
+            }
+          ]
+        },
+        "description": "Realiza a inclusão de um usuário conforme body da requisição.",
+        "operationId": "postUser",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthCareUser/V1/1_000/jsonschema/schemas/HealthCareUser_1_000.json#/definitions/UserPost"
+              }
+            }
+          },
+          "description": "Informações do usuário",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthCareUser/V1/1_000/jsonschema/schemas/HealthCareUser_1_000.json#/definitions/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthCareUsers/{id}": {
+      "get": {
+        "tags": [
+          "healthCareUsers"
+        ],
+        "summary": "Retorna informações dos Usuários",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            },
+            {
+              "product": "ProSaude",
+              "available": true
+            }
+          ]
+        },
+        "description": "Retorna um usuário de acordo com o código informado",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Expand"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthCareUser/V1/1_000/jsonschema/schemas/HealthCareUser_1_000.json#/definitions/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "healthCareUsers"
+        ],
+        "summary": "Altera informações do Usuário",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            },
+            {
+              "product": "ProSaude",
+              "available": false
+            }
+          ]
+        },
+        "description": "Altera informações do usuário de acordo com o ID informado",
+        "operationId": "putUser",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "requestBody": {
+          "description": "Usuário a ser incluído.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthCareUser/V1/1_000/jsonschema/schemas/HealthCareUser_1_000.json#/definitions/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/HealthCareUser/V1/1_000/jsonschema/schemas/HealthCareUser_1_000.json#/definitions/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados do usuário inválido"
+          },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "ExpiresAt": {
+        "name": "Expires_at",
+        "in": "header",
+        "description": "Data e hora da expiração do token em segundos",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Código do usuário",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
