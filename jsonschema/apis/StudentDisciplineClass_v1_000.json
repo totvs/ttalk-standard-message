@@ -1,0 +1,181 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para a dados do aluno na turma disciplina, perfil professor (StudentDisciplineClass) para produtos TOTVS",
+			"url": "{{host}}/api/educational/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade estudantes da turma disciplina",
+		"version": "1.000",
+		"title": "Estudantes da turma disciplina",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "StudentDisciplineClass",
+				"description": "Estudantes da turma disciplina",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Entidade de estudantes matrículados na turma disciplina, perfil professor"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/Professors/{ProfessorInternalId}/StudentDisciplineClasses": {
+			"get": {
+				"tags": [
+					"StudentDisciplineClass"
+				],
+				"summary": "Retorna os dados dos alunos matriculados em uma turma disciplina",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros exceto a opção de fields",
+							"minimalVersion": "12.1.31"
+						}
+					]
+				},
+				"description": "Retorna os dados dos alunos matriculados em uma turma disciplina",
+				"operationId": "getAll",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ProfessorInternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/StudentDisciplineClass/v1/1_000/jsonschema/schemas/StudentDisciplineClass_1_000.json#/definitions/PagedStudentDisciplineClass"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro no momento da listagem dos dados do aluno",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Professors/{ProfessorInternalId}/StudentDisciplineClasses/{InternalId}": {
+			"get": {
+				"tags": [
+					"StudentDisciplineClass"
+				],
+				"summary": "Retorna detalhes do tipo de ocorrência do educacional",
+				"description": "Retorna o tipo de ocorrência do educacional",
+				"operationId": "getId",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponível com todos os parâmetros",
+							"minimalVersion": "12.1.31"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ProfessorInternalId"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/StudentDisciplineClass/v1/1_000/jsonschema/schemas/StudentDisciplineClass_1_000.json#/definitions/StudentDisciplineClass"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Dados do aluno não localizado na base",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"ProfessorInternalId": {
+				"name": "ProfessorInternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do professor",
+				"schema": {
+					"type": "string"
+				}
+			},
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"required": true,
+				"description": "InternalId do registro do aluno do educacional",
+				"schema": {
+					"type": "string"
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
