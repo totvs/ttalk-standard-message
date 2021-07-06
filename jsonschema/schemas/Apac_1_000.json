@@ -1,20 +1,20 @@
 {
-  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Apac/V1/1_000/jsonschema/schemas/Apac_1_000.json#",
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AttendanceRegister/V1/1_000/jsonschema/schemas/AttendanceRegister_1_000.json#",
   "info": {
-    "description": "APAC",
+    "description": "Registro de Atendimento",
     "version": "1.000",
-    "title": "APAC",
+    "title": "Registro de Atendimento",
     "contact": "TribeSau.Squads@totvs.com.br",
     "x-totvs": {
     "messageDocumentation": {
-      "name": "Apac",
-      "description": "APAC",
+      "name": "AttendanceRegister",
+      "description": "Registro de Atendimento",
       "segment": "Saúde"
     }
   }
 },
 "definitions": {
-"PagedApac": {
+"PagedAttendanceRegister": {
   "type": "object",
   "allOf": [
   {
@@ -26,14 +26,14 @@
       "items": {
         "type": "array",
         "items": {
-           "$ref": "#/definitions/Apac"
+           "$ref": "#/definitions/AttendanceRegister"
                 }
              }
           }
        }
     ]
   },
-"Apac": {
+"AttendanceRegister": {
   "type": "object",
   "properties": {
      "id": {
@@ -43,7 +43,7 @@
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "[SZAPAC.CODCOLIGADA,SZAPAC.IDAPAC,SZAPAC.SEQAPAC]",
+                      "field": "[SZATENDIMENTO.CODCOLIGADA,SZPACIENTE.PRONTUARIO,SZATENDIMENTO.DATAENTRADA]",
                       "required": true,
                       "type": "String",
                       "available": true,
@@ -53,14 +53,14 @@
           }
      ,
      "companyId": {
-         "description": "Cod. Coligada",
+         "description": "Código da coligada",
               "required": true,
               "type": "integer",
               "format": "int16",
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.CODCOLIGADA",
+                      "field": "SZATENDIMENTO.CODCOLIGADA",
                       "required": true,
                       "type": "smallint",
                       "available": true,
@@ -69,15 +69,15 @@
               ]
           }
      ,
-     "apacId": {
-         "description": "Id. APAC",
+     "patientId": {
+         "description": "Código Paciente",
               "required": true,
               "type": "integer",
               "format": "int32",
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.IDAPAC",
+                      "field": "SZATENDIMENTO.CODPACIENTE",
                       "required": true,
                       "type": "int",
                       "available": true,
@@ -86,15 +86,51 @@
               ]
           }
      ,
-     "apacSequence": {
-         "description": "Sequencial APAC",
+     "patientName": {
+         "description": "Nome do Paciente",
+              "required": false,
+              "type": "string",
+              "maxLength": 70,
+              "x-totvs": [
+                  {
+                      "product": "RM",
+                      "field": "SZPACIENTE.NOMEPACIENTE",
+                      "required": false,
+                      "type": "varchar",
+                      "length": 70,
+                      "available": true,
+                      "canUpdate": true
+                  }
+              ]
+          }
+     ,
+     "medicalRecord": {
+         "description": "Prontuário",
+              "required": false,
+              "type": "string",
+              "maxLength": 10,
+              "x-totvs": [
+                  {
+                      "product": "RM",
+                      "field": "SZPACIENTE.PRONTUARIO",
+                      "required": false,
+                      "type": "varchar",
+                      "length": 10,
+                      "available": true,
+                      "canUpdate": true
+                  }
+              ]
+          }
+     ,
+     "attendanceId": {
+         "description": "Código Atendimento",
               "required": true,
               "type": "integer",
               "format": "int32",
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.SEQAPAC",
+                      "field": "SZATENDIMENTO.CODATENDIMENTO",
                       "required": true,
                       "type": "int",
                       "available": true,
@@ -104,14 +140,14 @@
           }
      ,
      "accountNumber": {
-         "description": "Número da conta",
+         "description": "Número Conta",
               "required": true,
               "type": "string",
               "maxLength": 14,
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.NUMEROCONTA",
+                      "field": "SZATENDIMENTO.NUMEROCONTA",
                       "required": true,
                       "type": "varchar",
                       "length": 14,
@@ -122,14 +158,14 @@
           }
      ,
      "accountSequence": {
-         "description": "Sequencial da conta",
+         "description": "Sequencial Conta",
               "required": true,
               "type": "integer",
               "format": "int32",
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.SEQUENCIALCONTA",
+                      "field": "SZATENDIMENTO.SEQUENCIALCONTA",
                       "required": true,
                       "type": "int",
                       "available": true,
@@ -138,33 +174,15 @@
               ]
           }
      ,
-     "numberApac": {
-         "description": "Número da APAC",
-              "required": false,
-              "type": "string",
-              "maxLength": 13,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.NUMAPAC",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 13,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "apresentation": {
-         "description": "Competência",
+     "attendanceEntryDate": {
+         "description": "Data Entrada",
               "required": false,
               "type": "string",
               "format": "date-time",
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.COMPPRODUCAO",
+                      "field": "SZATENDIMENTO.DATAENTRADA",
                       "required": false,
                       "type": "datetime",
                       "available": true,
@@ -173,69 +191,33 @@
               ]
           }
      ,
-     "apacType": {
-         "description": "Tipo da APAC",
-              "required": true,
-              "type": "string",
-              "maxLength": 1,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.TIPOAPAC",
-                      "required": true,
-                      "type": "char",
-                      "length": 1,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "attendanceType": {
-         "description": "Tipo de Atendimento",
+     "attendanceEntryHour": {
+         "description": "Hora Entrada",
               "required": false,
               "type": "string",
-              "maxLength": 2,
+              "maxLength": 4,
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.TIPOATEND",
+                      "field": "SZATENDIMENTO.HORAENTRADA",
                       "required": false,
                       "type": "varchar",
-                      "length": 2,
+                      "length": 4,
                       "available": true,
                       "canUpdate": true
                   }
               ]
           }
      ,
-     "exitReason": {
-         "description": "Motivo saída",
-              "required": false,
-              "type": "string",
-              "maxLength": 2,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.MOTSAIDA",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 2,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "dateDeathExit": {
-         "description": "Data de Saída",
+     "attendanceExitDate": {
+         "description": "Data Alta",
               "required": false,
               "type": "string",
               "format": "date-time",
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.DTOBITOSAIDA",
+                      "field": "SZATENDIMENTO.DATASAIDA",
                       "required": false,
                       "type": "datetime",
                       "available": true,
@@ -244,283 +226,18 @@
               ]
           }
      ,
-     "authorizingDoctor": {
-         "description": "Cod. Médico Autorizador",
-              "required": false,
-              "type": "integer",
-              "format": "int32",
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.MEDAUTORIZ",
-                      "required": false,
-                      "type": "int",
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "requestDate": {
-         "description": "Data da solicitação",
+     "attendanceExitHours": {
+         "description": "Hora Alta",
               "required": false,
               "type": "string",
-              "format": "date-time",
+              "maxLength": 4,
               "x-totvs": [
                   {
                       "product": "RM",
-                      "field": "SZAPAC.DTSOLICITACAO",
-                      "required": false,
-                      "type": "datetime",
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "authorizingDate": {
-         "description": "Data da autorização",
-              "required": false,
-              "type": "string",
-              "format": "date-time",
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.DTAUTOZ",
-                      "required": false,
-                      "type": "datetime",
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "issuingOrgan": {
-         "description": "Cod. Órgão Emissor",
-              "required": false,
-              "type": "string",
-              "maxLength": 10,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CODORGEMISSOR",
+                      "field": "SZATENDIMENTO.HORASAIDA",
                       "required": false,
                       "type": "varchar",
-                      "length": 10,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "attendanceFeature": {
-         "description": "Caráter do atendimento",
-              "required": false,
-              "type": "string",
-              "maxLength": 2,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CARATERATEND",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 2,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "numberApacPrevious": {
-         "description": "Número da APAC anterior",
-              "required": false,
-              "type": "string",
-              "maxLength": 13,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.NUMAPACANT",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 13,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "mainProcedureCode": {
-         "description": "Cod. Procedimento principal",
-              "required": false,
-              "type": "string",
-              "maxLength": 10,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CODPROCPRINC",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 10,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "requestingCNES": {
-         "description": "CNES do solicitante",
-              "required": false,
-              "type": "string",
-              "maxLength": 7,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CNESSOLICT",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 7,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "status": {
-         "description": "Status",
-              "required": true,
-              "type": "string",
-              "maxLength": 1,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.STATUS",
-                      "required": true,
-                      "type": "char",
-                      "length": 1,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "initialDate": {
-         "description": "Data início validade",
-              "required": false,
-              "type": "string",
-              "format": "date-time",
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.DATAINI",
-                      "required": false,
-                      "type": "datetime",
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "finalDate": {
-         "description": "Data fim validade",
-              "required": false,
-              "type": "string",
-              "format": "date-time",
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.DATAFIM",
-                      "required": false,
-                      "type": "datetime",
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "errorFlag": {
-         "description": "Flag de erro",
-              "required": true,
-              "type": "string",
-              "maxLength": 1,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.FLAGERRO",
-                      "required": true,
-                      "type": "char",
-                      "length": 1,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "serviceCode": {
-         "description": "Serviço",
-              "required": false,
-              "type": "string",
-              "maxLength": 3,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CODSERVICO",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 3,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "classificationCode": {
-         "description": "Classificação",
-              "required": false,
-              "type": "string",
-              "maxLength": 3,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CODCLASSIFICACAO",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 3,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "teamCode": {
-         "description": "Equipe",
-              "required": false,
-              "type": "string",
-              "maxLength": 12,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CODEQUIPE",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 12,
-                      "available": true,
-                      "canUpdate": true
-                  }
-              ]
-          }
-     ,
-     "doctorCNSMainProcedure": {
-         "description": "Médico Executante Proc. Principal",
-              "required": false,
-              "type": "string",
-              "maxLength": 15,
-              "x-totvs": [
-                  {
-                      "product": "RM",
-                      "field": "SZAPAC.CNSMEDEXECPROCPRINCIPAL",
-                      "required": false,
-                      "type": "varchar",
-                      "length": 15,
+                      "length": 4,
                       "available": true,
                       "canUpdate": true
                   }
