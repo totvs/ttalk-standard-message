@@ -141,7 +141,7 @@ describe("Validating Schema files...", function () {
         });
         done();
       } else {
-        console.log('Could not regonize any file changes or new files');
+        console.log('Could not recognize any file changes or new files');
         done();
       }
     });
