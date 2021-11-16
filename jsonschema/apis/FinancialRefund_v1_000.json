@@ -1,0 +1,137 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para solicitação de cancelamento de transação com TOTVS Pagamento Digital",
+			"url": "{{host}}/api/financial/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "Refunds",
+		"contact": {
+			"name": "T-Talk",
+			"url": "http://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Refunds",
+				"description": "Cancelamento de transação com TOTVS Pagamento Digital",
+				"segment": "Financeiro"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "tribebo.todos@totvs.com.br",
+					"description": "API de solicitação de cancelamento de transação com TOTVS Pagamento Digital"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/paymenthub/refund": {
+			"post": {
+				"tags": [
+					"refund"
+				],
+				"operationId": "postRefund",
+				"summary": "Faz a solicitação de cancelamento",
+				"description": "Realiza solicitação de reembolso de uma transação com TOTVS Pagamento Digital",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos os parametros",
+							"minimalVersion": ""
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/ContentType"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/FinancialRefund_1_000.json#/definitions/RefundBody"
+							}
+						}
+					},
+					"description": "Solicitação de cancelamento a ser realizada",
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/FinancialRefund_1_000.json#/definitions/Refund"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"ContentType": {
+				"name": "Content-Type",
+				"in": "header",
+				"description": "Tipo do conteúdo da requisição",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
