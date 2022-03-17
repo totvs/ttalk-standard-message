@@ -1,0 +1,127 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API de Reporte de Insumos",
+      "url": "{{host}}/api/est/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8051"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API para consulta de baixas realizadas (por produto), originado de uma solicitação de compras ou solicitação de armazém",
+    "version": "1.000",
+    "title": "Baixas de Item - Reporte de Insumo",
+    "contact": {
+      "name": "T-Talk",
+      "url": "https://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Reporte de Insumo",
+        "description": "Listagem de baixas de item vinculado a uma solicitação de compra ou solicitação de armazém",
+        "segment": "Backoffice"
+      },
+      "productInformation": [
+        {
+          "product": "RM",
+          "contact": "tribecp.squad.estoqueContratos@totvs.com.br",
+          "description": "Relatório de baixas realizadas (por item) de uma solicitação de compra ou solicitação de armazém, contém valores relevantes da baixa, quantidade, preço unitário, data da baixa"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/ReportInputs/input/{id}": {
+      "get": {
+        "tags": [
+          "ReportInputs"
+        ],
+        "summary": "Recupera as baixas realizadas (por item) de uma solicitação de compra ou solicitação de armazém, contém valores relevantes da baixa, quantidade, preço unitário, data da baixa",
+        "description": "Recupera as baixas realizadas (por item) de uma solicitação de compra ou solicitação de armazém, contém valores relevantes da baixa, quantidade, preço unitário, data da baixa. A identificação da baixa depende de parametrização, ver o link https://tdn.totvs.com/pages/viewpage.action?pageId=423938077",
+        "operationId": "GetOne",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros.",
+              "minimalVersion": "12.1.35"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportInputs_1_000.json#/definitions/PagedReportInputs"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro no momento da recuperação dos registros.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Chave Incorreta! Campos necessários. CompanyId|BranchId|MovementId|SequentialId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "A chave {id} é composta da concatenação de 4 itens, sendo eles - CompanyId|BranchId|MovementId|SequentialId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Informar os campos código coligada (CODCOLIGADA), código da filial (CODFILIAL), identificador do movimento (IDMOV) e sequencial do item de movimento (NSEQITMMOV)",
+              "minimalVersion": "12.1.35"
+            }
+          ]
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
