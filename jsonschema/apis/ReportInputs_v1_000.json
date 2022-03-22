@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "servers": [
     {
-      "description": "API de Reporte de Insumos",
+      "description": "API de Reporte de Itens Atendidos",
       "url": "{{host}}/api/est/v1",
       "variables": {
         "serverUrl": {
@@ -15,9 +15,9 @@
     }
   ],
   "info": {
-    "description": "API para consulta de baixas realizadas (por produto), originado de uma solicitação de compras ou solicitação de armazém",
+    "description": "API para consulta de itens atendidos, originado de uma solicitação de compras ou solicitação de armazém",
     "version": "1.000",
-    "title": "Baixas de Item - Reporte de Insumo",
+    "title": "Reporte de Itens Atendidos",
     "contact": {
       "name": "T-Talk",
       "url": "https://api.totvs.com.br",
@@ -25,15 +25,15 @@
     },
     "x-totvs": {
       "messageDocumentation": {
-        "name": "Reporte de Insumo",
-        "description": "Listagem de baixas de item vinculado a uma solicitação de compra ou solicitação de armazém",
+        "name": "Reporte de Itens Atendidos",
+        "description": "Listagem de itens atendidos vinculado a uma solicitação de compra ou solicitação de armazém",
         "segment": "Backoffice"
       },
       "productInformation": [
         {
           "product": "RM",
           "contact": "tribecp.squad.estoqueContratos@totvs.com.br",
-          "description": "Relatório de baixas realizadas (por item) de uma solicitação de compra ou solicitação de armazém, contém valores relevantes da baixa, quantidade, preço unitário, data da baixa"
+          "description": "Relatório de itens atendidos de uma solicitação de compra ou solicitação de armazém, é identificado o item solicitado, e cada ocorrência do item atendido contém seu preço, quantidade, e data."
         }
       ]
     }
@@ -44,8 +44,9 @@
         "tags": [
           "ReportInputs"
         ],
-        "summary": "Recupera as baixas realizadas (por item) de uma solicitação de compra ou solicitação de armazém, contém valores relevantes da baixa, quantidade, preço unitário, data da baixa",
-        "description": "Recupera as baixas realizadas (por item) de uma solicitação de compra ou solicitação de armazém, contém valores relevantes da baixa, quantidade, preço unitário, data da baixa. A identificação da baixa depende de parametrização, ver o link https://tdn.totvs.com/pages/viewpage.action?pageId=423938077",
+        "summary": "Recupera informação dos itens atendidos de uma solicitação de compra ou solicitação de armazém, é identificado o item solicitado, e cada ocorrência do item atendido contém seu preço, quantidade, e data.",
+        "description": "Recupera informação dos itens atendidos de uma solicitação de compra ou solicitação de armazém, é identificado o item solicitado, e cada ocorrência do item atendido contém seu preço, quantidade, e data.\nA identificação da movimentação dependerá de parametrização do ERP, mais detalhes no link\nhttps://tdn.totvs.com/pages/viewpage.action?pageId=423938077",
+
         "operationId": "GetOne",
         "x-totvs": {
           "productInformation": [
@@ -71,7 +72,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportInputs_1_000.json#/definitions/PagedReportInputs"
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/ReportInputs/v1/1_000/jsonschema/schemas/ReportInputs_1_000.json#/definitions/ReportInputsType"
                 }
               }
             }
@@ -105,7 +106,7 @@
       "id": {
         "name": "id",
         "in": "path",
-        "description": "A chave {id} é composta da concatenação de 4 itens, sendo eles -  CompanyId|BranchId|MovementId|SequentialId ",
+        "description": "A chave {id} é composta da concatenação de 4 itens, sendo eles -  {CompanyId|BranchId|MovementId|SequentialId}  que internamente (RM) são reespectivamente código coligada (CODCOLIGADA), código da filial (CODFILIAL), identificador do movimento (IDMOV) e sequencial do item de movimento (NSEQITMMOV)",
         "required": true,
         "schema": {
           "type": "string"
@@ -115,7 +116,7 @@
             {
               "product": "RM",
               "available": true,
-              "note": "Informar os campos código coligada (CODCOLIGADA), código da filial (CODFILIAL), identificador do movimento (IDMOV) e sequencial do item de movimento (NSEQITMMOV)",
+              "note": "",
               "minimalVersion": "12.1.35"
             }
           ]
