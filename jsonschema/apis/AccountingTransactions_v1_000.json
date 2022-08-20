@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API de Movimentações Contábeis",
+      "url": "{{host}}/api/ctb/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8051"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API no módulo Contábil para consulta de movimentação de contas contábeis",
+    "version": "1.000",
+    "title": "API de Movimentações Contábeis",
+    "contact": {
+      "name": "T-Talk",
+      "url": "https://api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "AccountingTransactions",
+        "description": "Listagem de Contas de Movimentações Contábeis.",
+        "segment": "Backoffice"
+      },
+      "productInformation": [
+        {
+          "product": "RM",
+          "contact": "tribecp.squad.ctbpat@totvs.com.br",
+          "description": "Contas Contábeis e seus movimentos de Débito e Crédito."
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/AccountingTransactions": {
+      "get": {
+        "tags": [
+          "AccountingTransactions"
+        ],
+        "summary": "Retorna uma lista de Movimentação Contábil.",
+        "description": "Retorna uma lista de movimentação em Contas Contábeis.",
+        "operationId": "GetAll",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros.",
+              "minimalVersion": "12.1.35"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "name": "companyId",
+            "in": "query",
+            "description": "Identificador da empresa",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Equivalente ao Período Contábil (data inicial e data final)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "Moeda",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "account",
+            "in": "query",
+            "description": "Conta",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "in": "query",
+            "description": "Filial",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "costCenterCode",
+            "in": "query",
+            "description": "Código Centro de Custo",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de Movimentação foi obtida com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingTransactions_1_000.json#/definitions/PagedAccountingTransactions"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro no momento da recuperação dos registros.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "São obrigatórios  filtros para codColigada (companyId) e Periodo de Movimentação Contábil (date), informe-os e tente novamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/AccountingTransactions/account": {
+      "get": {
+        "tags": [
+          "AccountingTransactions/account"
+        ],
+        "summary": "Retorna movimentação de uma Conta específica dentro do período.",
+        "description": "Retorna um único registro com a movimentação de acordo com a Conta, período e moeda informada.",
+        "operationId": "GetOne",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros.",
+              "minimalVersion": "12.1.35"
+            }
+          ]
+        },
+        "parameters": [
+          {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+          {
+            "name": "companyId",
+            "in": "query",
+            "description": "Identificador da empresa",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Data é período",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "Moeda",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "account",
+            "in": "query",
+            "description": "Conta",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "in": "query",
+            "description": "Filial",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de Movimentação foi obtida com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingTransactions_1_000.json#/definitions/PagedAccountingTransactions"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro no momento da recuperação dos registros.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Lista com todos os erros possiveis: Chave Incorreta! Campos necessários. CompanyId|date|account|currency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {},
+    "schemas": {}
+  }
+}
