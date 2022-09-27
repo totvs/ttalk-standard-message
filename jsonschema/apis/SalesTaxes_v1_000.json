@@ -1,0 +1,176 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para Consulta de Valores e Tributos (SalesTaxes) em Pedidos de Venda TOTVS",
+			"url": "{{host}}/api/fat/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8080"
+				}
+			}
+		}
+	],
+	"info": {
+        "description": "API para Consulta de Valores e Tributos (SalesTaxes) em Pedidos de Venda TOTVS",
+		"version": "1.000",
+		"title": "Impostos do Pedido de Venda",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "SalesTaxes",
+				"description": "Consulta de Valores e Tributos de Pedidos de Venda",
+				"segment": "Backoffice"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "squad.crm@totvs.com.br",
+					"description": "Consulta de Valores e Tributos de um Pedido de Venda",
+					"adapter": "MATSIMP.prw"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/SalesTaxes/{SalesOrderId}": {
+			"get": {
+				"tags": [
+					"SalesOrderId"
+				],
+				"summary": "Consultar os Valores e Tributos de um Pedido de Venda",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo esta disponível com os parâmetros SalesOrderId e Authorization",
+							"minimalVersion": "12.1.23"
+						}
+					]
+				},
+				"description": "Retorna uma lista com os Valores e Tributos de um Pedido de Venda gravado",
+				"operationId": "getSalesOrderId",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/SalesOrderId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/SalesTaxes_1_000.json#/definitions/ReturnSalesTaxes"
+								}
+							} 
+						}
+					},
+					"400": {
+						"description": "Erro na requisição!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Pedido não localizado na base!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}	
+			}
+		},
+		"/SalesTaxes": {
+			"post": {
+				"tags": [
+					"SalesTaxes"
+				],
+				"summary": "Consultar os Valores e Tributos de uma Simulação de Pedido de Venda",
+				"description": "Retorna uma lista com os Valores e Tributos de uma Simulação de Pedido de Venda",
+				"operationId": "postSalesTaxes",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível com os parâmetros Authorization e Fields."
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					}
+				],
+				"requestBody": {
+					"description": "Simulção de Pedido de Venda",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/SalesTaxes_1_000.json#/definitions/SalesOrderInfo"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/SalesTaxes_1_000.json#/definitions/ReturnSalesTaxes"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "erro na Inclusão!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"SalesOrderId": {
+				"name": "SalesOrderId",
+				"in": "path",
+				"required": true,
+				"description": "Identificador único representando o Pedido de Venda",
+				"schema": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
