@@ -1,0 +1,212 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para produtos TOTVS",
+			"url": "{{host}}/api/hac/v1",
+			"variables": {
+				"domain": {
+					"default": "localhost"
+				},
+				"port": {
+					"default": "8080"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para a entidade Fingerprints para produtos TOTVS",
+		"version": "1.000",
+		"title": "Fingerprints",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Fingerprints",
+				"description": "Biometrias",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "GPS",
+					"contact": "TOTVS.SAUDE.GPS.SQUAD.ATENDIMENTOS@totvs.com.br",
+					"description": "Manutenção de biometrias",
+					"adapter": "fingerprints.p",
+					"helpUrl": ""
+				}
+			]
+		}
+	},
+	"paths": {
+		"/fingerprints/{cardNumber}/{position}": {
+			"get": {
+				"tags": [
+					"Fingerprints"
+				],
+				"summary": "Retorna a biometria cadastrada para o beneficiário na posição (dedo) indicada",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "GPS",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos parametros",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				},
+				"description": "Retorna a biometria cadastrada para o beneficiário na posição (dedo) indicada",
+				"operationId": "findFingerprint",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cardNumber",
+						"description": "Carteira",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"in": "path",
+						"name": "position",
+						"description": "Posição (dedo)",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação executada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Fingerprints_1_000.json#/definitions/Fingerprint"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro na execução da operação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/fingerprints/{cardNumber}": {
+			"get": {
+				"tags": [
+					"Fingerprints"
+				],
+				"summary": "Retorna todas as biometrias cadastradas para o beneficiário",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "GPS",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos parametros",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				},
+				"description": "Retorna todas as biometrias cadastradas para o beneficiário",
+				"operationId": "findAllFingerprints",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cardNumber",
+						"description": "Carteira",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação executada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Fingerprints_1_000.json#/definitions/PagedFingerprints"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro na execução da operação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/fingerprints": {
+			"post": {
+				"tags": [
+					"Fingerprints"
+				],
+				"summary": "Cria um novo registro de biometria para o beneficiário. Será atualizado caso já exista para a posição (dedo) indicada",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "GPS",
+							"available": true,
+							"note": "Este verbo esta disponivel com todos parametros",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				},
+				"description": "Cria um novo registro de biometria para o beneficiário. Será atualizado caso já exista para a posição (dedo) indicada",
+				"operationId": "saveFingerprint",
+				"requestBody": {
+					"description": "Objeto para incluir/atualizar o registro de biometria",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Fingerprints_1_000.json#/definitions/Fingerprint"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Operação executada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Fingerprints_1_000.json#/definitions/Fingerprint"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro na execução da operação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

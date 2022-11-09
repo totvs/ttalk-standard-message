@@ -1,0 +1,277 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/CargoDelivery/v1/1_000/jsonschema/schemas/CargoDelivery_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para o cadastro do Registro de Entrega para produtos TOTVS",
+		"version": "1.000",
+		"title": "CargoDelivery",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"type": "object",
+					"$ref": "#/definitions/CargoDeliveryType"
+				},
+				"returnContentType": {
+					"type": "object",
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ReturnContentWithModelType"
+				}
+			},
+			"messageDocumentation": {
+				"name": "CargoDelivery",
+				"description": "Cadastro de Romaneio.",
+				"segment": "Gestão Frete Embarcador"
+			},
+			"productInformation": [
+				{
+					"product": "protheus",
+					"contact": "Protheus_FW@totvs.com.br",
+					"description": "Cadastro de Romaneio.",
+					"adapter": "gfea050api.prw",
+					"helpUrl": "link aqui"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedCargoDelivery": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/CargoDeliveryType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"CargoDeliveryType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"type": "string",
+					"description": "Chave do romaneio.",
+					"example": "01|00000001",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU_FILIAL|GWU_EMISDC|GWU_SERDC|GWU_NRDC|GWU_SEQ",
+							"type": "Char",
+							"length": "37",
+							"required": true,
+							"available": false,
+							"canUpdate": false,
+							"note": "Este dado é formado pelos campos: Filal, Emissor, Série, Documento e Trecho."
+						}
+					]
+				},
+				"BranchId": {
+					"type": "string",
+					"example": "99",
+					"description": "Filial do Sistema",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"Field": "GWU.GWU_FILIAL",
+							"Required": true,
+							"Type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Issuer": {
+					"type": "string",
+					"example": "000000000001",
+					"description": "Emissor do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_EMISDC",
+							"required": true,
+							"type": "Char",
+							"length": "14",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IssueDate": {
+					"type": "string",
+					"description": "Data de Emissão.",
+					"example": "2022-07-06",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_DTEMIS",
+							"required": false,
+							"type": "Date",
+							"length": "8",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Series": {
+					"type": "string",
+					"example": "001",
+					"description": "Série do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_SERDC",
+							"required": true,
+							"type": "Char",
+							"length": "03",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Number": {
+					"type": "string",
+					"example": "0000000000000010",
+					"description": "Número do Documento.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_NRDC",
+							"required": true,
+							"type": "Char",
+							"length": "16",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ElectronicValidationKey": {
+					"type": "string",
+					"example": "1111-2222-3333-4444-5555-6666-7777-8888-9999-0000-1234",
+					"description": "Chave NF-e.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_DANFE",
+							"required": false,
+							"type": "Char",
+							"length": "60",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"Carrier": {
+					"type": "string",
+					"example": "00000000000002",
+					"description": "Transportador.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_CDTRP",
+							"required": false,
+							"type": "Char",
+							"length": "14",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"PartSequence": {
+					"type": "string",
+					"example": "01",
+					"description": "Trecho.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_SEQ",
+							"required": true,
+							"type": "Char",
+							"length": "2",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DeliveryDate": {
+					"type": "string",
+					"description": "Data de Entrega.",
+					"example": "2022-07-06",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_DTENT",
+							"required": false,
+							"type": "Date",
+							"length": "8",
+							"precision": "2",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"DeliveryReceipt": {
+					"type": "boolean",
+					"example": "1",
+					"description": "Comprovante de Entrega.",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_FLGENT",
+							"required": false,
+							"type": "smallint",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"EvidenceOfDelivery": {
+					"type": "string",
+					"example": "Assinado por: Marcos José da Silva",
+					"description": "Evidência de Entrega",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_EVENTR",
+							"required": false,
+							"type": "char",
+							"length": "254",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"MovementType": {
+					"type": "string",
+					"example": "1",
+					"description": "Tipo de Movimentação (1 - Entrega / 2 - Cancelamento).",
+					"x-totvs": [
+						{
+							"product": "protheus",
+							"field": "GWU.GWU_TIPMOV",
+							"required": false,
+							"type": "char",
+							"length": "1",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				}
+			}
+		}
+	}
+}

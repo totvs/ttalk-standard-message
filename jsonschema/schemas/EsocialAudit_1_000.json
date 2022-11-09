@@ -20,7 +20,7 @@
                     "product": "protheus",
                     "contact": "silas.gomes@totvs.com.br",
                     "description": "API para conferência de envio dentro/ fora do prazo do governo",
-                    "adapter": "WSTAF039.prw"
+                    "adapter": "WSTAF041.prw"
                 }
             ]
         }
@@ -135,7 +135,187 @@
                     "type": "string",
                     "required": true,
                     "maxLength": 20
+                },
+                "status": {
+                    "name": "status",
+                    "description": "Status do evento",
+                    "example": "Dentro ou Fora do prazo",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 25
+                },
+                "ruleDescription": {
+                    "name": "ruleDescription",
+                    "description": "Descrição da regra em qual o evento se enquadra",
+                    "example": "",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 25
+                },
+                "deadlineDescription": {
+                    "name": "deadlineDescription",
+                    "description": "Tempo para envio do evento",
+                    "example": "",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 25
                 }
+            },
+            "Paging": {
+                "type": "object",
+                "properties": {
+                    "hasNext": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            }
+        },
+
+        "StatusItems": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ListStatus"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "ListStatus": {
+            "type": "object",
+            "properties": {
+                "finished": {
+                    "name": "finished",
+                    "description": "Finalizado",
+                    "example": "true",
+                    "type": "boolean",
+                    "maxLength": 10
+                },
+                "percent": {
+                    "name": "percent",
+                    "description": "Percentual",
+                    "example": "100%",
+                    "type": "string",
+                    "maxLength": 20
+                }
+               
+            },
+            "Paging": {
+                "type": "object",
+                "properties": {
+                    "hasNext": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            }
+        },
+
+        "AuditValueItems": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ListAuditValue"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "ListAuditValue": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "name": "items",
+                    "description": "Array com os itens a ser retornado",
+                    "type": "Array",
+                    "maxLength": 20
+                },
+                "hasNext": {
+                    "name": "hasNext",
+                    "description": "Indica se tem uma página para mostrar",
+                    "example": "'hasNext': false",
+                    "type": "boolean",
+                    "maxLength": 20
+                }
+               
+            },
+            "Paging": {
+                "type": "object",
+                "properties": {
+                    "hasNext": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            }
+        },
+
+        "ChartValueItems": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ListAuditChart"
+                            }
+                        }
+                    }
+                }
+            ]
+        },        
+        "ListAuditChart": {
+            "type": "object",
+            "properties": {
+                "transmInDeadline": {
+                    "name": "transmInDeadline",
+                    "description": "Prazo de transmissão",
+                    "type": "number",
+                    "maxLength": 20
+                },
+                "transmOutDeadline": {
+                    "name": "transmOutDeadline",
+                    "description": "Transmissão fora do prazo",                    
+                    "type": "number",
+                    "maxLength": 20
+                },
+                "notTransmInDeadline": {
+                    "name": "notTransmInDeadline",
+                    "description": "Não transmitido dentro do prazo",
+                    "type": "number",
+                    "maxLength": 20
+                },
+                "notTransmOutDeadline": {
+                    "name": "notTransmOutDeadline",
+                    "description": "Não transmitido fora do prazo",                   
+                    "type": "number",
+                    "maxLength": 20
+                }
+               
             },
             "Paging": {
                 "type": "object",
@@ -148,16 +328,38 @@
             }
         }
     },
+
     "parameters": {
         "companyId": {
             "name": "companyId",
             "description": "Código da empresa e código da filial",
+            "example": "T1|D MG 01",
+            "in": "query",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+        "requestId": {
+            "name": "requestId",
+            "description": "Código do ticket para requisição",
             "example": "T1D MG 01",
             "in": "query",
             "required": true,
             "schema": {
                 "type": "string"
             }
+        },
+        "status": {
+            "name": "status",
+            "description": "Status de Transmissão",
+            "example": "4",
+            "in": "query",
+            "required": false,
+            "schema": {
+                "type": "string"
+            }
         }
+
     }
 }
