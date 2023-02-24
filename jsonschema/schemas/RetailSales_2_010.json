@@ -1,0 +1,3089 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RetailSales_2_010.json#",
+	"info": {
+		"description": "",
+		"version": "2.010",
+		"title": "RetailSales",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "RetailSales",
+				"description": "Mensagem para Integração do Registro de Vendas",
+				"segment": ""
+			},
+			"productInformation": [
+				{
+					"product": "PROTHEUS",
+					"contact": "Diego Pereira Fernandes",
+					"note": "Coordenador de Inovação Varejo",
+					"adapter": "LOJI701"
+				},
+				{
+					"product": "RM",
+					"contact": "Alaim Porto Alvarenga",
+					"note": "GDP Inovação Construção e Projetos",
+					"adapter": "MovCumpoFiscalData"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/RetailSalesType",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedRetailSales": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/RetailSalesType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"RetailSalesType": {
+			"type": "object",
+			"properties": {
+				"CompanyId": {
+					"description": "Empresa",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "char",
+							"length": "2",
+							"note": "Será enviado o valor da variável cEmpAnt(Empresa)",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.CODCOLIGADA",
+							"required": true,
+							"type": "int",
+							"length": "",
+							"note": "Código da coligada",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BranchId": {
+					"description": "Filial",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_FILIAL",
+							"required": false,
+							"type": "char",
+							"length": "12",
+							"note": "Será enviado o valor da variável cFilAnt",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "CONTEXT.CODFILIAL",
+							"required": false,
+							"type": "int",
+							"length": "",
+							"note": "Visto que no RM a Filial não faz parte do cadastro de Cupom e para o protocolo de Mensagem Única é obrigatório, será considerado a filial do contexto de integração.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CompanyInternalId": {
+					"description": "InternalId da chave completa de empresa da venda",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework estando no ambiente (Empresa x Filial) correto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "CompanyId + '|' + BranchId",
+							"required": true,
+							"type": "string",
+							"length": "",
+							"note": "Chave de integração da empresa",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InternalId": {
+					"description": "InternalId da Venda",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": true,
+							"type": "Varchar",
+							"length": "50",
+							"note": "O InternalID da venda é formado por EMPRESA | L1_FILIAL | L1_DOC | L1_SERIE | L1_PDV",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.CODCOLIGADA|TCUPOMFISCAL.PONTOVENDA|TCUPOMFISCAL.CRO|TCUPOMFISCAL.NUMERO",
+							"required": true,
+							"type": "varchar",
+							"length": "20",
+							"note": "O InternalId do cupom é formado por Coligada | Ponto de Venda | Contador de Reinício de Operação | Número do Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SellerInternalId": {
+					"description": "InternalId do Vendedor",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "InternalId do Vendedor",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TMOV.CODVEN1",
+							"required": false,
+							"type": "varchar",
+							"length": "16",
+							"note": "Código do Vendedor 1",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ComissionPercent": {
+					"description": "Percentual da Comissão",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -999.99,
+					"maximum": 999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_COMIS",
+							"required": false,
+							"type": "Decimal",
+							"length": "5,2",
+							"note": "Percentual da Comissão",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "...",
+							"length": "...",
+							"note": "...",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CustomerVendorInternalId": {
+					"description": "InternalId do Código do Cliente",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo fisico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "O InternalID do Cliente é formado por EMPRESA | L1_FILIAL | L1_CLIENTE | L1_LOJA",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.CODCOLCFO|TCUPOMFISCAL.CODCFO",
+							"required": false,
+							"type": "string",
+							"length": "",
+							"note": "O InternalID do Cliente é formado por Coligada do Cli/For + código do Cli/For",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TotalPrice": {
+					"description": "Valor Total da Venda",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_VLRTOT",
+							"required": true,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor Total da Venda",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "Não utilizado pelo RM.",
+							"required": true,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountValue": {
+					"description": "Valor Total de Desconto",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_DESCONT",
+							"required": false,
+							"type": "Decimal",
+							"length": "12,2",
+							"note": "Valor Total de Desconto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.DESCONTO",
+							"required": false,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "Desconto do Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IncreaseValue": {
+					"description": "Valor de Acréscimo",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_FRETE + SL1.L1_SEGURO + SL1.L1_DESPESA",
+							"required": false,
+							"type": "Decimal",
+							"length": "14,2",
+							"note": "Valor de Acréscimo",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.ACRESCIMO",
+							"required": false,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "Acréscimo do Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"NetPrice": {
+					"description": "Valor Liquido da Venda",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_VLRLIQ",
+							"required": true,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor Liquido da Venda",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.VALORLIQUIDO e TCUPOMFISCAL.VALORRECEBIDO",
+							"required": false,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "Valor do Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CashValue": {
+					"description": "Valor Pago em Dinheiro",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_DINHEIR",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago em dinheiro",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ChecksValue": {
+					"description": "Valor Pago em Cheques",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_CHEQUES",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago em Cheques",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CardsValue": {
+					"description": "Valor Pago em Cartões de Crédito",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_CARTAO",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago em Cartões de Crédito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DebitValue": {
+					"description": "Valor Pago em Cartões de Débito",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_VLRDEBI",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago em Cartões de Débito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CovenantValue": {
+					"description": "Valor Pago com Convênio",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_CONVENI",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago com Convênio",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"VouchersValue": {
+					"description": "Valor Pago com Vales",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_VALES",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago com Vales",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinancedValue": {
+					"description": "Valor Pago com Financiamento",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_FINANC",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago com Financiamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OthersValue": {
+					"description": "Valor Pago com Outras Formas",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_OUTROS",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor Pago com Outras Formas",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InputValue": {
+					"description": "Valor de Entrada",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_ENTRADA",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor de Entrada",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IssueDateDocument": {
+					"description": "Data de Emissão da Venda",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_EMISSAO + SL1.L1_HORA",
+							"required": true,
+							"type": "DateTime",
+							"length": "8",
+							"note": "Data de Emissão da Venda",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.DATAEMISSAO",
+							"required": true,
+							"type": "DateTime",
+							"length": "8",
+							"note": "Data de Emissão",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EmisNf": {
+					"description": "Data de Emissao da Nota Fiscal",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_EMISNF",
+							"required": false,
+							"type": "DateTime",
+							"length": "8",
+							"note": "Data de Emissão da Nota Fiscal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},                
+				"DateTime": {
+					"description": "Hora de Emissao da Nota Fiscal",
+					"type": "string",
+					"format": "time",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_HORA",
+							"required": false,
+							"type": "Time",
+							"length": "8",
+							"note": "Hora de Emissão da Nota Fiscal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"InvoiceMessages": {
+					"description": "Mensagem da Nota Fiscal",
+					"type": "string",
+					"maxLength": 60,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_MENNOTA",
+							"required": false,
+							"type": "Varchar",
+							"length": "60",
+							"note": "Mensagem da Nota Fiscal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentCode": {
+					"description": "Numero do Documento",
+					"type": "string",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_DOC",
+							"required": true,
+							"type": "Varchar",
+							"length": "9",
+							"note": "Numero do Documento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.NUMERO",
+							"required": true,
+							"type": "int",
+							"length": "4",
+							"note": "Número do Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SerieCode": {
+					"description": "Serie do Documento",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_SERIE",
+							"required": true,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Serie do Documento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.SERIE",
+							"required": false,
+							"type": "varchar",
+							"length": "5",
+							"note": "Número do Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+                "NumCFis": {
+					"description": "Numero do Cupom Fiscal",
+					"type": "string",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_NUMCFIS",
+							"required": true,
+							"type": "Varchar",
+							"length": "9",
+							"note": "Numero do Cupom Fiscal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"GrossPrice": {
+					"description": "Valor Bruto da Venda",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_VALBRUT",
+							"required": true,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor Bruto da Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CommodityPrice": {
+					"description": "Valor Total da Mercadoria",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_VALMERC",
+							"required": false,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor Total da Mercadoria",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountPercent": {
+					"description": "Percentual de Desconto da Venda",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -999.99,
+					"maximum": 999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_DESCNF",
+							"required": false,
+							"type": "Decimal",
+							"length": "5,2",
+							"note": "Percentual de Desconto da Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OperatorCode": {
+					"description": "Codigo do Operador",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_OPERADO",
+							"required": true,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Codigo do Operador",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OperatorInternalId": {
+					"description": "InternalId do Operador",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": true,
+							"type": "Varchar",
+							"length": "50",
+							"note": "InternalId do Operador",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CurrencyRate": {
+					"description": "Taxa da Moeda",
+					"type": "number",
+					"multipleOf": 0.0001,
+					"minimum": -9999999.9999,
+					"maximum": 9999999.9999,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_TXMOEDA",
+							"required": false,
+							"type": "Decimal",
+							"length": "11,4",
+							"note": "Taxa da Moeda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Change": {
+					"description": "Valor do Troco na Venda",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_TROCO1",
+							"required": false,
+							"type": "Decimal",
+							"length": "15,2",
+							"note": "Valor do Troco na Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StationCode": {
+					"description": "Código da Estacao",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_PDV",
+							"required": true,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Codigo da Estacao que efetuou a Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountPaymentTerm": {
+					"description": "Desconto Financeiro na Venda",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -999999999999.99,
+					"maximum": 999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_DESCFIN",
+							"required": false,
+							"type": "Decimal",
+							"length": "14,2",
+							"note": "Valor do desconto associado a uma condição de pagamento, se houver (ex: 5% na venda se o cliente pagar na condição a vista)",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CreditValue": {
+					"description": "Valor de Crédito da Venda",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_CREDITO",
+							"required": false,
+							"type": "Decimal",
+							"length": "18,2",
+							"note": "Valor de Crédito da Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"KindOfDocument": {
+					"description": "Tipo do Documento",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_ESPECIE",
+							"required": false,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Tipo do Documento CF - Cupom Fiscal SATCE- Cupom Eletronico SAT NFCE- Nota Fiscal do Cupom Eletronico RPS- Recibo Provisorio de Servico NFCF- Nota Fiscal sobre cupom fiscal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CarrierCode": {
+					"description": "Código da Transportadora",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_TRANSP",
+							"required": false,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Código da Transportadora",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CarrierInternalId": {
+					"description": "InternalId da Transportadora",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "InternalId da Transportadora",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Md5": {
+					"description": "Código Md5",
+					"type": "string",
+					"maxLength": 60,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_PAFMD5",
+							"required": false,
+							"type": "Varchar",
+							"length": "60",
+							"note": "Código Md5",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"MovementNumber": {
+					"description": "Numero do movimento do Dia",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_NUMMOV",
+							"required": false,
+							"type": "varchar",
+							"length": "5",
+							"note": "Numero do movimento do Dia",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ElectronicInvoiceComplement": {
+					"description": "Informações Complementares NFCe",
+					"type": "string",
+					"maxLength": 60,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "60",
+							"note": "Informações Complementares NFCe",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PersonalIdentification": {
+					"description": "CPF/CGC do Cliente",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_CGCCLI",
+							"required": false,
+							"type": "Varchar",
+							"length": "16",
+							"note": "CPF/CGC do Cliente",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.CNPJCPFADQUIRENTE",
+							"required": false,
+							"type": "Varchar",
+							"length": "20",
+							"note": "CNPJ/CPF do Adquirente da mercadoria",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PurchaserName": {
+					"description": "Nome do Adquirente",
+					"type": "string",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.NOMEADQUIRENTE",
+							"required": false,
+							"type": "varchar",
+							"length": "40",
+							"note": "Nome do Adquirente da mercadoria",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocForeignPurchase": {
+					"description": "Nome do Adquirente",
+					"type": "string",
+					"maxLength": 40,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "Nome do Adquirente da mercadoria",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.DOCESTRANGEIROADQUIRENTE",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"note": "Nome do Adquirente da mercadoria",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IsCanceled": {
+					"description": "Informa se venda esta cancelada",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.CANCELADO",
+							"required": false,
+							"type": "bool",
+							"length": "2",
+							"note": "Eh cupom cancelado?",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "bool",
+							"length": "2",
+							"note": "Cupom cancelado?",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"NfceProtocol": {
+					"description": "Protocolo NFCe",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_PRONFCE",
+							"required": false,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Protocolo NFCe retornado pela Sefaz",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfSaleItem": {
+					"description": "Lista de Itens da Venda",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfSaleItemType",
+						"type": "object"
+					},
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2",
+							"required": true,
+							"type": "",
+							"length": "Lista de Itens da Venda",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfSaleCondition": {
+					"description": "Condições de Pagamento da Venda",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfSaleConditionType",
+						"type": "object"
+					},
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4",
+							"required": true,
+							"type": "",
+							"length": "Condições de Pagamento da Venda",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfTaxes": {
+					"description": "Lista de Impostos da Venda",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfTaxesType",
+						"type": "object"
+					},
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1",
+							"required": true,
+							"type": "",
+							"length": "Impostos da Venda",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StationSalePointCode": {
+					"description": "Código Ponto de Venda",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_CODIGO",
+							"required": true,
+							"type": "varchar",
+							"length": "3",
+							"note": "Código da Estacao de Trabalho",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.PONTOVENDA",
+							"required": true,
+							"type": "varchar",
+							"length": "10",
+							"note": "Código do Ponto de Venda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StationSalePointInternalId": {
+					"description": "InternalId do Ponto de Venda",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": ".",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalID do Código de Estação é formado por EMPRESA | LG_FILIAL | LG_CODIGO",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": ".",
+							"required": true,
+							"type": "varchar",
+							"length": "6",
+							"note": "O InternalID do Ponto de Venda é formado por TPONTOVENDA.CODCOLIGADA | TPONTOVENDA.PONTOVENDA",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SerialNumberSATEquipament": {
+					"description": "Número de Série do equipamento SAT",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SLG.LG_SERSAT",
+							"required": false,
+							"type": "varchar",
+							"length": "9",
+							"note": "Número de Série do equipamento SAT",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TMOVFISCAL.NROSAT",
+							"required": false,
+							"type": "string",
+							"length": "15",
+							"note": "Número de Série do equipamento SAT",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SaleType": {
+					"description": "Tipo do Documento / V - Venda Cupom Fiscal / S - SAT - Sistema de Autenticação e Transmissão de Cupom Fiscal Eletrônico / D - Devolucao de Compra / B - Utiliza Fornecedor",
+					"type": "string",
+					"enum": [
+						"V",
+						"S",
+						"D",
+						"B"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_TIPO",
+							"required": true,
+							"type": "Varchar",
+							"length": "1",
+							"note": "Tipo do Documento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCAL.TIPO",
+							"required": true,
+							"type": "int",
+							"length": "1",
+							"note": "Tipo do Documento V - Venda, D - Devolucao de Compra, B - Utiliza Fornecedor, S - SAT",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"KeyAcessNFe": {
+					"description": "Chave de acesso NFe",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_KEYNFCE",
+							"required": false,
+							"type": "varchar",
+							"length": "44",
+							"note": "Chave Nfce",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TMOV.CHAVEACESSONFE",
+							"required": false,
+							"type": "string",
+							"length": "44",
+							"note": "Chave de acesso Nota Fiscal Eletrônica.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StateTaxBurden": {
+					"description": "Carga Tributária Estadual",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "L1_TOTEST",
+							"required": true,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Carga Tributária Estadual",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"MunicipalTaxBurden": {
+					"description": "Carga Tributária Municipal",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "L1_TOTMUN",
+							"required": true,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Carga Tributária Municipal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FederalTaxBurden": {
+					"description": "Carga Tributária Federal",
+					"type": "number",
+					"format": "double",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "L1_TOTFED",
+							"required": true,
+							"type": "decimal",
+							"length": "14,2",
+							"note": "Carga Tributária Federal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"TaxSource": {
+					"description": "Fonte Tributária",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "L1_LTRAN",
+							"required": false,
+							"type": "varchar",
+							"length": "41",
+							"note": "Fonte Tributária",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BookingInformation": {
+					"$ref": "#/definitions/BookingInformationType",
+					"description": "Informações de Reserva (hotelaria)",
+					"type": "object",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "Informações de Reserva (hotelaria)",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PresencialIndicator": {
+					"description": "Presença Comprador",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "L1_INDPRES",
+							"required": false,
+							"type": "varchar",
+							"length": "1",
+							"note": "Presença Comprador",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IntermediaryCode": {
+					"description": "Codigo Intermediador",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "L1_INTERMD",
+							"required": false,
+							"type": "varchar",
+							"length": "6",
+							"note": "Codigo Intermediador",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ListOfSaleItemType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/SaleItemType",
+				"type": "object"
+			}
+		},
+		"SaleItemType": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"description": "InternalId do Item da Venda",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": true,
+							"type": "Varchar",
+							"length": "50",
+							"note": "O InternalID da venda é formado por EMPRESA | L1_FILIAL | L1_DOC | L1_SERIE | L1_PDV",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": true,
+							"type": "char",
+							"length": "10",
+							"note": "O InternalId do Item do Cupom é composto pelos campos TCUPOMFISCALITM.CODCOLIGADA | TCUPOMFISCALITM.IDCUPOM | TCUPOMFISCALITM.NUMEROITEM",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemInternalId": {
+					"description": "InternalId do Produto",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": true,
+							"type": "Varchar",
+							"length": "50",
+							"note": "O InternalID do Produto é formado por EMPRESA | L2_FILIAL | L2_PRODUTO",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": true,
+							"type": "char",
+							"length": "6",
+							"note": "O InternalId do Produto é composto pelos campos TCUPOMFISCALITM.CODCOLIGADA | TCUPOMFISCALITM.IDPRD",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemCode": {
+					"description": "Código do Produto",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_PRODUTO",
+							"required": true,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Código do Produto",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TPRODUTO.CODIGOPRD",
+							"required": false,
+							"type": "varchar",
+							"length": "30",
+							"note": "Código do Produto",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemOrder": {
+					"description": "Ordem do Item",
+					"type": "string",
+					"maxLength": 2,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_IEM",
+							"required": true,
+							"type": "Varchar",
+							"length": "2",
+							"note": "Ordem do Item",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.NUMEROITEM",
+							"required": true,
+							"type": "inteiro",
+							"length": "4",
+							"note": "Número do Item de Cupom Fiscal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},                
+                "DocumentCode": {
+					"description": "Numero da Nota Fiscal no Item",
+					"type": "string",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_DOC",
+							"required": false,
+							"type": "Varchar",
+							"length": "9",
+							"note": "Numero da Nota Fiscal no Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+                "SerieCode": {
+					"description": "Numero da Serie na Nota Fiscal do Item",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_SERIE",
+							"required": false,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Numero da Serie na Nota Fiscal do Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+                "StationCode": {
+					"description": "Numero do PDV no Item",
+					"type": "string",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_PDV",
+							"required": false,
+							"type": "Varchar",
+							"length": "10",
+							"note": "Numero do PDV no Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Quantity": {
+					"description": "Quantidade do Item",
+					"type": "number",
+					"multipleOf": 0.001,
+					"minimum": -999999999999.999,
+					"maximum": 999999999999.999,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_QUANT",
+							"required": true,
+							"type": "Decimal",
+							"length": "7,2",
+							"note": "Quantidade do Item",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.QUANTIDADE",
+							"required": true,
+							"type": "decimal",
+							"length": "15,3",
+							"note": "Quantidade do Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UnitPrice": {
+					"description": "Preço Unitário do Item",
+					"type": "number",
+					"multipleOf": 0.001,
+					"minimum": -999999999999.999,
+					"maximum": 999999999999.999,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_VRUNIT",
+							"required": true,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Preço Unitário do Item",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.PRECOUNITARIO",
+							"required": true,
+							"type": "decimal",
+							"length": "15,3",
+							"note": "Preço Unitário",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemPrice": {
+					"description": "Valor do Item",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_VLRITEM",
+							"required": true,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor do Item",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.VALORLIQUIDO",
+							"required": true,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "Valor do Item de Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountPercentage": {
+					"description": "Percentual de Desconto do Item",
+					"type": "number",
+					"multipleOf": 0.0001,
+					"minimum": -999.9999,
+					"maximum": 999.9999,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_DESC",
+							"required": false,
+							"type": "Decimal",
+							"length": "7,4",
+							"note": "Percentual de Desconto do Item",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "decimal",
+							"length": "7,4",
+							"note": "Não possui campo físico na tabela",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountAmount": {
+					"description": "Valor do Desconto do Item",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_VALDESC",
+							"required": false,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor do Desconto do Item",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.DESCONTO",
+							"required": false,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "Desconto do Item de Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DiscountTotalProrated": {
+					"description": "Valor do Desconto Total Rateado",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_DESCPRO",
+							"required": false,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor do Desconto Total Rateado para este item. Usado apenas quando existir desconto no total.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"OperationCode": {
+					"description": "Código Fiscal de Operações e Prestações",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_CF",
+							"required": true,
+							"type": "Varchar",
+							"length": "5",
+							"note": "Código Fiscal de Operações e Prestações - CFOP",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "DCFOP.CODNAT",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"note": "Código da Natureza",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+                "ItemSold": {
+					"description": "Status de Vendido",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_VENDIDO",
+							"required": false,
+							"type": "Varchar",
+							"length": "1",
+							"note": "Status de Vendido",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ListOfTaxes": {
+					"description": "Lista de Impostos do Item",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListOfTaxesType",
+						"type": "object"
+					},
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2",
+							"required": true,
+							"type": "",
+							"length": "Impostos do Item",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Increase": {
+					"description": "Valor de Acréscimo do Item",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_VALACRS",
+							"required": false,
+							"type": "Decimal",
+							"length": "14,2",
+							"note": "Valor de Acréscimo do Item",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.ACRESCIMO",
+							"required": true,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "Acréscimo do Item de Cupom",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"Lodging": {
+					"description": "Produto é Diaria",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Char",
+							"length": "1",
+							"note": "Flag se Produto é Diária",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Não utilizado no RM.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"IsCanceled": {
+					"description": "Informa se o item esta cancelado",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.CANCELADO",
+							"required": true,
+							"type": "bool",
+							"length": "2",
+							"note": "Eh item de cupom cancelado?",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "bool",
+							"length": "2",
+							"note": "Item cancelado?",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UnitOfMeasureCode": {
+					"description": "Unidade de Medida",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.CODUND",
+							"required": true,
+							"type": "varchar",
+							"length": "5",
+							"note": "Código da Unidade de Venda",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SB1.B1_UM",
+							"required": false,
+							"type": "varchar",
+							"length": "2",
+							"note": "Unidade de Medida do produto",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UnitOfMeasureInternalId": {
+					"description": "Id de integração da Unidade de Medida",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.CODUND",
+							"required": true,
+							"type": "varchar",
+							"length": "5",
+							"note": "Código da Unidade de Venda",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "O InternalID da Unidade de Medida é formado por EMPRESA | AH_FILIAL | AH_UNIMED",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WarehouseCode": {
+					"description": "Codigo do Local de Estoque(Armazem)",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.CODLOC",
+							"required": true,
+							"type": "varchar",
+							"length": "15",
+							"note": "Local de Estoque",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_LOCAL",
+							"required": false,
+							"type": "varchar",
+							"length": "2",
+							"note": "Código do Local de Estoque",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"WarehouseInternalId": {
+					"description": "Id de integração do Local de Estoque(Armazem)",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.CODFILIAL|TPONTOVENDA.CODLOC",
+							"required": true,
+							"type": "varchar",
+							"length": "30",
+							"note": "O InternalId é composto por Código da Coligada | Código da Filial | Código do Local de Estoque.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId do Local de Estoque é formado por EMPRESA|NNR_FILIAL|NNR_CODIGO",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"StoreIdentificationCode": {
+					"description": "Código da Identificação da Loja de Reserva",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "LJ_CODIGO",
+							"required": false,
+							"type": "varchar",
+							"length": "6",
+							"note": "Codigo da Loja cadastrado na rotina Identificação de Lojas.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ECFTaxingCode": {
+					"description": "Código da Tributação ECF",
+					"type": "string",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALITM.TRIBUTACAOECF",
+							"required": false,
+							"type": "char",
+							"length": "10",
+							"note": "Código da Tributação ECF",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "Código da Tributação ECF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BoardBasisInformation": {
+					"$ref": "#/definitions/BoardBasisInformationType",
+					"description": "Informações dos itens de Reserva (hotelaria)",
+					"type": "object",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "Informações dos itens de Reserva (hotelaria)",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SourceDocument": {
+					"description": "Numero do Documento Origem",
+					"type": "string",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH4_DOCORI",
+							"required": true,
+							"type": "Varchar",
+							"length": "9",
+							"note": "Numero do Documento  de Entrada Origem",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SourceDocumentSerie": {
+					"description": "Serie de Origem do Documento de Entrada",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH4_SERIEORI",
+							"required": true,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Serie do Documento Origen",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SourceDocumentItem": {
+					"description": "Item de Origem nota de entrada",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH4_ITEORIORI",
+							"required": true,
+							"type": "Varchar",
+							"length": "4",
+							"note": "Item Origen",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemReserveInternalId": {
+					"description": "Id da Reserva do item",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "O InternalId da Reserva do item é formado por EMPRESA|C0_FILIAL|C0_NUM",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemReserveCode": {
+					"description": "Codigo da Reserva do Item",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_RESERVA",
+							"required": false,
+							"type": "varchar",
+							"length": "6",
+							"note": "Codigo de Reserva do item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemDeliveryType": {
+					"description": "Tipo de Entrega do Item / 1 - Retira Posterior / 2 - Retira / 3 - Entrega / 4 - Retira Posterior com Pedido",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_ENTREGA",
+							"required": true,
+							"type": "varchar",
+							"length": "1",
+							"note": "1 = Retira Posterior, 2 = Retira, 3 = Entrega, 4 = Retira Posterior com Pedido",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemDeliveryDate": {
+					"description": "Data de Entrega do Item",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_FDTENTR",
+							"required": false,
+							"type": "Date",
+							"length": "8",
+							"note": "Data de entrega do Item, para as vendas do Tipo Entrega e Retira posterior com pedido",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"LotNumber": {
+					"description": "Número do Lote do Produto",
+					"type": "string",
+					"maxLength": 10,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_LOTECTL",
+							"required": false,
+							"type": "varchar",
+							"length": "10",
+							"note": "Numero do lote do produto cadastrado no estoque.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SubLotNumber": {
+					"description": "Número do SubLote do Produto",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_NLOTE",
+							"required": false,
+							"type": "varchar",
+							"length": "6",
+							"note": "Numero do Sublote do produto cadastrado no estoque",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AddressItem": {
+					"description": "Endereço do produto no estoque",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_LOCALIZ",
+							"required": false,
+							"type": "varchar",
+							"length": "15",
+							"note": "Código do endereço de estoque cadastrado para produtos que possuem endereçamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SeriesItem": {
+					"description": "Número de Série do Produto",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_NSERIE",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"note": "Número de série do produto, para produtos que possuem endereçamento e série.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemCarrierCode": {
+					"description": "Código da Transportadora do Item",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL2.L2_TRANSP",
+							"required": false,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Código da Transportadora do Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ItemCarrierInternalId": {
+					"description": "InternalId da Transportadora no Item",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "InternalId da Transportadora no Item",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ListOfTaxesType": {
+			"type": "array",
+			"items": {
+				"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/Tax_1_005.json#/definitions/TaxesType",
+				"type": "object"
+			}
+		},
+		"ListOfSaleConditionType": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/SaleConditionType",
+				"type": "object"
+			}
+		},
+		"SaleConditionType": {
+			"type": "object",
+			"properties": {
+				"AccountReceivableDocumentInternalId": {
+					"description": "InternalId do RA do cliente",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_CONTAHT",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "InternalId do RA do cliente",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DateOfPayment": {
+					"description": "Data de Vencimento da Parcela",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_DATA",
+							"required": true,
+							"type": "Date",
+							"length": "8",
+							"note": "Data de Vencimento da Parcela",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.DATAVENCIMENTO",
+							"required": false,
+							"type": "Date",
+							"length": "8",
+							"note": "Data de Vencimento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentValue": {
+					"description": "Valor do Pagamento",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_VALOR",
+							"required": true,
+							"type": "Decimal",
+							"length": "16,2",
+							"note": "Valor do Pagamento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.VALOR",
+							"required": false,
+							"type": "decimal",
+							"length": "15,2",
+							"note": "Valor do Pagamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentMethodCode": {
+					"description": "Forma de Pagamento",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_FORMA",
+							"required": true,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Forma de Pagamento",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TFORMAPAGTO.CODFORMAPAGTO",
+							"required": false,
+							"type": "varchar",
+							"length": "10",
+							"note": "Código Meio de Pagamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentMethodInternalId": {
+					"description": "Chave de Integração de Forma de Pagamento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "O InternalId da Forma de Pagamento é composto pelos campos EMPRESA | L4_FILIAL | L4_FORMA",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.CODCOLIGADA|TCUPOMFISCALFIN.IDFORMAPAGTO",
+							"required": false,
+							"type": "varchar",
+							"length": "6",
+							"note": "O InternalId da Forma de Pagamento é composto pelos campos TCUPOMFISCALFIN.CODCOLIGADA | TCUPOMFISCALFIN.IDFORMAPAGTO",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinancialManagerCode": {
+					"description": "Código da Administradora Financeira",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_ADMINIS",
+							"required": false,
+							"type": "Varchar",
+							"length": "36",
+							"note": "Código da Administradora Financeira, obrigatório se Forma de Pagamento CC/CD",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CardNumber": {
+					"description": "Numeração do Cheque",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_NUMCART",
+							"required": false,
+							"type": "Varchar",
+							"length": "30",
+							"note": "Numeração do Cheque",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.CHEQUE",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"note": "Número do Cheque",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"SerieCheck": {
+					"description": "Série do Cheque",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_SERCHQ",
+							"required": false,
+							"type": "Varchar",
+							"length": "6",
+							"note": "Série do Cheque",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Não utilizado no RM",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BankCheck": {
+					"description": "Banco do Cheque",
+					"type": "string",
+					"maxLength": 4,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_ADMINIS",
+							"required": false,
+							"type": "Varchar",
+							"length": "20",
+							"note": "Código do Banco, obrigatório se Forma de Pagamento Ch",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.BANCO",
+							"required": false,
+							"type": "varchar",
+							"length": "4",
+							"note": "Banco",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AgencyCheck": {
+					"description": "Agência Bancária do Cheque",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_AGENCIA",
+							"required": false,
+							"type": "Varchar",
+							"length": "8",
+							"note": "Agência Bancária do Cheque",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.AGENCIA",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"note": "Agência",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AccountCheck": {
+					"description": "Número da Conta do Cheque",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_CONTA",
+							"required": false,
+							"type": "Varchar",
+							"length": "20",
+							"note": "Número da Conta do Cheque",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.CC",
+							"required": false,
+							"type": "varchar",
+							"length": "20",
+							"note": "Conta/Corrente",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DocumentOfIdentification": {
+					"description": "Documento de Identidade do Cliente - Cheque",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_RG",
+							"required": false,
+							"type": "Varchar",
+							"length": "20",
+							"note": "Documento de Identidade do Cliente - Cheque",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Não utilizado no RM",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PhoneNumber": {
+					"description": "Telefone do Cliente - Cheque",
+					"type": "string",
+					"maxLength": 15,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_TELEFON",
+							"required": false,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Telefone do Cliente - Cheque",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "TCUPOMFISCALFIN.TELEMITENTE",
+							"required": false,
+							"type": "varchar",
+							"length": "15",
+							"note": "Telefone do Emitente",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EftDate": {
+					"description": "Data do Pagamento - TEF",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_DATATEF",
+							"required": false,
+							"type": "DateTime",
+							"length": "8",
+							"note": "Data do Pagamento - TEF",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EftDocument": {
+					"description": "Documento de Identificação TEF",
+					"type": "string",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_DOCTEF",
+							"required": false,
+							"type": "Varchar",
+							"length": "9",
+							"note": "Documento de Identificação TEF",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "tabela.campo",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EftAutorization": {
+					"description": "Código de Autorização TEF",
+					"type": "string",
+					"maxLength": 6,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_AUTORIZ",
+							"required": false,
+							"type": "Varchar",
+							"length": "6",
+							"note": "Código de Autorização TEF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EftCancellationDate": {
+					"description": "Data de Cancelamento TEF",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_DATCANC",
+							"required": false,
+							"type": "DateTime",
+							"length": "8",
+							"note": "Data de Cancelamento TEF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EftCancellationDocument": {
+					"description": "Número do Cancelamento TEF",
+					"type": "string",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_DOCCANC",
+							"required": false,
+							"type": "Varchar",
+							"length": "9",
+							"note": "Número do Cancelamento TEF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EftInstitute": {
+					"description": "Código do Instituto TEF",
+					"type": "string",
+					"maxLength": 16,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_INSTITU",
+							"required": false,
+							"type": "Varchar",
+							"length": "16",
+							"note": "Código do Instituto TEF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"UniqueSerialNumber": {
+					"description": "Código NSU - TEF",
+					"type": "string",
+					"maxLength": 12,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_NSUTEF",
+							"required": false,
+							"type": "Varchar",
+							"length": "12",
+							"note": "Código NSU - TEF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EftParcel": {
+					"description": "Parcelamento TEF",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_PARCTEF",
+							"required": false,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Parcelamento TEF",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"FinancialDocumentCode": {
+					"description": "Número do documento Financeiro",
+					"type": "string",
+					"maxLength": 20,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_IDCNAB",
+							"required": false,
+							"type": "Varchar",
+							"length": "20",
+							"note": "IDCNAB para baixa financeira",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentTermCodeInternalID": {
+					"description": "InternalId da condição de pagamento",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "InternalId da condição de pagamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PaymentTermCode": {
+					"description": "Condição de pagamento",
+					"type": "string",
+					"maxLength": 3,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL4.L4_FORMA",
+							"required": false,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Condição de pagamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+                "Installments": {
+					"description": "Quantidade de Parcelas",
+                    "type": "number",					
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "number",
+							"length": "2",
+							"note": "Quantidade de Parcelas Cartão",
+							"available": true,
+							"canUpdate": false
+						}
+					
+					]
+				}
+			}
+		},
+		"BookingInformationType": {
+			"type": "object",
+			"properties": {
+				"HotelAccountCode": {
+					"description": "Codigo de Reserva do Hospede",
+					"type": "string",
+					"maxLength": 32,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "SL1.L1_RESEHTL",
+							"required": false,
+							"type": "Varchar",
+							"length": "32",
+							"note": "Codigo de Reserva do Hospede",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"CheckinDate": {
+					"description": "Data de Checkin da Reserva",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH3_DATA",
+							"required": false,
+							"type": "DateTime",
+							"length": "8",
+							"note": "Data de Checkin da Reserva",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HabitationalUnitType": {
+					"description": "Tipo da Unidade Habitacional",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH3_TIPOUH",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "Tipo da Unidade Habitacional",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"HabitationalUnitNumber": {
+					"description": "Número da Unidade Habitacional",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH3_NUMUH",
+							"required": false,
+							"type": "Varchar",
+							"length": "15",
+							"note": "Número da Unidade Habitacional",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"MainGuestName": {
+					"description": "Nome do hóspede principal da reserva",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH3_HOSPRI",
+							"required": false,
+							"type": "Varchar",
+							"length": "50",
+							"note": "Nome do hóspede principal da reserva",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"AdditionalGuestName": {
+					"description": "Nomes de todos os hóspedes da reseva, com exeção do principal",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH3_HOSPED",
+							"required": false,
+							"type": "Memo",
+							"length": "10",
+							"note": "Nomes de todos os hóspedes da reseva, com exeção do principal",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"GroupName": {
+					"description": "Nome do Grupo da Reserva",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH3_GRUPO",
+							"required": false,
+							"type": "Varchar",
+							"length": "120",
+							"note": "Nome do Grupo da Reserva",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"EventName": {
+					"description": "Nome do Evento",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH3_EVENTO",
+							"required": false,
+							"type": "Varchar",
+							"length": "120",
+							"note": "Nome do Evento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"BoardBasisInformationType": {
+			"type": "object",
+			"properties": {
+				"BoardBasisType": {
+					"description": "Tipo de Pensao",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH4_TIPOPEN",
+							"required": false,
+							"type": "Varchar",
+							"length": "3",
+							"note": "Tipo de Pensao",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BoardBasisValue": {
+					"description": "Valor da Pensao",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH4_VLRPEN",
+							"required": false,
+							"type": "decimal",
+							"length": "16,2",
+							"note": "Valor da Pensao",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"BreakfastValue": {
+					"description": "Valor do café da manhã",
+					"type": "number",
+					"multipleOf": 0.01,
+					"minimum": -9999999999999.99,
+					"maximum": 9999999999999.99,
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH4_VLRCAFE",
+							"required": false,
+							"type": "decimal",
+							"length": "16,2",
+							"note": "Valor do café da manhã",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"DateOfMovement": {
+					"description": "Data de lançamento do serviço",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "MH4_DTLANC",
+							"required": false,
+							"type": "Date",
+							"length": "8",
+							"note": "Data de lançamento do serviço - Utlizado para tratamento de redução de base (F100) em itens do RPS",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				},
+				"ElectronicConsumerInvoice": {
+					"description": "XML de retorno NFCe",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "Não possui campo físico na tabela",
+							"required": false,
+							"type": "Varchar",
+							"length": "100",
+							"note": "XML de retorno NFCe",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		}
+	}
+}

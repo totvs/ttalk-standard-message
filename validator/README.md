@@ -1,7 +1,7 @@
 # [Codecov][0] NodeJS / Javascript Example
 
 ## Guide
-### Travis Setup
+### Travis Setup.
 
 bbbAdd the following to your `.travis.yml`:
 ```yml
