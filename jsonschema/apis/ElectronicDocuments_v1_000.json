@@ -45,7 +45,7 @@
                 "tags": [
                     "electronicDocuments"
                 ],
-                "summary": "Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
+                "summary": "Integração dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
                 "x-totvs": {
                     "productInformation": [
                         {
@@ -55,7 +55,7 @@
                         }
                     ]
                 },
-                "description": "Realiza a integração de Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
+                "description": "Realiza a integração dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
                 "operationId": "postElectronicDocuments",
                 "parameters": [
                     {
@@ -69,7 +69,7 @@
                         "example": "Basic YWRtaW46MTIzNA=="
                     },
                     {
-                        "name": "tenantID",
+                        "name": "tenantId",
                         "in": "header",
                         "required": true,
                         "description": "Parâmetro usado na preparação do ambiente da empresa e filial desejada",
@@ -100,13 +100,19 @@
                                     "properties": {
                                         "href": {
                                             "type": "string",
+                                            "format": "link",
                                             "example": "{{host}}/api/taf/fiscal/v1/electronicDocuments/queue/cbd15a26-6432-4739-b610-bc2d2ed72c8c"
                                         },
                                         "id": {
                                             "type": "string",
-                                            "example": "cbd15a26-6432-4739-b610-bc2d2ed72c8"
+                                            "format": "uuid",
+                                            "example": "cbd15a26-6432-4739-b610-bc2d2ed72c8c"
                                         }
-                                    }
+                                    },
+                                    "required": [
+                                        "href",
+                                        "id"
+                                    ]
                                 }
                             }
                         },
@@ -115,6 +121,7 @@
                                 "description": "Recurso temporário para o acompanhamento do status da requisição",
                                 "schema": {
                                     "type": "string",
+                                    "format": "link",
                                     "example": "{{host}}/api/taf/fiscal/v1/electronicDocuments/queue/cbd15a26-6432-4739-b610-bc2d2ed72c8c"
                                 }
                             }
@@ -202,6 +209,1020 @@
                                             "example": "The requested page could not be found but may be available again in the future"
                                         }
                                     }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Falha interna no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 500
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Internal Server Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "basic": []
+                    },
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "electronicDocuments"
+                ],
+                "summary": "Consulta de todos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "Protheus",
+                            "available": true,
+                            "minimalVersion": "12.1.2410"
+                        }
+                    ]
+                },
+                "description": "Realiza a consulta de todos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço) de acordo com os parâmetros informados",
+                "operationId": "getElectronicDocuments",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado para autorização das requisições (Basic Auth ou Bearer Token)",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Basic YWRtaW46MTIzNA=="
+                    },
+                    {
+                        "name": "tenantId",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado na preparação do ambiente da empresa e filial desejada",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "T1,D MG 01 "
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "required": false,
+                        "description": "Ordenação dos registros",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "005671238491262"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "description": "Página a ser consultada",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "description": "Quantidade de registros por página",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "example": 100
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Consulta realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Retorno da consulta",
+                                    "type": "object",
+                                    "properties": {
+                                        "hasNext": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "items": {
+                                            "description": "Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ElectronicDocuments_1_000.json#/definitions/ElectronicDocuments/items"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "hasNext",
+                                        "items"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Falha na requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 400
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Grupo, Empresa e Filial logada não foram informados no parâmetro 'companyId'."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Acesso não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The request requires authentication. The server might return this response for a page behind a login."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Recurso não encontrato",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 404
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": "URL: /rest/api/taf/fiscal/v1/electronicDocuments"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The requested page could not be found but may be available again in the future"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Falha interna no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 500
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Internal Server Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "basic": []
+                    },
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/electronicDocuments/{id}": {
+            "get": {
+                "tags": [
+                    "electronicDocuments"
+                ],
+                "summary": "Consulta dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço) por Id",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "Protheus",
+                            "available": true,
+                            "minimalVersion": "12.1.2410"
+                        }
+                    ]
+                },
+                "description": "Realiza a consulta dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço) pelo Id do documento informado",
+                "operationId": "getElectronicDocumentsId",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado para autorização das requisições (Basic Auth ou Bearer Token)",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Basic YWRtaW46MTIzNA=="
+                    },
+                    {
+                        "name": "tenantId",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado na preparação do ambiente da empresa e filial desejada",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "T1,D MG 01 "
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id do documento a ser consultado",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "005671238491262"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Consulta realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ElectronicDocuments_1_000.json#/definitions/ElectronicDocuments/items"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Falha na requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 400
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Grupo, Empresa e Filial logada não foram informados no parâmetro 'companyId'."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Acesso não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The request requires authentication. The server might return this response for a page behind a login."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Recurso não encontrato",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 404
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": "URL: /rest/api/taf/fiscal/v1/electronicDocuments"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The requested page could not be found but may be available again in the future"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Falha interna no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 500
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Internal Server Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "basic": []
+                    },
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/electronicDocuments/findByKey": {
+            "get": {
+                "tags": [
+                    "electronicDocuments"
+                ],
+                "summary": "Consulta dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço) pela chave de negócio",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "Protheus",
+                            "available": true,
+                            "minimalVersion": "12.1.2410"
+                        }
+                    ]
+                },
+                "description": "Realiza a consulta dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço) pela chave de negócio do documento informado",
+                "operationId": "getElectronicDocumentsFindByKey",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado para autorização das requisições (Basic Auth ou Bearer Token)",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Basic YWRtaW46MTIzNA=="
+                    },
+                    {
+                        "name": "tenantId",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado na preparação do ambiente da empresa e filial desejada",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "T1,D MG 01 "
+                    },
+                    {
+                        "name": "number",
+                        "in": "query",
+                        "required": true,
+                        "description": "Número do documento a ser consultado",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "000000000000000000000000000000000000000000000000000000000234"
+                    },
+                    {
+                        "name": "serie",
+                        "in": "query",
+                        "required": true,
+                        "description": "Série do documento a ser consultado",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "00000000000000032544"
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": true,
+                        "description": "Tipo do documento a ser consultado",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "06"
+                    },
+                    {
+                        "name": "participantCode",
+                        "in": "query",
+                        "required": true,
+                        "description": "Código do participante do documento a ser consultado",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "432782682508862430788243260360428833965975113705038250279304"
+                    },
+                    {
+                        "name": "issuanceDate",
+                        "in": "query",
+                        "required": true,
+                        "description": "Data de emissão do documento a ser consultado",
+                        "schema": {
+                            "type": "string",
+                            "format": "YYYYMMDD"
+                        },
+                        "example": "20230101"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Consulta realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ElectronicDocuments_1_000.json#/definitions/ElectronicDocuments/items"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Falha na requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 400
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Grupo, Empresa e Filial logada não foram informados no parâmetro 'companyId'."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Acesso não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The request requires authentication. The server might return this response for a page behind a login."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Recurso não encontrato",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 404
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": "URL: /rest/api/taf/fiscal/v1/electronicDocuments"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The requested page could not be found but may be available again in the future"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Falha interna no servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 500
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Internal Server Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "basic": []
+                    },
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/electronicDocuments/queue/{id}": {
+            "get": {
+                "tags": [
+                    "electronicDocuments"
+                ],
+                "summary": "Fila de processamento dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "Protheus",
+                            "available": true,
+                            "minimalVersion": "12.1.2410"
+                        }
+                    ]
+                },
+                "description": "Retorna as informações da fila de processamento dos Documentos Eletrônicos de Entrada e Saída (Mercadoria/Serviço)",
+                "operationId": "getQueue",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado para autorização das requisições (Basic Auth ou Bearer Token)",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Basic YWRtaW46MTIzNA=="
+                    },
+                    {
+                        "name": "tenantID",
+                        "in": "header",
+                        "required": true,
+                        "description": "Parâmetro usado na preparação do ambiente da empresa e filial desejada",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "T1,D MG 01 "
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Consulta realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Status da requisição",
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "cbd15a26-6432-4739-b610-bc2d2ed72c8"
+                                        },
+                                        "summary": {
+                                            "type": "string",
+                                            "example": "resource scheduled"
+                                        },
+                                        "state": {
+                                            "type": "string",
+                                            "example": "started"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "in progress"
+                                        },
+                                        "progress": {
+                                            "type": "string",
+                                            "example": "30%"
+                                        },
+                                        "createdAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-01-20T10:35:03-03:00"
+                                        },
+                                        "startedAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-01-20T10:41:01-03:00"
+                                        },
+                                        "endedAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": ""
+                                        },
+                                        "owner": {
+                                            "type": "string",
+                                            "example": "administrator"
+                                        },
+                                        "canCancel": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "required": [
+                                        "summary",
+                                        "state",
+                                        "status",
+                                        "progress",
+                                        "createdAt",
+                                        "startedAt",
+                                        "endedAt",
+                                        "owner",
+                                        "canCancel"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "303": {
+                        "description": "Processamento concluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Status da requisição",
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "cbd15a26-6432-4739-b610-bc2d2ed72c8"
+                                        },
+                                        "summary": {
+                                            "type": "string",
+                                            "example": "resource created"
+                                        },
+                                        "state": {
+                                            "type": "string",
+                                            "example": "completed"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "progress": {
+                                            "type": "string",
+                                            "example": "100%"
+                                        },
+                                        "createdAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-01-20T10:35:03-03:00"
+                                        },
+                                        "startedAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-01-20T10:41:01-03:00"
+                                        },
+                                        "endedAt": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-01-20T11:01:00-03:00"
+                                        },
+                                        "owner": {
+                                            "type": "string",
+                                            "example": "administrator"
+                                        },
+                                        "resource": {
+                                            "description": "Informações do recurso criado",
+                                            "type": "object",
+                                            "properties": {
+                                                "href": {
+                                                    "type": "string",
+                                                    "format": "link",
+                                                    "example": "{{host}}/api/taf/fiscal/v1/electronicDocuments/005671238491262"
+                                                },
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "005671238491262"
+                                                }
+                                            },
+                                            "required": [
+                                                "href",
+                                                "id"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "summary",
+                                        "state",
+                                        "status",
+                                        "progress",
+                                        "createdAt",
+                                        "startedAt",
+                                        "endedAt",
+                                        "owner",
+                                        "resource"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {
+                            "Location": {
+                                "description": "Endereço do recurso criado",
+                                "schema": {
+                                    "type": "string",
+                                    "format": "link",
+                                    "example": "{{host}}/api/taf/fiscal/v1/electronicDocuments/005671238491262"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Falha na requisição",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 400
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Grupo, Empresa e Filial logada não foram informados no parâmetro 'companyId'."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Acesso não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The request requires authentication. The server might return this response for a page behind a login."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Recurso não encontrato",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ],
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 404
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": "URL: /rest/api/taf/fiscal/v1/electronicDocuments"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "The requested page could not be found but may be available again in the future"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "410": {
+                        "description": "Recurso finalizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "Código identificador do erro.",
+                                            "example": 410
+                                        },
+                                        "detailedMessage": {
+                                            "type": "string",
+                                            "description": "Mensagem técnica e mais detalhada do erro.",
+                                            "example": ""
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Literal no idioma da requisição descrevendo o erro para o usuário.",
+                                            "example": "Recurso finalizado"
+                                        }
+                                    },
+                                    "required": [
+                                        "code",
+                                        "detailedMessage",
+                                        "message"
+                                    ]
                                 }
                             }
                         }
