@@ -62,7 +62,7 @@
                         "name": "Authorization",
                         "in": "header",
                         "required": true,
-                        "description": "Parâmetro usado para autorização das requisições (Basic Auth)",
+                        "description": "Parâmetro usado para autorização das requisições (Basic Auth ou Bearer Token)",
                         "schema": {
                             "type": "string"
                         },
@@ -77,16 +77,6 @@
                             "type": "string"
                         },
                         "example": "T1,D MG 01 "
-                    },
-                    {
-                        "name": "Content-Type",
-                        "in": "header",
-                        "required": true,
-                        "description": "Formato do conteúdo",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "application/json"
                     }
                 ],
                 "requestBody": {
@@ -102,6 +92,24 @@
                 "responses": {
                     "202": {
                         "description": "Requisição aceita",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Recurso temporário para o acompanhamento do status da requisição",
+                                    "type": "object",
+                                    "properties": {
+                                        "href": {
+                                            "type": "string",
+                                            "example": "{{host}}/api/taf/fiscal/v1/electronicDocuments/queue/cbd15a26-6432-4739-b610-bc2d2ed72c8c"
+                                        },
+                                        "id": {
+                                            "type": "string",
+                                            "example": "cbd15a26-6432-4739-b610-bc2d2ed72c8"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "headers": {
                             "Location": {
                                 "description": "Recurso temporário para o acompanhamento do status da requisição",
@@ -231,7 +239,28 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "basic": []
+                    },
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "basic": {
+                "type": "http",
+                "scheme": "basic"
+            },
+            "bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     }
