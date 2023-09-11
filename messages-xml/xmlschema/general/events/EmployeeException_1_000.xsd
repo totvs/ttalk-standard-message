@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:include schemaLocation="../totvsmsg.xsd"/>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+  <xs:annotation>
+    <xs:appinfo>
+      <MessageDocumentation>
+        <Name>Exceções</Name>
+        <Description>Exeções do Ponto eletronico</Description>
+        <Segment>Ponto Eletrônico</Segment>
+        <ProductInformation product="PROTHEUS">
+          <Contact>Natiê Sugahara</Contact>
+          <Description>Exceções - Este cadastro é utilizado para determinar exceções da Tabela de horário padrão a serem aplicadas a um ou mais
+                      funcionários por um período de tempo. O tipo da exceção pode ser cadastrada como trabalhada, não trabalhada, com DSR ou 
+                      compensada e podem ser informados o tipo do dia, a tabela de horas extras normais e noturnas, a apuração de nona hora, 
+                      os horários de entrada e saída (da 1ª. à 4ª. hora de entrada e saída), o tipo de refeição e a regra que regulamenta o apontamento.
+          </Description>
+          <Adapter>PONI090.prw</Adapter>
+          <Send>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Send>
+          <Receive>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Receive>
+        </ProductInformation>
+        <ProductInformation product="RM">
+          <Contact>Tiago Figueiredo de Carvalho</Contact>
+        </ProductInformation>
+        <ProductInformation product="DATASUL">
+          <Contact/>
+        </ProductInformation>
+        <ProductInformation product="LOGIX">
+          <Contact/>
+        </ProductInformation>
+      </MessageDocumentation>
+    </xs:appinfo>
+  </xs:annotation>
+
+  <xs:complexType name="BusinessContentType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="CompanyId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código da Empresa. No RM não há necessidade deste campo</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="BranchId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código da Filial. No RM não há necessidade deste campo</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CompanyInternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId da chave completa de empresa</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="ReasonForException">
+        <xs:annotation>
+          <xs:documentation>Motivo da Exceção</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_MOTIVO</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>30</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required>sim</Required>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="StartDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Data Inicial da Exceção</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_DATA</Field>
+              <Required>sim</Required>
+              <Type>date</Type>
+              <Length>8</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EndDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Data Final da Exceção</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_DATAATE</Field>
+              <Required>nao</Required>
+              <Type>date</Type>
+              <Length>8</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EmployeeCode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Matricula do funcionario</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_MAT</Field>
+              <Required>nao</Required>
+              <Type>char</Type>
+              <Length>6</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required>
+                Este código não é obrigatório e caso seja enviado em branco será considerado para todos funcionários, caso contrário
+                apenas os funcionário será considerado para a exceção.
+              </Required>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId da Matricula do funcionario</xs:documentation>
+          <xs:appinfo>
+            <InternalIdName>EmployeeCodeInternalId</InternalIdName>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>      
+      <xs:element maxOccurs="1" minOccurs="0" name="ShiftCodeWork" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código do Turno de Trabalho</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_TURNO</Field>
+              <Required>nao</Required>
+              <Type>char</Type>
+              <Length>3</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description>Este código não é obrigatório e caso seja enviado em branco será considerado para todos os turnos de trabalho, caso contrário 
+                            apenas os funcionários com o Turno enviado serão considerados para a exceção.
+              </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ShiftCodeWorkInternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId do Turno de Trabalho</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CostCenter" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código do Centro de Custo</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_CC</Field>
+              <Required>nao</Required>
+              <Type>char</Type>
+              <Length>9</Length>
+              <Description>
+                Este código não é obrigatório e caso seja enviado em branco será considerado para todos os centros de custos, caso contrário
+                apenas os funcionários com os centro de custos enviados serão considerados para a exceção.
+              </Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CostCenterInternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId do Centro de Custo</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ListOfException" type="ListOfExceptionType">
+        <xs:annotation>
+          <xs:documentation>Lista de Exceções</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+   
+  <xs:complexType name="ListOfExceptionType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="1" name="Exception" type="ExceptionType"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="ExceptionType">
+    <xs:sequence>   
+      <xs:element maxOccurs="1" minOccurs="0" name="WorkedDay">
+        <xs:annotation>
+          <xs:documentation>Tipo do dia da Exceção</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_TRABA</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>1</Length>
+              <Description>Este campo corresponde ao tipo do dia da Exceção. Ex.: Cadastrar uma exceção não trabalhada para o dia 01/02 (segunda-feira) </Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Dia Trabalhado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>Compensado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>DSR</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+              <xs:annotation>
+                <xs:documentation>Não Trabalhado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="DayType">
+        <xs:annotation>
+          <xs:documentation>Tipo do dia</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_TIPODIA</Field>
+              <Required>nao</Required>
+              <Type>char</Type>
+              <Length>1</Length>
+              <Description>Este campo define qual é o tipo do dia da Tabela de Horário Padrão, isto é, tipo do dia do Turno.</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Dia Trabalhado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>Compensado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>DSR</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+              <xs:annotation>
+                <xs:documentation>Não Trabalhado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ListOfExceptionHour" type="ListOfExceptionHourType">
+        <xs:annotation>
+          <xs:documentation>Lista de Horários</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfExceptionHourType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="1" name="ExceptionHour" type="ExceptionHourType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExceptionHourType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="HourType">
+        <xs:annotation>
+          <xs:documentation>Tipo de Horário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_INTERV1,P2_INTERV2,P2_INTERV3</Field>
+              <Required>nao</Required>
+              <Type>char</Type>
+              <Length>1</Length>
+              <Description>
+                Através destes campos é possivel definir como será a seleção dos horários de intervalo.
+                Caso seja enviado 1-Jornada, os campos ficam P2_INTERV1 = N, P2_INTERV2 = N, P2_INTERV3 = N
+                Caso seja enviado 2-Intervalo, os campos ficam P2_INTERV1 = S, P2_INTERV2 = N, P2_INTERV3 = N
+                Caso seja enviado 3-Lanche, os campos ficam P2_INTERV1 = N, P2_INTERV2 = S, P2_INTERV3 = N
+                Esta é uma referencia do Protheus, o conteudo do campo deverá ser conforme o simpletype.
+              </Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required>sim</Required>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Jornada</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>Intervalo</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>Lanche</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="StartHour">
+        <xs:annotation>
+          <xs:documentation>Hora de entrada: ex:08:00</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_ENTRA1,P2_ENTRA2,P2_ENTRA3,P2_ENTRA4</Field>
+              <Required>nao</Required>
+              <Type>decimal</Type>
+              <Length>5,2</Length>
+              <Description>
+                Nestes campos serão gravados os horários enviados nas listas conforme o exemplo abaixo:
+                Ex.: linha 1 - HourType=1 , StartHour = 08:00, EndHour = 17:30
+                     Será gravado: P2_ENTRA1 = 08:00 e P2_SAIDA1 = 17:30
+              </Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="5"/>
+            <xs:fractionDigits value="2"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EndHour">
+        <xs:annotation>
+          <xs:documentation>Hora de saida: ex: 16:00</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>P2_SAIDA1,P2_SAIDA2,P2_SAIDA3,P2_SAIDA4</Field>
+              <Required>nao</Required>
+              <Type>decimal</Type>
+              <Length>5,2</Length>
+              <Description>
+                Nestes campos serão gravados os horários enviados nas listas conforme o exemplo abaixo:
+                Ex.: linha 1 - HourType=1 , StartHour = 08:00, EndHour = 17:30
+                Será gravado: P2_ENTRA1 = 08:00 e P2_SAIDA1 = 17:30
+              </Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="5"/>
+            <xs:fractionDigits value="2"/>                            
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="ListOfInternalId" type="ListOfInternalIdType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+
+</xs:schema>

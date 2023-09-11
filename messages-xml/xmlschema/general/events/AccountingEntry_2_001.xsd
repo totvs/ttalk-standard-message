@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>AccountingEntry</Name>
+				<Description>Lançamento Contábil</Description>
+				<Segment>Controladoria</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogerio Nagy</Contact>
+					<Adapter>CTBI102prw</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PIMS">
+					<Contact>José Alberto da Silva</Contact>
+					<Description>Lançamentos Contábeis</Description>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Empresa Geradora do Lançamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+							<Description>Será enviado o valor da variável cEmpAnt( empresa)</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>EMPRESA.CD_INT_ERP</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Codigo da Empresa no ERP</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Filial Geradora do Lançamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>12</Length>
+							<Description>Será enviado o valor da variável cFilAnt</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>FILIAL.CD_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Codigo da Filial no ERP</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field/>
+							<Required>não</Required>
+							<Type/>
+							<Length/>
+							<Description>Não será enviado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Origem do Lançamento (Sistema Gerador)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>03</Length>
+							<Description>Será enviado em Branco pelo Protheus ( Não Utilizado no Protheus)</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field/>
+							<Required>não</Required>
+							<Type/>
+							<Length/>
+							<Description>Não será enviado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PeriodStartDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Inicial do Período Contábil. Informa a menor data de lançamento que será enviada na mensagem.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_DATA</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>03</Length>
+							<Description>No Protheus, a data inicial e final será o a mesma. Em um documento contábil só existe lançamentos de um dia.</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PeriodEndDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Final do Período Contábil. Informa a maior data de lançamento que será enviada na mensagem.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_DATA</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>08</Length>
+							<Description>No Protheus, a data inicial e final será o a mesma. Em um documento contábil só existe lançamentos de um dia.</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BatchNumber" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lote Contábil.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_LOTE</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>06</Length>
+							<Description>Lote do documento contábil</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SubLot" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Sub-Lote Contábil.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_SBLOTE</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>03</Length>
+							<Description>Sub-Lote do documento contábil</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Document" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Documento Contábil.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_DOC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>06</Length>
+							<Description>Sub-Lote do documento contábil</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Lancamento Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Código que irá identificar o documento no sistema : cEmpAnt|xFilial("CT2")|DTOS(CT2_DATA)|CT2_LOTE|CT2_SBLOTE|CT2_DOC</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Entries" type="EntriesType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lançamentos Contábeis</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EntriesType">
+		<xs:annotation>
+			<xs:documentation>Lançamento</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Entry" type="EntryType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EntryType">
+		<xs:sequence>
+			<xs:element name="Item" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Linha do Lançamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_LINHA</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>03</Length>
+							<Description>Linha do Lançamento Contábil</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo da Linha do Lançamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_DC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>Tipo da Linha do Lançamento</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Debito</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Credito</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Partida Dobrada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EntryNumber" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lançamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Código que irá identificar a linha documento no sistema : cEmpAnt+xFilial("CT2")+DTOS(CT2_DATA)+CT2_LOTE+CT2_SBLOTE+CT2_DOC+CT2_LINHA</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RelationshipNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Relacionamento entre os débitos e créditos</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Codigo de Relacionamento. Não é utilizado no Protheus</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MovementDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data do Movimento Contábil.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_DATA</Field>
+							<Required>não</Required>
+							<Type>Date</Type>
+							<Length>08</Length>
+							<Description>Data do Lançamento Contábil</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BalanceType" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo De Saldo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_TPSALD</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>Este campo tem a função de segregar os valores contabilizados segundo as normas da	contabilidade fiscal,
+								dos valores contabilizados segundo as normas da contabilidade Societária.
+								O usuário pode criar mais tipos de saldo</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+  					</FieldDocumentation>
+ 
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrencyCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Moeda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_MOEDLC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>03</Length>
+							<Description>Código da Moeda</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrencyInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código de InternalId da Moeda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CTO")|CT2_MOEDLC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>03</Length>
+							<Description>Código de InternalId da Moeda</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DebitAccountCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Conta de Débito com máscara. (RM: 40, LOGIX: 23, DATASUL: 20, Protheus: 20)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_DEBITO</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>20/40</Length>
+							<Description>Conta Contábil da Partida Débito sem a Mascara ( no Protheus a mascara não é armazenada ).</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DebitAccountInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id da Conta Contábil da Partida Débito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CT1")|CT2_DEBITO</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Conta Contábil da Partida Débito</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CreditAccountCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Conta de Credito com máscara. (RM: 40, LOGIX: 23, DATASUL: 20, Protheus: 20)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_CREDIT</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>20/40</Length>
+							<Description>Conta Contábil da Partida Credito sem a Mascara ( no Protheus a mascara não é armazenada ).</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CreditAccountInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id da Conta Contábil da Partida Credito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CT1")|CT2_CREDIT</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Conta Contábil da Partida Débito</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EntryValue" type="xs:double" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Lançamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_VALOR</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Valor do Lançamento</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HistoryCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do histórico Padrão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_HP</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Valor do Lançamento</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ComplementaryHistory" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Histórico Complementar</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_HIST</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Histórico do lançamento.</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CostCenterCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_CCD</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Centro de Custo Débito.</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+  					    </FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterDebitInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id do Centro de Custo Débito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CTT")|CT2_CCD</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id do Centro de Custo Débito</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterCreditCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Centro de Custo Crédito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_CCC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Centro de Custo Crédito.</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterCreditInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id do Centro de Custo Crédito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CTT")|CT2_CCC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id do Centro de Custo Crédito</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItemDebitCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Item Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_ITEMD</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Item Contábil Débito.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItemDebitInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id do Item Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CTD")|CT2_ITEMD</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id do Item Contábil</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItemCreditCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Item Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_ITEMC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Item Contábil Crédito.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItemCreditInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id do Item Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CTD")|CT2_ITEMC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id do Item Contábil</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassValueDebitCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Classe de valor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_CLVLDB</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Classe de valor Debito.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassValueDebitInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id da Classe de valor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CTH")|CT2_CLVLDB</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Classe de valor</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>		
+			<xs:element name="ClassValueCreditCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Classe de valor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_CLVLDB</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Classe de valor Crédito.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassValueCreditInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id da Classe de valor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CTH")|CT2_CLVLDB</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Classe de valor</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+
+			<xs:element name="ManagerialAccountingEntityDebit" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entidade Conta Gerencial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_ECXXDB</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>O Protheus irá utilizar a entidade contábil gerencial configurada no parâmetro MV_CTBCGER</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManagerialAccountingEntityDebitInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id da Conta Gerencial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CV0")|CT2_ECXXDB</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Entidade Contábil Gerencial</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="ManagerialAccountingEntityCredit" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entidade Conta Gerencial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT2_ECXXCR</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>O Protheus irá utilizar a entidade contábil gerencial configurada no parâmetro MV_CTBCGER</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManagerialAccountingEntityCreditInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id da Entidade Conta Gerencial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|xFilial("CV0")|CT2_ECXXCR</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Entidade Conta Gerencial</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+
+	
+			<xs:element name="ItemDeleted" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indicação de linha excluída</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>Indicação de linha excluída</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Linha de lançamento excluída</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Linha de lançamento não excluída</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

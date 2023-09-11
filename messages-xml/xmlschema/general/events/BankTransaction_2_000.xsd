@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+		<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+		<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+		<xs:annotation>
+			<xs:appinfo>
+				<MessageDocumentation>
+					<Name>Movimentos Financeiros</Name>
+					<Description>Integração dos Movimentos Financeiros</Description>
+					<Segment>Serviços e Jurídico</Segment>
+					<ProductInformation product="PROTHEUS" version="11.90">
+						<Contact>Marylly Araújo Silva</Contact>
+					</ProductInformation>
+					<ProductInformation product="TFS" version="">
+						<Contact>Leonardo Ferreira Carneiro</Contact>
+					</ProductInformation>
+            		<Adapter>FINI100.PRW</Adapter>
+					<Send>
+						<Insert>Sim - A mensagem envia os movimentos financeiros para o sistema destino.</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim - A mensagem gera movimentos financeiros do sistema origem.</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</MessageDocumentation>
+			</xs:appinfo>
+		</xs:annotation>
+	
+		<!-- ==================================== -->
+		<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+		<!-- ==================================== -->
+		<xs:complexType name="BusinessContentType">
+			<xs:sequence>
+				<xs:element name="InternalId" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Identificação do Movimento Financeiro
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"></xs:maxLength>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="OperationType" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Modo de Edição: 3-Inclusão a Pagar 4-Inclusao a Receber 5-Cancelamento de Movimento 6-Exclusão de Movimento
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="3">
+								<xs:annotation>
+									<xs:documentation>
+										Inclusão de Movimento a Pagar
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="4">
+								<xs:annotation>
+									<xs:documentation>
+										Inclusão de Movimento a Receber
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="5">
+								<xs:annotation>
+									<xs:documentation>
+										Cancelamento de Movimento Financeiro
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="6">
+								<xs:annotation>
+									<xs:documentation>
+										Exclusão de Movimento Financeiro
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="CompanyId" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Identificação da Empresa do Movimento
+							Financeiro
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="2"></xs:maxLength>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="BranchId" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Identificação da Filial do Movimento
+							Financeiro
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="2"></xs:maxLength>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="BankCode" minOccurs="0"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							Código de identificação do banco onde ocorreu o movimento bancário.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				
+				<xs:element name="Agency" minOccurs="0"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							Número de identificação da agência bancária onde ocorreu o movimento bancário.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				
+				<xs:element name="NumberAccount" minOccurs="0"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							Número de identificação da conta bancária onde ocorreu o movimento bancário.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				
+				<xs:element name="BankInternalId" minOccurs="0"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							Identificador de Integração do Banco do Movimento Financeiro
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="MovementDate" type="xs:date"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Data da Movimentação Financeira
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="EntryValue" type="xs:double"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Valor da Movimentação Financeira
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="MovementType" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Tipo de Movimento 1-Débito, 2-Crédito
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="1">
+								<xs:annotation>
+									<xs:documentation>
+										Débito (Carteira a Pagar)
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="2">
+								<xs:annotation>
+									<xs:documentation>
+										Crédito (Carteira a Receber)
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="ApportionmentDistribution"
+					minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Apportionment"
+								type="ApportionmentDistributionType" minOccurs="0"
+								maxOccurs="unbounded">
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+
+				<xs:element name="HistoryCode" type="xs:string"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Código do Histórico Contábil
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="ComplementaryHistory" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Histórico Complementar
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"></xs:maxLength>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="DocumentType" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Tipo de Documento 1-DB Débito, 2-CR Crédito,
+							3-DP Duplicata, 4-CH Cheque
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="1">
+								<xs:annotation>
+									<xs:documentation>
+										DB Débito
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="2">
+								<xs:annotation>
+									<xs:documentation>
+										CR Crédito
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="3">
+								<xs:annotation>
+									<xs:documentation>
+										DP Duplicata
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="4">
+								<xs:annotation>
+									<xs:documentation>
+										CH Cheque
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="5">
+								<xs:annotation>
+									<xs:documentation>
+										CD Cheque Pré-Datado
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="6">
+								<xs:annotation>
+									<xs:documentation>
+										TR Transferência Bancária
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="DocumentNumber" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Identificação do Documento
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="16"></xs:maxLength>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="BatchNumber" type="xs:int"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Número do Lote (É utilizado para modificação
+							ou exclusão)
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="BatchSequence" type="xs:int"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Sequência do Lote (É utilizado para
+							modificação ou exclusão)
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="FinancialCode" type="xs:string"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Código de identificação da Natureza
+							Financeira (Protheus)
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+
+				<xs:element name="CurrencyType" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Tipo de Moeda do Movimento Financeiro: 1 - CC Cartão de Crédito , 2 - CD Cartão de Débito , 3 - CH Cheque, 4 - R$ Dinheiro
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="2"></xs:maxLength>
+							<xs:enumeration value="1">
+								<xs:annotation>
+									<xs:documentation>
+										CC Cartão Crédito
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="2">
+								<xs:annotation>
+									<xs:documentation>
+										CD Cartão Débito
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="3">
+								<xs:annotation>
+									<xs:documentation>
+										CH Cheque
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="4">
+								<xs:annotation>
+									<xs:documentation>
+										R$ Dinheiro
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+
+				<xs:element name="TypingDate" type="xs:date"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Data de Digitação da Movimentação Financeira
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="AvailabilityDate" type="xs:date"
+					maxOccurs="1" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Data de Disponibilidade da Movimentação
+							Financeira
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+
+				<xs:element name="OriginalBranchId" maxOccurs="1"
+					minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Filial de Origem do Movimento Financeiro
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="7"></xs:maxLength>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>				
+			</xs:sequence>
+		</xs:complexType>
+		
+		<!-- ========================================================== -->
+		<!-- CONTEÚDO DE NEGÓCIO DE RATEIO DO MOVIMENTO FINANCEIRO ==== -->
+		<!-- ========================================================== -->
+		<xs:complexType name="ApportionmentDistributionType">
+			<xs:sequence>
+				
+				<xs:element name="DebitAccountantAcountInternalId" minOccurs="0" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Identificador de integração da Conta contábil</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				
+				<xs:element name="CreditAccountantAcountInternalId" minOccurs="0" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Identificador de integração da Conta contábil</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				
+				<xs:element name="CostCenterInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Identificador de integração do Centro de Custo</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		
+		<xs:complexType name="ReturnContentType">
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="0" name="ListOfInternalId" type="ListOfInternalIdType"/>
+				<!-- outras campos necessários no retorno -->
+			</xs:sequence>
+		</xs:complexType>
+		<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+		<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+		<xs:group name="NewGroupDefinition">
+			<xs:sequence></xs:sequence>
+		</xs:group>
+	</xs:schema>

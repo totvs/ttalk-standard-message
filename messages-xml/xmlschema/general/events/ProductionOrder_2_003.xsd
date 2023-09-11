@@ -1,0 +1,2694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+  <xs:annotation>
+    <xs:appinfo>
+      <MessageDocumentation>
+        <Name>ProductionOrder</Name>
+        <Description>Mensagem para Integração de Ordens de produção</Description>
+        <Segment>Manufatura</Segment>
+        <ProductInformation product="PROTHEUS">
+          <Contact>Robson Roberto Klug</Contact>
+          <Description>Cadastro de Ordens de Produção</Description>
+          <Adapter>MATI650.prw</Adapter>
+          <Send>
+            <Insert>Sim</Insert>
+            <Update>Sim</Update>
+            <Delete>Sim</Delete>
+          </Send>
+          <Receive>
+            <Insert>Não</Insert>
+            <Update>Não</Update>
+            <Delete>Não</Delete>
+          </Receive>
+        </ProductInformation>
+      </MessageDocumentation>
+    </xs:appinfo>
+  </xs:annotation>
+  
+  <xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="Number">
+				<xs:annotation>
+					<xs:documentation>Número Ordem Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Origin" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação da origem da mensagem (ex:APS, Chão de Fábrica). Este campo foi necessário pois existe mais de um módulo do Datasul que envia Ordem de Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ProductionOrderUniqueID" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação Ordem Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FatherNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número Ordem Produção Pai</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FatherProductionOrderUniqueID" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação Ordem Produção Pai</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ItemCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Item</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ListOfItemGrids" type="ListOfItemGridsType" minOccurs="0" />
+			<xs:element name="ItemDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição Item</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo Item</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Interna</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Externa</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Interna/Externa</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>Retrabalho</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation>Conserto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation>Manutenção</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="7">
+							<xs:annotation>
+								<xs:documentation>Ativo Fixo</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="8">
+							<xs:annotation>
+								<xs:documentation>Ferramentaria</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="9">
+							<xs:annotation>
+								<xs:documentation>Reaproveitamento</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IsItemCoproduct" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Coproduto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Quantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MinimumQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Mínima</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MaximumQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Máxima</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ReportQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Reportada</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ApprovedQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Aprovada</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="18"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ReworkQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Retrabalhada</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="17"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ScrapQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Refugada</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="18"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="AuxiliarItemCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Item Auxiliar</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IsStatusOrder" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Reporte Fecha Ordem Produção</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UnitOfMeasureCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Unidade Medida</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="RequestOrderCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Pedido Ordem Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StatusType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Estado</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Não Iniciada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Liberada PCP</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Iniciada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>Suspensa</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation>Finalizada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StatusOrderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Estado Ordem</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Não Iniciada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Liberada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Alocada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>Separada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation>Requisitada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation>Iniciada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="7">
+							<xs:annotation>
+								<xs:documentation>Finalizada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="8">
+							<xs:annotation>
+								<xs:documentation>Terminada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+                  <xs:enumeration value="9">
+							<xs:annotation>
+								<xs:documentation>Ociosa</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ProductionLineCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Linha Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ProductionLineDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição Linha Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PlannerUser" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Planejador</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ReferenceCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Referência (Característica do Item)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ReportOrderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Reporta Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Ordem</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Operação</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Ponto Controle</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>Item</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="AllocationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo de Alocação</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Total</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Parcial</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Proporcional</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SiteCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Estabelecimento</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="WarehouseCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Depósito</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EndOrderCPDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Fim Ordem Produção CP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StartOrderCPDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Início Ordem Produção CP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReleaseOrderDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Liberação Ordem Produção</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TimeReleaseQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Segs Liberação OP</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:totalDigits value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StartOrderDateTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data/Hora Início Ordem Produção</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StartOrderQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Segs Início Ordem Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:totalDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EndOrderDateTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data/Hora Fim Ordem Produção</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EndOrderQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Segs Fim Ordem Produção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:totalDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StartEarlierDateTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data/Hora Início Mais Cedo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EndLaterDateTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data/Hora Fim Mais Tarde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AbbreviationProviderName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nome Cliente</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CustomerGroupCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Grupo Cliente</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CustomerRequestCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Pedido Cliente</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LastPertNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Última Seqçãncia</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PertRequestNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sequência Pedido</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LotCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lote/Série</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MaterialListCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Lista Componentes</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ScriptCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Roteiro</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MaterialCalculationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Cálculo Custo Material</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Proporcional</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Total</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LaborType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Reporta Mão de Obra</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Real</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Padrão</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LaborCostType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Custeio Proporcional Mão de Obra</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade da Ordem</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade Inicial</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade Operação</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MaterialCostType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Custeio Proporcional Material</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade da Ordem</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade Inicial</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade Operação</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OverheadCostType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Custeio Proporcional GGF</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade da Ordem</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade Inicial</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Proporcional Quantidade Operação</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LaborCalculationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Cálculo Custo Mão de Obra</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Proporcional</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Total</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OverheadCalculationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Cálculo Custo Gastos Gerais de Fabricação</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Proporcional</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Total</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OverheadType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Reporta Gastos Gerais de Fabricação</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Real</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Padrão</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ScrapItemCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Item Refugo</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ScrapItemValue" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Relação Refugo/Item</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="10"/>
+						<xs:fractionDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BusinessUnitCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Unidade Negócio</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StockGroupCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Grupo Estoque</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StockGroupDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição Grupo Estoque</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FamilyCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Família</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FamilyDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição Família</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NetWeight" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Peso Líquido</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="GrossWeight" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Peso Bruto</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DeliveryNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número Entrega</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Priority" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Prioridade</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:totalDigits value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ListOfActivityOrders" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ActivityOrder" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ProductionOrderNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Número Ordem Produção</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityID" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>ID Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityDescription" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Descrição Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="40"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Split" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código do Split</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction	base="xs:string">
+												<xs:maxLength value="10" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ItemCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="30"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ItemDescription" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Descrição Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="40"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ListOfItemGrids" type="ListOfItemGridsType" minOccurs="0" />
+									<xs:element name="ActivityType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="1"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="WorkCenterCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Centro Trabalho</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="WorkCenterDescription" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Descrição Centro Trabalho</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="40"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="UnitTimeType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo Unidade Tempo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="1">
+													<xs:annotation>
+														<xs:documentation>Horas</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="2">
+													<xs:annotation>
+														<xs:documentation>Minutos</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="3">
+													<xs:annotation>
+														<xs:documentation>Segundos</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="4">
+													<xs:annotation>
+														<xs:documentation>Dias</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimeResource" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Recurso</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="15"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimeMachine" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Máquina</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="15"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimeSetup" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Preparação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="15"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ScriptCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Roteiro</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="EndLaterDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Mais Tarde</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="ResourceQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Recurso</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="3"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PercentageOverlapValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>% Overlap</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="3"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PercentageScrapValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>% Refugo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="5"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PercentageValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Proporção</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="5"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="LaborCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Mão de Obra Direta</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="8"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="UnitItemNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Unidades</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="5"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ProductionQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Produzida</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="13"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="AlternativeActivityCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Codigo Operação Alternativa</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="UnitActivityCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Unidade Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ReworkQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Retrabalhada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="17"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ScrapItemCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Item Refugo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="30"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ScrapItemValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Relação Refugo/Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="9"/>
+												<xs:fractionDigits value="5"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimePostprocessing" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Pós Processo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="UsedCapacity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Capacidade Utilizada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="12"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="LoadQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Carga Batelada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="12"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StatusType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Estado</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="1">
+													<xs:annotation>
+														<xs:documentation>Nao Iniciado</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="2">
+													<xs:annotation>
+														<xs:documentation>Iniciado</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="3">
+													<xs:annotation>
+														<xs:documentation>Finalizada</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StartRealDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Real</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="EndRealDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Real</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="StartEarlierDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Mais Cedo</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="OrderReferenceNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Número Ordem Referência</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="IsActivityStart" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Primeira Operação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="IsActivityEnd" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Última Operação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="ApprovedQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Aprovada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="18"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ScrapQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Refugada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="18"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ReportQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Reportada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="13"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="IsLastReport" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Reporte Fecha Operação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="MaterialItemValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Relação Item Operac/Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="9"/>
+												<xs:fractionDigits value="5"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TreatmentTimeType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tipo Tratamento Tempo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="1">
+													<xs:annotation>
+														<xs:documentation>Proporcional</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="2">
+													<xs:annotation>
+														<xs:documentation>Fixo</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="3">
+													<xs:annotation>
+														<xs:documentation>Por lote</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="4">
+													<xs:annotation>
+														<xs:documentation>Dep Ferramenta</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StandardLotQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Lote Padrão</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="17"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MultipleLotQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Lote Múltiplo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="17"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MinimumLotQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Lote Mínimo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="17"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Prevista</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="12"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MachineCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Máquina</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StartPlanDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Programação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="EndPlanDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Programação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="IsSignificantTime" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Significativo</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="ActivityControlCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Ponto Controle</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="3"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+                           <xs:element name="SecondUnitActivityCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Segunda Unidade Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+                           <xs:element name="SecondUnitActivityFactor" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Fator de conversão para segunda unidade de medida da operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="5"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityItemValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Relação Operação/Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="9"/>
+												<xs:fractionDigits value="5"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ListOfActivityOrderTools" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="ActivityOrderTool" minOccurs="0" maxOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="ToolCode" minOccurs="0">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="20"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfPertOrders" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PertOrder" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ProductionOrderNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Número Ordem Produção</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ItemCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="30"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="NextActivityID" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>ID Operação Sucessora</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ScriptCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Roteiro</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PreviousItemCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Item Predecessor</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="30"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PreviousActivityID" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>ID Operação Predecessora</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PreviousScriptCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Roteiro Predecessor</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PreviousActivityCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Operação Predecessora</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimeTransport" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Transporte</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PercentageOverlapValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>% Overlap</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="6"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="OverlapQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Overlap</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="9"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfMaterialOrders" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="MaterialOrder" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element
+										name="ProductionOrderNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Número Ordem Produção
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="20" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MaterialID"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												ID Reserva
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="10" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MaterialCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Item Reserva
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="30" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element
+										name="MaterialDescription" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Descrição Item
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="40" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element
+										name="ListOfMaterialGrids" type="ListOfItemGridsType"
+										minOccurs="0" />
+									<xs:element name="FatherItemCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Item Pai
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="30" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element
+										name="FatherItemDescription" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Descrição Item Pai
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="40" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ListOfFatherGrids"
+										type="ListOfItemGridsType" minOccurs="0" />
+									<xs:element name="ReferenceCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Referência
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="20" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element
+										name="OrderReferenceNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Número Ordem Referência
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="20" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ScriptCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Roteiro
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="20" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityID"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												ID Operação
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="10" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Operação
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="10" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="LocationCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Localização
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="20" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="WarehouseCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Depósito
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="10" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="LotCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Lote/Série
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="20" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StatusType"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Estado
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:enumeration
+													value="1">
+													<xs:annotation>
+														<xs:documentation>
+															Ativo
+														</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration
+													value="2">
+													<xs:annotation>
+														<xs:documentation>
+															Inativo
+														</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="UnitOfMeasureCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Unidade Medida
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength value="2" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MaterialListCode"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Código Lista Componentes
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength
+													value="20" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MaterialDate"
+										type="xs:date" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Data Reserva
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="MaterialQuantity"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Quantidade Reserva
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:decimal">
+												<xs:totalDigits
+													value="14" />
+												<xs:fractionDigits
+													value="4" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element
+										name="PertMaterialNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Sequência Reserva
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:string">
+												<xs:maxLength value="3" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ReportQuantity"
+										minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												Quantidade Atendida
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction
+												base="xs:decimal">
+												<xs:totalDigits
+													value="14" />
+												<xs:fractionDigits
+													value="4" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="RequestType"
+										maxOccurs="1" minOccurs="0" type="xs:integer">
+										<xs:annotation>
+											<xs:documentation>
+												Identifica se a
+												requisição pode ser
+												feita separadamente do
+												reporte da produção
+											</xs:documentation>
+										</xs:annotation>
+
+									</xs:element>
+									<xs:element name="ListOfAllocatedMaterial" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="AllocatedMaterial" minOccurs="0" maxOccurs="unbounded">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="WarehouseCode" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Código do armazém
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="10" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="LotCode" maxOccurs="1" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Código do lote
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="20"></xs:maxLength>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="LocationCode" maxOccurs="1" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Localização/Endereço
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="15"></xs:maxLength>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="ActivityCode" maxOccurs="1" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Código da operação
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="10"></xs:maxLength>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="ScriptCode" maxOccurs="1" minOccurs="0">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="20"></xs:maxLength>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="AllocationQuantity" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Quantidade alocada
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:decimal">
+																		<xs:totalDigits value="14" />
+																		<xs:fractionDigits value="4" />
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="AllocatedMaterialAllocationType" maxOccurs="1" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Tipo Alocação
+																		Como esta mensagem pode ser utilizada tanto para  Alocação, quanto para Desalocação, 
+																		informar o tipo torna a decisão do que fazer com a quantidade mais rápida. 1-Soma, 2-Diminui, 3-Absoluto.
+																		Ex.: Caso já tenha sido alocado 50 unidades do componente previsto na OP, 
+																		e seja necessário desalocar uma parte, a mensagem poderá vir de duas formas. 
+																		40 unidades com Tipo 2, fará com que seja desalocada 40 unidades, restando apenas 10 unidades ainda alocadas na OP. 
+																		10 unidades com tipo 3, fará com que seja desalocada 40 unidades, restando exatamente 10 unidade ainda alocadas na OP.
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="1"></xs:maxLength>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="SubLoteCode" maxOccurs="1" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Sub Lote
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="20"></xs:maxLength>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="NumberSeries" maxOccurs="1" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>
+																		Número de Serie
+																	</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="20"></xs:maxLength>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="LotDueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+                                                <xs:annotation>
+                                                   <xs:documentation>Data de Validade</xs:documentation>
+                                                </xs:annotation>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfQuotaActivity" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="QuotaActivity" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ProductionOrderNumber" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Número Ordem Produção</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ControlType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Seleção Split</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityID" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>ID Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ItemCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="30"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ItemDescription" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Descrição Item</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="40"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StartActivityDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Atividade</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="EndActivityDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Atividade</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="ApprovedQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Aprovada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="18"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ScrapQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Refugada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="18"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MachineCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Máquina</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="20"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MachineDescription" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Descrição Máquina</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="40"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ActivityQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Prevista</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="12"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TeamItemQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Produto Pallet</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="7"/>
+												<xs:fractionDigits value="3"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StandardSetup" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Padrão Preparação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StandardActivity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Padrão Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StandardPostprocessing" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Padrão Pós-Processo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StandardMachine" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Padrão Máquina</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StandardOperator" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Padrão MOD</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="UsedCapacity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Capacidade Utilizada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="12"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="IsReportOrder" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Reportado CP</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="ActivityTimeQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Hora Disponível Atividade</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ReportQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Reportada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="13"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ReworkQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Retrabalhada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="17"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StartSetupDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Preparação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="EndSetupDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Preparação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="AvailablePlanDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Programada Disponível</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="TimeSetup" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Preparação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimeMachine" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Máquina</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimeOperator" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo MOD</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TimePostprocessing" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Pós Processo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ExtraTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Tempo Extra</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:totalDigits value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="LoadQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Carga Batelada</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="12"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="StartEarlierDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Mais Cedo</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="EndEarlierDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Mais Cedo</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="StartLaterDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Mais Tarde</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="EndLaterDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Mais Tarde</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="StartEarlierSetupDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Mais Cedo Preparação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="StartLaterSetupDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Início Mais Tarde Preparação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="StartPlanDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Programada Início</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="EndPlanDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Fim Programada</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="StartPlanSetupDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Programada Início Preparação</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="QuotaActivityID" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>ID Split</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="5"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="QuotaExternalID" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>ID Split Externo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="5"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="WorkCenterCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Centro Trabalho</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="AvailableDateTime" type="xs:dateTime" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Data/Hora Disponível</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="PercentageScrapValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>% Refugo</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="5"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="PercentageReworkValue" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>% Retrabalho</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="5"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ReportedSplit" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Split Reportado</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="CriticalSplit" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Split Crítico</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="DischargedSplit" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Split Descarregado</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="StatusActivityType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Estado Operação</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="1">
+													<xs:annotation>
+														<xs:documentation>Não Iniciado</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="2">
+													<xs:annotation>
+														<xs:documentation>Programado</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="3">
+													<xs:annotation>
+														<xs:documentation>Liberado</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="4">
+													<xs:annotation>
+														<xs:documentation>Iniciado</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="5">
+													<xs:annotation>
+														<xs:documentation>Finalizado</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+												<xs:enumeration value="6">
+													<xs:annotation>
+														<xs:documentation>Suspenso</xs:documentation>
+													</xs:annotation>
+												</xs:enumeration>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ListOfQuotaActivityTools" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="QuotaActivityTool" minOccurs="0" maxOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="ToolCode" minOccurs="0">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="20"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="ToolQuantity" minOccurs="0">
+																<xs:simpleType>
+																	<xs:restriction base="xs:integer">
+																		<xs:maxInclusive value="999"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		    <xs:element name="ListOfRequestOrders" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RequestOrder" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="RequestOrderCode" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Código Pedido Ordem Produção</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="AttendedQuantity" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Quantidade Atendida pelo Pedido</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:totalDigits value="18"/>
+												<xs:fractionDigits value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListOfItemGridsType">
+		<xs:sequence>
+			<xs:element name="ItemGrid" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="GridCode" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Código da grade</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="15"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="GridSequence" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Sequência da grade</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:totalDigits value="10"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+
+</xs:schema>

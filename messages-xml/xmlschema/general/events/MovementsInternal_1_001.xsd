@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>Movimentos Internos</Name>
+				<Description>transferência de produtos entre armazens</Description>
+				<Segment>Manufatura</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>...consulte guia de documentacao...</Contact>
+					<Description>...consulte guia de documentacao...</Description>
+					<Adapter>MATA240.PRW</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Código da empresa.
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description>
+								o tamanho pode chegar a 4, caso a gestão
+								de empresa esteja ativo (a partir da
+								v11)
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ID Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>*_FILIAL</Field>
+							<Required></Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description>
+								o tamanho pode chegar a 12, caso o campo
+								seja aumentado e habilitada a gestão de
+								empresa
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string"
+				minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId da chave completa da empresa
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								o EAI deveria garantir o ambiente estar
+								na empresa e filial corretos
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="InternalId" type="xs:string" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId da movimentação.
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>
+								SD3.D3_FILIAL+SD3.D3_COD+SD3.D3_LOCAL+SD3.D3_NUMSEQ
+							</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length></Length>
+							<Description>
+								tamanho sera variavel conforme a
+								combinacao dos campos
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TypeMovementCode" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Código do Tipo de Movimento interno
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_TM</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length>3</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EmissionDate" type="xs:date" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Data de Emissão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_EMISSAO</Field>
+							<Required>sim</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="ItemCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Item/Produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_COD</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>15</Length>
+							<Description>
+								o tamanho padrão é 15, mas ser aumentado
+								até 30
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="UnitOfMeasureCode" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Unidade de Medida
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_UM</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="Quantity" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Quantidade</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_QUANT</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>12,2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="11" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="WarehouseCode" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Código do Armazém
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_LOCAL</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description>
+								campo pode ter o tamanho alterado até 6
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="LotNumber" maxOccurs="1" minOccurs="0">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation>
+							Número do Lote
+						</xs:documentation>
+						<xs:appinfo>
+							<FieldDocumentation product="LOGIX">
+								<Field>tabela.campo</Field>
+								<Required>sim/não</Required>
+								<Type>char</Type>
+								<Length>10</Length>
+								<Description>
+									não é necessário descrever o obvio,
+									mas alguma informação importante ou
+									particular do produto
+								</Description>
+							</FieldDocumentation>
+							<FieldDocumentation product="PROTHEUS">
+								<Field>SD3.D3_LOTECTL</Field>
+								<Required>
+									não, somente é obrigatório caso
+									rastro de produto esteja ativado no
+									sistema e no item
+								</Required>
+								<Type>char</Type>
+								<Length>10</Length>
+								<Description>
+									tamanho expansível até 40
+								</Description>
+							</FieldDocumentation>
+						</xs:appinfo>
+					</xs:annotation>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="SubLotNumber" maxOccurs="1"
+				minOccurs="0">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation>
+							Número do SubLote
+						</xs:documentation>
+						<xs:appinfo>
+							<FieldDocumentation product="LOGIX">
+								<Field>tabela.campo</Field>
+								<Required>sim/não</Required>
+								<Type>char</Type>
+								<Length>10</Length>
+								<Description>
+									não é necessário descrever o obvio,
+									mas alguma informação importante ou
+									particular do produto
+								</Description>
+							</FieldDocumentation>
+							<FieldDocumentation product="PROTHEUS">
+								<Field>SD3.D3_NUMLOTE</Field>
+								<Required>
+									não, somente é obrigatório caso
+									rastro de produto esteja ativado no
+									sistema e no item
+								</Required>
+								<Type>char</Type>
+								<Length>6</Length>
+								<Description></Description>
+							</FieldDocumentation>
+						</xs:appinfo>
+					</xs:annotation>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="LotExpirationDate" maxOccurs="1"
+				minOccurs="0" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>
+						Data Validade do Lote
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_DTVALID</Field>
+							<Required>não</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="FamilyCode" type="xs:string" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Família</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="Address" type="xs:string" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Endereço</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_LOCALIZ</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>15</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="NumberSeries" type="xs:string"
+				minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Número de série</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_NUMSERI</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>20</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="InputOrOutput" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Movimento de Entrada ou Saida
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>
+								não é necessário descrever o obvio, mas
+								alguma informação importante ou
+								particular do produto
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="E">
+							<xs:annotation>
+								<xs:documentation>
+									Entrada
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="S">
+							<xs:annotation>
+								<xs:documentation>
+									Saída
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="ReferenceCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Referência</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="DATASUL">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ScriptCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código do roteiro
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="DATASUL">
+							<Field>ttReqOrd.cod-roteiro</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>16</Length>
+							<Description>
+								Código do roteiro
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD4.D4_ROTEIRO</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>2</Length>
+							<Description>
+								Código do roteiro
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ActivityCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código da operação
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="DATASUL">
+							<Field>ttReqOrd.op-codigo</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length>5</Length>
+							<Description>
+								Código da operação
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD4.D4_OPERAC</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>2</Length>
+							<Description>
+								Código da operação
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProductionOrderNumber" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Número da ordem de produção
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="DATASUL">
+							<Field>ttReqOrd.nr-ord-produ</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length>9</Length>
+							<Description>
+								Número da ordem de produção
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_OP</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>20</Length>
+							<Description>
+								Código da operação
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FatherItemCode" type="xs:string" maxOccurs="1" minOccurs="0">
+                <xs:annotation>
+                	<xs:documentation>Item pai</xs:documentation>
+                	<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="DATASUL">
+							<Field>ttReqOrd.item-pai</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>16</Length>
+							<Description>
+								Código do item pai
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+                </xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+
+</xs:schema>

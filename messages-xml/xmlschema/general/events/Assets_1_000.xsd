@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>Assets</Name>
+					<Description>Ativos</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+  <xs:complexType name="BusinessContentType">
+    <xs:sequence>
+      <xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Código da Empresa</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Código da Filial</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Code" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Código do Ativo</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="25"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do Code</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="PropertyCode" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Código do Bem(equipamento) dentro do Cadastro de Ativos Imobilizados.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="25"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="ItemNumber" type="xs:int" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Número do item dentro do código do bem.
+            Protheus: campo texto de 4 posições
+            DataSul: campo inteiro de 5 posições
+            Logix: Decimal tamanho 3,0
+            RM: não utiliza esta informação
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="PurchaseDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data de aquisição do bem.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Description" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Descrição Sintética do Bem.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="240"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="Amount" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Quantidade do ativo</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="11"/>
+            <xs:fractionDigits value="3"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="CardAssets" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Número da Placa de Patrimônio</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="StatusAssets" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Status atual do ativo
+            PROTHEUS: (0-Pendente de classificação; 1-Em Uso; 2-Bloqueado por usuário;
+            3-Bloqueado por local; 4-Transferência interna entre filiais)
+            RM: (0-Inativo; 1-Ativo)
+            DataSul: (Ativo, Inativo)
+            Logix: (1-Em uso, 2-Depreciado.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Ativo</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>Inativo</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="VendorCode" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Código do Fornecedor</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="VendorInternalId" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId do VendorCode</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ListOfSalesAndValuesAssets" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:annotation>
+            <xs:documentation>Saldos e Valores</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+            <xs:element name="SalesAndValuesItem" type="SalesAndValuesAssetsType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SalesAndValuesAssetsType">
+    <xs:sequence>
+      <xs:element name="InternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId do Saldo e Valores - chave do filho</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="TypeAssets" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Tipo do Ativo
+            PROTHEUS: (01.Aquisição; 02.Reavaliação; 03.Adiantamento; 04.Lei 8.200;
+            05.Reavaliação Negativa; 06.Depr. Acelerada Específica;
+            07.Depr. Acelerada; 08.Depr. Incentivada Positiva; 09.Depr. Incentivada Reversa;
+            10.Depreciação Gerencial com Metodo Linear; 11.Valor Recuperável de Ativo)
+            RM: (1.Aquisição; 2.Depreciação; 3.Correção Monetária (Positiva);
+            4.Correção Monetária (Negativa); 5.Baixa; 6.Acréscimo;
+            7.Transferência Monetária; 8.Transferência Controle)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="01">
+              <xs:annotation>
+                <xs:documentation>Aquisição</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="02">
+              <xs:annotation>
+                <xs:documentation>Reavaliação</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="03">
+              <xs:annotation>
+                <xs:documentation>Adiantamento</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="04">
+              <xs:annotation>
+                <xs:documentation>Lei 8.200</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="05">
+              <xs:annotation>
+                <xs:documentation>Reavaliação Negativa</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="06">
+              <xs:annotation>
+                <xs:documentation>Depr. Acelerada Específica</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="07">
+              <xs:annotation>
+                <xs:documentation>Depr. Acelerada</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="08">
+              <xs:annotation>
+                <xs:documentation>Depr. Incentivada Positiva</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="09">
+              <xs:annotation>
+                <xs:documentation>Depr. Incentivada Reversa</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="10">
+              <xs:annotation>
+                <xs:documentation>Depreciação Gerencial com Metodo Linear</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="11">
+              <xs:annotation>
+                <xs:documentation>Valor Recuperável de Ativo</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="TypeOccurrence" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Tipo de Ocorrência:
+            PROTHEUS: (0-Ativo; 1-Baixado)
+            RM: (0-Sem Ocorrência; 99-Baixa no Período; 90- Baixa Parcial;
+            100-Baixado em Periodo Anterior; 1-Transferência monetário;
+            70-Acrescimo)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="0">
+              <xs:annotation>
+                <xs:documentation>Ativo</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Baixado: Ativo vendido, doado ou sucateado.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="Observation" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Observação (Histórico)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AssetAccount" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Conta Contábil do Bem</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="20"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="CostCenterCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Centro De Custo</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CostCenterInternalId" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId do CostCenterCode</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="DepreciationStartDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data Início de Depreciação.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CurrencyCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código da Moeda</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CurrencyInternalId" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId do CurrencyCode</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="OriginalValueCurrency" type="xs:decimal" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Valor Original Moeda</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AnnualRateCurrencyDepreciation" type="xs:decimal" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Taxa Anual De Depreciação Na Moeda</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MethodDepreciation" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Método De Depreciação
+            PROTHEUS: (1-Linear; 2-Redução de Saldos;4-Unidades Produzidas;
+            5-Horas Trabalhadas; 6-Soma dos Digitos; 7-Linear com Valor Max. Depreciação;
+            8-Exaustão Linear; 9-Exaustão por saldo residual)
+            RM : (Depreciação Linear)
+            OBS.: Nesta primeira versão iremos tratar somente a depreciação linear. Caso seja utilizado
+            outras formas de depreciação será necessário revisar esta mensagem.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Linear</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="BalanceType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Tipo De Saldo
+            PROTHEUS: (0-Orcado; 1-Real; 2-Previsto; 3-Gerencial; 4-Empenhado; 9-Pre-Lancamento)
+            Este campo tem a função de segregar os valores contabilizados segundo as normas da	contabilidade fiscal,
+            dos valores contabilizados segundo as normas da contabilidade Societária.
+            RM: não possui esta informação.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="0">
+              <xs:annotation>
+                <xs:documentation>Orcado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Real</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>Previsto</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>Gerencial</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+              <xs:annotation>
+                <xs:documentation>Empenhado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="9">
+              <xs:annotation>
+                <xs:documentation>Pre-Lancamento</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+
+  <xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

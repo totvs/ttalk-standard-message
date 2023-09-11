@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!-- ===================================== -->
+	<!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+	<!-- ===================================== -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM             -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>AccountsReceivableOffsetting</Name>
+				<Description>Compensação de Títulos a Receber</Description>
+				<Segment>Financeiro</Segment>
+				<ProductInformation product="MULTICLUBES">
+					<Contact>???</Contact>
+					<Description>??</Description>
+					<Adapter>???</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>não</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogerio Nagy</Contact>
+					<Description>GDP de Inovação Controladoria</Description>
+					<Adapter>FINI330</Adapter>
+					<Send>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>não</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InernalId da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="MULTICLUBES">
+							<Field>FLAN.CODCOLIGADA|TMOV.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>integer|integer</Type>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId da empresa é formado por EMPRESA|E1_FILIAL</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="MULTICLUBES">
+							<Field>FLAN.CODCOLIGADA</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="MULTICLUBES">
+							<Field>FLAN.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SE1XX0.E1_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identificador único da compensação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="MULTICLUBES">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>Identificador único da compensação</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="AccountReceivableDocumentInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do título a receber a ser compensado</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="MULTICLUBES">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>integer|integer</Type>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Título é formado por E1_FILIAL|E1_PREFIXO|E1_NUM|E1_PARCELA|E1_TIPO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="AdvanceInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Título de adiantamento a ser compensado</xs:documentation>
+					<xs:appinfo>						
+						<InternalIdName>AccountReceivableDocumentInternalId</InternalIdName>
+						<FieldDocumentation product="MULTICLUBES">
+							<Field>FLAN.CODCOLIGADA|TMOV.IDMOV</Field>
+							<Required>sim</Required>
+							<Type>integer|integer</Type>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Título é formado por E1_FILIAL|E1_PREFIXO|E1_NUM|E1_PARCELA|E1_TIPO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="OffsettingDate" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Data da Compensação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description>Data da compensação - dDataBase</Description>
+						</FieldDocumentation>
+					</xs:appinfo>						
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="HistoryText" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Historico do Movimento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>10</Length>
+							<Description>Historico da negociação</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="OffsettingValue" type="xs:double" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor da Compensação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SE5.E5_VALOR</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>15,2</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO                  -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+</xs:schema>

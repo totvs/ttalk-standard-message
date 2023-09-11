@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd"
+           elementFormDefault="qualified">
+
+  <!-- ===================================== -->
+  <!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+  <!-- ===================================== -->
+  <xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ApportionType_2_003.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+  <!-- ==================================== -->
+  <!-- DOCUMENTAÇÃO DA MENSAGEM             -->
+  <!-- ==================================== -->
+  <xs:annotation>
+    <xs:appinfo>
+      <MessageDocumentation>
+        <Name>AccountPayableDocument</Name>
+        <Description>Título a pagar</Description>
+        <Segment>Construção e Projetos</Segment>
+        <ProductInformation product="RM">
+          <Contact>Alaim Porto Alvarenga</Contact>
+          <Description>GDP Inovação Const. e Proj.</Description>
+          <Adapter>MovMovimentoData</Adapter>
+          <Send>
+            <Insert>sim</Insert>
+            <Update>não</Update>
+            <Delete>sim</Delete>
+          </Send>
+          <Receive>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Receive>
+        </ProductInformation>
+        <ProductInformation product="PROTHEUS">
+          <Contact>Rogerio Nagy</Contact>
+          <Description>GDP de Inovação Controladoria</Description>
+          <Adapter>FINI050</Adapter>
+          <Send>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Send>
+          <Receive>
+            <Insert>sim</Insert>
+            <Update>não</Update>
+            <Delete>sim</Delete>
+          </Receive>
+        </ProductInformation>
+      </MessageDocumentation>
+    </xs:appinfo>
+  </xs:annotation>
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM      -->
+  <!-- ==================================== -->
+  <xs:complexType name="BusinessContentType">
+    <xs:sequence>
+      <xs:element name="InternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId do Título</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CODCOLIGADA|TMOV.IDMOV</Field>
+              <Required>sim</Required>
+              <Type>integer|integer</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field></Field>
+                <Required>sim</Required>
+                <Type>varchar</Type>
+                <Length>50</Length>
+                <Description>O InternalId do Título é formado por E2_FILIAL|E2_PREFIXO|E2_NUM|E2_PARCELA|E2_TIPO|E2_FORNECE|E2_LOJA</Description>
+              </FieldDocumentation>
+            </xs:appinfo>          
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CODCOLIGADA</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field>Não possui campo físico na tabela</Field>
+                <Required>sim</Required>
+                <Type>varchar</Type>
+                <Length>2</Length>
+                <Description></Description>
+              </FieldDocumentation>
+            </xs:appinfo>           
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="CompanyInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId da Empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CODCOLIGADA|TMOV.CODFILIAL</Field>
+              <Required>sim</Required>
+              <Type>integer|integer</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field></Field>
+                <Required>sim</Required>
+                <Type>varchar</Type>
+                <Length>50</Length>
+                <Description>O InternalID da empresa é formado por EMPRESA|E2_FILIAL.</Description>
+              </FieldDocumentation>
+            </xs:appinfo>           
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Filial</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CODFILIAL</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SE2XX0.E2_FILIAL</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>2</Length>
+              <Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+            </FieldDocumentation>
+          </xs:appinfo>          
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DocumentPrefix" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prefixo (Série)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DocumentNumber" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Número do Título</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="9"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DocumentParcel" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Parcela</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="1"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DocumentTypeCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Tipo do Título</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ListOfSourceDocument" type="ListOfSourceDocumentType" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nota Fiscal</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IssueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data de Emissão</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.DATAEMISSAO</Field>
+              <Required>sim</Required>
+              <Type>datetime</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field>SE2XX0.E2_EMISSAO</Field>
+                <Required>sim</Required>
+                <Type>date</Type>
+                <Length>8</Length>
+                <Description></Description>
+              </FieldDocumentation>
+            </xs:appinfo>          
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data de Vencimento Original.</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.DATAEXTRA1</Field>
+              <Required>sim</Required>
+              <Type>datetime</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field>SE2XX0.E2_VENCTO</Field>
+                <Required>sim</Required>
+                <Type>date</Type>
+                <Length>8</Length>
+                <Description></Description>
+              </FieldDocumentation>
+            </xs:appinfo>          
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RealDueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data de Vencimento Real.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VendorCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Fornecedor</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CODCFO</Field>
+              <Required>sim</Required>
+              <Type>string</Type>
+              <Lenght>25</Lenght>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field>SE2XX0.E2_FORNECE</Field>
+                <Required>sim</Required>
+                <Type>varchar</Type>
+                <Length>6</Length>
+                <Description></Description>
+              </FieldDocumentation>
+            </xs:appinfo>          
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="15"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="VendorInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId do Fornecedor</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CODCOLCFO|TMOV.CODCFO</Field>
+              <Required>sim</Required>
+              <Type>integer|string</Type>
+              <Lenght>|25</Lenght>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field></Field>
+                <Required>sim</Required>
+                <Type>varchar</Type>
+                <Length>50</Length>
+                <Description>O InternalId do Fornecedor é formado por EMPRESA|A2_FILIAL|A2_COD|A2_LOJA</Description>
+              </FieldDocumentation>
+            </xs:appinfo>          
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="StoreId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Loja</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NetValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor líquido.</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.VALORBRUTO</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field>SE2XX0.E2_VALOR</Field>
+                <Required>sim</Required>
+                <Type>decimal</Type>
+                <Length>16,2</Length>
+                <Description></Description>
+              </FieldDocumentation>
+            </xs:appinfo>          
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GrossValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor Bruto</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.VALORBRUTO</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+            </FieldDocumentation>
+          </xs:appinfo>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field></Field>
+                <Required></Required>
+                <Type></Type>
+                <Length></Length>
+                <Description></Description>
+              </FieldDocumentation>
+            </xs:appinfo>           
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CurrencyCode" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Moeda</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CurrencyInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId da Moeda</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CurrencyRate" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Taxa da Moeda</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Taxes" type="TaxesType" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Impostos</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ApportionmentDistribution" maxOccurs="1" minOccurs="0">
+        <xs:complexType>
+          <xs:annotation>
+            <xs:documentation> Distribuição de rateio.</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+            <xs:element name="Apportionment" type="ApportionType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Observation" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Observação</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="200"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Origin" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Origem</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="FinancialNatureInternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation> InternalId da Natureza (Protheus)  </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BankCode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código do Banco da Conta Bancária do Fornecedor</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>E2_FORBCO</Field>
+              <Required>Nao</Required>
+              <Type>String</Type>
+              <Length>3</Length>
+              <Description>Código do Banco do Fornecedor.</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="TFS">
+              <Field>cd_cbr_lib|cd_bco|cd_bc</Field>
+              <Required>Nao</Required>
+              <Type>Integer</Type>
+              <Length>10</Length>
+              <Description>
+                Código do Banco do Cliente:
+                Campo cd_cbr_lib, se for a rotina "Titulos Pagar";
+                Campo cd_bco, se for a rotina "Titulos Pagar Desconto";
+                Campo cd_bco, se for a rotina "De Prazo Títulos Pagar" ou "De Prazo Títulos Pagar Exclusão";
+                Campo cd_bc, se não houver dados bancários no título.
+              </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+      	</xs:annotation>
+      </xs:element>
+      <xs:element name="BankBranch" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código da Agência Bancária do Fornecedor</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>E2_FORAGE</Field>
+              <Required>Nao</Required>
+              <Type>String</Type>
+              <Length>5</Length>
+              <Description>Agência Bancária do Fornecedor.</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="TFS">
+              <Field>cd_und_lib|cd_age|cd_ag|nr_ag</Field>
+              <Required>Nao</Required>
+              <Type>Integer</Type>
+              <Length>10</Length>
+              <Description>
+                Código da Agência Bancária do cliente (no mesmo campo é salvo agência e DV):
+                Campo cd_und_lib, se for a rotina "Titulos Pagar";
+                Campo cd_age, se for a rotina "Titulos Pagar Desconto";
+                Campo cd_ag, se for a rotina "De Prazo Títulos Pagar" ou "De Prazo Títulos Pagar Exclusão";
+                Campo nr_ag, se não houver dados bancários no título.
+              </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BranchKey" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Dígito Verificador da Agência Bancária do Fornecedor</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>E2_FAGEDV</Field>
+              <Required>Nao</Required>
+              <Type>String</Type>
+              <Length>1</Length>
+              <Description>Digito Verificador da Agência Bancária do Fornecedor.</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="TFS">
+              <Field>cd_und_lib|cd_age|cd_ag|nr_ag</Field>
+              <Required>Nao</Required>
+              <Type>Integer</Type>
+              <Length>10</Length>
+              <Description>
+                Digito Verificador da Agência Bancária do cliente (no mesmo campo é salvo agência e DV):
+                Campo cd_und_lib, se for a rotina "Titulos Pagar";
+                Campo cd_age, se for a rotina "Titulos Pagar Desconto";
+                Campo cd_ag, se for a rotina "De Prazo Títulos Pagar" ou "De Prazo Títulos Pagar Exclusão";
+                Campo nr_ag, se não houver dados bancários no título.
+              </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CheckingAccountNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Número da Conta Bancária do Fornecedor</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>E2_FORCTA</Field>
+              <Required>Nao</Required>
+              <Type>String</Type>
+              <Length>10</Length>
+              <Description>Conta Bancária do Fornecedor.</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="TFS">
+              <Field>cd_cc_lib|cd_cco|cd_cta|nr_cc</Field>
+              <Required>Nao</Required>
+              <Type>string</Type>
+              <Length>12</Length>
+              <Description>
+                Código da Conta Bancária do cliente (no mesmo campo é salvo conta e DV):
+                Campo cd_cc_lib, se for a rotina "Titulos Pagar";
+                Campo cd_cco, se for a rotina "Titulos Pagar Desconto";
+                Campo cd_cta, se for a rotina "De Prazo Títulos Pagar" ou "De Prazo Títulos Pagar Exclusão";
+                Campo nr_cc, se não houver dados bancários no título.
+              </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CheckingAccountNumberKey" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Dígito Verificador da Conta Bancária do Fornecedor</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>E2_FCTADV</Field>
+              <Required>Nao</Required>
+              <Type>String</Type>
+              <Length>1</Length>
+              <Description>Digito Verificador da Conta Bancária do Fornecedor.</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="TFS">
+              <Field>cd_cc_lib|cd_cco|cd_cta|nr_cc</Field>
+              <Required>Nao</Required>
+              <Type>string</Type>
+              <Length>12</Length>
+              <Description>
+                Digito Verificador da Conta Bancária do cliente (no mesmo campo é salvo conta e DV):
+                Campo cd_cc_lib, se for a rotina "Titulos Pagar";
+                Campo cd_cco, se for a rotina "Titulos Pagar Desconto";
+                Campo cd_cta, se for a rotina "De Prazo Títulos Pagar" ou "De Prazo Títulos Pagar Exclusão";
+                Campo nr_cc, se não houver dados bancários no título.
+              </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>   
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="ListOfSourceDocumentType">
+    <xs:sequence>
+      <xs:element name="SourceDocument" type="SourceDocumentType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SourceDocumentType">
+    <xs:sequence>
+      <xs:element name="SourceDocument" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Documento de Origem. Número do Documento Relacionado ao Título</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="SourceDocumentSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Serie</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="SourceDocumentSubSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>SubSerie</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="5"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="SourceDocumentTypeCode" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Tipo de Documento de Origem. Tipo do Documento Relacionado ao Título</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SourceDocumentValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do Documento de Origem. Valor do Documento Relacionado ao Título</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TaxesType">
+    <xs:sequence>
+      <xs:element name="Tax" type="TaxType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TaxType">
+    <xs:attribute name="Taxe">
+      <xs:annotation>
+        <xs:documentation>Nome do Imposto (ITF, COFINS, CSLL, FABOV, FACS, INSS-PF, INSS-PJ, INSS-RUR, IOF, IR-CARRETEIRO, IR-PF, IR-PJ, IRRF–PF, IRRF–PJ, ISS, ISS-ARQ-ELET, PIS, PIS/COFINS/CSLL, PIS/COFINS-CRED, PIS/COFINS-PROD, SEST/SENAT)</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ITF">
+            <xs:annotation>
+              <xs:documentation>-Imposto sobre movimentação financeira</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="COFINS">
+            <xs:annotation>
+              <xs:documentation>COFINS</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CSLL">
+            <xs:annotation>
+              <xs:documentation>CSLL</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="FABOV">
+            <xs:annotation>
+              <xs:documentation>FABOV</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="FACS">
+            <xs:annotation>
+              <xs:documentation>FACS</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="INSS-PF">
+            <xs:annotation>
+              <xs:documentation>INSS-PF</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="INSS-PJ">
+            <xs:annotation>
+              <xs:documentation>INSS-PJ</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="INSS-RUR">
+            <xs:annotation>
+              <xs:documentation>INSS-RUR</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="IOF">
+            <xs:annotation>
+              <xs:documentation>IOF</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="IR-CARRETEIRO">
+            <xs:annotation>
+              <xs:documentation>IR-CARRETEIRO</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="IRRF–PF">
+            <xs:annotation>
+              <xs:documentation>IRRF–PF</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="IRRF–PJ">
+            <xs:annotation>
+              <xs:documentation>IRRF–PJ</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="ISS">
+            <xs:annotation>
+              <xs:documentation>ISS</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="ISS-ARQ-ELET">
+            <xs:annotation>
+              <xs:documentation>ISS-ARQ-ELET</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="PIS">
+            <xs:annotation>
+              <xs:documentation>PIS</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="PIS/COFINS/CSLL">
+            <xs:annotation>
+              <xs:documentation>PIS/COFINS/CSLL</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="PIS/COFINS-CRED">
+            <xs:annotation>
+              <xs:documentation>PIS/COFINS-CRED</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="PIS/COFINS-PROD">
+            <xs:annotation>
+              <xs:documentation>PIS/COFINS-PROD</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="SEST/SENAT">
+            <xs:annotation>
+              <xs:documentation>SEST/SENAT</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CountryCode" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Código do País</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StateCode" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Código da Unidade Federativa</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CityCode" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Código da Cidade</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CalculationBasis" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>Base de Calculo para o Imposto</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Percentage" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>Percentual do Imposto</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ReductionBasedPercent" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>Percentual de Redução de Base</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Value" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>Valor do Imposto</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Reason">
+      <xs:annotation>
+        <xs:documentation>Motivo da Retenção 1-Autopeças, 2-Órgãos Públicos, 3–Serviço</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="001">
+            <xs:annotation>
+              <xs:documentation>Autopeças</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="002">
+            <xs:annotation>
+              <xs:documentation>Órgãos Públicos</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="003">
+            <xs:annotation>
+              <xs:documentation>Serviço</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Recalculate" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Recalcular?</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE RETORNO                  -->
+  <!-- ==================================== -->
+  <xs:complexType name="ReturnContentType">
+    <xs:sequence>
+      <xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ==================================== -->
+  <!-- REFERÊNCIA AOS TIPOS                 -->
+  <!-- ==================================== -->
+  <xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+  <xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>
+  

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>CardClassification</Name>
+				<Description>Cadastro de Classificação de Cartão</Description>
+				<Segment>Serviços</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact/>
+					<Description/>
+					<Adapter>TURI055.PRW</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>Gestão de Empresa ativado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>pode ter tamanho variável até 8 com Gestão de Empresa ativado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa da empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Classificação de Cartão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>G8Q.G8Q_CODIGO</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>6</Length>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da Classificação de Cartão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt+G8Q.G8Q_FILIAL+G8Q.G8Q_CODIGO</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>136</Length>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição da Classificação de Cartão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>G8Q.G8Q_DESCR</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>40</Length>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Situation" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Situação? ("1-Ativo / 2-Bloqueado")</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>G8Q.G8Q_MSBLQL</Field>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>1</Length>
+							<Description>Campo Opcional, se no cadastro esse campo existir, será enviado a TAG</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ListOfFamily" type="ListOfFamilyType" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>Lista de Grupo de Produto (Itens/Detalhe)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ListOfFamilyType">
+		<xs:sequence>
+			<xs:element name="Family" type="FamilyType" minOccurs="0" maxOccurs="unbounded" >
+				<xs:annotation>
+					<xs:documentation>Nó contendo o detalhe do Grupo de Produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="FamilyType">
+		<xs:sequence>
+			<xs:element name="FamilyCode" type="xs:string" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>Código do Grupo de Produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>G8R.G8R_CODGRP</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>6</Length>
+							<Description>Seu conteúdo é pré determinado pelo cadastro de Grupo de Produto (Mata035 - SBM )</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FamilyInternalId" type="xs:string" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>InternalId do Grupo de Produto</xs:documentation>
+					<xs:appinfo>
+						<InternalIdName>FamilyInternalId</InternalIdName>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>136</Length>
+							<Description>O InternalId dessa Tag é referente ao internalId do Grupo de Produto (SBM - Family - Mata035)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- TIPOS ABSTRATOS  =================== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+</xs:schema>

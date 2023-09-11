@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>Bank</Name>
+				<Description>Cadastro de Bancos</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+    <xs:complexType name="BusinessContentType">
+        <xs:sequence>
+			<xs:element name="Code" type="xs:string" maxOccurs="1" minOccurs="0"/>
+			<xs:element name="Febraban" type="xs:string" maxOccurs="1" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Número Oficial do Banco no Brasil</xs:documentation>
+			    </xs:annotation>
+			</xs:element>
+			<xs:element name="Name" maxOccurs="1" minOccurs="0">
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="40"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="ShortName" maxOccurs="1" minOccurs="0">
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="20"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			
+			<xs:element name="ListOfAgency" type="ListOfAgencyType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="ListOfAgencyType">
+		<xs:sequence>
+			<xs:element name="Agency" type="AgencyType" minOccurs="1" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+    
+    <xs:complexType name="AgencyType">
+        <xs:sequence>
+        	<xs:element name="Number" type="xs:string" minOccurs="0" maxOccurs="1">
+        		<xs:annotation><xs:documentation>Número da Agência</xs:documentation></xs:annotation>
+        	</xs:element>
+        	<xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="1" />
+        	<xs:element name="Address" type="AddressType" minOccurs="0" maxOccurs="1"/>
+        	<xs:element name="ListOfContactInformation" type="ListOfContactInformationType" minOccurs="0" maxOccurs="1"></xs:element>
+        	<xs:element name="ListOfAccount" type="ListOfAccountType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+  <xs:complexType name="ListOfContactInformationType">
+    <xs:sequence>
+      <xs:element name="ContactInformation" type="ContactInformationType" minOccurs="1" maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+    
+	<xs:complexType name="ListOfAccountType">
+		<xs:sequence>
+			<xs:element name="Account" type="AccountType" minOccurs="1" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+    
+  <xs:complexType name="AccountType">
+    <xs:sequence>
+      <xs:element name="CompanyId" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+      <xs:element name="Number" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation><xs:documentation>RM: Número da Conta</xs:documentation></xs:annotation>
+      </xs:element>
+      <xs:element name="AccountantAccountCode" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>RM: Não irá utilizar inicialmente este campo, pois é permitido informar mais
+					de uma Conta Contabil no momento do Cadastro, o que difere das outras Linhas.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation><xs:documentation>RM: Nome da Conta Caixa</xs:documentation></xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+</xs:schema>

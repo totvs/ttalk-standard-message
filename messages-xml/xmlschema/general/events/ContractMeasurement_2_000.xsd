@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified" xmlns:xsd="undefined">
+
+	<!-- ==================================== -->
+	<!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>ContractMeasurement</Name>
+				<Description>Medição de Contrato</Description>
+				<Segment>Serviços</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rodrigo Toledo</Contact>
+					<Description>GDP de Inovação Controladoria</Description>
+					<Adapter>CNTI121</Adapter>
+					<Send>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>não</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PIMS">
+					<Contact>José Alberto da Silva</Contact>
+					<Description>Product Onwer - Squad Integração</Description>
+					<Adapter>ContratoData</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.CD_EMPRESA</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length></Length>
+							<Description>cEmpAnt</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.CD_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length></Length>
+							<Description>cFilAnt</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length></Length>
+							<Description>cEmpAnt|cFilAnt</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfContract" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Lista de Contratos</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="Contract" type="ContractType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ContractType">
+		<xs:sequence>
+			<xs:element name="ContractInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.ID_MEDICAO_CONTRATO</Field>
+							<Required>sim</Required>
+							<Type>Numerico</Type>
+							<Length>38</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length></Length>
+							<Description>O InternalId do contrato é formado por EMPRESA|CN9_FILIAL|CN9_NUMERO|CN9_REVISA</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ContractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Número do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.NO_CONTRATO</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>16</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CN9XX0.CN9_NUMERO</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>15</Length>
+							<Description>Número do Contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ContractReview" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Revisão do Contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CN9XX0.CN9_REVISA</Field>
+							<Required>sim</Required>
+							<Type>VarChar</Type>
+							<Length>3</Length>
+							<Description>Revisão do Contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfMeasurement" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Lista de Planilhas da Medicao</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="Measurement" type="MeasurementType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="MeasurementType">
+		<xs:sequence>
+			<xs:element name="SheetNumber" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Planilha</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.NO_SEQUENCIA</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CXNXX0.CXN_NUMPLA</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>6</Length>
+							<Description>Número da Planilha</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da medição</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.ID_SV_DT_PAGTO</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length/>
+							<Description>O InternalId da medição é formado por EMPRESA|CND_FILIAL|CND_CONTRA|CND_REVISA|CND_NUMMED</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfItem" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Lista de Itens</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="Item" type="ItemType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ItemType">
+		<xs:sequence>
+			<xs:element name="ItemCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.CD_OPERACAO</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CNEXX0.CNE_PRODUT</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>15</Length>
+							<Description>Código do Item do Contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do ItemCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.ID_OPERACAO</Field>
+							<Required>sim</Required>
+							<Type>Numerico</Type>
+							<Length>38</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1XX0.B1_COD</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length></Length>
+							<Description>cEmpAnt|B1_FILIAL|B1_COD</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Quantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CNEXX0.CNE_QUANT</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>16,8</Length>
+							<Description>Quantidade Medida</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.QT_MEDICAO</Field>
+							<Required>sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,6</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CostCenterCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CNEXX0.CNE_CC</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>9</Length>
+							<Description>Centro de Custo</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.CD_CCUSTO</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Id de integração do Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTTXX0.CTT_CUSTO</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+							<Description>O InternalId do centro de custo é formado por EMPRESA|CTT_FILIAL|CTT_CUSTO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.ID_CCUSTO</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountantAcountCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Conta contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CNEXX0.CNE_CONTA</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+							<Description>Conta Contábil</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.CD_CONTACUSTO</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountantAcountInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Id de integração da Conta contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT1XX0.CT1_CONTA</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+							<Description>O InternalId da Conta contábil é formado por EMPRESA|CT1_FILIAL|CT1_CONTA</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>BRG_MEDICAO_CONTRATO.ID_CONTACUSTO</Field>
+							<Required>sim</Required>
+							<Type>Numerico</Type>
+							<Length>38</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItemCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Item Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CNEXX0.CNE_ITEMCT</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>9</Length>
+							<Description>Item da Conta Contábil</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItemInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id do Item Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTDXX0.CTD_ITEM</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+							<Description>O InternalId do item contábil é formado por EMPRESA|CTD_FILIAL|CTD_ITEM</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassValueCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Classe de valor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CNEXX0.CNE_CLVL</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>9</Length>
+							<Description>Classe de Valor</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassValueInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Internal Id da Classe de valor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTHXX0.CTD_CLVL</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+							<Description>O InternalId da classe de valor é formado por EMPRESA|CTH_FILIAL|CTH_CLVL</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo de Documento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PIMS">
+							<Field>Tipo da Medição de Contrato</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>1</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CNEXX0.CNE_PEDTIT</Field>
+							<Required>não</Required>
+							<Type>Varchar</Type>
+							<Length>1</Length>
+							<Description>Gera pedido(1) ou título(2)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="3"/>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Nota Fiscal</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Titulo</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO                  -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS                 -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>

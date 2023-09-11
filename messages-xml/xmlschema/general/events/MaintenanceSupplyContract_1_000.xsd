@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" 
+elementFormDefault="qualified">
+
+	<!-- ==================================== -->
+	<!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>MaintenanceSupplyContract</Name>
+				<Description>Cadastro de Contrato de fornecimento de manutenção</Description>
+				<Segment>Construção e Projetos</Segment>
+				<ProductInformation product="RM">
+					<Contact>Lucas Peixoto Sepe</Contact>
+					<Description>GDP Inovação Const. e Proj.</Description>
+					<Adapter>CtrCntData</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Lucas Guszak</Contact>
+					<Description>GDP de Manutenção de Ativos</Description>
+					<Adapter>NGMUMntSup</Adapter>
+					<Send>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="InternalId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODCOLIGADA|TCNT.IDCNT</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Description>Chave única do contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Chave única do contrato que é formada por EMPRESA|TP3_FILIAL|TP3_CONTRA</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>        
+			</xs:element>
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODCOLIGADA</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>InernalId da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODCOLIGADA|TCNT.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>integer|integer</Type>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId da empresa é formado por EMPRESA|E1_FILIAL</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SE1XX0.E1_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ContractNumber" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Número do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODIGOCONTRATO</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>30</Length>
+							<Description>Código do contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>TP3XX0.TP3_CONTRA</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>8</Length>
+							<Description>Código do Contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Description" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição do Contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.NOME</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>40</Length>
+							<Description>Nome do contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>TP3XX0.TP3_DESCRI</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>40</Length>
+							<Description>Descrição do Contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>        
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CostCenterCode" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODCCUSTO</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>25</Length>
+							<Description>Código do Centro de custo</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>TP3XX0.TP3_CCUSTO</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>Código do Centro de custo</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do CostCenterCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODCOLIGADA|TCNT.CODCCUSTO</Field>
+							<Required>não</Required>
+							<Type>integer|varchar</Type>              
+							<Description>Chave única do Centro de Custo e deve ser composto pela chave completa do registro no RM que é: TCNT.CODCOLIGADA|TCNT.CODCCUSTO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>não</Required>
+							<Type>integer|varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Centro de Custo é formado por EMPRESA|CTT_FILIAL|CTT_CUSTO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CustomerVendorCode" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Código do Cliente/Fornecedor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODCFO</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>25</Length>
+							<Description>Código do Cliente/Fornecedor</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>TP3XX0.TP3_FORNEC</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>25</Length>
+							<Description>Código do Cliente/Fornecedor</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CustomerVendorInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Código do Fornecedor responsável pela execução da manutenção</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.CODCOLCFO|TCNT.CODCFO</Field>
+							<Required>sim</Required>
+							<Type>integer|varchar</Type>
+							<Length>25</Length>
+							<Description>Este campo deve ser composto pela chave completa do registro no RM que é: TCNT.CODCOLCFO|TCNT.CODCFO</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>sim</Required>
+							<Type>integer|varchar</Type>
+							<Length>25</Length>
+							<Description>O InternalId do Cliente/Fornecedor é formado por EMPRESA|A1_FILIAL|A1_COD</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MaintenanceSupplyContractType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.NATUREZA</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Description>Campo responsável por informar a natureza do contrato (Compra/Venda/Ambos)</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+							<Description>Natureza do contrato (1=Venda;2=Compra;3=Ambos) Obs.: Não utilizado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="1"/>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Venda</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Compra</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Ambos</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="RegisterDateTime" maxOccurs="1" minOccurs="0" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Data de assinatura do Contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.DATACONTRATO</Field>
+							<Required>sim</Required>
+							<Type>Datetime</Type>
+							<Description>Data de inclusão do contrato</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>TP3XX0.TP3_DTINCL</Field>
+							<Required>sim</Required>
+							<Type>Datetime</Type>
+							<Length>8</Length>
+							<Description>Data de inclusão do contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InitialDateTime" maxOccurs="1" minOccurs="0" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Data de inicio de vigência do Contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.DATAINICIO</Field>
+							<Required>sim</Required>
+							<Type>Datetime</Type>
+							<Description>Data de início de vigência do contrato</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>TP3XX0.TP3_DTVGIN</Field>
+							<Required>sim</Required>
+							<Type>Datetime</Type>
+							<Length>8</Length>
+							<Description>Data de início de vigência do contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FinalDateTime" maxOccurs="1" minOccurs="0" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Data de término de vigência do Contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>TCNT.DATAFIM</Field>
+							<Required>sim</Required>
+							<Type>Datetime</Type>
+							<Description>Data de término de vigência do contrato</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>TP3XX0.TP3_DTVGFI</Field>
+							<Required>sim</Required>
+							<Type>Datetime</Type>
+							<Length>8</Length>
+							<Description>Data de término de vigência do contrato</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>      
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO                  -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS                 -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>

@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified" xmlns:xsd="undefined">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>REDUCTION</Name>
+				<Description>Mensagem para Integração do Registro de Redução Z</Description>
+				<Segment></Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Diego Pereira Fernandes</Contact>
+					<Description>Coordenador de Inovação Varejo</Description>
+					<Adapter>LOJI160</Adapter>
+					<Send>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</ProductInformation>								
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>2</Length>
+							<Description>...</Description>
+						</FieldDocumentation>													
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SFI.FI_FILIAL</Field>
+							<Required>Sim</Required>             
+							<Type>Varchar</Type>
+							<Length>2</Length>
+							<Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa da Redução</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework 
+							estando no ambiente (Empresa x Filial) correto</Description>
+						</FieldDocumentation>            
+                    </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InternalId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da Reducao</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field/>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>50</Length>
+						  <Description>O InternalID da reducao é formado por EMPRESA|FI_FILIAL|FI_DTMOVTO|FI_PDV|FI_NUMREDZ</Description>
+						</FieldDocumentation>																		
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="MovementDate" type="xs:dateTime" minOccurs="0">						
+				<xs:annotation>
+					<xs:documentation>Data do Movimento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SFI.FI_DTMOVTO</Field>
+							<Required>Sim</Required>
+							<Type>DateTime</Type>
+							<Length>8</Length>
+							<Description>Data do Movimento</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>						
+			<xs:element name="StationCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Estacao</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo fisico na tabela</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>3</Length>
+							<Description>Codigo da Estacao que efetuou a Reducao</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ReductionCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Codigo da Reducao</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SFI.FI_NUMREDZ</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>5</Length>
+							<Description>Numeracao da Reducao</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+			<xs:element name="InitialValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Grande Total Final do dia anterior</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SFI.FI_GTINI</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Grande Total Final do dia anterior</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FinalValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Grande Total Final do dia</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SFI.FI_GTEND</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Grande Total Final do dia</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InitialCounter" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Numero do Cupom Inicial do Dia</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SFI.FI_NUMINI</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>9</Length>
+							<Description>Numero do Cupom Inicial do Dia</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>				
+			<xs:element name="FinalCounter" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Número do Cupom Final do Dia</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_NUMFIM</Field>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>9</Length>
+						  <Description>Número do Cupom Final do Dia</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ValueCancellations" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Total de Cancelamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_CANCEL</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor Total de Cancelamentos</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SalesValueNet" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Contabil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_VALCON</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor Contabil do Fechamento</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TaxReplacementValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Substituição Tributária</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_SUBTRIB</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor de substituição Tributária</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DiscountValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor de Descontos</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_DESC</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor de Descontos</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="FreeValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor de Isentos</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_ISENTO</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor de Isentos</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="UntaxedValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor de Não Tributado</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_NTRIB</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor de Não Tributado</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CounterCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Contador de Ordem de Operação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_COO</Field>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>6</Length>
+						  <Description>Contador de Ordem de Operação</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ValueOfOthersReceivables" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor de Outros Recebimentos</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_OUTROSR</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor de Outros Recebimentos</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="AmountOfTaxDue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor do Imposto Devido</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_IMPDEBT</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>13,2</Length>
+						  <Description>Valor do Imposto Devido</Description>
+						</FieldDocumentation>												
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IssValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Base do ISS</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_ISS</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor Base do ISS</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CounterReset" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Contador de Ordem de Reinicio</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_CRO</Field>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>3</Length>
+						  <Description>Contador de Ordem de Reinicio</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="IssueDateReduction" type="xs:dateTime" minOccurs="0">			
+				<xs:annotation>
+					<xs:documentation>Data de Emissão da Redução</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI.FI_DTREDZ</Field>
+						  <Required>Não</Required>
+						  <Type>DateTime</Type>
+						  <Length>8</Length>
+						  <Description>Data de Emissão da Redução</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element name="ListOfAliquot" type="ListOfAliquotType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lista de Aliquotas ICMS da Redução Z</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SFI</Field>
+						  <Required>Sim</Required>
+						  <Type></Type>
+						  <Length>Lista de Aliquotas ICMS da Redução Z</Length>
+						  <Description></Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ListOfAliquotType">
+		<xs:sequence>
+		<xs:element name="Aliquot" type="AliquotType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="AliquotType">
+		<xs:sequence>
+			<xs:element name="AliquotCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificador da Base ICMS</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>3</Length>
+							<Description>Identificador da Base ICMS</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+			<xs:element name="AliquotBase" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor da Base ICMS</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SFI.FI_BAS</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>14,2</Length>
+							<Description>Valor da Base ICMS, complementa o nome do Field, valor passado na tag AliquotCode</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+</xs:schema>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>AccountantAccount</Name>
+				<Description>Plano de contas contábil</Description>
+				<Segment>ERP base</Segment>
+				<ProductInformation product="DATASUL">
+					<Contact>....</Contact>
+				</ProductInformation>
+				<ProductInformation product="lOGIX">
+					<Contact>Lediel Eleutério</Contact>
+					<Adapter>adp10038.4gl</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogerio Nagy</Contact>
+					<Adapter>CTBI020.prw</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Empresa da Conta Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>plano_contas.cod_empresa</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+							<Description>O Logix enviará a empresa e filial cadastrada no log0083 correspondente a empresa do Logix</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+							<Description>será enviado o valor da variável cEmpAnt( empresa) </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial da Conta Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>log_emp_filial_logix_protheus.filial_protheus</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+							<Description>O Logix enviará a empresa e filial cadastrada no log0083 correspondente a empresa do Logix</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+							<Description>Será enviado o valor da variável cFilAnt </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>Campo não utilizado nesta mensagem</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código com máscara (exemplos: '1', '1.1', '1.1.001')</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>plano_contas.num_conta</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>23</Length>
+							<Description>Conta contábil extendida</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT1.CT1_CONTA</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>20</Length>
+							<Description>Código da Conta Contábil</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Code</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>Código que indentificar a conta contabil no sistema externo</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>tabela.campo</Field>
+							<Required>sim/não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>Código que irá identificar a conta contábil no sistema externo: xfilial("CT1")+CT1.CT1_CONTA </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ShortCode" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código Reduzido</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>plano_contas.num_conta_reduz</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>Número reduzido da conta contábil</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT1.CT1_RES</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>Código da conta reduzida</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Description" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>Den_conta</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>50</Length>
+							<Description>Descrição da conta contábil</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT1.CT1_DESC01</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>40</Length>
+							<Description>Descrição da conta contábil</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PostingNature" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Natureza</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>plano_contas.ies_saldo_conta</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>No Logix este campo aceita C= Crédito e D=Débito</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT1.CT1_NORMAL</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>1</Length>
+							<Description>1 - Devedora 2 - Credora</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Devedora</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Credora</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="AnalyticalOrSynthetic" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Se Analítico ou Sintético</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>plano_contas.ies_titulo</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>Conta analítica no Logix é denominada conta título.</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT1.CT1_CLASSE</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>1</Length>
+							<Description>1 - Analítca 2 - Sintética</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Sintético</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Analítico</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ActiveOrInactive" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Se 1(Ativa) ou 2(Inativa)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>plano_contas.ies_sit_conta</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>O Logix possui varias situações para conta contábil.
+							             Portanto, tudo que for diferente de "1" (ativa) será tratado como "2" (inativa)</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CT1.CT1_BLOQ</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>1</Length>
+							<Description>1 - Bloqueada 2 - Não Bloqueada</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Ativa</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Inativo, Bloqueado ou Excluido</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="ManagerialAccountingEntityPolicy" minOccurs="0" maxOccurs="1" type="ValidatePolicyType">
+				<xs:annotation>
+					<xs:documentation>Política de uso de Conta Gerencial (ManagerialAccountingEntity) para esta Conta Contábil.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>RATEIO</Field>
+							<Required>não</Required>
+							<Type>int</Type>
+							<Description>Informa se conta contábil exige rateio gerencial ou não.</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cTipoPer</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Informa se conta contábil exige conta gerencial ou não.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>				
+			</xs:element>						
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- POLITICA DE SEGURANÇA                -->
+	<!-- ==================================== -->
+	<xs:simpleType name="ValidatePolicyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>Não permitir uso</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="2"><xs:annotation><xs:documentation>Permitir uso</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>Exigir uso</xs:documentation></xs:annotation></xs:enumeration>						
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+
+</xs:schema>

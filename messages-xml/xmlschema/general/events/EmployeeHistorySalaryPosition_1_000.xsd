@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xsd="undefined">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../commons_1_000.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>Histório de Salários/Cargos do(s) funcionário(s)</Name>
+				<Description>Histórico de alteração de salários/cargos</Description>
+				<Segment>Recursos Humanos</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>NATIÊ SUGAHARA</Contact>
+				</ProductInformation>
+				<ProductInformation product="PIMS">
+					<Contact>JOSÉ ALBERTO DA SILVA</Contact>
+				</ProductInformation>
+				<Adapter></Adapter>
+				<Send>
+					<Insert>Não</Insert>
+					<Update>Não</Update>
+					<Delete>Não</Delete>
+				</Send>
+				<Receive>
+					<Insert>Não</Insert>
+					<Update>Não</Update>
+					<Delete>Não</Delete>
+				</Receive>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Codigo da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>não possui campo físico na tabela</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>02</Length>
+							<Description/>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>EMPRESA.CD_INT_ERP</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Código da Empresa no ERP</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SR7XX0.R7_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>02</Length>
+							<Description>pode ter tamanho entre 02 e 12	dependendo da configuração do Protheus</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>FILIAL.CD_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Código da Filial no ERP</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="CompanyInternalId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>CompanyInternalId da chave completa de empresa do produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+						<FieldDocumentation product="DATASUL">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field/>
+							<Required>não</Required>
+							<Type/>
+							<Length>...</Length>
+							<Description>...</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfEmployeeHistorySalaryPosition" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="EmployeeHistorySalaryPosition" type="EmployeeHistorySalaryPositionType" maxOccurs="unbounded" minOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="EmployeeHistorySalaryPositionType">
+		<xs:sequence>
+
+			<xs:element name="EmployeeCode" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Chapa/Matricula do funcionario</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SR7.R7_MAT</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>6</Length>
+							<Description>Número da Matricula</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>FUNCIONAR.CD_INT_ERP</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Código do Funcionário</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="EmployeeInternalId" minOccurs="0" maxOccurs="1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>InternalId do funcionário</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>empresa|SR7XX0.R7_FILIAL|SR7XX0.R7_MAT</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>o InternalID do cadastro é formado pelos campos empresa|R7_FILIAL|R7_MAT</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type></Type>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="ChangedDate" minOccurs="1" maxOccurs="1" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Data de alteração do Salário/Cargo do Funcionário</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SR7.R7_DATA</Field>
+							<Required>sim</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description>Data Alteracao Salarial</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field/>
+							<Required>FUNCIONARDISP.DT_EVENTO</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description>Data de alteração do salário ou cargo do funcionário</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="Salary" minOccurs="1" maxOccurs="1" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Valor do Salário do Funcionário</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SR3XX0.R3_VALOR</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>12</Length>
+							<Description>Valor</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>FUNCIONARDISP.VL_SALARIO</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>15,4</Length>
+							<Description>Valor do Salário do Funcionário</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PaymentFrequency" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Frequência de Pagamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SR7XX0.R7_TIPOPGT</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>Tipo de pagamento</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>FUNCIONARDISP.FG_FREQ_PGTO</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>1</Length>
+							<Description>Frequencia de pagamento do funcionário</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Mensalista</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Horista</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Tarefeiro</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>Diarista</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation>Quinzenalista</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation>Semanalista</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="7">
+							<xs:annotation>
+								<xs:documentation>Outros</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="8">
+							<xs:annotation>
+								<xs:documentation>Horista Professor</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" name="EmployeePositionCode" type="xs:string" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Codigo do cargo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SR7XX0.R7_CARGO</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>05</Length>
+							<Description>Cargo</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>CARGO.CD_INT_ERP</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Código do Cargo no ERP</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="EmployeePositionInternalId" type="xs:string" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalID do Codigo do Cargo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EmployeePositionLevel" type="xs:integer" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código Nivel Cargo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field>Código Nivel Cargo</Field>
+							<Required>não</Required>
+							<Type>number</Type>
+							<Length>2</Length>
+							<Description>Código Nivel Cargo ( Não utilizado entre PimsMC x Protheus )</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Sequence" type="xs:integer" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Sequencia 1, 2, 3 ... (Quando ocorrer mais de uma alteração de salário no mesmo dia)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SR7XX0.R7_SEQ</Field>
+							<Required>Não</Required>
+							<Type>number</Type>
+							<Length>2</Length>
+							<Description>Sequencia</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PIMS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="ListOfInternalId" type="ListOfInternalIdType"/>
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+</xs:schema>

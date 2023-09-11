@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	 <xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>Financing</Name>
+					<Description>Geração dos lançamentos do plano de financiamento</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="ContractHeader" maxOccurs="1" minOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Empresa</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"></xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Filial</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"></xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="ContractNumber" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Numero do Contrato</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"></xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="DocumentTypeCode" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>O tipo de documento. Conforme a mensagem DocumentType</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="3"></xs:maxLength>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfContractParcel" maxOccurs="unbounded" minOccurs="1" type="ListOfContractParcelType">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ApportDistributionType">
+		<xs:sequence>
+			<xs:element name="Apport" type="ApportType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ApportType">
+		<xs:sequence>
+			<xs:element name="CostCenterCode" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Centro de Custo (linha de produto + linha de receita + segmento de mercado + classe de uso)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:double" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Rateio para o Centro de Custo ou outro</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FinancialCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Natureza (Protheus) Tipo de Fluxo (DataSul)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListOfComponentType">
+		<xs:sequence>
+			<xs:element name="Component" type="ComponentType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ComponentType">
+		<xs:sequence>
+			<xs:element name="Code" maxOccurs="1" minOccurs="0" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>Código do Componente da parcela</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Nome do Componente da parcela</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:double" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Componente</xs:documentation>
+				</xs:annotation>
+			</xs:element>			
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListOfContractParcelType">
+		<xs:sequence>
+			<xs:element name="ContractParcel" type="ContractParcelType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContractParcelType">
+		<xs:sequence>
+			<xs:element name="InternalId" maxOccurs="1" minOccurs="1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identificador Interno de cada parcela (título)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FlagAccount" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Gerar título para esta parcela? 0 = Não / 1 = Sim</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int"></xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Type">
+				<xs:annotation>
+					<xs:documentation>Tipo da Parcela (Título)</xs:documentation>
+				</xs:annotation>
+               <xs:simpleType>
+                    <xs:restriction base="xs:string">                        
+                        <xs:enumeration value="Receivable"><xs:annotation><xs:documentation>A receber</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="Payable"><xs:annotation><xs:documentation>A pagar</xs:documentation></xs:annotation></xs:enumeration>						
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+			<xs:element name="CustomerVendorId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Cliente/Fornecedor</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="DocumentPrefix" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Prefixo do Título/Provisão (Série)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocNumber" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Título/Provisão</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocParcel" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número da Parcela</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="1"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Event" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>1-Upsert; 2-Delete</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IssueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Emissão</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Vencimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NetValue" type="xs:double" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor Líquido</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrencyCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Moeda</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string"></xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ApportDistribution" type="ApportDistributionType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Distribuição de rateio</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfComponent" type="ListOfComponentType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lista de componentes da parcela</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FinancialCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Natureza (Protheus) Tipo de Despesa (LOGIX) Tipo de Fluxo (DataSul)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:complexType name="ListInternalIdType">
+		<xs:sequence>
+			<xs:element name="InternalId" type="InternalIdType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="InternalIdType">
+		<xs:sequence>
+			<xs:element name="OriginInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identificador de quem enviou a mensagem</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DestinationInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificador de quem recebeu a mensagem</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListInternalId" maxOccurs="1" minOccurs="0" type="ListInternalIdType">
+				<xs:annotation>
+					<xs:documentation>Identificador</xs:documentation>
+				</xs:annotation>
+			</xs:element>			
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>

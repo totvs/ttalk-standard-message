@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>ComplementaryValue</Name>
+				<Description>Configuracao de Valores Acessorios do Financeiro</Description>
+				<Segment>Educacional</Segment>
+				
+				<ProductInformation product="RM">
+					<Contact>Poliana Aparecida Pessoa</Contact>
+					<Description>GDP de Inovação Controladoria</Description>
+					<Adapter>SettingComplementaryValues</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+				
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogério Nagy</Contact>
+					<Description>GDP - Inovacao Controladoria</Description>
+					<Adapter>FINI035</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+				
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InernalId da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLAN.CODCOLIGADA|TMOV.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>integer|integer</Type>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId da empresa é formado por EMPRESA|FILIAL</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLAN.CODCOLIGADA</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>não possui campo físico na tabela</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Código da Empresa (cEmpAnt)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLAN.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKCXX0.FKC_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+												
+			<xs:element name="ListOfComplementaryValues" type="ListOfComplementaryValuesType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lista de valores acessórios</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="ListOfComplementaryValuesType">
+		<xs:sequence>
+			<xs:element name="ComplementaryValue" type="ComplementaryValueType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ComplementaryValueType">
+		<xs:sequence>
+		
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Codigo do Valor Acessório</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>Definidos pela Regra de Negócio</Field>
+							<Required>sim</Required>
+							<Type>Integer, Varchar</Type>
+							<Length>50</Length>
+							<Description>Na Gestão Financeira, os códigos são definidos pelas strings: VALOROP1, VALOROP2, ..., VALOROP8, VALORDEVOLUCAO, VALORNOTACREDITO, VALORCREDITOADIANTAMENTO, VALORPERDAFINANCEIRA, VALORDESCONTOACORDO, VALORACRESCIMOACORDO, VALORJUROSACORDO</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Definidos pela Regra de Negócio</Field>
+							<Required>sim</Required>
+							<Type>Varchar</Type>
+							<Length>50</Length>
+							<Description>Os códigos são definidos por regra de negócio: Empresa|Filial|Código (T1|D MG 01|000001)</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Code" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do valor acessório</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>O campo é enviado vazio</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_CODIGO</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>6</Length>
+							<Description>Código do valor acessório</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FPARAM.TEXTO</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>30</Length>
+							<Description>Descrição do Valor Complementar</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_DESC</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>30</Length>
+							<Description>Descrição do tipo de Valor Acessório</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Action" type="ActionType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FPARAM.INTEIRO</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length/>
+							<Description>Determina o efeito do valor acessório sobre o saldo do valor do lançamento financeiro</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_ACAO</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+							<Description>Tipo de ação do Valor Acessório (1=Soma;2=Subtrai)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="ValueType" type="ValueTypeType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Tipo de Valor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>não tem equivalência no RM, será informado sempre "Value"</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_TPVAL</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+							<Description>Tipo de Valor Acessório (1=Percentual;2=Valor)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Application" type="ApplicationType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Aplicação quanto a data de vencimento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FPARAM.INTEIRO</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length/>
+							<Description>Determina que o efeito do Valor de Integração deve ter efeito até a data de vencimento</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_APLIC</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+							<Description>Aplicação do VA quanto a data de vencimento (1=Percentual;2=Valor)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Periodicity" type="PeriodicityType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Periodicidade</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>não tem equivalência no RM, será informado sempre "single"</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_PERIOD</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+							<Description>1=Único;2=Diário;3=Mensal;4=Anual</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Enabled" type="xs:boolean" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Acessório ativo?</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+              <Field>FPARAM.INTEIRO</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length/>
+              <Description>Informado se o valor opcional está ativo, para valores fixos da baixa é informado sempre "true"</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_ATIVO</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+							<Description>1=Sim;2=Não</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>						
+			
+			<xs:element name="Portfolio" type="PortfolioType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Carteira a que se aplica a regra de valor complementar</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description>Nos casos de ação Acrescenta/Diminui, é enviado "Ambos", nos casos de Acrescenta se a Receber, e Diminui se a Receber, é nenviado "Receber"</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_RECPAG</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+							<Description>Aplicação do VA quanto a carteira (1=Pagar;2=Receber;3=Ambas)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="DayFactor" type="xs:integer" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Fator dia - Complementar a aplicação quanto à data de vencimento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+              <Field>FPARAM.INTEIRO</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length/>
+              <Description>Envia valor complementar do valor opcional, se ação for do tipo Acrescenta (dias em atraso)</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FKC_NDIAS</Field>
+							<Required>Sim</Required>
+							<Type>integer</Type>
+							<Length>3</Length>
+							<Description>Fator dia</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="ActionType">
+		<xs:restriction base="xs:string">
+			
+			<xs:enumeration value="add">
+				<xs:annotation>
+					<xs:documentation>Somar</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="subtract">
+				<xs:annotation>
+					<xs:documentation>Subtrair</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ValueTypeType">
+		<xs:restriction base="xs:string">
+		
+			<xs:enumeration value="value">
+				<xs:annotation>
+					<xs:documentation>Valor</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		
+			<xs:enumeration value="percentage">
+				<xs:annotation>
+					<xs:documentation>Percentual</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ApplicationType">
+		<xs:restriction base="xs:string">
+			
+			<xs:enumeration value="before">
+				<xs:annotation>
+					<xs:documentation>Válido até data de vencimento</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="after">
+				<xs:annotation>
+					<xs:documentation>Válido após data de vencimento</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="fixed">
+				<xs:annotation>
+					<xs:documentation>não depende da data de vencimento</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="PeriodicityType">
+		<xs:restriction base="xs:string">
+		
+			<xs:enumeration value="single">
+				<xs:annotation>
+					<xs:documentation>Único</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="daily">
+				<xs:annotation>
+					<xs:documentation>Diário</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="biweekly">
+				<xs:annotation>
+					<xs:documentation>Quinzenal</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="monthly">
+				<xs:annotation>
+					<xs:documentation>Mensal</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="quarterly">
+				<xs:annotation>
+					<xs:documentation>Trimestral</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="semiannual">
+				<xs:annotation>
+					<xs:documentation>Semestral</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="yearly">
+				<xs:annotation>
+					<xs:documentation>Anual</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="PortfolioType">
+		<xs:restriction base="xs:string">
+		
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Pagar</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Receber</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Ambas</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>

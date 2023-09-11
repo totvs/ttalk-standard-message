@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" 
+			elementFormDefault="qualified">
+
+	<!--  ====================================  -->
+	<!--  INCLUDES NECESSÁRIOS PARA A MENSAGEM  -->
+	<!--  ====================================  -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<!--  ====================================  -->
+	<!--  DOCUMENTAÇÃO DA MENSAGEM              -->
+	<!--  ====================================  -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>AccountantAccountMask</Name>
+				<Description>Máscara de entidade contábil</Description>
+				<Segment>Administrativo</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Felipe Raposo</Contact>
+					<Description>ERP TOTVS PROTHEUS</Description>
+					<Adapter>CTB130Est</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE NEGÓCIO DA MENSAGEM ====  -->
+	<!--  ====================================  -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+
+			<xs:element name="Code" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da conta orçamentária</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTM_CODIGO</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>3</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="1"/>
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="InternalId" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId de Integração</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt + xFilial("CTM") + CTM_CODIGO</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="Description" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:appinfo>
+						<xs:documentation>Descrição do conta orcamentária</xs:documentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTM_DESCM</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>40</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="Identifier" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:appinfo>
+						<xs:documentation>Identificador do tipo de Máscara</xs:documentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTM_IDENT</Field>
+							<Required>Sim</Required>
+							<Type>Number</Type>
+							<Length>1</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Conta contábil</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Centro de custo</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Item de conta</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>Classe de valor</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation>Outros</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="ListOfSegment" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Segment" type="SegmentType" minOccurs="1" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Lista de segmentos</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SegmentType">
+		<xs:sequence>
+			<xs:element name="Length" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Quantidade de dígitos do segmento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTM_DIGITO</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>2</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="99"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="Description" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição do segmento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTM_DESC</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>40</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="Separator" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Caracter separador do segmento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTM_SEPARA</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>1</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE RETORNO ================  -->
+	<!--  ====================================  -->
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

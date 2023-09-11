@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified" xmlns:xsd="undefined">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>ItemReserve</Name>
+				<Description>Mensagem para Integração da Reserva de Produtos</Description>
+				<Segment/>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Alan S. R. Oliveira</Contact>
+					<Description>Inovação Varejo</Description>
+					<Adapter>MATI410</Adapter>
+					<Send>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description>Será enviado o valor da variável cEmpAnt(Empresa)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>C0_FILIAL</Field>
+							<Required>Não</Required>             
+							<Type>char</Type>
+							<Length>12</Length>
+							<Description>Será enviado o valor da variável cFilAnt indicando em qual Filial Será feita a Reserva</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa da venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework 
+							estando no ambiente (Empresa x Filial) correto</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da Reserva</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalID da Reserva é formado por EMPRESA|C0_FILIAL|C0_NUM|C0_PRODUTO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="ReserveNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Numero da Reserva</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>C0_NUM</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>6</Length>
+							<Description>Numero da Reserva no Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReserveType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Tipo de Reserva</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SC0.C0_TIPO</Field>
+							<Required>Sim </Required>
+							<Type>Varchar</Type>
+							<Length>2</Length>
+							<Description>Tipo de Reserva</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+                <xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="VD">
+							<xs:annotation>
+								<xs:documentation>Venda Direta</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="CL">
+							<xs:annotation>
+								<xs:documentation>Cliente</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="PD">
+							<xs:annotation>
+								<xs:documentation>Pedido de Venda</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="LB">
+							<xs:annotation>
+								<xs:documentation>Liberacao</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="NF">
+							<xs:annotation>
+								<xs:documentation>Nota Fiscal</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+			</xs:element>			
+			<xs:element name="DocumentReserve" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Documento que Originou a Reserva</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>C0_DOCRES</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>9</Length>
+							<Description>Número do documento que originou  a reserva.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>				
+			</xs:element>												
+			<xs:element name="Requester" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Solicitante</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>C0_SOLICIT</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Nome do usuário solicitante da reserva.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="RequestBranch" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial Responsável pela Solicitação de Reserva</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>C0_FILRES</Field>
+							<Required>Não</Required>
+							<Type>VarChar</Type>
+							<Length>12</Length>
+							<Description>Filial solicitante da reserva.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReserveItemType" type="ReserveItemType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Itens da Reserva</xs:documentation>
+						<xs:appinfo>
+							<FieldDocumentation product="PROTHEUS">
+								<Field/>
+								<Required/>
+								<Type/>
+								<Length/>
+								<Description/>
+								</FieldDocumentation>
+						</xs:appinfo>
+					</xs:annotation>
+			</xs:element>	
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReserveItemType">
+		<xs:sequence>
+			<xs:element name="ItemCode" type="xs:string" maxOccurs="1" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Código do Produto</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_PRODUTO</Field>
+									<Required>sim</Required>
+									<Type>varchar</Type>
+									<Length>15</Length>
+									<Description>Código identificador do produto junto ao sistema.</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+			<xs:element name="ItemInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>InternalId do Produto</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>Não possui campo físico na tabela</Field>
+									<Required>Sim</Required>
+									<Type>Varchar</Type>
+									<Length>50</Length>
+									<Description>O InternalID do Produto é formado por EMPRESA|FILIAL| PRODUTO</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+			<xs:element name="WarehouseCode" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Codigo do Local de Estoque(Armazem)</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_LOCAL</Field>
+									<Required>nao</Required>
+									<Type>varchar</Type>
+									<Length>2</Length>
+									<Description>Código do Local de Estoque</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+			<xs:element name="WarehouseInternalId" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Id de integração do Local de Estoque(Armazem)</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field/>
+									<Required>sim</Required>
+									<Type>varchar</Type>
+									<Length>50</Length>
+									<Description>O InternalId do Local de Estoque é formado por EMPRESA|NNR_FILIAL|NNR_CODIGO</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+			<xs:element name="Quantity" maxOccurs="1" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Quantidade do Item</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_QUANT</Field>
+									<Required>Sim</Required>
+									<Type>Decimal</Type>
+									<Length>7,2</Length>
+									<Description>Quantidade do Item</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:totalDigits value="15"/>
+								<xs:fractionDigits value="3"/>
+							</xs:restriction>
+						</xs:simpleType>				
+					</xs:element>
+			<xs:element name="ReserveExpiration" type="xs:dateTime" maxOccurs="1" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Data de Vencimento da Reserva</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_VALIDA</Field>
+									<Required>Sim</Required>
+									<Type>Date</Type>
+									<Length>8</Length>
+									<Description>Data de Vencimento da Reserva</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>						
+					</xs:element>
+			<xs:element name="IssueDateReserve" type="xs:dateTime" minOccurs="0">			
+						<xs:annotation>
+							<xs:documentation>Data de Emissão da Reserva</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_EMISSAO</Field>
+									<Required>Sim</Required>
+									<Type>DateTime</Type>
+									<Length>8</Length>
+									<Description>Data de Emissão da Reserva</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>			
+			<xs:element name="LotNumber" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Número do Lote</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_LOTECTL</Field>
+									<Required>não</Required>
+									<Type>char</Type>
+									<Length>10</Length>
+									<Description>Número do lote usado no Controle de Reservas</Description>
+								</FieldDocumentation>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+			<xs:element name="SubLotNumber" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Número do SubLote</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROTHEUS">
+										<Field>C0_NUMLOTE</Field>
+										<Required>não</Required>
+										<Type>char</Type>
+										<Length>6</Length>
+										<Description>Código do Lote associado ao produto.</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="6"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>	
+			<xs:element name="SeriesItem" type="xs:string" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Número de Serie do Produto</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_NUMSERI</Field>
+									<Required>Não</Required>
+									<Type>VarChar</Type>
+									<Length>20</Length>
+									<Description>Número de Série do produto, caso o produto faça o controle.</Description>
+								</FieldDocumentation>						
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+			<xs:element name="AddressingItem" type="xs:string" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Endereço do produto reservado.</xs:documentation>
+							<xs:appinfo>
+								<FieldDocumentation product="PROTHEUS">
+									<Field>C0_LOCALIZ</Field>
+									<Required>Não</Required>
+									<Type>VarChar</Type>
+									<Length>15</Length>
+									<Description>Endereço do produto reservado, utilizado nos casos que o estique di produto tem endereços.</Description>
+								</FieldDocumentation>						
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+			<xs:element name="NoteReserveItem" type="xs:string" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>Observacao</xs:documentation>
+						<xs:appinfo>
+							<FieldDocumentation product="PROTHEUS">
+								<Field>C0_OBS</Field>
+								<Required>Não</Required>
+								<Type>varchar</Type>
+								<Length>80</Length>
+								<Description>Observacao da Reserva</Description>
+							</FieldDocumentation>						
+						</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+			<xs:element name="ReserveBranch" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial onde será realizada a Reserva</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>C0_FILIAL</Field>
+							<Required>Não</Required>
+							<Type>VarChar</Type>
+							<Length>12</Length>
+							<Description>Filial onde será realizada a reserva do item.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element name="IsCanceled" type="xs:boolean" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Não possui campo físico na tabela.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>Sim</Required>
+							<Type>boolean</Type>
+							<Length>1</Length>
+							<Description>Indica se o Item deverá ser excluído, apenas em casos de updade.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>					
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+</xs:schema>

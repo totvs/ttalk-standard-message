@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>	
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>AddressStock</Name>
+				<Description>Mensagem para Integração do Endereço de estoque</Description>
+				<Segment>Manufatura</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Robson Roberto Klug</Contact>
+					<Description>Cadastro de Endereços</Description>
+					<Adapter>MATI015.prw</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="DATASUL">
+					<Contact>Robson Roberto Klug</Contact>
+					<Description>Cadastro de Localização</Description>
+					<Adapter>AddressStockAdapter.cls</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="LOGIX">
+					<Contact>Robson Roberto Klug</Contact>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+  
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="WarehouseCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código do Armazém/Depósito
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>localizacao.cod-depos</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>3</Length>
+							<Description>Depósito</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SBE.BE_LOCAL</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>2</Length>
+							<Description>Código do armazém</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LocationCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Endereço/Localização
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>localizacao.cod-localiz</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>20</Length>
+							<Description>Localização</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SBE.BE_LOCALIZ</Field>
+							<Required>nao</Required>
+							<Type>string</Type>
+							<Length>15</Length>
+							<Description>
+								Endereço/Localização
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AddressStockDescription" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Descrição do endereço
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>localizacao.descricao</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>30</Length>
+							<Description>Descrição</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SBE.BE_DESCRIC</Field>
+							<Required>nao</Required>
+							<Type>string</Type>
+							<Length>30</Length>
+							<Description>
+								Descrição do endereço
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AddressInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+                <xs:annotation>
+                	<xs:documentation>Chave completa endereço</xs:documentation>
+                	<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>localizacao.cod-estabel|localizacao.cod-depos|localizacao.cod-localiz</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>28</Length>
+							<Description>InternalId da localização</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|SBE.BE_FILIAL|SBE.BE_LOCAL|SBE.BE_LOCALIZ</Field>
+							<Required>nao</Required>
+							<Type>string</Type>
+							<Length>50</Length>
+							<Description>
+								InternalId do endereço
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+                </xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="undefined">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>ImplementKilometrage</Name>
+				<Description>Mensagem para Integração de Quilometragens do Equipamento</Description>
+				<Segment></Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact></Contact>
+					<Description></Description>
+					<Adapter></Adapter>
+					<Send>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Send>
+					<Receive>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="RM">
+					<Contact></Contact>
+					<Description></Description>
+					<Adapter/>
+					<Send>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Send>
+					<Receive>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="DATASUL">
+					<Contact></Contact>
+					<Description></Description>
+					<Adapter/>
+					<Send>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Send>
+					<Receive>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROXIMA-PIMS">
+					<Contact>José Alberto da Silva</Contact>
+					<Description>Movimento de Quilometragem do Equipamento</Description>
+					<Adapter>QuilometragemEquipamentoAdapter.java</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Empresa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EquipmentCode">
+				<xs:annotation>
+					<xs:documentation>Codigo do Equipamento</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ReferenceDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Data de referência para atualização do movimento de percursos dos equipamentos. A partir desta data o movimento será excluído e reprocessado. Normalmente equivalente à data do primeiro movimento constante na lista de movimentos.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence>
+				<xs:element name="ListOfMovements">
+					<xs:annotation>
+						<xs:documentation>Contém a lista de percursos dos equipamentos (dia-a-dia) a partir da data de referência</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Movement" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="MovementDate" type="xs:date">
+											<xs:annotation>
+												<xs:documentation>Data do movimento (Uso interno: campo= mgfro.mab-movto-km-eqpto.dat-movto)</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="MovementHour" type="xs:date">
+											<xs:annotation>
+												<xs:documentation>Hora do movimento</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="PROXIMA">
+														<Field>tabela.campo</Field>
+														<Required>sim/não</Required>
+														<Type>...</Type>
+														<Length>...</Length>
+														<Description>Campo Enviado do PIMSMC para o Protheus NG</Description>
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="NumeroBoletim">
+											<xs:annotation>
+												<xs:documentation>Numero do Boletim</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="PROXIMA">
+														<Field>tabela.campo</Field>
+														<Required>sim/não</Required>
+														<Type>...</Type>
+														<Length>...</Length>
+														<Description>Campo Enviado do PIMSMC para o Protheus</Description>
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="16"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="ImplementKilometrage">
+											<xs:annotation>
+												<xs:documentation>Quantidade percorrida pelo equipamento na data do movimento - 1 Contador</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal"/>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="ImplementKilometrageSecondary">
+										    <xs:annotation>
+										        <xs:documentation>Quantidade percorrida pelo equipamento na data do movimento - 2 Contador </xs:documentation>
+										    </xs:annotation>
+										    <xs:simpleType>
+										        <xs:restriction base="xs:decimal"/>
+										    </xs:simpleType>
+										</xs:element>
+										<xs:element name="OperationCode">
+											<xs:annotation>
+												<xs:documentation>Atributo que representa do código da operação</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="PROXIMA">
+														<Field>tabela.campo</Field>
+														<Required>sim/não</Required>
+														<Type>...</Type>
+														<Length>...</Length>
+														<Description>Campo Enviado do PIMSMC para o Protheus NG</Description>
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="16"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="OperationType">
+											<xs:annotation>
+												<xs:documentation>Atributo que representa do código da operação</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="PROXIMA">
+														<Field>tabela.campo</Field>
+														<Required>sim/não</Required>
+														<Type>...</Type>
+														<Length>...</Length>
+														<Description>Campo Enviado do PIMSMC para o Protheus NG</Description>
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+											<xs:simpleType>
+
+												<xs:restriction base="xs:integer">
+													<xs:enumeration value="1">
+														<xs:annotation>
+															<xs:documentation>Inclusão</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+													<xs:enumeration value="2">
+														<xs:annotation>
+															<xs:documentation>Alteração</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+													<xs:enumeration value="3">
+														<xs:annotation>
+															<xs:documentation>Deleção</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd"
+			elementFormDefault="qualified">
+
+	<!--  ====================================  -->
+	<!--  INCLUDES NECESSÁRIOS PARA A MENSAGEM  -->
+	<!--  ====================================  -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<!--  ====================================  -->
+	<!--  DOCUMENTAÇÃO DA MENSAGEM              -->
+	<!--  ====================================  -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>CurrencyQuote</Name>
+				<Description>Mensagem de integração de cotação da moeda.</Description>
+				<Segment>Geral</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogerio Nagy</Contact>
+					<Description>PO Contas a Receber.</Description>
+					<Adapter>MATA090</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE NEGÓCIO DA MENSAGEM ====  -->
+	<!--  ====================================  -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+
+			<xs:element name="Date" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Data da cotação</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>M2_DATA</xs:Field>
+							<xs:Required>Sim</xs:Required>
+							<xs:Type>Date</xs:Type>
+							<xs:Length>10</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfCurrency" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Currency" type="CurrencyType" minOccurs="1" maxOccurs="99">
+							<xs:annotation>
+								<xs:documentation>Cotações das moedas</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CurrencyType">
+		<xs:sequence>
+			<xs:element name="Code" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da moeda (número de 1 a 99)</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Required>Sim</xs:Required>
+							<xs:Type>varchar</xs:Type>
+							<xs:Length>2</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="99"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Nome da moeda (Real, Dólar, Euro...)</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>MV_MOEDA + código da moeda (ex: MV_MOEDA1, MV_MOEDA2... MV_MOEDA99)</xs:Field>
+							<xs:Required>Não</xs:Required>
+							<xs:Type>varchar</xs:Type>
+							<xs:Length>250</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="Symbol" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Símbolo da moeda (R$, US$, €...)</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>MV_SIMB + código da moeda (ex: MV_SIMB1, MV_SIMB2... MV_SIMB99)</xs:Field>
+							<xs:Required>Não</xs:Required>
+							<xs:Type>varchar</xs:Type>
+							<xs:Length>250</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="Quote" type="xs:double" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Cotação da moeda</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>M2_MOEDA + código da moeda (ex: M2_MOEDA1, M2_MOEDA2... M2_MOEDA99)</xs:Field>
+							<xs:Required>Sim</xs:Required>
+							<xs:Type>Numérico</xs:Type>
+							<xs:Length>11v4</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by Charles Machado (private) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	elementFormDefault="qualified"
+	xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd">
+	<!-- ==================================== -->
+	<!-- INCLUDES NECESSARIOS PARA A MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../commons_1_000.xsd"/>
+	<xs:include schemaLocation="../types/ApportionType_2_001.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM             -->
+	<!-- ==================================== -->
+	<xs:annotation> 
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>Request</Name>
+				<Description>Solicitação ao Armazém / 
+				             Solicitação de Compras</Description>
+				<Segment>Construção e Projetos</Segment>
+				<ProductInformation product="RM">
+					<Contact>Alaim Porto Alvarenga</Contact>
+					<Description>GDP Inovação Const. e Proj.</Description>
+					<Adapter>MovMovimentoData</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>não</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Eduardo de Souza</Contact>
+					<Description>o GDP de Materiais</Description>
+					<Adapter>MATI105 (S.A.) /
+					         MATI110 (S.C.)</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>não</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="Code" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código da Solicitação
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId da Solicitação
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Origin" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Identificação da origem da mensagem (ex:APS,
+						Chão de Fábrica). Este campo foi necessário pois
+						existe mais de um módulo do Datasul que envia
+						Ordem de Produção
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Number" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Numero da Solicitação, que é propagado para o
+						pedido e nota fiscal
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Tipo da Solicitação Particularidades do Logix:
+						Solicitação de Compra – Ordem de compra com
+						situação “P”-planejada Solicitação de Estoque –
+						Requisição de Estoque(Reserva) Solicitação de
+						Cotação – Ordem de compra com situação
+						“D”-Tomada de preço
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="3" />
+						<xs:enumeration value="000">
+							<xs:annotation>
+								<xs:documentation>
+									Solicitação de Compra
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="001">
+							<xs:annotation>
+								<xs:documentation>
+									Solicitação de Estoque
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="002">
+							<xs:annotation>
+								<xs:documentation>
+									Solicitação de Cotação
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CompanyId" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RequestNumberUniqueID" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Identificador único do registro para controle de
+						transação
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId da Empresa
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UserRequesterCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código do Usuário Requisitante Proposta de nome:
+						UserRequesterCode + outra tag UserInternalID
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="UserRequesterInternalId" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId do usuário
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UserRequesterName" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Nome do usuario requisitante
+					</xs:documentation>
+				</xs:annotation>			
+			</xs:element>
+			<xs:element name="Series" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Série da Solicitação, utilizada como agrupador e
+						é propagada no pedido e nota fiscal
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="8" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="RegisterDateTime" type="xs:dateTime"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Data de Emissão da solicitação
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DeliveryDateTime" type="xs:dateTime"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Data de Entrega ou Previsão de entrega
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AbatementDateTime" type="xs:dateTime"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Data de Dedução no contrato (muito utilizado em
+						integração com TOP)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PaymentConditionCode" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código da Condição de Pagamento
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PaymentConditionInternalId"
+				type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId da PaymentConditionCode
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProjectCode" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código do projeto
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProjectInternalId" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId do ProjectCode
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MainOrderCode" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código da ordem (OP ou OS) que originou a
+						Solicitação
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MainOrderInternalId" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						InternalId da ordem (OP ou OS) que originou a
+						Solicitação
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Observation" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Observação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfRequestItem" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>
+							Lista de Itens da Requisição
+						</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="RequestItem"
+							type="RequestItemType" minOccurs="0" maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfApportionRequest" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>
+							Rateio da Requisição
+						</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="ApportionRequest"
+							type="ApportionType" minOccurs="0" maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListOfItemGridsType">
+		<xs:sequence>
+			<xs:element name="ItemGrid" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="GridCode" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Código da grade</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="15"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="GridSequence" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Sequência da grade</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:totalDigits value="10"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RequestItemType">
+		<xs:sequence>
+			<xs:element name="Code" type="xs:int" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do item da solicitação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do item da solicitação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Item</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfItemGrids" type="ListOfItemGridsType" minOccurs="0"/>
+			<xs:element name="ListOfMaterialOrder" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Lista de componentes do item beneficiado</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+     					<xs:element name="MaterialOrder" minOccurs="0" maxOccurs="unbounded">
+     					<xs:complexType>
+               					<xs:sequence>
+	                					<xs:element name="MaterialCode" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+	      			            		<xs:element name="ListOfMaterialItemGrids" type="ListOfItemGridsType" minOccurs="0" maxOccurs="unbounded"/>
+                        				<xs:element name="MaterialQuantity" type="xs:decimal" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                         </xs:complexType>
+                         </xs:element>
+                    </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfDeliverySchedule" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Lista de programações de entrega</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+     					<xs:element name="DeliverySchedule" minOccurs="0" maxOccurs="unbounded">
+     					<xs:complexType>
+               					<xs:sequence>
+	                					<xs:element name="DeliveryID" type="xs:integer" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>
+													Número sequencial da programação de entrega
+												</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="DATASUL">
+													</FieldDocumentation>
+													<FieldDocumentation product="LOGIX">
+														<Field>prog_ordem_sup.num_prog_entrega</Field>
+														<Required>sim</Required>
+														<Type>integer</Type>
+														<Length>3</Length>
+														<Description>
+															Número sequencial da programação dentro da
+															ordem de compra. 
+														</Description>
+													</FieldDocumentation>
+													<FieldDocumentation product="PROTHEUS">
+													</FieldDocumentation>
+													<FieldDocumentation product="RM">
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+											</xs:element>
+	      			            		<xs:element name="EstimatedDeliveryDate" type="xs:dateTime" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>
+													Data de entrega prevista
+												</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="DATASUL">
+													</FieldDocumentation>
+													<FieldDocumentation product="LOGIX">
+														<Field>prog_ordem_sup.dat_entrega_prev</Field>
+														<Required>sim</Required>
+														<Type>date</Type>
+														<Length>99/99/9999</Length>
+														<Description>
+															Data prevista de entrega da sequencia de programação.  
+														</Description>
+													</FieldDocumentation>
+													<FieldDocumentation product="PROTHEUS">
+													</FieldDocumentation>
+													<FieldDocumentation product="RM">
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+											</xs:element>
+                        				<xs:element name="QuantityRequested" type="xs:decimal" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>
+													Quantidade solicitada
+												</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="DATASUL">
+													</FieldDocumentation>
+													<FieldDocumentation product="LOGIX">
+														<Field>prog_ordem_sup.qtd_solic</Field>
+														<Required>sim</Required>
+														<Type>decimal</Type>
+														<Length>12</Length>
+														<Description>
+															Quantidade de material solicitado e previsto de
+															entrega para a sequencia.
+														</Description>
+													</FieldDocumentation>
+													<FieldDocumentation product="PROTHEUS">
+													</FieldDocumentation>
+													<FieldDocumentation product="RM">
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+											</xs:element>
+                        				<xs:element name="Observation" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>
+													Observações da programação de entrega
+												</xs:documentation>
+												<xs:appinfo>
+													<FieldDocumentation product="DATASUL">
+													</FieldDocumentation>
+													<FieldDocumentation product="LOGIX">
+														<Field>prog_ordem_sup.tex_observacao</Field>
+														<Required>não</Required>
+														<Type>string</Type>
+														<Length>50</Length>
+														<Description>
+															Observações da programação de entrega
+														</Description>
+													</FieldDocumentation>
+													<FieldDocumentation product="PROTHEUS">
+													</FieldDocumentation>
+													<FieldDocumentation product="RM">
+													</FieldDocumentation>
+												</xs:appinfo>
+											</xs:annotation>
+											</xs:element>
+                                </xs:sequence>
+                         </xs:complexType>
+                         </xs:element>
+                    </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Text" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Textos da ordem de compra</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>Ordem_sup_txt.tex_observ_oc</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>60</Length>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Application" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Aplicação da ordem de compra</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>Grupo_ctr_desp.ies_obj_entrada</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>20</Length>
+							<Description>
+							Industrialização
+							Comercialização
+							Ativo imobilizado
+							Material de consumo
+							Outros
+							Ativo CIAP
+							Material de processo
+							Serviço 
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do ItemCOde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemReferenceCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código de Referência do Produto</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+						<xs:minLength value="1"/>
+						<xs:whiteSpace value="preserve"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="UnitPrice" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Preço Unitário</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TotalPrice" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Preço Total do Item</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Quantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="UnitOfMeasureCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Unidade de Medida</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UnitOfMeasureInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da UnitOfMeasureCode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WarehouseCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Local de Estoque(Armazem)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WarehouseInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do WarehouseCode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DeliveryDateTime" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Entrega ou Previsão de entrega do item</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Centro de Custo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do CostCenterCode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountantAcountCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Conta contábil</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountantAcountInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do AccountantAcountCode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MainOrderCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da ordem (OP ou OS) que originou a Solicitação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MainOrderInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da ordem (OP ou OS) que originou a Solicitação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProjectCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do projeto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProjectInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do ProjectCode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TaskCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Codigo da Tarefa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TaskInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da TaskCode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Observation" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Observação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OTHER" type="tcother" minOccurs="0"/>
+			<xs:element name="Event" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Operação a ser executada no registro.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="delete">
+							<xs:annotation>
+								<xs:documentation>Quando este registro for exclusão</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ListOfApportionRequestItem" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Rateio dos Itens da Requisição</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="ApportionRequestItem" type="ApportionType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS                 -->
+	<!-- ==================================== -->
+	<!-- tcOther - Representa a estrutura dos Outros Campos Adicionais -->
+	<xs:complexType name="tcother">
+		<xs:sequence>
+			<xs:element name="ADDFIELDS" type="tcaddfields" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- tcAddFields - Representa a estrutura dos Outros Campos Adicionais -->
+	<xs:complexType name="tcaddfields">
+		<xs:sequence minOccurs="0" maxOccurs="20">
+			<xs:element name="ADDFIELD" type="tcAddField" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="tcAddField">
+		<xs:sequence>
+			<xs:element name="field" type="tsfield" minOccurs="0"/>
+			<xs:element name="value" type="tsvalue" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>	
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="tsfield">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="12"/>
+			<xs:minLength value="1"/>
+			<xs:whiteSpace value="preserve"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tsvalue">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+			<xs:whiteSpace value="preserve"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>
+
+
+
+
+
+
+

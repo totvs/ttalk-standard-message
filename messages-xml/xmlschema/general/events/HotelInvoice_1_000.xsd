@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ApportionType_2_001.xsd"></xs:include>
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>HotelInvoice</Name>
+				<Description>Faturas de Hotelaria</Description>
+				<Segment>Controladoria</Segment>
+				
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogerio Nagy</Contact>
+					<Description>GDP de Inovação Controladoria</Description>
+					<Adapter>FINI791</Adapter>
+					<Send>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+			
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			
+			<xs:element name="CompanyId" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Será enviado o valor da variável cEmpAnt (Empresa)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>12</Length>
+							<Description>Será enviado o valor da variável cFilAnt</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId das informações da empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|FWxFilial("FO8")</Field>
+			              	<Required>sim</Required>
+			              	<Type>varchar</Type>
+			              	<Length>50</Length>
+			              	<Description>o InternalID da empresa é formado empresa|FO8_FILIAL.</Description>
+			            </FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="InternalID" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identificador único da fatura</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+		                	<Description>O InternalId da fatura é formado por EMPRESA|FWxFilial("FO8")|FO8_NUM|FO8_CLI|FO8_LOJA</Description>
+						</FieldDocumentation>
+		            </xs:appinfo>
+		        </xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Code" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da fatura</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FO8_NUM</Field>
+		                	<Required>sim</Required>
+		                	<Type>varchar</Type>
+		                	<Length>9</Length>
+		                	<Description>Código da fatura, respeitando o tamanho do número do título a receber (E1_NUM), pois o título da fatura será gerado com esse código.</Description>
+		              	</FieldDocumentation>
+            		</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="IssueDate" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Data de Emissão da fatura</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FO8_DATA</Field>
+							<Required>sim</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description>Data de Emissão da fatura</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			
+			<xs:element name="CustomerVendorInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identificador único do Cliente da fatura</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>XXF_INTVAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Cliente é formado por EMPRESA|A1_FILIAL|A1_COD|A1_LOJA</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Value" type="xs:double" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor da Fatura</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>FO8_VALOR</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>16,2</Length>
+							<Description>Valor da Fatura</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="ListOfRetailSales" type="ListOfRetailSalesType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lista de Notas da Fatura</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="ListOfAccountReceivableInformation" type="ListOfAccountReceivableInformationType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lista de Informações do Contas a Receber</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ListOfRetailSalesType">
+		<xs:sequence>		
+			<xs:element name="RetailSales" type="RetailSalesType" minOccurs="0" maxOccurs="unbounded"></xs:element>			
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="RetailSalesType">
+		<xs:sequence>
+		
+			<xs:element name="RetailSalesInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identificador Único do RPS integrado com a mensagem RetailSales</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>XXF_INTVAL</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>50</Length>
+							<Description>Identificador Único do RPS integrado com a mensagem RetailSales</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ListOfAccountReceivableInformationType">
+		<xs:sequence>		
+			<xs:element name="AccountReceivableInformation" type="AccountReceivableInformationType" minOccurs="0" maxOccurs="unbounded"></xs:element>			
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="AccountReceivableInformationType">
+		<xs:sequence>
+		
+			<xs:element name="Value" type="xs:double" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor do Título a Receber</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>E1_VALOR</Field>
+							<Required>Sim</Required>
+							<Type>decimal</Type>
+							<Length>16,2</Length>
+							<Description>Valor do Título a Receber</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="DueDate" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Data de Vencimento do Título a Receber</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>E1_VENCTO</Field>
+							<Required>Sim</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description>Data de Vencimento do Título a Receber</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+	
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema>

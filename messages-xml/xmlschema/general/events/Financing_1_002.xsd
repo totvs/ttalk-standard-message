@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!-- ===================================== -->
+	<!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+	<!-- ===================================== -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM             -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>Financing</Name>
+				<Description>Geração dos lançamentos do plano de financiamento</Description>
+				<Segment>Incorporação</Segment>
+				<ProductInformation product="RM">
+					<Contact>Guilherme Sana Rezende</Contact>
+					<Description>GDP Inovação Const. e Proj.</Description>
+					<Adapter>Financing</Adapter>
+					<Send>
+						<Request>não</Request>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROTHEUS">
+					<Contact></Contact>
+					<Description></Description>
+					<Adapter></Adapter>
+					<Send>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->	
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="ContractHeader" maxOccurs="1" minOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Empresa</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Filial</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="ContractNumber" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Numero do Contrato</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="DocumentTypeCode" maxOccurs="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>O tipo de documento. Conforme a mensagem DocumentType</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="3"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfContractParcel" maxOccurs="unbounded" minOccurs="1" type="ListOfContractParcelType">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ApportDistributionType">
+		<xs:sequence>
+			<xs:element name="Apport" type="ApportType" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ApportType">
+		<xs:sequence>
+			<xs:element name="CostCenterCode" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLANRATCCU.CODCOLIGADA|FLANRATCCU.CODCCUSTO</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>30</Length>
+							<Description>Centro de Custo (linha de produto + linha de receita + segmento de mercado + classe de uso)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterInternalId" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Internal Id do Centro de Custo 
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|cFilAnt|Entidade</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id do Centro de Custo</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItem" type="xs:string"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Item Contábil
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cItemCTB</Field>
+							<Required>não</Required>
+							<Type>String</Type>
+							<Length>Variável</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountingItemInternalId" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Internal Id do Item Contábil
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cFilAnt|Entidade</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id do Item Contábil </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassValue" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Classe de valor inicial do filtro de exportação
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cClasse</Field>
+							<Required>não</Required>
+							<Type>String</Type>
+							<Length>Variável</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ClassValueInternalId" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Internal Id da Classe de valor
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|cFilAnt|Entidade</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Classe de valor  </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManagerialAccountingEntity" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Entidade Contábil Gerencial  do filtro de exportação
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEntCTB05</Field>
+							<Required>não</Required>
+							<Type>String</Type>
+							<Length>Variável</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManagerialAccountingEntityInternalId" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Internal Id da Entidade Contábil Gerencial 
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|cFilAnt|cPlan|Entidade</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Description>Internal Id da Entidade Contábil Gerencial   </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:decimal" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Rateio para o Centro de Custo ou outro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLANRATCCU.VALOR</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Description>Valor do Rateio para o Centro de Custo ou outro</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FinancialCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Natureza (Protheus) Tipo de Fluxo (DataSul)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLANRATCCU.CODCOLIGADA|FLANRATCCU.CODNATFINANCEIRA</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>45</Length>
+							<Description>Natureza Financeira</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListOfComponentType">
+		<xs:sequence>
+			<xs:element name="Component" type="ComponentType" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ComponentType">
+		<xs:sequence>
+			<xs:element name="Code" maxOccurs="1" minOccurs="0" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>Código do Componente da parcela</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field/>
+							<Required>nao</Required>
+							<Type>int</Type>
+							<Description>não utilizado atualmente na integraçao TIN x Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>					
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Nome do Componente da parcela</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field/>
+							<Required>nao</Required>
+							<Type>string</Type>
+							<Description>não utilizado atualmente na integraçao TIN x Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>						
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:decimal" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Componente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field/>
+							<Required>nao</Required>
+							<Type>decimal</Type>
+							<Description>não utilizado atualmente na integraçao TIN x Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>											
+				</xs:annotation>
+			</xs:element>			
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListOfContractParcelType">
+		<xs:sequence>
+			<xs:element name="ContractParcel" type="ContractParcelType" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContractParcelType">
+		<xs:sequence>
+			<xs:element name="InternalId" maxOccurs="1" minOccurs="1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identificador Interno de cada parcela (título)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CODCOLIGADA|IDLAN</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>15</Length>
+							<Description>Identificador Interno de cada parcela (título)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FlagAccount" maxOccurs="1" minOccurs="0" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>Gerar título para esta parcela? 0 = Não / 1 = Sim</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>Campo calculado - Define o tipo de lançamento que deverá ser criado (NF ou PR) no Protheus</Field>
+							<Required>sim</Required>
+							<Type>int</Type>
+							<Description>Gerar título para esta parcela? 0 = Não / 1 = Sim</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Type">
+				<xs:annotation>
+					<xs:documentation>Tipo da Parcela (Título)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLAN.PAGREC</Field>
+							<Required>sim</Required>
+							<Type>int</Type>
+							<Description>Tipo da Parcela (Título), onde é "A RECEBER" se PAGREC = 1 e "A PAGAR" se PAGREC = 2</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">                        
+						<xs:enumeration value="Receivable">
+							<xs:annotation>
+								<xs:documentation>A receber</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="Payable">
+							<xs:annotation>
+								<xs:documentation>A pagar</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>						
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CustomerVendorId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Cliente/Fornecedor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FCFO.CODCOLIGADA|FCFO.CODCFO</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>30</Length>
+							<Description>Código do Cliente/Fornecedor</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="DocumentPrefix" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Prefixo do Título/Provisão (Série)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>SERIEDOCUMENTO</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>8</Length>
+							<Description>Prefixo do Título/Provisão (Série)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocNumber" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Título/Provisão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>NUMERODOCUMENTO</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>40</Length>
+							<Description>Número do Título/Provisão</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>					
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocParcel" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número da Parcela</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>PARCELA</Field>
+							<Required>não</Required>
+							<Type>int</Type>
+							<Description>Número da Parcela</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>										
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Event" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>1-Upsert; 2-Delete</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>Não utilizado na integração TIN x Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>						
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IssueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Emissão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>DATAEMISSAO</Field>
+							<Required>sim</Required>
+							<Type>date</Type>
+							<Description>Data de Emissão</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>						
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Vencimento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>DATAVENCIMENTO</Field>
+							<Required>sim</Required>
+							<Type>date</Type>
+							<Description>Data de Vencimento</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>						
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NetValue" type="xs:decimal" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor Líquido</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CVALORLIQUIDO</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Description>Valor Líquido</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>			
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrencyCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Moeda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CODMOEVALORORIGINAL</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>10</Length>
+							<Description>Código da Moeda</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>					
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ApportDistribution" type="ApportDistributionType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Distribuição de rateio</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfComponent" type="ListOfComponentType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lista de componentes da parcela</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FinancialCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Natureza (Protheus) Tipo de Despesa (LOGIX) Tipo de Fluxo (DataSul)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>FLANRATCCU.CODCOLIGADA|FLANRATCCU.CODNATFINANCEIRA</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>45</Length>
+							<Description>Natureza Financeira</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MCMVContract" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do contrato "Minha Casa, Minha Vida" com a caixa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>XREGRACOMPONENTEVENDA.CODCONTRATOCEF</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>50</Length>
+							<Description>Código do contrato "Minha Casa, Minha Vida" com a caixa</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>					
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO                  -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"	elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>	
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>Seller</Name>
+					<Description>Vendedor</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code">
+			    <xs:annotation>
+			        <xs:documentation>Código do Vendedor </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="6"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>InternalId da entidade</xs:documentation>
+			    </xs:annotation>
+			</xs:element>
+			<xs:element name="Name">
+			    <xs:annotation>
+			        <xs:documentation>Nome do Vendedor</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="40"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="ShortName" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Login do Vendedor</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="25"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="SellerPassword" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Senha do Vendedor</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="6"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+      <xs:element name="CommunicationInformation" type="CommunicationInformationType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Dados para contato com o vendedor (telefone, e-mail etc)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+			<xs:element name="Address" type="AddressType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Dados da localização física do vendedor</xs:documentation>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="SalesChargeInformation" type="SalesChargeInformationType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+          				<xs:documentation>Informações de comissões</xs:documentation>
+        			</xs:annotation>
+			</xs:element>		
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="SalesChargeInformationType">
+		<xs:sequence>			
+			<xs:element name="CustomerVendorInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId do Fornecedor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>A3_FORNECE</Field>
+							<Required>sim, quando integração com Newhotel</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+		                			<Description>O InternalId do Fornecedor é formado por EMPRESA|A2_FILIAL|A2_COD|A2_LOJA</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+		        	</xs:annotation>
+			</xs:element>			
+			<xs:element name="SalesChargeInterface" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Interface a ser utilizada no fechamento da comissão (Contas a Pagar, Folha ou Sem Interface)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>A3_GERASE2</Field>
+							<Required>sim, quando integração com Newhotel</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+		                			<Description>"S" = Contas a Pagar; "F" = Folha de Pagamento; "N" = Sem Interface</Description>
+						</FieldDocumentation>
+		            		</xs:appinfo>
+		        	</xs:annotation>
+		        	<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="S">
+							<xs:annotation>
+								<xs:documentation>Contas a Pagar</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="F">
+							<xs:annotation>
+								<xs:documentation>Folha de Pagamento</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="N">
+							<xs:annotation>
+								<xs:documentation>Sem Interface</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

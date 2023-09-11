@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:xsd="undefined">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>PriceListHeaderItem</Name>
+					<Description>Tabela de Preços</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="Code">
+			    <xs:annotation>
+			        <xs:documentation>Codigo da Tabela de Precos</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="3"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="Name">
+			    <xs:annotation>
+			        <xs:documentation>Descricao da tabela - Protheus(30) / DataSul(40) </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="30"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="InitialDate">
+			    <xs:annotation>
+			        <xs:documentation>Data Inicial Vigencia  AAAAMMDD </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:date"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="FinalDate">
+			    <xs:annotation>
+			        <xs:documentation>Data Final Vigencia  AAAAMMDD </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:date"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="InitiaHour">
+			    <xs:annotation>
+			        <xs:documentation>Hora Inicial Vigencia HH:MM:SS </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="FinalHour">
+			    <xs:annotation>
+			        <xs:documentation>Hora Final Vigencia HH:MM:SS </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="ItensTablePrice" type="ItensTablePriceType">
+			    <xs:annotation>
+			        <xs:documentation>Itens da tabela de preco</xs:documentation>
+			    </xs:annotation>
+			</xs:element>		
+		</xs:sequence>
+	</xs:complexType>	
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+	<xs:complexType name="ItensTablePriceType">
+	    <xs:sequence>
+	        <xs:element name="Item" type="ItemType" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ItemType">
+	    <xs:sequence>
+		<xs:element name="ItemCode">
+			    <xs:annotation>
+			        <xs:documentation>Codigo do Produto </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="30"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="MinimumSalesPrice">
+			    <xs:annotation>
+			        <xs:documentation>Preco de minimo de venda do produto - Valor Sem Frete  </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="12"/>
+			            <xs:fractionDigits value="5"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="DiscountValue">
+			    <xs:annotation>
+			        <xs:documentation>Valor de Desconto em reais</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="12"/>
+			            <xs:fractionDigits value="2"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="DiscountFactor" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Fator de Acresc./Desconto% </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="11"/>
+			            <xs:fractionDigits value="4"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="ItemValidity" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Vigencia do item AAAAMMDD</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Event">
+			    <xs:annotation>
+			        <xs:documentation>Identifica o tipo de operacao sobre o item da tabela de preco: (upsert - alteracao e inclusao) ; (delete - exclusao)</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:enumeration value="upsert"/>
+			            <xs:enumeration value="delete"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+</xs:schema>

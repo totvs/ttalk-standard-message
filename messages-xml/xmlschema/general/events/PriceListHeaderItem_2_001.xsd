@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by a (TOTVS S.A.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>	
+
+    
+	<!-- ==================================== -->
+	<!-- DOCUMENTA��O DA MENSAGEM             -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+		  <MessageDocumentation>
+			<Name>PriceListHeaderItem</Name>
+			<Description>Tabela de Preços</Description>
+			<Segment>Distribuicao </Segment>
+			<ProductInformation product="Datasul">
+			  <Contact>Marcos Pedro da Silveira</Contact>
+			  <Description>GDP Inovacao Const. e Proj.</Description>
+			  <Adapter>MovMovimentoData</Adapter>
+			  <Send>
+				<Insert>sim</Insert>
+				<Update>n�o</Update>
+				<Delete>sim</Delete>
+			  </Send>
+			  <Receive>
+				<Insert>n�o</Insert>
+				<Update>n�o</Update>
+				<Delete>n�o</Delete>
+			  </Receive>
+			</ProductInformation>			
+		  </MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>	
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da empresa.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>pode ter tamanho variável até 4 com Gestão de Empresa ativado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code">
+			    <xs:annotation>
+			        <xs:documentation>Codigo da Tabela de Precos</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="4"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa da tabela de preço</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>.</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>InternalID da tabela de preço formado por EMPRESA|DA0_FILIAL|DA0_CODTAB</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element name="Name">
+			    <xs:annotation>
+			        <xs:documentation>Descricao da tabela - Protheus(30) / DataSul(40) </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="30"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="InitialDate">
+			    <xs:annotation>
+			        <xs:documentation>Data Inicial Vigencia  AAAAMMDD </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:date"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="FinalDate">
+			    <xs:annotation>
+			        <xs:documentation>Data Final Vigencia  AAAAMMDD </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:date"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="InitiaHour">
+			    <xs:annotation>
+			        <xs:documentation>Hora Inicial Vigencia HH:MM:SS </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="FinalHour">
+			    <xs:annotation>
+			        <xs:documentation>Hora Final Vigencia HH:MM:SS </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string"/>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="ValueDescount">
+			    <xs:annotation>
+			        <xs:documentation>Desconto Tabela de Preco </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="12"/>
+			            <xs:fractionDigits value="2"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			
+			<xs:element name="ItensTablePrice" type="ItensTablePriceType">
+			    <xs:annotation>
+			        <xs:documentation>Itens da tabela de preco</xs:documentation>
+			    </xs:annotation>
+			</xs:element>		
+		</xs:sequence>
+	</xs:complexType>	
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+	<xs:complexType name="ItensTablePriceType">
+	    <xs:sequence>
+	        <xs:element name="Item" type="ItemType" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ItemType">
+	    <xs:sequence>
+		<xs:element name="ItemCode">
+			    <xs:annotation>
+			        <xs:documentation>Codigo do Produto </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="30"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="ItemInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>.</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>InternalID do produto formado por EMPRESA|B1_FILIAL|B1_COD</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="ReferenceCode">
+			    <xs:annotation>
+			        <xs:documentation>Codigo da Referencia do Produto </xs:documentation>
+
+				<xs:appinfo>				
+					<FieldDocumentation product="DATASUL">
+								<Field>cod-refer</Field>
+								<Required>Sim</Required>
+								<Type>string</Type>
+								<Length>8</Length>
+								<Description></Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="8"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="UnitOfMeasureCode">
+			    <xs:annotation>
+			        <xs:documentation>Codigo da Unidade de Medida de Venda </xs:documentation>
+
+				<xs:appinfo>				
+					<FieldDocumentation product="DATASUL">
+								<Field>cod-unid-med</Field>
+								<Required>Sim</Required>
+								<Type>string</Type>
+								<Length>2</Length>
+								<Description></Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:maxLength value="2"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			
+			<xs:element name="MinimumSalesPrice">
+			    <xs:annotation>
+			        <xs:documentation>Preco de minimo de venda do produto - Valor Sem Frete  </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="12"/>
+			            <xs:fractionDigits value="5"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="MinimumSalesPriceFOB">
+			    <xs:annotation>
+			        <xs:documentation>Preco de minimo de venda do produto - FOB  </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="12"/>
+			            <xs:fractionDigits value="5"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>			
+			<xs:element name="DiscountValue">
+			    <xs:annotation>
+			        <xs:documentation>Valor de Desconto em reais</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="12"/>
+			            <xs:fractionDigits value="2"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="DiscountFactor" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Fator de Acresc./Desconto% </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="11"/>
+			            <xs:fractionDigits value="4"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="MinimumAmount" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Quantidade Minima</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="11"/>
+			            <xs:fractionDigits value="4"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+			<xs:element name="CifPrice" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Preco CIF </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="11"/>
+			            <xs:fractionDigits value="4"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>	
+			<xs:element name="FobPrice" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Preco FOB </xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:decimal">
+			            <xs:totalDigits value="11"/>
+			            <xs:fractionDigits value="4"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>			
+			
+			
+			<xs:element name="ItemValidity" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Vigencia do item AAAAMMDD</xs:documentation>
+				</xs:annotation>
+			</xs:element>  
+		     <xs:element name="TypePrice" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo da Tabela de Preco</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>.</Field>
+							<Required>nao</Required>
+							<Type>varchar</Type>	
+							<Length>1</Length>
+							<Description> 1 = Preco Venda , 2 = Venda Consumidor, 3 = Atacado , 4 = Varejo, 5 = Promocao</Description>
+						</FieldDocumentation>
+		          </xs:appinfo>
+		        </xs:annotation>
+		        	<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="1"><xs:annotation><xs:documentation>Preco Venda</xs:documentation></xs:annotation></xs:enumeration>
+							<xs:enumeration value="2"><xs:annotation><xs:documentation>Venda Consumidor</xs:documentation></xs:annotation></xs:enumeration>
+							<xs:enumeration value="3"><xs:annotation><xs:documentation>Atacado</xs:documentation></xs:annotation></xs:enumeration>
+							<xs:enumeration value="4"><xs:annotation><xs:documentation>Varejo</xs:documentation></xs:annotation></xs:enumeration>
+							<xs:enumeration value="5"><xs:annotation><xs:documentation>Promocao</xs:documentation></xs:annotation></xs:enumeration>
+						</xs:restriction>
+					</xs:simpleType>
+			</xs:element>	  	
+		<xs:element name="Event">
+			    <xs:annotation>
+			        <xs:documentation>Identifica o tipo de operacao sobre o item da tabela de preco: (upsert - alteracao e inclusao) ; (delete - exclusao)</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:enumeration value="upsert"/>
+			            <xs:enumeration value="delete"/>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+		<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"></xs:element>	
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+		
+</xs:schema>

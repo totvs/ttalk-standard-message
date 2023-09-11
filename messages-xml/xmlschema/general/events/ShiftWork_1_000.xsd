@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+  <xs:annotation>
+    <xs:appinfo>
+      <MessageDocumentation>
+        <Name>Turno de Trabalho</Name>
+        <Description>Turno de Trabalho de Recursos humanos</Description>
+        <Segment>Recursos humanos</Segment>
+        <ProductInformation product="PROTHEUS">
+          <Contact>Natiê Sugahara</Contact>
+          <Description>Turno de Trabalho</Description>
+          <Adapter>GPEI080.prw</Adapter>
+          <Send>
+            <Insert>não</Insert>
+            <Update>não</Update>
+            <Delete>não</Delete>
+          </Send>
+          <Receive>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Receive>
+        </ProductInformation>
+        <ProductInformation product="RM">
+          <Contact>Tiago Figueiredo de Carvalho</Contact>
+        </ProductInformation>
+        <ProductInformation product="DATASUL">
+          <Contact>Patricia Theilacker</Contact>
+        </ProductInformation>
+        <ProductInformation product="LOGIX">
+          <Contact>Rafael Luis Silva</Contact>
+        </ProductInformation>
+      </MessageDocumentation>
+    </xs:appinfo>
+  </xs:annotation>
+  
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="CompanyId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Codigo da Empresa.No Datasul não há relação de Empresa e Filiais.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element maxOccurs="1" minOccurs="0" name="BranchId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Codigo da Filial.
+           No Datasul não há relação de Empresa e Filiais.
+           No RM não há relação de Filiais.
+          </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element maxOccurs="1" minOccurs="0" name="Code" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Codigo do turno</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>R6_TURNO</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>3</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+      
+      <xs:element maxOccurs="1" minOccurs="0" name="InternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId do turno</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element maxOccurs="1" minOccurs="0" name="Description">
+				<xs:annotation>
+					<xs:documentation>Denominacao do turno</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>R6_DESC</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>50</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element maxOccurs="1" minOccurs="0" name="RegularHour" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Horas mensal de trabalho. Ex: 180hrs
+           Caso o produto não possua aberto as Hrs Normais e DSR, 
+           deve enviar o total de horas do turno.
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>R6_HRNORMA</Field>
+              <Required>nao</Required>
+              <Type>decimal</Type>
+              <Length>6,2</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element maxOccurs="1" minOccurs="0" name="RestHour" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Horas mensal de DSR. Ex: 40hrs
+           No RM/Datasul não há este campo, ele é calculado. 
+           Será necessário a análise no RM/Datasul quando for 
+           utilizar esta informação
+         </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>R6_HRDESC</Field>
+              <Required>nao</Required>
+              <Type>decimal</Type>
+              <Length>5,2</Length>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+		</xs:sequence>
+	</xs:complexType>
+	
+  <xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+  <xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="0" name="ListOfInternalId" type="ListOfInternalIdType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>

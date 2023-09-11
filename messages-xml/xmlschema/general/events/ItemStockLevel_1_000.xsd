@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>	
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>ItemStockLevel</Name>
+				<Description>Mensagem para Atualização do saldo de estoque</Description>
+				<Segment>Manufatura</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Robson Roberto Klug</Contact>
+					<Description>Saldos</Description>
+					<Adapter>MATI225.prw</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="DATASUL">
+					<Contact>Robson Roberto Klug</Contact>
+					<Description>Cadastro de Localização</Description>
+					<Adapter>ItemStockLevelAdapter.cls</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="LOGIX">
+					<Contact>Robson Roberto Klug</Contact>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+  
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="ItemCode" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código do Produto
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>saldo-estoque.it-codigo</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>16</Length>
+							<Description>Item</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB2.B2_COD</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>15</Length>
+							<Description>Código do produto</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemDescription" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Descrição do Produto
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>item.desc-item</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>60</Length>
+							<Description>Descrição</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_DESC</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>30</Length>
+							<Description>Descrição do produto</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfStock" type="ListOfStockType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lista de saldos em estoque</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ListOfStockType">
+		<xs:sequence>
+			<xs:element name="Stock" type="StockType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="StockType">
+		<xs:sequence>
+			<xs:element name="ReferenceCode" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código da referência
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>saldo-estoq.cod-refer</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>8</Length>
+							<Description>Referência</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WarehouseCode" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código do armazém
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>saldo-estoq.cod-depos</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>3</Length>
+							<Description>Depósito</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB2.B2_LOCAL</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>2</Length>
+							<Description>
+								Código do armazém
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LotCode" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Número do lote
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>saldo-estoq.lote</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>40</Length>
+							<Description>Lote/Série</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB8.B8_LOTECTL</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>10</Length>
+							<Description>
+								Número do lote
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SubLotCode" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Número do sub-lote
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB8.B8_NUMLOTE</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>6</Length>
+							<Description>
+								Número do sub-lote
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumberSeries" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Número de série
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SBF.BF_NUMSERI</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>20</Length>
+							<Description>
+								Número de série
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AddressCode" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Endereço/Localização
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>saldo-estoq.cod-localiz</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>20</Length>
+							<Description>
+								Localização
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SBF.BF_LOCALIZ</Field>
+							<Required>não</Required>
+							<Type>string</Type>
+							<Length>15</Length>
+							<Description>
+								Endereço
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LotDueDate" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Data de validade
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>saldo-estoq.dt-vali-lote</Field>
+							<Required>não</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description>
+								Validade lote
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB8.B8_DTVALID</Field>
+							<Required>não</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description>
+								Data de validade do lote
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="QuantityUpdated" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Quantidade atualizada
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>movto-estoq.quantidade</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>17,4</Length>
+							<Description>
+								Qtde
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3.D3_QUANT</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>17,4</Length>
+							<Description>
+								Quantidade movimentada
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InputOutput" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Entrada ou Saída
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>movto-estoq.tipo-trans</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>1</Length>
+							<Description>
+								Tipo transação 
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Entrada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Saída</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CurrentStockAmount" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Saldo de estoque
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+							<Field>saldo-estoq.qtidade-atu</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>13,4</Length>
+							<Description>
+								Qtde atual
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB2.B2_QATU</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length>14,2</Length>
+							<Description>
+								Saldo de estoque
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BookedStockAmount" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Quantidade Reservada
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB2.B2_RESERVA</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>12,2</Length>
+							<Description>
+								Quantidade Reservada
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AvailableStockAmount" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Saldo disponível
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="DATASUL">
+						</FieldDocumentation>
+						<FieldDocumentation product="LOGIX">
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB2.B2_QATU - SB2.B2_RESERVA</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>12,2</Length>
+							<Description>
+								Saldo disponível
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+    </xs:complexType>
+	
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

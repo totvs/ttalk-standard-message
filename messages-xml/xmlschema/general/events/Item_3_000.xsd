@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>Produto</Name>
+				<Description>cadastro de Produtos</Description>
+				<Segment>Manufatura</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>...</Contact>
+					<Description>......</Description>
+					<Adapter>MATA010.PRX</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="lOGIX">
+					<Contact>...consulte guia de documentacao...</Contact>
+					<Description>...consulte guia de documentacao...</Description>
+					<Adapter>...consulte guia de documentacao...</Adapter>
+					<Send>
+						<Insert>...consulte guia de documentacao...</Insert>
+						<Update>...consulte guia de documentacao...</Update>
+						<Delete>...consulte guia de documentacao...</Delete>
+					</Send>
+					<Receive>
+						<Insert>...consulte guia de documentacao...</Insert>
+						<Update>...consulte guia de documentacao...</Update>
+						<Delete>...consulte guia de documentacao...</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Código da empresa.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>pode ter tamanho variável até 4 com Gestão de Empresa ativado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>ID Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>pode ter tamanho variável até 8 com Gestão de Empresa ativado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework 
+							estando no ambiente (Empresa x Filial) correto</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_COD</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>15</Length>
+							<Description>campo expansivel ate 30</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId de Integração</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_FILIAL+SB1.B1_COD</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nome</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_DESC</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>30</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ShortName" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Nome Curto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Active" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Item Ativo?</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_ATIVO</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>1</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StockGroupCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código Grupo Estoque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_TIPO</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>30</Length>
+							<Description>campo possui conteúdo validado com cadastro de SX5 que pode ser editado pelo cliente</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StockGroupInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de Grupo de Estoque do produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StockGroupDescription" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição Grupo Estoque</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UnitOfMeasureCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código Unidade Medida</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_UM</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="UnitOfMeasureInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de Unidade Medida do produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SAH.AH_FILIAL+SB1.B1_UM</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ObtainingType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Forma de Obtenção</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1"><xs:annotation><xs:documentation>Comprado</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="2"><xs:annotation><xs:documentation>Fabricado</xs:documentation></xs:annotation></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ComercialFamilyCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Família Comercial</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ComercialFamilyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de Família Comercial do produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ComercialFamilyDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição Família Comercial</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DeployDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Implantação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReleaseDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Liberação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StandardWarehouseCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Depósito Padrão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_LOCPAD</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StandardWarehouseInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de Depósito Padrão do produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>NNR.NNR_FILIAL+SB1.B1_LOCPAD</Field>
+						</FieldDocumentation>
+					</xs:appinfo>					
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StandardWarehouseDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição Depósito Padrão</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MultipleLot" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lote Múltiplo</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EconomicLot" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lote Econômico</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_LE</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>12,2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MinimumLot" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lote Mínimo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_LM</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>12,2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="QualityControl" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Controla Qualidade</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ControlType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo Controle</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1"><xs:annotation><xs:documentation>Físico</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="2"><xs:annotation><xs:documentation>Total</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="3"><xs:annotation><xs:documentation>Consignado</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="4"><xs:annotation><xs:documentation>Débito Direto</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="5"><xs:annotation><xs:documentation>Não Definido</xs:documentation></xs:annotation></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StockControlType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo Controle Estoque</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1"><xs:annotation><xs:documentation>Serial</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="2"><xs:annotation><xs:documentation>Número Série</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="3"><xs:annotation><xs:documentation>Lote</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="4"><xs:annotation><xs:documentation>Referência</xs:documentation></xs:annotation></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FractionalQuantity" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Fracionada</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NetWeight" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Peso Líquido</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_PESO</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>11,4</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="GrossWeight" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Peso Bruto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_PESBRU</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>11,4</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FamilyCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Família</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FamilyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de Família do produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FamilyDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição Família</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FamilyClassificationCode" type="xs:string" minOccurs="0" maxOccurs="1">
+			    <xs:annotation>
+			        <xs:documentation>Classificaçãio da Família de Materiais</xs:documentation>
+			    </xs:annotation>
+			</xs:element>
+			<xs:element name="FormulaType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo Fórmula</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1"><xs:annotation><xs:documentation>Não Utiliza</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="2"><xs:annotation><xs:documentation>Concentração</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="3"><xs:annotation><xs:documentation>PPM</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="4"><xs:annotation><xs:documentation>Veículo</xs:documentation></xs:annotation></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PerMillion" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor Per PPM</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IsScrapStockControl" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Controla Estoque Refugo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IsScrapFiscalPrice" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Refugo ao Preco Fiscal</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ScrapItemCode" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Item Refugo</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ScrapItemInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de Item Refugo do produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ScrapItemQuantity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade Item Refugo</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="10"/>
+						<xs:fractionDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Origin" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Origem da mercadoria</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0"><xs:annotation><xs:documentation>Nacional</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="1"><xs:annotation><xs:documentation>Estrangeira - Importacao direta</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="2"><xs:annotation><xs:documentation>Estrangeira - Adquirida no mercado externo</xs:documentation></xs:annotation></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FiscalInformation" type="FiscalInformationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfCustomerItemInformation" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Verificar com a equipe responsável se será CustomerItemInformation ou CustomerInformation como está no fonte Protheus</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="CustomerItemInformation" type="CustomerItemInformationType" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="CostCenterCode" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_CC</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>9</Length>
+							<Description>campo expansivel ate 20</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do CostCenterCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTT.CTT_FILIAL+SB1.B1_CC</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GroupCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_GRUPO</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>4</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GroupInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do GroupCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SBM.BM_FILIAL+SB1.B1_GRUPO</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GroupName" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SecondUnitOfMeasureCode" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Segunda Unidade de Medida Utilizada para converter a quantidade para uma segunda unidade</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_SEGUM</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SecondUnitOfMeasureInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do SecondUnitOfMeasureCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SAH.AH_FILIAL+SB1.B1_SEGUM</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MultiplicationFactorValue" maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Fator multiplicador da conversão para a segunda unidade de medida</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SB1.B1_CONV</Field>
+							<Required>não, somente necessário quando inserida segunda unidade de medida</Required>
+							<Type>decimal</Type>
+							<Length>5,2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="8"/>
+						<xs:fractionDigits value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Values" type="ValuesType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valores do Item (preço de venda, preço de custo, etc)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProductType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Tipo de produto</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="01"><xs:annotation><xs:documentation>ATIVO IMOBILIZADO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="02"><xs:annotation><xs:documentation>BENEFICIAMENTO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="03"><xs:annotation><xs:documentation>EMBALAGEM</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="04"><xs:annotation><xs:documentation>GASTOS GERAIS</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="05"><xs:annotation><xs:documentation>MATERIAL DE CONSUMO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="06"><xs:annotation><xs:documentation>MERCADORIA</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="07"><xs:annotation><xs:documentation>MAO DE OBRA</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="08"><xs:annotation><xs:documentation>MATERIA PRIMA</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="09"><xs:annotation><xs:documentation>OUTROS INSUMOS</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="10"><xs:annotation><xs:documentation>PRODUTO ACABADO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="11"><xs:annotation><xs:documentation>PRODUTO INTERMEDIARIO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="12"><xs:annotation><xs:documentation>PRODUTO EM PROCESSO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="13"><xs:annotation><xs:documentation>PRODUTO VEICULO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="14"><xs:annotation><xs:documentation>SELO DE CONTROLE</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="15"><xs:annotation><xs:documentation>SUBPRODUTO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="16"><xs:annotation><xs:documentation>INSUMO    AGRICOLA</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="17"><xs:annotation><xs:documentation>MATERIAIS MANFRO</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="18"><xs:annotation><xs:documentation>PRODUTOS  INDUSTRIAIS</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="19"><xs:annotation><xs:documentation>INSUMO    INDUSTRIAIS</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="20"><xs:annotation><xs:documentation>SERVIÇO </xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="21"><xs:annotation><xs:documentation>GENERICO </xs:documentation></xs:annotation></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Trail" minOccurs="0">
+			    <xs:annotation>
+			        <xs:documentation>Rastro por lote ou Sublote, sem rastro</xs:documentation>
+			    </xs:annotation>
+			    <xs:simpleType>
+			        <xs:restriction base="xs:string">
+			            <xs:enumeration value="S"><xs:annotation><xs:documentation>SubLote</xs:documentation></xs:annotation></xs:enumeration>
+			            <xs:enumeration value="L"><xs:annotation><xs:documentation>Lote</xs:documentation></xs:annotation></xs:enumeration>
+			            <xs:enumeration value="N"><xs:annotation><xs:documentation>Nao utiliza rastro</xs:documentation></xs:annotation></xs:enumeration>
+			        </xs:restriction>
+			    </xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FiscalInformationType">
+		<xs:annotation>
+			<xs:documentation>Informações fiscais do Item</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="FiscalClassification" type="FiscalClassificationType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CustomerItemInformationType">
+		<xs:annotation>
+			<xs:documentation>Amarração Cliente X Item</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="CustomerCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do cliente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SA7.A7_CLIENTE+SA7.A7_LOJA</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>8</Length>
+							<Description>expansivel ate 24 (uniao dos campos cliente e loja)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CustomerInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do CustomerCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SA1.A1_FILIAL+SA7.A7_CLIENTE+SA7.A7_LOJA</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CustomerItemCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do Item X Cliente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SA7.A7_CODCLI</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>15</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CustomerItemInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do CustomerItemCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SA7.A7_FILIAL+SA7.A7_CLIENTE+SA7.A7_LOJA+SA7.A7_PRODUTO</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FiscalClassificationType">
+		<xs:annotation>
+			<xs:documentation>Informacoes fiscais Item</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="FiscalClassificationCode">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation>Codigo Classificacao Fiscal</xs:documentation>
+					</xs:annotation>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="FiscalClassificationInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do FiscalClassificationCode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FiscalClassificationDescription" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descricao Classificacao Fiscal</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ValuesType">
+		<xs:sequence>
+			<xs:element name="CostPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Preço de Custo</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SalesPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Preço de Venda</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="AverageCostPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Preço Médio de Custo</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StandardCostPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Preço Padrão</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BaseDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Base do Calculo dos preços</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="PackingQuantity" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade na Embalagem</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="AccountantAccountCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Conta Contábil </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="AllowsPurchase" type="xs:boolean" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Permite Comprar do Item</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="IsStorable" type="xs:boolean" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Item é  Estocável (true)  ou Aplicação direta (false) ? </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="LastUpdateItem" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Última atualização do Item</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="LastPurchaseItem" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Última Compra do Item </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+
+</xs:schema>

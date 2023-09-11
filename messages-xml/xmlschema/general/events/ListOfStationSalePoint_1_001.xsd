@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" xmlns:xsd="undefined">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../commons_1_000.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>Estação PDV</Name>
+				<Description>Estação de Ponto de Venda</Description>
+				<Segment>Varejo</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>leandro.lima</Contact>
+					<Description>Inovação Varejo</Description>
+					<Adapter></Adapter>
+					<Send>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="RM">
+					<Contact>Alaim Porto Alvarenga</Contact>
+					<Description>GDP Inovação Construção e Projetos.</Description>
+					<Adapter></Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="ListOfStationSalePoint" type="ListOfStationSalePointType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lista de Estação de Ponto de Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>Lista de Estação de Ponto de Venda (Tabela TPONTOVENDA)</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG</Field>
+							<Required>sim</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>Estação Estação de Ponto de Venda</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListOfStationSalePointType">
+		<xs:sequence>
+			<xs:element name="StationSalePoint" type="StationSalePointType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Estação de Ponto de Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>6</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA</Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>Tabela de Ponto de Venda</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StationSalePointType">
+		<xs:sequence>
+			<xs:element name="Event" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Evento do item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>6</Length>
+							<Description>Update ou Delete</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>.</Field>
+							<Required>sim</Required>
+							<Type>string</Type>
+							<Length>6</Length>
+							<Description>Operação a ser executada no registro: upsert ou gelete</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="upsert">
+							<xs:annotation>
+								<xs:documentation>Atualizar registro.</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="delete">
+						  <xs:annotation>
+							<xs:documentation>Apagar registro.</xs:documentation>
+						  </xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>Será enviado o valor da variável cEmpAnt(Empresa)</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.CODCOLIGADA</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length>2</Length>
+							<Description>Codigo da Coligada</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>12</Length>
+							<Description>Será enviado o valor da variável cFilAnt</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.CODFILIAL</Field>
+							<Required>não</Required>
+							<Type>integer</Type>
+							<Length>2</Length>
+							<Description>Filial Default</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework 
+							estando no ambiente (Empresa x Filial) correto</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.CODCOLIGADA | TPONTOVENDA.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>10</Length>
+							<Description>Concatenação da coligada do registro e filial do contexto</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Ponto de Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG.LG_CODIGO</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>3</Length>
+							<Description>Código da Estacao de Trabalho</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.PONTOVENDA</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>10</Length>
+							<Description>Código do Ponto de Venda</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId de Integração</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>.</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalID do Código de Estação é formado por EMPRESA|LG_FILIAL|LG_CODIGO</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>.</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>6</Length>
+							<Description>O InternalID do Ponto de Venda é formado por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.PONTOVENDA</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Series" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Série</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG.LG_SERIE</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>3</Length>
+							<Description>Série da Estação de Trabalho</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.SERIE</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>5</Length>
+							<Description>Série Default</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FiscalSerie" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Serie ECF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG.LG_SERPDV</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Serie da impressora fiscal, do equipamento ECF</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SATSerie" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Série SAT</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG.LG_SERSAT</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>9</Length>
+							<Description>Serie do equipamento SAT-ECF</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SeriesInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Id de integração da Série</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG.LG_SERIE</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>3</Length>
+							<Description>Série da Estação de Trabalho</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>Este campo é composto por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.SERIE</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>5</Length>
+							<Description>Série Default</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Description" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Descrição</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG.LG_NOME</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description>Nome da Estação de Trabalho</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.DESCRICAO</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>60</Length>
+							<Description>Descrição do Ponto de Venda</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WarehouseCode" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+				  <xs:documentation>Codigo Local de Estoque(Armazem)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SLG.LG_LOCAL</Field>
+						  <Required>não</Required>
+						  <Type>varchar</Type>
+						  <Length>2</Length>
+						  <Description>Armazém padrão</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+						  <Field>TPONTOVENDA.CODLOC</Field>
+						  <Required>não</Required>
+						  <Type>varchar</Type>
+						  <Length>15</Length>
+						  <Description>Local de Estoque Default</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WarehouseInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração do Local de Estoque(Armazem)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>.</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description> InternalId do Local de Estoque Default</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>.</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>19</Length>
+							<Description>Este campo é composto por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.CODFILIAL|TPONTOVENDA.CODLOC</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Active" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Estação Ativa?</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description/>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.INATIVO</Field>
+							<Required>não</Required>
+							<Type>boolean</Type>
+							<Length></Length>
+							<Description>Ponto de venda Inativo: 0-Ativo 1-Inativo</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CRO" type="xs:integer" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Contador Reinício de Operação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SLG.LG_CRO</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>6</Length>
+							<Description>Contador Reinício de Operação</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="RM">
+							<Field>TPONTOVENDA.CRO</Field>
+							<Required>não</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description>Contador Reinício de Operação Default</Description>
+						</FieldDocumentation>
+				  </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"/>
+</xs:schema>

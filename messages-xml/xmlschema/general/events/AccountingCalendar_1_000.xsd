@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+	
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+	
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>AccountingCalendar</Name>
+				<Description>Calendário Contábil</Description>
+				<Segment>Controladoria</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogerio Nagy</Contact>
+					<Adapter>CTBI010.prw</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+							<Description>será enviado o valor da variável cEmpAnt( empresa) </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>12</Length>
+							<Description>Será enviado o valor da variável cFilAnt </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CalendarCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do Calendário</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTG_CALEND</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>03</Length>
+							<Description>Código do calendário contábil</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="03"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do CalendarCode</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description>Código que irá identificar o calendario contabil no sistema externo: xfilial("CTG")+CTG.CTG_CALEND+CTG.CTG_EXERC </Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="FinancialYear" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Exercicio Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTG_EXERC</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>04</Length>
+							<Description>Ano do exercicio contábil. Exemplo 2013</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="04"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ListOfAccountingPeriods" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Periodos Contábeis</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="PeriodOfAccount" type="PeriodOfAccountType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PeriodOfAccountType">
+		<xs:sequence>
+			<xs:element name="PeriodCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código Periodo Contabil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTG_PERIOD</Field>
+							<Required>nao</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+							<Description>Código alfanumerico do periodo contábil. Caso não seja passado a rotina irá pesquisar pela data inicial e final do periodo</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="02"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InitialDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Inicial do Período</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTG_DTINI</Field>
+							<Required>sim</Required>
+							<Type>Data</Type>
+							<Length>08</Length>
+							<Description>Data Inicial do Período</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FinalDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Final do Período</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTG_DTFIM</Field>
+							<Required>sim</Required>
+							<Type>Data</Type>
+							<Length>08</Length>
+							<Description>Data Final do Período</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PeriodStatus" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Status do Período
+						PROTHEUS: ( 1.Aberto 4.Bloqueado)
+					</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CTG_STATUS</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>01</Length>
+							<Description>Status do Período. 1- Aberto - Permite o lançamento contábil no período. 4 - Bloqueado - Não permite o lançamento.</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1"><xs:annotation><xs:documentation>Aberto</xs:documentation></xs:annotation></xs:enumeration>
+						<xs:enumeration value="4"><xs:annotation><xs:documentation>Bloqueado</xs:documentation></xs:annotation></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

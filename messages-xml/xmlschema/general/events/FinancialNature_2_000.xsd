@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd"
+           elementFormDefault="qualified">
+
+  <!-- ===================================== -->
+  <!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+  <!-- ===================================== -->
+  <xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+  <!-- ==================================== -->
+  <!-- DOCUMENTAÇÃO DA MENSAGEM -->
+  <!-- ==================================== -->
+  <xs:annotation>
+    <xs:appinfo>
+      <MessageDocumentation>
+        <Name>FinancialNature</Name>
+        <Description>Cadastro de naturezas financeiras</Description>
+        <Segment>ERP base</Segment>
+        <ProductInformation product="DATASUL">
+          <Contact>....</Contact>
+        </ProductInformation>
+        <ProductInformation product="lOGIX">
+          <Contact>...</Contact>
+        </ProductInformation>
+        <ProductInformation product="PROTHEUS">
+          <Contact>Rogerio Nagy</Contact>
+          <Adapter>FINI010I.prw</Adapter>
+          <Send>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Send>
+          <Receive>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Receive>
+        </ProductInformation>
+        <ProductInformation product="RM">
+          <Contact>Alaim Alvarenga</Contact>
+          <Adapter>MovTbOrcamentoData</Adapter>
+          <Send>
+            <Insert>não</Insert>
+            <Update>não</Update>
+            <Delete>não</Delete>
+          </Send>
+          <Receive>
+            <Insert>sim</Insert>
+            <Update>sim</Update>
+            <Delete>sim</Delete>
+          </Receive>
+        </ProductInformation>
+      </MessageDocumentation>
+    </xs:appinfo>
+  </xs:annotation>
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+  <!-- ==================================== -->
+  <xs:complexType name="BusinessContentType">
+    <xs:sequence>
+      <xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>02</Length>
+              <Description>será enviado o valor da variável cEmpAnt (Empresa)</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.CODCOLIGADA</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Codigo da empresa</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Filial</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>02</Length>
+              <Description>Será enviado o valor da variável cFilAnt (Filial)</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="CompanyInternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId Empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>tabela.campo</Field>
+              <Required>sim/não</Required>
+              <Type>char</Type>
+              <Length>10</Length>
+              <Description>Valores de Empresa + Filial (cEmpAnt|cFilAnt)</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.CODCOLIGADA</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Chave da empresa</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InternalId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>tabela.campo</Field>
+              <Required>sim/não</Required>
+              <Type>char</Type>
+              <Length>18</Length>
+              <Description>Código que irá identificar a natureza financeira no sistema externo: xfilial("SED")+SED.SED_CODIGO</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.CODCOLIGADA|TTBORCAMENTO.CODTBORCAMENTO</Field>
+              <Required>sim</Required>
+              <Type>integer|string</Type>
+              <Length>|40</Length>
+              <Description>Chave da natureza financeira</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Code" maxOccurs="1" minOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Código da Natureza Financeira
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SED.SED_CODIGO</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>10</Length>
+              <Description>Código da natureza financeira</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.CODTBORCAMENTO</Field>
+              <Required>sim</Required>
+              <Type>string</Type>
+              <Length>40</Length>
+              <Description>Codigo da Natureza financeira</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Description">
+        <xs:annotation>
+          <xs:documentation>
+            Descrição da Natureza Financeira
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SED.SED_DESCRIC</Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>30</Length>
+              <Description>Descrição da natureza financeira</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.DESCRICAO</Field>
+              <Required>nao</Required>
+              <Type>string</Type>
+              <Length>100</Length>
+              <Description>Descrição da Natureza financeira</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="NatureType">
+        <xs:annotation>
+          <xs:documentation>
+            Tipo da Natureza
+          </xs:documentation>
+          <xs:documentation>
+            [DataSul]. Neste item podem haver mais niveis
+            que podem ser totalizadores. Esta prática foi
+            mencionada pelo Kleber Rocha. Em consensos
+            futuros poderá ser analisado.
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SED.SED_TIPO</Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>01</Length>
+              <Description>Tipo da natureza financeira</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.SINTETICOANALITICO</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Tipo da Natureza financeira</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Synthetic">
+              <xs:annotation>
+                <xs:documentation>
+                  Sintético
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Analytical">
+              <xs:annotation>
+                <xs:documentation>
+                  Analítico
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="UseCategory">
+        <xs:annotation>
+          <xs:documentation>
+            Categoria de Uso
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SED.SED_COND</Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>01</Length>
+              <Description>Categoria de Uso</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.NATUREZA</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Categoria de Uso</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Free">
+              <xs:annotation>
+                <xs:documentation>
+                  Livre
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Receivable">
+              <xs:annotation>
+                <xs:documentation>
+                  A receber
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Payable">
+              <xs:annotation>
+                <xs:documentation>
+                  A pagar
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Banking">
+              <xs:annotation>
+                <xs:documentation>
+                  Banco
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Blocked">
+        <xs:annotation>
+          <xs:documentation>Bloqueado?</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>tabela.campo</Field>
+              <Required>não</Required>
+              <Type>Int</Type>
+              <Length>01</Length>
+              <Description>Bloqueado</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TTBORCAMENTO.INATIVO</Field>
+              <Required>não</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Bloqueado</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:int">
+            <xs:enumeration value="0">
+              <xs:annotation>
+                <xs:documentation>
+                  Não Bloqueado
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>
+                  Bloqueado
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE RETORNO ================ -->
+  <!-- ==================================== -->
+  <xs:complexType name="ReturnContentType">
+    <xs:sequence>
+      <xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ==================================== -->
+  <!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+  <!-- ==================================== -->
+  <xs:element name="BusinessContent" type="BusinessContentType"/>
+  <xs:element name="ReturnContent" type="ReturnContentType"></xs:element>
+
+</xs:schema>

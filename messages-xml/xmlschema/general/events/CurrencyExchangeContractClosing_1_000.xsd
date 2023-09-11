@@ -1,0 +1,1017 @@
+	<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+		<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+		<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+		<xs:annotation>
+			<xs:appinfo>
+				<MessageDocumentation>
+					<Name>Fechamento de Contrato de Cambio</Name>
+					<Description>Integracao do Fechamento de Contrato de Cambio para efetivacao da baixa de titulos em moeda estrangeira</Description>
+					<Segment>Backoffice</Segment>
+					<ProductInformation product="LOGIX" version="12.26">
+						<Contact>Rafael Luis da Silva</Contact>
+					</ProductInformation>
+					<Send>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</MessageDocumentation>
+			</xs:appinfo>
+		</xs:annotation>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="InternalId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação do Movimento Financeiro</xs:documentation>
+ 					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description> Empresa externa para a busca no de/para</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>							
+				</xs:annotation>			
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da Empresa|Filial do Movimento Financeiro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="Logix">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description>Empresa para a busca no de/para</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação da Empresa do Movimento Financeiro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description> Empresa externa para a busca no de/para</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação da Filial do Movimento Financeiro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description>Filial externa para a busca no de/para
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ContractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Número do contrato de câmbio</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Sim</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="ContractDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de efetivação do contrato de câmbio</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Sim</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>Data de efetivação do contrato de câmbio</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+  				</xs:annotation>
+			</xs:element>
+			<xs:element name="CurrencyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identificador único da moeda da baixa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>docum_txt.parametro[444,445]</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description>Identificador único da moeda da baixa</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="EntryValue" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor da Movimentação Financeira na moeda do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.val_contabil</Field>
+							<Required>Sim</Required>
+							<Type>decimal</Type>
+							<Length>15,2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="DefaultCurrencyEntryValue" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor da movimentação financeira na moeda padrão do sistema, já ajustado para evitar divergência de arredondamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.val_contabil</Field>
+							<Required>Sim</Required>
+							<Type>decimal</Type>
+							<Length>15,2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="CurrencyRate" type="xs:double" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Taxa da moeda na efetivação do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>cre_docum_compl.parametro_qtd</Field>
+							<Required>Sim</Required>
+							<Type>DECIMAL</Type>
+							<Length>18,9</Length>
+							<Description>Taxa da moeda na efetivação do contrato</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BankInternalId" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identificador de Integração do Banco do Movimento Financeiro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.cod_banco</Field>
+							<Required>Sim</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>Código do banco</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="Agency" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Número de identificação da agência bancária onde ocorreu o movimento bancário.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.num_agencia</Field>
+							<Required>Sim</Required>
+							<Type>CHAR</Type>
+							<Length>6</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="NumberAccount" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Número de identificação da conta bancária onde ocorreu o movimento bancário.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.conta_bco</Field>
+							<Required>Sim</Required>
+							<Type>CHAR</Type>
+							<Length>15</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="MovementDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data da Movimentação Financeira			</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.dat_movto</Field>
+							<Required>Sim</Required>
+							<Type>DATE</Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="MovementType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo de Movimento 1-Débito, 2-Crédito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.tip_movto</Field>
+							<Required>Sim</Required>
+							<Type>CHAR</Type>
+							<Length>1</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Débito (Carteira a Pagar)</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Crédito (Carteira a Receber)</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="ApportionmentDistribution" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Apportionment" type="ApportionmentDistributionType" minOccurs="0" maxOccurs="unbounded">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="HistoryCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Histórico Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>
+							</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ComplementaryHistory" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Histórico Complementar</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+         	<xs:element name="DocumentType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo de Documento 1-DB Débito, 2-CR Crédito,3-DP Duplicata, 4-CH Cheque 5-CD Cheque Pré-Datado 6-TR Transferência Bancária</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.tip_docum_cap</Field>
+							<Required>Não</Required>
+							<Type>CHAR</Type>
+							<Length>2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>DB Débito</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>CR Crédito</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>DP Duplicata</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>CH Cheque</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation>CD Cheque Pré-Datado</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation>TR Transferência Bancária</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="DocumentNumber" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Documento que Originou o Movimento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.num_docum</Field>
+							<Required>Não</Required>
+							<Type>CHAR</Type>
+							<Length>16</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="BatchNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lote (É utilizado para modificação ou exclusão)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>movfin.num_lote</Field>
+							<Required>Sim</Required>
+							<Type>NUMBER</Type>
+							<Length>5</Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="ListOfAccountReceivableDocument"  minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="AccountReceivableDocument" type="AccountReceivableDocumentType" minOccurs="0" maxOccurs="unbounded">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+            </xs:element>
+			<xs:element name="FinancialCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código de identificação da Natureza Financeira (Protheus)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="CurrencyType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo de Moeda do Movimento Financeiro: 1 - CC Cartão de Crédito , 2 - CD Cartão de Débito , 3 - CH Cheque, 4 - R$ Dinheiro </xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>CC Cartão Crédito</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>CD Cartão Débito</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>CH Cheque</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>R$ Dinheiro</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TypingDate" type="xs:time" maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Data de Digitação da Movimentação Financeira </xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AvailabilityDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Disponibilidade da Movimentação Financeira</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalBranchId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Filial de Origem do Movimento Financeiro </xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+							<xs:maxLength value="7"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>        
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="AccountReceivableDocumentType">
+		<xs:sequence>	
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da Empresa|Filial do título</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="Logix">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description>Empresa para a busca no de/para</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação da Empresa do Movimento Financeiro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description> Empresa externa para a busca no de/para</Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identificação da Filial do Movimento Financeiro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description>Filial externa para a busca no de/para</Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="AccountReceivableDocumentInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identificador único do título a receber que foi baixado e corresponde ao lote do contrato de cambio</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>eai_depara_valores.valor_externo</Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>Quando houver internalID da mensgem de titulos. Se não enviar este código para a busca do título, deverá enviar os demais campos</Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>    
+            <xs:element name="DocumentPrefix" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Prefixo do título</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>200</Length>
+							<Description>Campo enviado pelo sistema externo</Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="DocumentNumber" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Título</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>docum_pgto.num_docum</Field>
+							<Required>Não</Required>
+							<Type>char</Type>
+							<Length>16</Length>
+							<Description>Obrigatório caso não envie o InternalID do título</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="DocumentParcel" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Parcela do Título</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Nao</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>Obrigatório caso não envie o InternalID do título</Description>
+						</FieldDocumentation>							
+                        <FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="1"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="DocumentTypeCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo do Título</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>docum_pgto.ies_tip_docum</Field>
+							<Required>Não</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description>Obrigatório caso não envie o InternalID do título</Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>          
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DischargeSequence" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sequência da Baixa do título baixado</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+            <xs:element name="PaymentValue" type="xs:double" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor do Pagamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field>docum_pgto.val_pago</Field>
+							<Required>Sim</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>   
+    
+	<!-- ========================================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DE RATEIO DO MOVIMENTO FINANCEIRO ==== -->
+	<!-- ========================================================== -->
+	<xs:complexType name="ApportionmentDistributionType">
+		<xs:sequence>				
+			<xs:element name="DebitAccountantAcountInternalId" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identificador de integração da Conta contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>            
+				</xs:annotation>
+			</xs:element>				
+			<xs:element name="CreditAccountantAcountInternalId" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identificador de integração da Conta contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation> 
+					</xs:appinfo>             
+				</xs:annotation>
+			</xs:element>				
+			<xs:element name="CostCenterInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Identificador de integração do Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="LOGIX">
+							<Field></Field>
+							<Required>Não</Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>							
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>            
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>		
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="ListOfInternalId" type="ListOfInternalIdType"/>
+		   	<!-- outras campos necessários no retorno -->
+        </xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+	<xs:group name="NewGroupDefinition">
+		<xs:sequence></xs:sequence>
+	</xs:group>	
+</xs:schema>

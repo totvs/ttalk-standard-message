@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>CreditRiskAnalysis</Name>
+				<Description>Consulta do status de crédito do cliente</Description>
+				<Segment>Controladoria</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Rogerio Nagy</Contact>
+					<Description>GDP de Inovação Controladoria</Description>
+					<Adapter>FINMI060</Adapter>
+					<Send>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			
+			<xs:element name="CompanyId" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Será enviado o valor da variável cEmpAnt (Empresa)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>12</Length>
+							<Description>Será enviado o valor da variável cFilAnt</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId das informações da empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt|FWxFilial("FLY")</Field>
+			              	<Required>sim</Required>
+			              	<Type>varchar</Type>
+			              	<Length>50</Length>
+			              	<Description>o InternalID da empresa é formado empresa|FLY_FILIAL. Tamanho entre 05 e 15</Description>
+			            </FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="ListOfCreditRiskAnalysis" type="ListOfCreditRiskAnalysisType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lista dos clientes e seus status de crédito</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ListOfCreditRiskAnalysisType">
+		<xs:sequence>
+			<xs:element name="CreditRiskAnalysis" type="CreditRiskAnalysisType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+			
+	<xs:complexType name="CreditRiskAnalysisType">
+		<xs:sequence>
+			<xs:element name="CustomerInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código interno do cliente.</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+              				<Required>sim</Required>
+              				<Type>varchar</Type>
+              				<Length>136</Length>
+							<Description>O InternalId do Cliente é formado por EMPRESA|A1_FILIAL|A1_COD|A1_LOJA|C</Description>
+	   					</FieldDocumentation>
+    				</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			
+			<xs:element name="Status" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Situação do crédito do cliente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+        	   				<Required>sim</Required>
+               				<Type>varchar</Type>
+            				<Length>2</Length>
+            				<Description>Situação do crédito do cliente (00 - Crédito Liberado; 01 – limite de crédito ultrapassado; 04 – validade do crédito expirada)</Description>
+            			</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation>Crédito Liberado</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Limite de Crédito Ultrapassado</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Validade do Crédito Expirada</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			
+			<xs:element name="CreditBalance" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Saldo do limite de crédito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>16</Length>
+							<Description>Saldo do limite de crédito</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>				
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfCustomerInternalID" type="ListOfCustomerInternalIDType" minOccurs="0" maxOccurs="1"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="ListOfCustomerInternalIDType">
+		<xs:sequence>
+			<xs:element name="CustomerInternalId" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Lista dos clientes processados</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+              				<Required>sim</Required>
+              				<Type>varchar</Type>
+              				<Length>70</Length>
+              				<Description>Lista dos clientes processado (código externo)</Description>
+	   					</FieldDocumentation>
+    				</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+</xs:schema>

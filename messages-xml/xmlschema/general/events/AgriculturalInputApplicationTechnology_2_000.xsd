@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd"
+			elementFormDefault="qualified">
+
+	<!--  ====================================  -->
+	<!--  INCLUDES NECESSÁRIOS PARA A MENSAGEM  -->
+	<!--  ====================================  -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<!--  ====================================  -->
+	<!--  DOCUMENTAÇÃO DA MENSAGEM              -->
+	<!--  ====================================  -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>Modo de aplicação do insumo agrícola</Name>
+				<Description>Mensagem de integração do modo de aplicação do insumo agrícola</Description>
+				<Segment>Agro Indústria</Segment>
+				<ProductInformation product="PIMS">
+					<Contact>integracao.agro@totvs.com.br</Contact>
+					<Description>Equipe de Integração TOTVS Agro</Description>
+					<Adapter>AplicacaoTecnologiaInsumo.Java</Adapter>
+					<Send>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Felipe Raposo</Contact>
+					<Description>ERP Totvs Protheus</Description>
+					<Adapter>AGRPA060</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE NEGÓCIO DA MENSAGEM ====  -->
+	<!--  ====================================  -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="InternalId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId de Integração</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PIMS">
+							<xs:Field/>
+						</xs:FieldDocumentation>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>cEmpAnt + NCC_FILIAL + NCC_CODIGO</xs:Field>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do modo de aplicação</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PIMS">
+							<xs:Field/>
+						</xs:FieldDocumentation>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>NCC_CODIGO</xs:Field>
+							<xs:Required>Sim</xs:Required>
+							<xs:Type>Varchar</xs:Type>
+							<xs:Length>10</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PIMS">
+							<xs:Field/>
+						</xs:FieldDocumentation>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>NCC_OBS</xs:Field>
+							<xs:Required>Não</xs:Required>
+							<xs:Type>Text</xs:Type>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ShortDescription" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição reduzida</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PIMS">
+							<xs:Field/>
+						</xs:FieldDocumentation>
+						<xs:FieldDocumentation product="PROTHEUS">
+							<xs:Field>NCC_DESCRI</xs:Field>
+							<xs:Required>Sim</xs:Required>
+							<xs:Type>Varchar</xs:Type>
+							<xs:Length>50</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE RETORNO ================  -->
+	<!--  ====================================  -->
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

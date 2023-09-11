@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>ScheduleWork</Name>
+					<Description>Agenda de trabalho</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="CompanyId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Codigo da Empresa</xs:documentation>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element maxOccurs="1" minOccurs="0" name="BranchId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Codigo da Filial </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="CompanyInternalId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Codigo Interno da Empresa</xs:documentation>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element maxOccurs="1" minOccurs="0" name="WorkShiftCode" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Codigo do turno. No Datasul/RM, a estrutura de
+						horarios eh diferente. Sera necessario rever quando utilizar esta
+						mensagem. Sera revisto pelas marcas RM/Datasul mais uma forma de
+						propor esta mensagem, analisando a regra de negocio.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="WorkShiftInternalId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>InternalId do WorkShift</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="Description" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Descrição do Turno</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="RegularHour" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Horas mensal de trabalho. Ex: 180hrs Caso o
+						produto nao possua aberto as Hrs Normais e DSR, deve enviar o
+						total de horas do turno.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="RestHour" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Horas mensal de DSR. Ex: 40hrs No RM/Datasul nao
+						ha este campo, ele e calculado. Sera necessario a analise no
+						RM/Datasul quando for utilizar esta informacao
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="StartDateScheduleWork" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Data de inicio da escala.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="ListOfSchedule" type="ListOfScheduleType">
+				<xs:annotation>
+					<xs:documentation>Lista de Escala</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	
+	<xs:complexType name="ListOfScheduleType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="Schedule" type="ScheduleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ScheduleType">
+		<xs:sequence>
+			<xs:element name="StartSequence" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>Sequencia Inicio da Escala</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EndSequence" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>Sequência Final da Escala</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TypeOfDay">
+				<xs:annotation>
+					<xs:documentation>Tipo de Dia da Escala</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Dia Trabalhado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+						<xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>Compensado</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+						<xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>DSR</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="ListOfScheduleHour" type="ListOfScheduleHourType">
+				<xs:annotation>
+					<xs:documentation>Lista de Horários</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ListOfScheduleHourType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="ScheduleHour" type="ScheduleHourType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ScheduleHourType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="HourType">
+				<xs:annotation>
+					<xs:documentation>Tipo de Horário</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>Jornada</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+						<xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>Intervalo</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+						<xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>Lanche</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StartHour" type="xs:time">
+				<xs:annotation>
+					<xs:documentation>Hora Início: ex: 08:00</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EndHour" type="xs:time">
+				<xs:annotation>
+					<xs:documentation>Hora Término: ex: 18:00</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="ListOfInternalId" type="ListOfInternalIdType"/>
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>	
+</xs:schema>

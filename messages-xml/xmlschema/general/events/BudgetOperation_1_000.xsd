@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" 
+			elementFormDefault="qualified">
+
+	<!--  ====================================  -->
+	<!--  INCLUDES NECESSÁRIOS PARA A MENSAGEM  -->
+	<!--  ====================================  -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	
+	<!--  ====================================  -->
+	<!--  DOCUMENTAÇÃO DA MENSAGEM              -->
+	<!--  ====================================  -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>BudgetOperation</Name>
+				<Description>Mensagem de integração de operações da planilha orçamentária.</Description>
+				<Segment>Administrativo</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Felipe Raposo</Contact>
+					<Description>ERP TOTVS PROTHEUS</Description>
+					<Adapter>PCOA080</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE NEGÓCIO DA MENSAGEM ====  -->
+	<!--  ====================================  -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+
+			<xs:element name="Code" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da operações da planilha orçamentária</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PROTHEUS">	
+							<xs:Field>AKF_CODIGO</xs:Field>
+							<xs:Required>Sim</xs:Required>
+							<xs:Type>Varchar</xs:Type>
+							<xs:Length>10</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="1"/>
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="InternalId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId de Integração</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt + xFilial("FKC") + AKF_CODIGO</Field>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="Description" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição da operações da planilha orçamentária</xs:documentation>
+					<xs:appinfo>
+						<xs:FieldDocumentation product="PROTHEUS">	
+							<xs:Field>AKF_DESCRI</xs:Field>
+							<xs:Required>Sim</xs:Required>
+							<xs:Type>Varchar</xs:Type>
+							<xs:Length>80</xs:Length>
+						</xs:FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="1"/>
+						<xs:maxLength value="80"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE RETORNO ================  -->
+	<!--  ====================================  -->
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

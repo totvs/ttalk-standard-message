@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="undefined">
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>EquipmentsCost</Name>
+				<Description>Mensagem para Integração de Custos do Equipamento</Description>
+				<Segment></Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact></Contact>
+					<Description></Description>
+					<Adapter></Adapter>
+					<Send>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Send>
+					<Receive>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="RM">
+					<Contact></Contact>
+					<Description></Description>
+					<Adapter/>
+					<Send>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Send>
+					<Receive>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="DATASUL">
+					<Contact></Contact>
+					<Description></Description>
+					<Adapter/>
+					<Send>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Send>
+					<Receive>
+						<Insert>...</Insert>
+						<Update>...</Update>
+						<Delete>...</Delete>
+					</Receive>
+				</ProductInformation>
+				<ProductInformation product="PROXIMA-PIMS">
+					<Contact>José Alberto da Silva</Contact>
+					<Description>Movimento de Custos do Equipamento</Description>
+					<Adapter>CustoEquipamentoAdapter.java</Adapter>
+					<Send>
+						<Insert>não</Insert>
+						<Update>não</Update>
+						<Delete>não</Delete>
+					</Send>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+	<!-- ==================================== -->
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="Selection" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Definição das seleções realizadas para geração dos dados</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROXIMA">
+							<Field>Definição das seleções realizadas para geração dos dados</Field>
+							<Required>sim</Required>
+							<Type>...</Type>
+							<Length>..</Length>
+							<Description>Definição das seleções realizadas para geração dos dados</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="MonthInitial" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Data de inicio para a seleção dos dados (utilizado para gerar os dados de custos em um intervalo de data)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Data de inicio para a seleção dos dados</Field>
+										<Required>sim</Required>
+										<Type>char</Type>
+										<Length>7</Length>
+										<Description>Data de inicio para a seleção dos dados</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="7"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="MonthEnd" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Data fim para a seleção dos dados (utilizado para gerar os dados de custos em um intervalo de data)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Data fim para a seleção</Field>
+										<Required>sim</Required>
+										<Type>char</Type>
+										<Length>7</Length>
+										<Description>Data fim para a seleção dos dados</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="7"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="InitialCompanyId" minOccurs="1" maxOccurs="1" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Código inicial do intervalo de  empresa a ser selecionado (Seleção utilizada para selecionar um intervalo de empresas)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Código inicial do intervalo de  empresa a ser selecionado</Field>
+										<Required>sim</Required>
+										<Type>char</Type>
+										<Length>3</Length>
+										<Description>Código inicial do intervalo de  empresa a ser selecionado</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="EndCompanyId" minOccurs="1" maxOccurs="1" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Código final do intervalo de  empresa a ser selecionado (Seleção utilizada para selecionar um intervalo de empresas)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Código final do intervalo de  empresa a ser selecionado</Field>
+										<Required>sim</Required>
+										<Type>char</Type>
+										<Length>3</Length>
+										<Description>Código final do intervalo de  empresa a ser selecionado</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="InitialBranchId" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Código do Estabelecimento no cadastro da empresa (Seleção utilizada para selecionar um intervalo de Estabelecimentos)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Código final do intervalo do estabelecimento a ser selecionado</Field>
+										<Required>sim</Required>
+										<Type>number</Type>
+										<Length>3</Length>
+										<Description>Código final do intervalo do estabelecimento a ser selecionado</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="3"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="EndBranchId" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Código do Estabelecimento no cadastro da empresa (Seleção utilizada para selecionar um intervalo de Estabelecimento)</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="3"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="InitialEquipment" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Código Inicial no Equipamento no cadastro do equipamento (Seleção utilizada para selecionar um intervalo de Equipamentos)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Código Inicial no Equipamento no cadastro do equipamento</Field>
+										<Required>sim</Required>
+										<Type>char</Type>
+										<Length>16</Length>
+										<Description>Código Inicial no Equipamento no cadastro do equipamento</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="16"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="EndEquipment" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Código do Equipamento no cadastro do equipamento (Seleção utilizada para selecionar um intervalo de Equipamentos)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Código Final do Equipamento no cadastro do equipamento</Field>
+										<Required>sim</Required>
+										<Type>number</Type>
+										<Length>..</Length>
+										<Description>Código Final do Equipamento no cadastro do equipamento</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="16"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Parameters" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Definição dos parametros para a geração dos dados</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IsFuel" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a combustível</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a combustível</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a combustível</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsLubrificant" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a lubrificantes</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a lubrificantes</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a lubrificantes</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsFilter" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Filtros</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Filtros</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Filtros</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsItem" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Itens de estoque - Ordem de Manutenção</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Itens de estoque - Ordem de Manutenção</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Itens de estoque - Ordem de Manutenção</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsFormaBillofSaleMaterial" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Notas fiscais de Materiais</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Notas fiscais de Materiais</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Notas fiscais de Materiais</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsFormaBillofSaleService" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Notas fiscais de serviço</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Notas fiscais de serviço</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Notas fiscais de serviço</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsManPower" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a mao de obra</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a mao de obra</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a mao de obra</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsOverHead" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Gastos Gerais de Fabricação</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Gastos Gerais de Fabricação</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Gastos Gerais de Fabricação</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsTire" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Pneus</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Pneus</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Pneus</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsDepreciation" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Depreciação</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Depreciação</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Depreciação</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="IsEvent" type="xs:boolean" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Indica se será enviado custos referentes a Eventos</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>Indica se será enviado custos referentes a Eventos</Field>
+										<Required>não</Required>
+										<Type>boolean</Type>
+										<Length>..</Length>
+										<Description>Indica se será enviado custos referentes a Eventos</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="EquipmentsCost" minOccurs="1" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Codigo da Empresa</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Codigo da Empresa</Field>
+										<Required>sim</Required>
+										<Type>char</Type>
+										<Length>...</Length>
+										<Description/>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>InternalId da chave completa de empresa e do produto</Field>
+										<Required>não</Required>
+										<Type>char</Type>
+										<Length>...</Length>
+										<Description/>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Code" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Código do Equipamento</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Código do Equipament</Field>
+										<Required>sim</Required>
+										<Type>char</Type>
+										<Length>16</Length>
+										<Description>Código do Equipamento</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="16"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="InternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>InternalId do Code</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="DATASUL">
+										<Field>tabela.campo</Field>
+									</FieldDocumentation>
+									<FieldDocumentation product="PROXIMA-?">
+										<Field>tabela.campo</Field>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MovementDate" type="xs:date" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Data de referência para atualização do movimento de custos. Normalmente registra o primeiro dia do mês ao qual o custo está atribuído</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Data de referência</Field>
+										<Required>sim</Required>
+										<Type>date</Type>
+										<Length>..</Length>
+										<Description>Data de referência</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Accountant" type="xs:decimal" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Contador criado no adapter para enviar uma identificação para as mensagens (Campo de programa não é guardado em tabela)</xs:documentation>
+								<xs:appinfo>
+									<FieldDocumentation product="PROXIMA">
+										<Field>Contador</Field>
+										<Required>sim</Required>
+										<Type>number</Type>
+										<Length>..</Length>
+										<Description>Contador</Description>
+									</FieldDocumentation>
+								</xs:appinfo>
+							</xs:annotation>
+						</xs:element>
+						<xs:sequence>
+							<xs:element name="ListOfBranch">
+								<xs:annotation>
+									<xs:documentation>Contém a lista de estabelecimentos</xs:documentation>
+									<xs:appinfo>
+										<FieldDocumentation product="PROXIMA">
+											<Field>Contém a lista de estabelecimentos</Field>
+											<Required>sim</Required>
+											<Type>...</Type>
+											<Length>..</Length>
+											<Description>Contém a lista de estabelecimentos</Description>
+										</FieldDocumentation>
+									</xs:appinfo>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Branch" minOccurs="1" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1">
+														<xs:annotation>
+															<xs:documentation>Codigo da Filial</xs:documentation>
+															<xs:appinfo>
+																<FieldDocumentation product="PROXIMA">
+																	<Field>Codigo da Filial</Field>
+																	<Required>sim</Required>
+																	<Type>char</Type>
+																	<Length>...</Length>
+																	<Description/>
+																</FieldDocumentation>
+															</xs:appinfo>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="ListOfEvent">
+														<xs:annotation>
+															<xs:documentation>Contém a lista dos eventos de custos</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Event" minOccurs="1" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="EventCode" maxOccurs="1" minOccurs="1">
+																				<xs:annotation>
+																					<xs:documentation>Código do Evento (Uso interno: campo= mvfro. mgf-eqpto-cust-event.cod-evento)</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>Código do Evento</Field>
+																							<Required>sim</Required>
+																							<Type>char</Type>
+																							<Length>8</Length>
+																							<Description>Código do Evento</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string">
+																						<xs:maxLength value="8"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																			<xs:element name="EventInternalId" type="xs:string" minOccurs="1" maxOccurs="1">
+																				<xs:annotation>
+																					<xs:documentation>EventInternalId da chave Completa</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>EventInternalId da chave Completa</Field>
+																							<Required>sim</Required>
+																							<Type>char</Type>
+																							<Length>...</Length>
+																							<Description/>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="EventDescription" minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>Descrição do Evento (Uso interno: campo= mgfro.mab-event.des-event)</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>Descrição do Evento</Field>
+																							<Required>sim</Required>
+																							<Type>...</Type>
+																							<Length>..</Length>
+																							<Description>Descrição do Evento</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string">
+																						<xs:maxLength value="30"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																			<xs:element name="ConsumptionValue" type="xs:decimal" minOccurs="1" maxOccurs="1">
+																				<xs:annotation>
+																					<xs:documentation>Valor do Consumo</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>Valor do Consumo</Field>
+																							<Required>sim</Required>
+																							<Type>...</Type>
+																							<Length>..</Length>
+																							<Description>Valor do Consumo</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="ConsumptionQuantity" type="xs:decimal" minOccurs="1" maxOccurs="1">
+																				<xs:annotation>
+																					<xs:documentation>Quantidade do Consumo</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>Quantidade do Consumo</Field>
+																							<Required>sim</Required>
+																							<Type>...</Type>
+																							<Length>..</Length>
+																							<Description>Quantidade do Consumo</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="WorkCenterCode" type="xs:string" minOccurs="0" maxOccurs="1">
+																				<xs:annotation>
+																					<xs:documentation>Centro de Trabalho</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="DATASUL">
+																							<Field>tabela.campo</Field>
+																							<Required>sim/não</Required>
+																							<Type>...</Type>
+																							<Length>...</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																						<FieldDocumentation product="PROXIMA-?">
+																							<Field>tabela.campo</Field>
+																							<Required>sim/não</Required>
+																							<Type>...</Type>
+																							<Length>...</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="WorkCenterInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+																				<xs:annotation>
+																					<xs:documentation>Centro de Trabalho</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="DATASUL">
+																							<Field>tabela.campo</Field>
+																							<Required>sim/não</Required>
+																							<Type>...</Type>
+																							<Length>...</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																						<FieldDocumentation product="PROXIMA-?">
+																							<Field>tabela.campo</Field>
+																							<Required>sim/não</Required>
+																							<Type>...</Type>
+																							<Length>...</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="CostCenterCode" maxOccurs="1" minOccurs="0" type="xs:string">
+																				<xs:annotation>
+																					<xs:documentation>Código do Centro de Custo</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="DATASUL">
+																							<Field>tabela.campo</Field>
+																							<Required>sim/não</Required>
+																							<Type>...</Type>
+																							<Length>...</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																						<FieldDocumentation product="PROXIMA-?">
+																							<Field>tabela.campo</Field>
+																							<Required>sim/não</Required>
+																							<Type>...</Type>
+																							<Length>...</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="CostCenterInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+																				<xs:annotation>
+																					<xs:documentation>InternalId do CostCenterCode</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field></Field>
+																							<Required></Required>
+																							<Type>...</Type>
+																							<Length>..</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="CostType" maxOccurs="1" minOccurs="1">
+																				<xs:annotation>
+																					<xs:documentation>Tipo do custo do Equipamento</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>CostType</Field>
+																							<Required>sim</Required>
+																							<Type>numeric</Type>
+																							<Length>...</Length>
+																							<Description>Tipo do custo do Equipamento - Campo Utilizado na integração entre PIMSMC com Protheus</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:integer">
+																						<xs:enumeration value="1">
+																							<xs:annotation>
+																								<xs:documentation>GPM-Grupo de Material</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="2">
+																							<xs:annotation>
+																								<xs:documentation>PMDO-Preventiva Mão de Obra</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="3">
+																							<xs:annotation>
+																								<xs:documentation>PTERC-Preventiva Tereceiro</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="4">
+																							<xs:annotation>
+																								<xs:documentation>PFERR-Preventiva Ferramentas</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="5">
+																							<xs:annotation>
+																								<xs:documentation>CMDO-Corretiva Mão de Obra</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="6">
+																							<xs:annotation>
+																								<xs:documentation>CTERC-Corretiva Tereceiro</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="7">
+																							<xs:annotation>
+																								<xs:documentation>CFERR-Corretiva Ferramentas</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="8">
+																							<xs:annotation>
+																								<xs:documentation>RMDO-Reforma Mão de Obra</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																						<xs:enumeration value="9">
+																							<xs:annotation>
+																								<xs:documentation>RTERC-Reforma Terceiro e RFERR-Reforma Ferramentas</xs:documentation>
+																							</xs:annotation>
+																						</xs:enumeration>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																			<xs:element name="EquipmentGroupCode" maxOccurs="1" minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>Codigo do Grupo do Equipamento - 
+																									 Utilizado na Integração entre PIMSMC x Protheus NG. 
+																									 Obrigatório para o Tipo de Custo seja - 1 GPM-Grupo de Material</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>Codigo do Grupo do Equipamento</Field>
+																							<Required>sim</Required>
+																							<Type>char</Type>
+																							<Length>..</Length>
+																							<Description>Codigo do Grupo do Equipament</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string">
+																						<xs:maxLength value="8"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																			<xs:element name="EquipmentGroupInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+																				<xs:annotation>
+																					<xs:documentation>InternalId do EquipmentGroupCode</xs:documentation>
+																					<xs:appinfo>
+																						<FieldDocumentation product="PROXIMA">
+																							<Field>InternalId do EquipmentGroupCode</Field>
+																							<Required>não</Required>
+																							<Type>...</Type>
+																							<Length>..</Length>
+																							<Description>...</Description>
+																						</FieldDocumentation>
+																					</xs:appinfo>
+																				</xs:annotation>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ListOfInternalId" type="ListOfInternalIdType" maxOccurs="1" minOccurs="0"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,2054 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified" xmlns:xsd="undefined">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	<xs:include schemaLocation="../types/Tax_1_002.xsd"/>
+
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>RetailSales</Name>
+				<Description>Mensagem para Integração do Registro de Vendas</Description>
+				<Segment></Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Diego Pereira Fernandes</Contact>
+					<Description>Coordenador de Inovação Varejo</Description>
+					<Adapter>LOJI701</Adapter>
+					<Send>
+						<Insert>Não</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Não</Update>
+						<Delete>Não</Delete>
+					</Receive>
+				</ProductInformation>
+        <ProductInformation product="RM">
+          <Contact>Alaim Porto Alvarenga</Contact>
+          <Description>GDP Inovação Construção e Projetos</Description>
+          <Adapter>MovCumpoFiscalData</Adapter>
+          <Send>
+            <Insert>Não</Insert>
+            <Update>Não</Update>
+            <Delete>Não</Delete>
+          </Send>
+          <Receive>
+            <Insert>Sim</Insert>
+            <Update>Sim</Update>
+            <Delete>Não</Delete>
+          </Receive>
+        </ProductInformation>
+      </MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>2</Length>
+							<Description>Será enviado o valor da variável cEmpAnt(Empresa)</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.CODCOLIGADA</Field>
+              <Required>sim</Required>
+              <Type>int</Type>
+              <Length></Length>
+              <Description>Código da coligada</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_FILIAL</Field>
+							<Required>Não</Required>             
+							<Type>char</Type>
+							<Length>12</Length>
+							<Description>Será enviado o valor da variável cFilAnt</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>CONTEXT.CODFILIAL</Field>
+              <Required>sim/não</Required>
+              <Type>int</Type>
+              <Length></Length>
+              <Description>Visto que no RM a Filial não faz parte do cadastro de Cupom e para o protocolo de Mensagem Única é obrigatório, será considerado a filial do contexto de integração.</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+      <xs:element name="CompanyInternalId" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa de empresa da venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial já pelo Framework 
+							estando no ambiente (Empresa x Filial) correto</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>CompanyId + '|' + BranchId</Field>
+              <Required>sim</Required>
+              <Type>string</Type>
+              <Length></Length>
+              <Description>Chave de integração da empresa</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>Não possui campo físico na tabela</Field>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>50</Length>
+						  <Description>O InternalID da venda é formado por EMPRESA|L1_FILIAL|L1_DOC|L1_SERIE|L1_PDV</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.CODCOLIGADA|TCUPOMFISCAL.PONTOVENDA|TCUPOMFISCAL.CRO|TCUPOMFISCAL.NUMERO</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>20</Length>
+              <Description>O InternalId do cupom é formado por Coligada|Ponto de Venda|Contador de Reinício de Operação|Número do Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="SellerInternalId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Vendedor</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>50</Length>
+							<Description>InternalId do Vendedor</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CODVEN1</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>16</Length>
+              <Description>Código do Vendedor 1</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ComissionPercent" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Percentual da Comissão</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_COMIS</Field>
+							<Required>Não</Required>
+							<Type>Decimal</Type>
+							<Length>5,2</Length>
+							<Description>Percentual da Comissão</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required>sim/não</Required>
+              <Type>...</Type>
+              <Length>...</Length>
+              <Description>...</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="5"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="CustomerVendorInternalId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Código do Cliente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo fisico na tabela</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalID do Cliente é formado por EMPRESA|L1_FILIAL|L1_CLIENTE|L1_LOJA</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.CODCOLCFO|TCUPOMFISCAL.CODCFO</Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length></Length>
+              <Description>O InternalID do Cliente é formado por Coligada do Cli/For + código do Cli/For</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>				
+			</xs:element>												
+			<xs:element name="TotalPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Total da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_VLRTOT</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Valor Total da Venda</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>Não utilizado pelo RM.</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+			<xs:element name="DiscountValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Total de Desconto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_DESCONT</Field>
+							<Required>Não</Required>
+							<Type>Decimal</Type>
+							<Length>12,2</Length>
+							<Description>Valor Total de Desconto</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.DESCONTO</Field>
+              <Required>não</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Desconto do Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="IncreaseValue" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor de Acréscimo</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SL1.L1_FRETE + SL1.L1_SEGURO + SL1.L1_DESPESA</Field>
+              <Required>Não</Required>
+              <Type>Decimal</Type>
+              <Length>14,2</Length>
+              <Description>Valor de Acréscimo</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.ACRESCIMO</Field>
+              <Required>não</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Acréscimo do Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="15"/>
+            <xs:fractionDigits value="2"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+			<xs:element name="NetPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Liquido da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_VLRLIQ</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Valor Liquido da Venda</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.VALORLIQUIDO e TCUPOMFISCAL.VALORRECEBIDO</Field>
+              <Required>som</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Valor do Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CashValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago em Dinheiro</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_DINHEIR</Field>
+							<Required>Não</Required>
+							<Type>Decimal</Type>
+							<Length>15,2</Length>
+							<Description>Valor Pago em dinheiro</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>				
+			<xs:element name="ChecksValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago em Cheques</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_CHEQUES</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor Pago em Cheques</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CardsValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago em Cartões de Crédito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_CARTAO</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor Pago em Cartões de Crédito</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DebitValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago em Cartões de Débito</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_VLRDEBI</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor Pago em Cartões de Débito</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CovenantValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago com Convênio</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_CONVENI</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor Pago com Convênio</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="VouchersValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago com Vales</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_VALES</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor Pago com Vales</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="FinancedValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago com Financiamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_FINANC</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor Pago com Financiamento</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OthersValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Pago com Outras Formas</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_OUTROS</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor Pago com Outras Formas</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InputValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor de Entrada</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_ENTRADA</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor de Entrada</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IssueDateDocument" type="xs:dateTime" minOccurs="0">			
+				<xs:annotation>
+					<xs:documentation>Data de Emissão da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_EMISSAO + SL1.L1_HORA</Field>
+						  <Required>Sim</Required>
+						  <Type>DateTime</Type>
+						  <Length>8</Length>
+						  <Description>Data de Emissão da Venda</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.DATAEMISSAO</Field>
+              <Required>Sim</Required>
+              <Type>DateTime</Type>
+              <Length>8</Length>
+              <Description>Data de Emissão</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+			<xs:element name="DocumentCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Numero do Documento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_DOC</Field>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>9</Length>
+						  <Description>Numero do Documento</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.NUMERO</Field>
+              <Required>sim</Required>
+              <Type>int</Type>
+              <Length>4</Length>
+              <Description>Número do Cupom</Description>
+            </FieldDocumentation>					
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SerieCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Serie do Documento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_SERIE</Field>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>3</Length>
+						  <Description>Serie do Documento</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TPONTOVENDA.SERIE</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>5</Length>
+              <Description>Número do Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="GrossPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Bruto da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_VALBRUT</Field>
+						  <Required>Sim</Required>
+						  <Type>Decimal</Type>
+						  <Length>16,2</Length>
+						  <Description>Valor Bruto da Venda</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="CommodityPrice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor Total da Mercadoria</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_VALMERC</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>16,2</Length>
+						  <Description>Valor Total da Mercadoria</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>															
+			<xs:element name="DiscountPercent" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Percentual de Desconto da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_DESCNF</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>5,2</Length>
+						  <Description>Percentual de Desconto da Venda</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="5"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>            								
+			<xs:element name="OperatorCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Codigo do Operador</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_OPERADO</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>3</Length>
+							<Description>Codigo do Operador</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>						                      
+      <xs:element name="CurrencyRate" minOccurs="0" maxOccurs="1">
+	      <xs:annotation>
+		      <xs:documentation>Taxa da Moeda</xs:documentation>
+		      <xs:appinfo>
+			      <FieldDocumentation product="PROTHEUS">
+				      <Field>SL1.L1_TXMOEDA</Field>
+				      <Required>Não</Required>
+				      <Type>Decimal</Type>
+				      <Length>11,4</Length>
+				      <Description>Taxa da Moeda</Description>
+			      </FieldDocumentation>						
+		      </xs:appinfo>
+	      </xs:annotation>
+	      <xs:simpleType>
+		      <xs:restriction base="xs:decimal">
+			      <xs:totalDigits value="11"/>
+			      <xs:fractionDigits value="4"/>
+		      </xs:restriction>
+	      </xs:simpleType>
+      </xs:element>
+      <xs:element name="Change" minOccurs="0" maxOccurs="1">
+			  <xs:annotation>
+				  <xs:documentation>Valor do Troco na Venda</xs:documentation>
+				  <xs:appinfo>
+					  <FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_TROCO1</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>15,2</Length>
+						  <Description>Valor do Troco na Venda</Description>
+					  </FieldDocumentation>						
+				  </xs:appinfo>
+			  </xs:annotation>
+			  <xs:simpleType>
+				  <xs:restriction base="xs:decimal">
+					  <xs:totalDigits value="15"/>
+					  <xs:fractionDigits value="2"/>
+				  </xs:restriction>
+			  </xs:simpleType>
+		  </xs:element>            			
+			<xs:element name="StationCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Estacao</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL1.L1_PDV</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>3</Length>
+							<Description>Codigo da Estacao que efetuou a Venda</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="DiscountPaymentTerm" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Desconto Financeiro na Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_DESCFIN</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>14,2</Length>
+						  <Description>Valor do desconto associado a uma condição de pagamento, se houver (ex: 5% na venda se o cliente pagar na condição a vista)</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="CreditValue" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Valor de Crédito da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_CREDITO</Field>
+						  <Required>Não</Required>
+						  <Type>Decimal</Type>
+						  <Length>18,2</Length>
+						  <Description>Valor de Crédito da Venda</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="18"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="KindOfDocument" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Tipo do Documento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_ESPECIE</Field>
+						  <Required>Não</Required>
+						  <Type>Varchar</Type>
+						  <Length>15</Length>
+							<Description>
+								Tipo do Documento 
+								CF 		- Cupom Fiscal
+								SATCE	- Cupom Eletronico SAT 
+								NFCE	- Nota Fiscal do Cupom Eletronico
+								RPS		- Recibo Provisorio de Servico
+								NFCF	- Nota Fiscal sobre cupom fiscal
+							</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>            			
+			<xs:element name="Md5" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código Md5</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_PAFMD5</Field>
+						  <Required>Não</Required>
+						  <Type>Varchar</Type>
+						  <Length>60</Length>
+						  <Description>Código Md5</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="60"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>						
+			<xs:element name="ElectronicInvoiceComplement" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Informações Complementares NFCe</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>Não possui campo físico na tabela</Field>
+						  <Required>Não</Required>
+						  <Type>Varchar</Type>
+						  <Length>60</Length>
+						  <Description>Informações Complementares NFCe</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="60"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PersonalIdentification" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>CPF/CGC do Cliente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1.L1_CGCCLI</Field>
+						  <Required>Não</Required>
+						  <Type>Varchar</Type>
+						  <Length>16</Length>
+						  <Description>CPF/CGC do Cliente</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.CNPJCPFADQUIRENTE</Field>
+              <Required>Não</Required>
+              <Type>Varchar</Type>
+              <Length>20</Length>
+              <Description>CNPJ/CPF do Adquirente da mercadoria</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="PurchaserName" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Nome do Adquirente</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>tabela.campo</Field>
+              <Required>sim/não</Required>
+              <Type>varchar</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.NOMEADQUIRENTE</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>40</Length>
+              <Description>Nome do Adquirente da mercadoria</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="DocForeignPurchase" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Nome do Adquirente</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length></Length>
+              <Description>Nome do Adquirente da mercadoria</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.DOCESTRANGEIROADQUIRENTE</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>20</Length>
+              <Description>Nome do Adquirente da mercadoria</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      
+      <xs:element name="IsCanceled" type="xs:boolean" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Informa se venda esta cancelada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.CANCELADO</Field>
+              <Required>não</Required>
+              <Type>bool</Type>
+              <Length>2</Length>
+              <Description>Eh cupom cancelado?</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required>não</Required>
+              <Type>bool</Type>
+			  <Length>2</Length>
+              <Description>Cupom cancelado?</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+			<xs:element name="ListOfSaleItem" type="ListOfSaleItemType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lista de Itens da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL2</Field>
+						  <Required>Sim</Required>
+						  <Type></Type>
+						  <Length>Lista de Itens da Venda</Length>
+						  <Description></Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfSaleCondition" type="ListOfSaleConditionType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Condições de Pagamento da Venda</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL4</Field>
+						  <Required>Sim</Required>
+						  <Type></Type>
+						  <Length>Condições de Pagamento da Venda</Length>
+						  <Description></Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfTaxes" type="ListOfTaxesType" minOccurs="0" maxOccurs="1">							
+				<xs:annotation>
+					<xs:documentation>Lista de Impostos da Venda</xs:documentation>				
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL1</Field>
+						  <Required>Sim</Required>
+						  <Type></Type>
+						  <Length>Impostos da Venda</Length>
+						  <Description></Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+      <xs:element name="StationSalePointCode" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código Ponto de Venda</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SLG.LG_CODIGO</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>3</Length>
+              <Description>Código da Estacao de Trabalho</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TPONTOVENDA.PONTOVENDA</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>10</Length>
+              <Description>Código do Ponto de Venda</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="StationSalePointInternalId" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId do Ponto de Venda</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>.</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalID do Código de Estação é formado por EMPRESA|LG_FILIAL|LG_CODIGO</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>.</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>6</Length>
+              <Description>O InternalID do Ponto de Venda é formado por TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.PONTOVENDA</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="SerialNumberSATEquipament" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Número de Série do equipamento SAT</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SLG.LG_SERSAT</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>9</Length>
+              <Description>Número de Série do equipamento SAT</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TMOVFISCAL.NROSAT</Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>15</Length>
+              <Description>Número de Série do equipamento SAT</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SaleType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Tipo de venda.</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SL1.L1_SERSAT</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>9</Length>
+              <Description>Numero de Serie do SAT</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCAL.TIPO</Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>1</Length>
+              <Description>Tipo do Cupom Fiscal.</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="V">
+              <xs:annotation>
+                <xs:documentation>Venda Cupom Fiscal</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="S">
+              <xs:annotation>
+                <xs:documentation>SAT - Sistema de Autenticação e Transmissão de Cupom Fiscal Eletrônico</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="KeyAcessNFe" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Chave de acesso NFe</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SL1.L1_KEYNFCE</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>44</Length>
+              <Description>Chave Nfce</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TMOV.CHAVEACESSONFE</Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>44</Length>
+              <Description>Chave de acesso Nota Fiscal Eletrônica.</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+    </xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ListOfSaleItemType">
+		<xs:sequence>
+			<xs:element name="SaleItem" type="SaleItemType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>		
+	
+	<xs:complexType name="SaleItemType">
+		<xs:sequence>
+      <xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do Item da Venda</xs:documentation>
+          <xs:appinfo>            			
+			<FieldDocumentation product="PROTHEUS">
+				<Field>Não possui campo físico na tabela</Field>
+				<Required>Sim</Required>
+				<Type>Varchar</Type>
+				<Length>50</Length>
+				<Description>O InternalID da venda é formado por EMPRESA|L1_FILIAL|L1_DOC|L1_SERIE|L1_PDV</Description>
+			</FieldDocumentation>			
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>10</Length>
+              <Description>O InternalId do Item do Cupom é composto pelos campos TCUPOMFISCALITM.CODCOLIGADA|TCUPOMFISCALITM.IDCUPOM|TCUPOMFISCALITM.NUMEROITEM</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ItemInternalId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>Não possui campo físico na tabela</Field>
+						  <Required>Sim</Required>
+						  <Type>Varchar</Type>
+						  <Length>50</Length>
+						  <Description>O InternalID do Produto é formado por EMPRESA|L2_FILIAL|L2_PRODUTO</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>6</Length>
+              <Description>O InternalId do Produto é composto pelos campos TCUPOMFISCALITM.CODCOLIGADA|TCUPOMFISCALITM.IDPRD</Description>
+            </FieldDocumentation>
+            </xs:appinfo>
+				</xs:annotation>
+			</xs:element>	
+			<xs:element name="ItemCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_PRODUTO</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>15</Length>
+							<Description>Código do Produto</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TPRODUTO.CODIGOPRD</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>30</Length>
+              <Description>Código do Produto</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>	
+			<xs:element name="ItemOrder" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ordem do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_IEM</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>2</Length>
+							<Description>Ordem do Item</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.NUMEROITEM</Field>
+              <Required>sim</Required>
+              <Type>inteiro</Type>
+              <Length>4</Length>
+              <Description>Número do Item de Cupom Fiscal</Description>
+            </FieldDocumentation>
+            </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Quantity" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_QUANT</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>7,2</Length>
+							<Description>Quantidade do Item</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.QUANTIDADE</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+              <Length>15,3</Length>
+              <Description>Quantidade do Item</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="3"/>
+					</xs:restriction>
+				</xs:simpleType>				
+			</xs:element>
+			<xs:element name="UnitPrice" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Preço Unitário do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_VRUNIT</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Preço Unitário do Item</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.PRECOUNITARIO</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+              <Length>15,3</Length>
+              <Description>Preço Unitário</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ItemPrice" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_VLRITEM</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Valor do Item</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.VALORLIQUIDO</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Valor do Item de Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DiscountPercentage" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Percentual de Desconto do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_DESC</Field>
+							<Required>Não</Required>
+							<Type>Decimal</Type>
+							<Length>7,4</Length>
+							<Description>Percentual de Desconto do Item</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required>não</Required>
+              <Type>decimal</Type>
+              <Length>7,4</Length>
+              <Description>Não possui campo físico na tabela</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="7"/>
+						<xs:fractionDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DiscountAmount" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Desconto do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_VALDESC</Field>
+							<Required>Não</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Valor do Desconto do Item</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.DESCONTO</Field>
+              <Required>não</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Desconto do Item de Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OperationCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código Fiscal de Operações e Prestações</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_CF</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>5</Length>
+							<Description>Código Fiscal de Operações e Prestações - CFOP</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>DCFOP.CODNAT</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>20</Length>
+              <Description>Código da Natureza</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>						
+			</xs:element>
+			<xs:element name="ListOfTaxes" type="ListOfTaxesType" minOccurs="0" maxOccurs="1">							
+				<xs:annotation>
+					<xs:documentation>Lista de Impostos do Item</xs:documentation>				
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL2</Field>
+						  <Required>Sim</Required>
+						  <Type></Type>
+						  <Length>Impostos do Item</Length>
+						  <Description></Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>									
+			<xs:element name="Increase" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor de Acréscimo do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL2.L2_VALACRS</Field>
+							<Required>Não</Required>
+							<Type>Decimal</Type>
+							<Length>14,2</Length>
+							<Description>Valor de Acréscimo do Item</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.ACRESCIMO</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Acréscimo do Item de Cupom</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="15"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>															
+			<xs:element name="Lodging" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Produto é Diaria</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>1</Length>
+							<Description>Flag se Produto é Diária</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required>não</Required>
+              <Type></Type>
+              <Length></Length>
+              <Description>Não utilizado no RM.</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="IsCanceled" type="xs:boolean" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Informa se o item esta cancelado</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.CANCELADO</Field>
+              <Required>sim</Required>
+              <Type>bool</Type>
+              <Length>2</Length>
+              <Description>Eh item de cupom cancelado?</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required>sim</Required>
+              <Type>bool</Type>
+			  <Length>2</Length>
+              <Description>Item cancelado?</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="UnitOfMeasureCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Unidade de Medida</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.CODUND</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>5</Length>
+              <Description>Código da Unidade de Venda</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SB1.B1_UM</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>2</Length>
+              <Description>Unidade de Medida do produto</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UnitOfMeasureInternalId" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Id de integração da Unidade de Medida</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.CODUND</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>5</Length>
+              <Description>Código da Unidade de Venda</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+				<Field>Não possui campo físico na tabela</Field>
+				<Required>não</Required>
+				<Type>Varchar</Type>
+				<Length>50</Length>
+				<Description>O InternalID da Unidade de Medida é formado por EMPRESA|AH_FILIAL|AH_UNIMED</Description>			  			                              
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WarehouseCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codigo do Local de Estoque(Armazem)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TPONTOVENDA.CODLOC</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>15</Length>
+              <Description>Local de Estoque</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SL2.L2_LOCAL</Field>
+              <Required>nao</Required>
+              <Type>varchar</Type>
+              <Length>2</Length>
+              <Description>Código do Local de Estoque</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WarehouseInternalId" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Id de integração do Local de Estoque(Armazem)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TPONTOVENDA.CODCOLIGADA|TPONTOVENDA.CODFILIAL|TPONTOVENDA.CODLOC</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>30</Length>
+              <Description>O InternalId é composto por Código da Coligada | Código da Filial | Código do Local de Estoque.</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId do Local de Estoque é formado por EMPRESA|NNR_FILIAL|NNR_CODIGO</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ECFTaxingCode" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Código da Tributação ECF</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALITM.TRIBUTACAOECF</Field>
+              <Required>Nao</Required>
+              <Type>char</Type>
+              <Length>10</Length>
+              <Description>Código da Tributação ECF</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length></Length>
+              <Description>Código da Tributação ECF</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+	</xs:complexType>
+					
+	<xs:complexType name="ListOfTaxesType">
+		<xs:sequence>
+			<xs:element name="Tax" type="TaxesType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>						
+					
+	<xs:complexType name="ListOfSaleConditionType">
+		<xs:sequence>
+			<xs:element name="SaleCondition" type="SaleConditionType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="SaleConditionType">
+		<xs:sequence>
+			<xs:element name="AccountReceivableDocumentInternalId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do RA do cliente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+						  <Field>SL4.L4_CONTAHT</Field>
+						  <Required>Nao</Required>
+						  <Type>Varchar</Type>
+						  <Length>50</Length>
+						  <Description>InternalId do RA do cliente</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DateOfPayment" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Vencimento da Parcela</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_DATA</Field>
+							<Required>Sim</Required>
+							<Type>Date</Type>
+							<Length>8</Length>
+							<Description>Data de Vencimento da Parcela</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.DATAVENCIMENTO</Field>
+              <Required>não</Required>
+              <Type>Date</Type>
+              <Length>8</Length>
+              <Description>Data de Vencimento</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>						
+			</xs:element>
+			<xs:element name="PaymentValue" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Pagamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_VALOR</Field>
+							<Required>Sim</Required>
+							<Type>Decimal</Type>
+							<Length>16,2</Length>
+							<Description>Valor do Pagamento</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.VALOR</Field>
+              <Required>não</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Valor do Pagamento</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="16"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>															
+			<xs:element name="PaymentMethodCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Forma de Pagamento</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_FORMA</Field>
+							<Required>Sim</Required>
+							<Type>Varchar</Type>
+							<Length>15</Length>
+							<Description>Forma de Pagamento</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TFORMAPAGTO.CODFORMAPAGTO</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>10</Length>
+              <Description>Código Meio de Pagamento</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="PaymentMethodInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Chave de Integração de Forma de Pagamento</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required>Não</Required>
+              <Type>Varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId da Forma de Pagamento é composto pelos campos EMPRESA|L4_FILIAL|L4_FORMA</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.CODCOLIGADA|TCUPOMFISCALFIN.IDFORMAPAGTO</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>6</Length>
+              <Description>O InternalId da Forma de Pagamento é composto pelos campos TCUPOMFISCALFIN.CODCOLIGADA|TCUPOMFISCALFIN.IDFORMAPAGTO</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinancialManagerCode" maxOccurs="1" minOccurs="0">
+			  <xs:annotation>
+				  <xs:documentation>Código da Administradora Financeira</xs:documentation>
+				  <xs:appinfo>
+					  <FieldDocumentation product="PROTHEUS">
+						  <Field>SL4.L4_ADMINIS</Field>
+						  <Required>Não</Required>
+						  <Type>Varchar</Type>
+						  <Length>36</Length>
+						  <Description>Código da Administradora Financeira, obrigatório se Forma de Pagamento CC/CD</Description>
+					  </FieldDocumentation>
+				  </xs:appinfo>
+			  </xs:annotation>
+			  <xs:simpleType>
+				  <xs:restriction base="xs:string">
+					  <xs:maxLength value="1"/>
+				  </xs:restriction>
+			  </xs:simpleType>
+		  </xs:element>			
+		  <xs:element name="CardNumber" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numeração do Cheque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_NUMCART</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>30</Length>
+							<Description>Numeração do Cheque</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.CHEQUE</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>20</Length>
+              <Description>Número do Cheque</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="SerieCheck" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Série do Cheque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_SERCHQ</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>6</Length>
+							<Description>Série do Cheque</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description>Não utilizado no RM</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="BankCheck" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Banco do Cheque</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SL4.L4_ADMINIS</Field>              			  
+			   <Required>Não</Required>
+			   <Type>Varchar</Type>
+			   <Length>20</Length>
+			   <Description>Código do Banco, obrigatório se Forma de Pagamento Ch</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.BANCO</Field>
+              <Required></Required>
+              <Type>varchar</Type>
+              <Length>4</Length>
+              <Description>Banco</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="4"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="AgencyCheck" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Agência Bancária do Cheque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_AGENCIA</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>8</Length>
+							<Description>Agência Bancária do Cheque</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.AGENCIA</Field>
+              <Required></Required>
+              <Type>varchar</Type>
+              <Length>20</Length>
+              <Description>Agência</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="AccountCheck" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número da Conta do Cheque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_CONTA</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+							<Description>Número da Conta do Cheque</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.CC</Field>
+              <Required></Required>
+              <Type>varchar</Type>
+              <Length>20</Length>
+              <Description>Conta/Corrente</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>      
+      <xs:element name="DocumentOfIdentification" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Documento de Identidade do Cliente - Cheque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_RG</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>20</Length>
+							<Description>Documento de Identidade do Cliente - Cheque</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description>Não utilizado no RM</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="PhoneNumber" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Telefone do Cliente - Cheque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_TELEFON</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>15</Length>
+							<Description>Telefone do Cliente - Cheque</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>TCUPOMFISCALFIN.TELEMITENTE</Field>
+              <Required>não</Required>
+              <Type>varchar</Type>
+              <Length>15</Length>
+              <Description>Telefone do Emitente</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EftDate" type="xs:dateTime" minOccurs="0">			            
+				<xs:annotation>
+					<xs:documentation>Data do Pagamento - TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_DATATEF</Field>
+							<Required>Não</Required>
+							<Type>DateTime</Type>
+							<Length>8</Length>
+							<Description>Data do Pagamento - TEF</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>						
+			</xs:element>            
+      <xs:element name="EftDocument" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Documento de Identificação TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_DOCTEF</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>9</Length>
+							<Description>Documento de Identificação TEF</Description>
+						</FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>tabela.campo</Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="EftAutorization" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código de Autorização TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_AUTORIZ</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>6</Length>
+							<Description>Código de Autorização TEF</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EftCancellationDate" type="xs:dateTime" minOccurs="0">            
+				<xs:annotation>
+					<xs:documentation>Data de Cancelamento TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_DATCANC</Field>
+							<Required>Não</Required>
+							<Type>DateTime</Type>
+							<Length>8</Length>
+							<Description>Data de Cancelamento TEF</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>						
+			</xs:element>            
+      <xs:element name="EftCancellationDocument" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Cancelamento TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_DOCCANC</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>9</Length>
+							<Description>Número do Cancelamento TEF</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="EftInstitute" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Instituto TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_INSTITU</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>16</Length>
+							<Description>Código do Instituto TEF</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="UniqueSerialNumber" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código NSU - TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_NSUTEF</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>12</Length>
+							<Description>Código NSU - TEF</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+      <xs:element name="EftParcel" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Parcelamento TEF</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SL4.L4_PARCTEF</Field>
+							<Required>Não</Required>
+							<Type>Varchar</Type>
+							<Length>3</Length>
+							<Description>Parcelamento TEF</Description>
+						</FieldDocumentation>							
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>														
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>			
+			
+			<xs:element name="ElectronicConsumerInvoice" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>XML de retorno NFCe</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>Sim, para retorno de nfc-e</Required>
+							<Type>Varchar</Type>
+							<Length>100</Length>
+							<Description>XML de retorno NFCe</Description>
+						</FieldDocumentation>													
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+</xs:schema>

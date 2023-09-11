@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>LeasingContractCancel</Name>
+				<Description>Cancelamento/Exclusão de Contrato Leasing</Description>
+				<Segment>Controladoria</Segment>
+				<ProductInformation product="Datasul">
+					<Contact>Danieli Deschamps Kruger</Contact>
+					<Description>Cancelamento/Exclusão Contrato de Leasing IFRS16</Description>
+					<Receive>
+						<Update>sim</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>				
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="LessorId" maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>CPF/CNPJ do Arrendador</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="Datasul">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>20</Length>
+							<Description>O código do arrendador será buscado a partir do cpf/cnpj informado</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="ContractId" maxOccurs="1" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do Contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="Datasul">
+							<Field>cod_contrat_leas</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>12</Length>
+							<Description>Código do contrato de leasing</Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="12"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ContractCancelDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data de Cancelamento do Contrato de Leasing. Caso não vier a data de cancelamento preenchida, tratar como apenas a exclusão do contrato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="Datasul">
+							<Field>contrat_leas.dat_cancel_leas</Field>
+							<Required>não</Required>
+							<Type>date</Type>
+							<Length>08</Length>
+							<Description>Data de Cancelamento do Contrato. </Description>
+						</FieldDocumentation>						
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>			
+		</xs:sequence>
+	</xs:complexType>			
+			
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+</xs:schema>

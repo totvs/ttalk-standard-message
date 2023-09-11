@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>BankTransactions</Name>
+					<Description>Integração dos Movimentos Financeiros</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Bank" type="BankType" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Dados Bancários</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MovementDate" type="xs:date" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Data do Movimento
+					</xs:documentation>
+                    <xs:appinfo>
+                      <FieldDocumentation product="PROTHEUS">
+                      <Field>SM3.M3_DTEMISS</Field>
+                      <Required>nao</Required>
+                      <Type>Date</Type>
+                      <Length>8</Length>
+                      <Description/>
+                      </FieldDocumentation>
+                      <FieldDocumentation product="RM">
+                      <Field/>
+                      <Required/>
+                      <Type/>
+                      <Length/>
+                      <Description/>
+                      </FieldDocumentation>
+                    </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EntryValue" type="xs:double" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Valor do Lançamento
+					</xs:documentation>
+                    <xs:appinfo>
+                      <FieldDocumentation product="PROTHEUS">
+                      <Field>SM3->M3_VALOR</Field>
+                      <Required>nao</Required>
+                      <Type>Decimal</Type>
+                      <Length>16</Length>
+                      <Description/>
+                      </FieldDocumentation>
+                      <FieldDocumentation product="RM">
+                      <Field/>
+                      <Required/>
+                      <Type/>
+                      <Length/>
+                      <Description/>
+                      </FieldDocumentation>
+                    </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MovementType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Tipo de Movimento 1-Débito, 2-Crédito
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>
+									Débito
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>
+									Crédito
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="ApportionmentDistribution" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Apportionment"
+							type="ApportionmentDistributionType" minOccurs="0" maxOccurs="unbounded">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			
+			<xs:element name="HistoryCode" type="xs:string"
+				maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Código do Histórico Contábil
+					</xs:documentation>
+                    <xs:appinfo>
+                      <FieldDocumentation product="PROTHEUS">
+                      <Field>SM3.M3_CODHIST</Field>
+                      <Required>nao</Required>
+                      <Type>char</Type>
+                      <Length>3</Length>
+                      <Description/>
+                      </FieldDocumentation>
+                      <FieldDocumentation product="RM">
+                      <Field/>
+                      <Required/>
+                      <Type/>
+                      <Length/>
+                      <Description/>
+                      </FieldDocumentation>
+                    </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ComplementaryHistory" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Histórico Complementar
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocumentType" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Tipo de Documento 1-DB Débito, 2-CR Crédito,
+						3-DP Duplicata, 4-CH Cheque
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>
+									DB Débito
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>
+									CR Crédito
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>
+									DP Duplicata
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>
+									CH Cheque
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocumentNumber" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Número do Documento
+					</xs:documentation>
+                    <xs:appinfo>
+                      <FieldDocumentation product="PROTHEUS">
+                      <Field>SM3.M3_NUMCHEQ</Field>
+                      <Required>nao</Required>
+                      <Type>char</Type>
+                      <Length>15</Length>
+                      <Description/>
+                      </FieldDocumentation>
+                      <FieldDocumentation product="RM">
+                      <Field/>
+                      <Required/>
+                      <Type/>
+                      <Length/>
+                      <Description/>
+                      </FieldDocumentation>
+                    </xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BatchNumber" type="xs:int" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Número do Lote (É utilizado para modificação ou
+						exclusão)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BatchSequence" type="xs:int" maxOccurs="1"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						Sequência do Lote (É utilizado para modificação
+						ou exclusão)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BankType">
+		<xs:sequence>
+			<xs:element name="BankCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do Banco</xs:documentation>
+				</xs:annotation>
+                <xs:appinfo>
+                      <FieldDocumentation product="PROTHEUS">
+                      <Field>SM3.M3_BANCO</Field>
+                      <Required>nao</Required>
+                      <Type>char</Type>
+                      <Length>3</Length>
+                      <Description/>
+                      </FieldDocumentation>
+                      <FieldDocumentation product="RM">
+                      <Field/>
+                      <Required/>
+                      <Type/>
+                      <Length/>
+                      <Description/>
+                      </FieldDocumentation>
+                    </xs:appinfo>
+			</xs:element>
+			<xs:element name="AgencyNumber" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número da Agência</xs:documentation>
+                    <xs:appinfo>
+                      <FieldDocumentation product="PROTHEUS">
+                      <Field>SM3.M3_AGENCIA</Field>
+                      <Required>nao</Required>
+                      <Type>char</Type>
+                      <Length>5</Length>
+                      <Description/>
+                      </FieldDocumentation>
+                      <FieldDocumentation product="RM">
+                      <Field/>
+                      <Required/>
+                      <Type/>
+                      <Length/>
+                      <Description/>
+                      </FieldDocumentation>
+                    </xs:appinfo>
+ 				</xs:annotation>
+			</xs:element>
+			<xs:element name="BankAccount" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número da Conta</xs:documentation>
+                    <xs:appinfo>
+                      <FieldDocumentation product="PROTHEUS">
+                      <Field>SM3.M3_CONTA</Field>
+                      <Required>nao</Required>
+                      <Type>char</Type>
+                      <Length>10</Length>
+                      <Description/>
+                      </FieldDocumentation>
+                      <FieldDocumentation product="RM">
+                      <Field/>
+                      <Required/>
+                      <Type/>
+                      <Length/>
+                      <Description/>
+                      </FieldDocumentation>
+                    </xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		 </xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ApportionmentDistributionType">
+		<xs:sequence>
+			<xs:element name="DebitAccount" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Conta Contábil de Débito</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CreditAccount" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Conta Contábil de Crédito</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Centro de Custo (AeN LOGIX)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocumentNumber" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Documento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BatchNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lote</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BatchSequence" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sequência do Lote</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent" />
+</xs:schema>

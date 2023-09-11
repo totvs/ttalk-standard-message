@@ -1,0 +1,3813 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+  <!-- ===================================== -->
+  <!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+  <!-- ===================================== -->
+  <xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+  <xs:include schemaLocation="../types/Tax_1_005.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ApportionType_2_004.xsd"></xs:include>
+  <xs:include schemaLocation="../types/GovernmentalInformation_1_000.xsd"></xs:include>
+  <xs:include schemaLocation="../types/Address_1_000.xsd"></xs:include>
+  <!-- ==================================== -->
+  <!-- DOCUMENTAÇÃO DA MENSAGEM =========== -->
+  <!-- ==================================== -->
+  <xs:annotation>
+      <xs:appinfo>
+        <MessageDocumentation>
+          <Name>Invoice</Name>
+          <Description>Baixa de estoque</Description>
+          <Segment>Construção e Projetos</Segment>
+          <ProductInformation product="RM">
+            <Contact>Bruno Barbosa de Souza</Contact>
+            <Description>GDP Inovação Const. e Proj.</Description>
+            <Adapter>MovMovimentoData</Adapter>
+            <Receive>
+              <Insert>sim</Insert>
+              <Update>não</Update>
+              <Delete>sim</Delete>
+            </Receive>
+          </ProductInformation>
+          <ProductInformation product="PROTHEUS">
+            <Contact>Eduardo de Souza</Contact>
+            <Description>GDP de Materiais</Description>
+            <Adapter>MATI103b</Adapter>
+            <Send>
+              <Insert>sim</Insert>
+              <Update>não</Update>
+              <Delete>sim</Delete>
+            </Send>
+          </ProductInformation>
+        </MessageDocumentation>
+      </xs:appinfo>
+  </xs:annotation>
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE NEGÓCIO ================ -->
+  <!-- ==================================== -->
+  <xs:complexType name="BusinessContentType">
+    <xs:sequence>
+      <xs:element name="CompanyId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.CODCOLIGADA</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+            <xs:appinfo>
+              <FieldDocumentation product="PROTHEUS">
+                <Field>Não possui campo físico na tabela</Field>
+                <Required>Sim</Required>
+                <Type>varchar</Type>
+                <Length>02</Length>
+                <Description></Description>
+              </FieldDocumentation>
+            </xs:appinfo>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BranchId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Filial</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_FILIAL</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>2</Length>
+              <Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.codfilial</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CompanyInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId da chave completa da empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>50</Length>
+              <Description>o InternalID da empresa é formado por EMPRESA|F1_FILIAL. Tamanho entre 05 e 15</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.codcoligada|tmov.codfilial</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId da Invoice</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_DOC</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>9</Length>
+              <Description>O InternalId da Invoice é formado por EMPRESA|F1_FILIAL|F1_DOC|F1_SERIE|F1_FORNECE|F1_LOJA|F1_TIPO</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.codcoligada|tmov.idmov</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InvoiceNumber" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Número da Nota Fiscal (LOGIX: 10, DataSul: 16, Protheus: 20)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_DOC</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>9</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.NUMEROMOV</Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>35</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="20"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InvoiceSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Serie da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_SERIE</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>3</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.serie</Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>8</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InvoiceSubSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sub-Serie da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="5"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InvoiceModel" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Modelo da Nota Fiscal (Convênio ICMS 31/99)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InvoiceSituation" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Situação da Nota Fiscal (1-Normal 2-Cancelada)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_STATUS</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>1</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>1-Normal</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>2-Cancelada</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="TypeOfDocument" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Tipo do documento
+            - Logix é uma lista fixa
+            - Datasul é uma lista fixa
+            - Protheus é pré-cadastrado e permite mudar
+            - RM é cadastro livre
+
+            Para entender como este campo irá funciona, consulte o seguinte tópico
+            da documento
+
+            TFS:TOTVSMSGXML \DEV\documentação\Padrão para criação de mensagens únicas.docx
+
+            2.13.2 Conflito entre valores fixos e valores cadastráveis
+
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_TIPO</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>1</Length>
+              <Description>N = NF Normal
+                           C = Compl. Preço
+                           D = Devolução
+                           I = NF Compl. ICMS
+                           P = NF Compl. IPI
+                           B = NF Beneficiamento</Description>
+            </FieldDocumentation>			
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.tipo</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>1</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VendorCode" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Código do fornecedor
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_FORNECE</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>6</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VendorInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            InternalId do VendorCode
+          </xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>Sim</Required>
+              <Type>Varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId do Fornecedor é formado por EMPRESA|A2_FILIAL|A2_COD|A2_LOJA</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IssueDate" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data de Emissão</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_EMISSAO</Field>
+              <Required>Sim</Required>
+              <Type>date</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>tmov.dataemissao</Field>
+              <Required>sim</Required>
+              <Type>datetime</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InputDate" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data de Recebimento/Digitação</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_DTDIGIT</Field>
+              <Required>não</Required>
+              <Type>date</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InvoiceAmount" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_VALBRUT</Field>
+              <Required>Não</Required>
+              <Type>number</Type>
+              <Length>14,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValueofGoods" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor da Mercadoria</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_VALMERC</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>14,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FreightAmount" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do frete</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_FRETE</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InsuranceAmount" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do Seguro</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_SEGURO</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>15,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DiscountAmount" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do Desconto</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_DESCONT</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>14,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CurrencyRate" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Taxa da Moeda Utilizada para Calcular o Valor da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_TXMOEDA</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>11,4</Length>
+              <Description>Contém máscara numérica @E 999999.9999</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="CurrencyInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId da Taxa da Moeda Utilizada para Calcular o Valor da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>Empresa+SF1XX0.F1_FILIAL+SF1XX0.F1_MOEDA</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId da Taxa da Moeda formada por EMPRESA|F1_FILIAL|F1_MOEDA</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PaymentConditionCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código da condição de pagamento</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_COND</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>3</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="PaymentConditionInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId da PaymentConditionCode</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId da Condição de Pagamento é formado por EMPRESA|E4_FILIAL|E4_CODIGO</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BoardingMode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Modo de embarque</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field>nf_sup.cod_mod_embar</Field>
+              <Required>Não</Required>
+              <Type>NUMBER</Type>
+              <Length>3</Length>
+              <Description>Código do Modo de Embarque</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CustomerCode" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código do Cliente</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CustomerInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId da CustomerCode</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="StoreCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código da Loja</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_LOJA</Field>
+              <Required>Sim</Required>
+              <Type>Varchar</Type>
+              <Length>2</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="StoreInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>InternalId da StoreCode</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="MasterInvoiceNumber" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Número da Nota Fiscal Mestre - Informativo</xs:documentation>
+		    <xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_nf_origem.nf_origem</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>7</Length>
+					<Description>Número da Nota Fiscal Mestre (quando especie igual a NFP ou NFC)</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="20"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="MasterInvoiceSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Série da Nota Fiscal Mestre - Informativo</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_nf_origem.ser_nf_origem</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>3</Length>
+					<Description>Série da Nota Fiscal Mestre (quando especie igual a NFP ou NFC)</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="MasterInvoiceSubSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Sub Série da Nota Fiscal Mestre</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_nf_origem.ssr_nf_origem</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>7</Length>
+					<Description>Subsérie da Nota Fiscal Mestre (quando especie igual a NFP ou NFC)</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="7"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="TaxOpCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Código Fiscal de Operação - CFOP</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>nf_sup.cod_operacao</Field>
+					<Required>sim</Required>
+					<Type>char</Type>
+					<Length>7</Length>
+					<Description>CFOP da nota</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="7"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="TaxOperationCodeComplement" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Código Fiscal de Operação Complementar - CFOP</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>aviso_rec_compl.cod_fiscal_compl / frete_sup_compl.cod_fiscal_compl </Field>
+					<Required>não</Required>
+					<Type>number</Type>
+					<Length>10</Length>
+					<Description>CFOP complementar da nota</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="CarrierCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Código do Transportador - Informativo</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>aviso_rec_compl.cod_transpor</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>19</Length>
+					<Description>Código do Transportador.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="19"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="ImportDeclaration" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Número da Declaração de Importação</xs:documentation>
+		    <xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>aviso_rec_compl.num_di</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>10</Length>
+					<Description>Número da Declaração de Importação.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="12"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="ImportDeclarationDate" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Data da Declaração de Importação</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'data_di_nf'</Field>
+					<Required>nao</Required>
+					<Type>date</Type>
+					<Length></Length>
+					<Description>Data da Declaração de Importação.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ImportProcess" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Processo de Importação</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'processo_import'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>6</Length>
+					<Description>Número do Processo de Importação.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="6"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="ClearanceDate" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Data do Desembaraço Aduaneiro</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'data_desembaraco'</Field>
+					<Required>nao</Required>
+					<Type>date</Type>
+					<Length></Length>
+					<Description>Data do Desembaraço Aduaneiro.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ClearanceSite" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Local do Desembaraço Aduaneiro</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'local_desemb_nf'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>60</Length>
+					<Description>Local do Desembaraço Aduaneiro.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="60"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="ClearanceUF" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Sigla da UF do Desembaraço Aduaneiro</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'uf_desemb_nf'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>2</Length>
+					<Description>Sigla da UF do Desembaraço Aduaneiro.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="ExporterCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Código do Exportador</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="15"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="TransportMode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Via de transporte</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'meio_transp_ar'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>1</Length>
+					<Description>Sigla da UF do Desembaraço Aduaneiro.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>1=Marítima</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>2=Fluvial</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>3=Lacustre</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="4">
+              <xs:annotation>
+                <xs:documentation>4=Aérea</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="5">
+              <xs:annotation>
+                <xs:documentation>5=Postal</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="6">
+              <xs:annotation>
+                <xs:documentation>6=Ferroviária</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="7">
+              <xs:annotation>
+                <xs:documentation>7=Rodoviária</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="8">
+              <xs:annotation>
+                <xs:documentation>8=Conduto / Rede Transmissão</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="9">
+              <xs:annotation>
+                <xs:documentation>9=Meios Próprios</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="10">
+              <xs:annotation>
+                <xs:documentation>10=Entrada / Saída ficta</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="AFRMMValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Valor da AFRMM - Adicional ao Frete para Renovação da Marinha Mercante. Quando 'TransportMode' igual a 1.</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'val_afrmm'</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>15,2</Length>
+					<Description>Valor da AFRMM - Adicional ao Frete para Renovação da Marinha Mercante. Quando 'TransportMode' igual a 1.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ImportMode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Forma de Importação quanto a intermediação</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'forma_impn'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>1</Length>
+					<Description>Forma de importação.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation>1=Importação por conta própria</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation>2=Importação por conta e ordem</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="3">
+              <xs:annotation>
+                <xs:documentation>3=Importação por encomenda</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="BuyerCNPJ" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>CNPJ do Adquirente ou Encomendante. Obrigatório quando 'ImportMode' igual 2 ou 3.</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'cnpj_adq_enc'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description>CNPJ do Adquirente ou Encomendante.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="15"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="BuyerUF" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Sigla da UF do Adquirente ou Encomendante. Obrigatório quando 'ImportMode' igual 2 ou 3.</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'uf_adq_enc'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>2</Length>
+					<Description>Sigla da UF do Adquirente ou Encomendantes.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="15"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="AccountInTransit" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Conta Contábil de Importação em Andamento.</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'conta_importacao'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>23</Length>
+					<Description>Conta Contábil de Importação em andamento.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="23"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="Packing" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Embalagem dos produtos</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>nfe_sup_compl.den_embal</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>10</Length>
+					<Description>Embalagem dos Produtos.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="Volumes" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Quantidade de volumes</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>nfe_sup_comple.qtd_volumes</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>5</Length>
+					<Description>Quantidade de Volumes.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="GrossWeight" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Peso Bruto</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>nfe_sup_compl.peso_bruto</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>9,3</Length>
+					<Description>Peso Bruto.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="NetWeight" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Peso Líquido</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>nfe_sup_compl.peso_liquido</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>9,3</Length>
+					<Description>Peso Líquido.</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="Observation" type="xs:string" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Observações da nota fiscal</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>nfe_sup_compl.texto_compl1</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>120</Length>
+					<Description>Texto complementar</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CurrencyCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Moeda</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field></Field>
+              <Required></Required>
+              <Type>varchar</Type>
+              <Length>10</Length>
+              <Description>Moeda do Contrato</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InboundRegistrationCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código do registro de entrada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>number</Type>
+              <Length>2</Length>
+              <Description>Código do registro de entrada</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Purpose" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Finalidade da nota fiscal de entrada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>number</Type>
+              <Length>2</Length>
+              <Description>Código da finalidade da nota fiscal de entrada 1 - normal, 2 - Complemento, 3 - Ajuste, 4 - Devolução</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinalConsumerIndicator" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indicador de consumidor final</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>1</Length>
+              <Description>Indicador de consumidor final 0-Não, 1-Consumidor Final </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CustomerPresenceIndicator" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indicador de presença do consumidor final na operação</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>1</Length>
+              <Description>Indicador de presença do consumidor final 0-Não se aplica ou NFC, 1-Operação Presencial, 2-Oper.Via Internet, 3-Oper.Teleatendimento, 4-NFC. Entr. Domicílio, 9-Outros  </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IcmsPayTaxIndicator" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indicador de contribuinte do ICMS</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>1</Length>
+              <Description>Indicador de contribuinte de ICMS  1-Contribuinte ICMS, 2-Contribuinte isento, 9-Não Contribuinte </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ElectronicAccessKey" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Chave de acesso eletrônica</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>44</Length>
+              <Description>Chave de acesso eletrônica</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ElectronicProtocol" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Protocolo eletrônico</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>25</Length>
+              <Description>Protocolo eletrônico</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ElectronicKeyJustification" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Justificativa chave de acesso eletrônico</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length>25</Length>
+              <Description>Justificativa da chave acesso eletrônico</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TollValue" type="xs:double" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do pedágio</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field>pedagio_frete.val_pedagio</Field>
+              <Required>nao</Required>
+              <Type>decimal</Type>
+              <Length>17,2</Length>
+              <Description>Valor do pedágio</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>	  
+	  <xs:element name="ListOfRelatedInvoices" type="ListOfRelatedInvoicesType" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Lista de notas fiscais relacionadas</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ListOfItens" type="ListOfItensType" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Itens da Nota</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="PaymentPlan" type="PaymentType" minOccurs="0"/>	  
+	  <xs:element name="ShippingAddress" type="AddressType" minOccurs="0">
+		<xs:annotation>
+			<xs:documentation>Endereço de entrega</xs:documentation>
+		</xs:annotation>
+	  </xs:element>	
+	  <xs:element name="ShippingAddressGovernmentalInformation" type="GovernmentalInformationType" minOccurs="0">
+		<xs:annotation>
+			<xs:documentation>Documentos do cliente/comprador para o qual será feita a entrega</xs:documentation>
+		</xs:annotation>
+	  </xs:element>
+	  <xs:element name="ListOfConsignee" type="ListOfConsigneeType" minOccurs="0">
+		<xs:annotation>
+			<xs:documentation>Lista de consignatários da nota fiscal</xs:documentation>
+		</xs:annotation>
+	  </xs:element>	  
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfRelatedInvoicesType">
+    <xs:sequence>
+      <xs:element name="RelatedInvoices" type="RelatedInvoicesType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfItensType">
+    <xs:sequence>
+      <xs:element name="Item" type="ItemType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfTaxes">
+    <xs:sequence>
+      <xs:element name="Tax" type="TaxesType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+ <xs:complexType name="RelatedInvoicesType"> 
+    <xs:sequence>
+      <xs:element name="InvoiceNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Número da nota relacionada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>Não</Required>
+              <Type>number</Type>
+              <Length>10</Length>
+              <Description>Número da nota fiscal relacionada</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InvoiceSerie" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Série da nota relacionada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>Não</Required>
+              <Type>string</Type>
+              <Length>3</Length>
+              <Description>Série da nota fiscal relacionada</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InvoiceSubSerie" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Subsérie da nota relacionada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>Não</Required>
+              <Type>string</Type>
+              <Length>10</Length>
+              <Description>Série da nota fiscal relacionada</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InvoiceTransaction" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Transação da nota relacionada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>Não</Required>
+              <Type>number</Type>
+              <Length>10</Length>
+              <Description>Série da nota fiscal relacionada</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InvoiceDateIssue" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Date de emissão da nota relacionada</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>Não</Required>
+              <Type>date</Type>
+              <Length></Length>
+              <Description>Date de emissão da nota fiscal relacionada</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	</xs:sequence>
+ </xs:complexType>
+
+  <xs:complexType name="ItemType">
+    <xs:sequence>
+      <xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do item da Invoice</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>Sim</Required>
+              <Type>Varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId do Item na Nota Fiscal é formado por EMPRESA|FILIAL|D1_DOC</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.codcoligada|titmmov.codfilial</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InvoiceSequence" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sequência da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_ITEM</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>4</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.numerosequencial</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="4"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="OrderNumber" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Número do Pedido que Originou o Item da Nota</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_PEDIDO</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>6</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="6"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="OrderInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do Pedido</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OrdemItem" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sequência do Item do Pedido que Gerou o Item da Nota</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_ITEMPC</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>4</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="9"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="OrderItemInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do Item do Pedido</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ListOfRequests" type="ListOfRequestsType" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Lista de Solicitações de compra</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ItemCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código do Item</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_COD</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>15</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.codtip</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>10</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="15"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ItemInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do Item</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>Sim</Required>
+              <Type>Varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId do Produto é formado por EMPRESA|B1_FILIAL|B1_COD</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.IDPRD</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ItemExpenseGroupCode" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Grupo de Despesa do item</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field>aviso_rec.gru_ctr_desp_item / frete_sup.gru_ctr_desp_frete</Field>
+              <Required>Não</Required>
+              <Type>number</Type>
+              <Length>4</Length>
+              <Description>Grupo de despesa do item</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ItemExpenseGroupInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Internal Id do Grupo de Despesa do item</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>Não</Required>
+              <Type>Varchar</Type>
+              <Length>20</Length>
+              <Description>InternalId é formado pela código da empresa mais o código do grupo de despesa do item XX|YYYY</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Quantity" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Quantidade do Item</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_QUANT</Field>
+              <Required>Sim</Required>
+              <Type>decimal</Type>
+              <Length>11,2</Length>
+              <Description>Contém máscara numérica @E 99999999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.Quantity</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UnitofMeasureCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código da Unidade de Medida</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_UM</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>2</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="6"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="UnitofMeasureInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do UnitofMeasure</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>Sim</Required>
+              <Type>Varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId da Unidade de Medida é formado por EMPRESA|AH_FILIAL|AH_UNIMED</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.CODUND</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>5</Length>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UnityPrice" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Preço Unitário do Item x Taxa da Moeda)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_VUNIT</Field>
+              <Required>Sim</Required>
+              <Type>decimal</Type>
+              <Length>14,2</Length>
+              <Description>Contém a máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.precounitario</Field>
+              <Required>sim</Required>
+              <Type>decimal</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GrossValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor Bruto do Item. (Quantidade x Preço Unitário x Taxa da Moeda)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FreightValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do Frete Unitário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_VALFRE</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>14,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InsuranceValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do Seguro Unitário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_SEGURO</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>14,2</Length>
+              <Description>Contém máscara numérica @E 99,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DiscountValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor do Desconto Unitário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_VALDESC</Field>
+              <Required>Não</Required>
+              <Type>decimal</Type>
+              <Length>12,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NetValue" type="xs:double" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valor Líquido (Valor Bruto + Frete + Seguro - Desconto)</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_TOTAL</Field>
+              <Required>Sim</Required>
+              <Type>decimal</Type>
+              <Length>14,2</Length>
+              <Description>Contém máscara numérica @E 999,999,999.99</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AreAndLineOfBusinessCode" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Código da área e linha.
+            No Logix será uma string que poderá ter 4 (área/linha de negócio com 2 níveis)
+            ou 8 caracteres (área/linha de negócio com 4 níveis).
+            Os campos serão concatenados sem separador, respeitando a sequencia da chave da tabela linha_prod.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WarehouseCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código do Armazem</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_LOCAL</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>2</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="15" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="WarehouseInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do WarehouseCode</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>Sim</Required>
+              <Type>Varchar</Type>
+              <Length>50</Length>
+              <Description>O InternalId do Local de Estoque é formado por EMPRESA|NNR_FILIAL|NNR_CODIGO</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.CODLOC</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>15</Length>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LotNumber" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Número do Lote</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_LOTECTL</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>10</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="SubLotNumber" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Número do Lote</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_NUMLOTE</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>6</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="6" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="LotExpirationDate" maxOccurs="1" minOccurs="0" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Data Vencimento Lote</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SD1XX0.D1_DTVALID</Field>
+              <Required>Não</Required>
+              <Type>Date</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ContractInternalID" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Dedução por Faturamento Direto</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>titmmov.idcnt</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>AFNXX0.AFN_CONTRA</Field>
+              <Required>Não</Required>
+              <Type>Varchar</Type>
+              <Length>20</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="DeliverySchedule" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Programação de entrega do item na solicitação</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>ar_ped.num_prog_entrega</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>3</Length>
+					<Description>Número da Programação de Entrega do Item</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="NCM" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código da Nomenclatura Comum do Mercosul</xs:documentation>
+            <xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>aviso_rec.cod_cla_fisc</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>10</Length>
+					<Description>NCM</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="AccessoryExpense" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Despesa Acessória do Item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>aviso_rec.val_despesa_aces_i</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>17,2</Length>
+					<Description>Valor da Despesa Acessória</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="OtherExpenses" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Outras Despesas do Item que não incidem impostos</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>aviso_rec.val_compl_estoque</Field>
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>17,2</Length>
+					<Description>Valor de outras despesas</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExporterExpenses" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Despesas do Item assumidas pelo exportador, não compondo custo</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="DATASUL">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="LOGIX">
+              <Field>sup_par_ar.parametro = 'val_exporterexpenses'</Field>
+              <Required>nao</Required>
+              <Type>decimal</Type>
+              <Length>17,2</Length>
+              <Description>Valor de despesas assumidas pelo exportador que não compõem custo do item</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TaxOpCodeItem" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código Fiscal de Operação (CFOP) do Item</xs:documentation>
+            <xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>aviso_rec.cod_fiscal_item</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>7</Length>
+					<Description>CFOP do Item</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="7"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="AddingDiNumber" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Número da Adição da DI</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'num_adicao_di'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>3</Length>
+					<Description>Número da Adição da DI</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="AddingDiSeq" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Sequência da Adição da DI</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'seq_item_adicao'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>3</Length>
+					<Description>Sequencia da Adição da DI</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Manufacturer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código do Fabricante do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'fabricante_item'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description>Fabricante do Item</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="15"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DiscountDiValue" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Valor do Desconto do item da DI - Adição</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CustomsCosts" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Despesas Aduaneiras</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IOFValue" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Valor Imposto sobre Operações Financeiras</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ConcessionActDrawback" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Número da Ato Concessório de Drawback</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'num_drawback'</Field>
+					<Required>nao</Required>
+					<Type>char</Type>
+					<Length>11</Length>
+					<Description>Ato Concessório de Drawback</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="11"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+	  <xs:element name="Sample" type="xs:boolean" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+            <xs:documentation>Indicador do item de Amostra</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar.parametro = 'finalidade_import'</Field>
+					<Required>nao</Required>
+					<Type/>
+					<Length/>
+					<Description>Finalide da Importação</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ListOfNVE" type="ListOfNVEType" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codificação NVE dos itens - Nomenclatura de Valor Aduaneiro e Estatística</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ListOfTaxes" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Taxes" type="TaxesType" minOccurs="1" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Event" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Operação a ser executada no registro.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="delete">
+              <xs:annotation>
+                <xs:documentation>Quando este registro for exclusão</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ListOfApportionInvoiceItem" maxOccurs="1" minOccurs="0">
+        <xs:complexType>
+          <xs:annotation>
+            <xs:documentation>Rateio dos Itens do Pedido</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+            <xs:element name="ApportionInvoiceItem" type="ApportionType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+	  <xs:element name="TotalStock" type="xs:double" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+              <xs:documentation>Total físico </xs:documentation>
+              <xs:appinfo>
+                  <FieldDocumentation product="PROTHEUS">
+                      <Field>B2_QATU - SD1XX0.D1_QUANT </Field>
+                      <Required>Sim</Required>
+                      <Type>decimal</Type>
+                      <Length>11,2</Length>
+                      <Description>Contém máscara numérica @E 99999999.99</Description>
+                  </FieldDocumentation>
+              </xs:appinfo>
+          </xs:annotation>
+      </xs:element>
+      <xs:element name="LotStock" type="xs:double" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+              <xs:documentation>Total do Lote </xs:documentation>
+              <xs:appinfo>
+                  <FieldDocumentation product="PROTHEUS">
+                      <Field>Sum(B8_SALDO)– D1_QUANT</Field>
+                      <Required>Não</Required>
+                      <Type>decimal</Type>
+                      <Length>11,2</Length>
+                      <Description>Contém máscara numérica @E 99999999.99</Description>
+                  </FieldDocumentation>
+              </xs:appinfo>
+          </xs:annotation>
+      </xs:element>
+      <xs:element name="UpdateStock" type="xs:boolean" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+              <xs:documentation>Campo que identifica se movimenta o estoque</xs:documentation>
+              <xs:appinfo>
+                  <FieldDocumentation product="PROTHEUS">
+                      <Field>F4_ESTOQUE</Field>
+                      <Required>Não</Required>
+                      <Type>Boolean</Type>
+                      <Length>1</Length>
+                      <Description>.T. ou .F.</Description>
+                  </FieldDocumentation>
+              </xs:appinfo>
+          </xs:annotation>
+      </xs:element>
+      <xs:element name="AcessoryExpenseCalculationBasis" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indicador se a despesa acessória entra na base de cálculo dos impostos</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field>aviso_rec.ies_da_bc_ipi</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>1</Length>
+              <Description>Indicador se a despesa acessória entra na base de cálculo dos impostos</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpenseTypeCode" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Código do tipo de despesa do item</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field>aviso_rec.cod_tip_despesa</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>4</Length>
+              <Description>Código do tipo de despesa do item</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpenseTypeInternalId" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Internal Id do tipo de despesa do item</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="LOGIX">
+              <Field></Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>10</Length>
+              <Description>Internal Id do tipo de despesa do item empresa+ tipo de despesa XX|YYYY</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+	  </xs:element>
+	  <xs:element name="ItemGrossWeight" type="xs:double" maxOccurs="1" minOccurs="0">
+		<xs:annotation>
+			<xs:documentation>Peso Bruto total do item</xs:documentation>
+			<xs:appinfo>				
+				<FieldDocumentation product="LOGIX">					
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>17,6</Length>
+					<Description>Peso total do item mais o peso rateado das embalagens da nota fiscal que estão relacionadas ao item. Peso em Kg</Description>
+				</FieldDocumentation>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>	  
+	  <xs:element name="ItemNetWeight" type="xs:double" maxOccurs="1" minOccurs="0">
+		<xs:annotation>
+			<xs:documentation>Peso liquído total do item</xs:documentation>
+			<xs:appinfo>				
+				<FieldDocumentation product="LOGIX">					
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>17,6</Length>
+					<Description>Peso total do item em Kg</Description>
+				</FieldDocumentation>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>	  
+	  <xs:element name="ItemVolume" type="xs:double" maxOccurs="1" minOccurs="0">
+		<xs:annotation>
+		<xs:documentation>Volume total do item</xs:documentation>
+			<xs:appinfo>				
+				<FieldDocumentation product="LOGIX">					
+					<Required>nao</Required>
+					<Type>decimal</Type>
+					<Length>17,6</Length>
+					<Description>Volume total do item em metros cúbicos, considerando as embalagens relacionadas ao item na nota fiscal</Description>
+				</FieldDocumentation>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>	  
+	  <xs:element name="ItemDescription" type="xs:string" maxOccurs="1" minOccurs="0">
+		<xs:annotation>
+			<xs:documentation>Descrição do item</xs:documentation>
+			<xs:appinfo>				
+				<FieldDocumentation product="LOGIX">
+					<Field>fat_nf_item.des_item</Field>
+					<Required>não</Required>
+					<Type>char</Type>
+					<Length>76</Length>
+					<Description>Descrição do item</Description>
+				</FieldDocumentation>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>	  
+	  <xs:element name="ListOfStateRegistration" type ="ListOfStateRegistrationType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Lista de inscrições estaduais do item</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ListOfItemGrid" type ="ListOfItemGridType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Lista de grades e dimensionais do item</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+	  <xs:element name="ListOfRelatedInvoicesItem" type="ListOfRelatedInvoicesItemType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Lista de notas fiscais relacionadas ao item</xs:documentation>
+        </xs:annotation>
+      </xs:element>	  	
+	</xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfStateRegistrationType">
+    <xs:sequence>
+      <xs:element name="StateRegistration" type="StateRegistrationType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StateRegistrationType">
+    <xs:sequence>
+      <xs:element name="StateRegistrationCode" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código de inscrição estadual</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field></Field>
+					<Required/>
+					<Type>char</Type>
+					<Length>16</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+ <xs:complexType name="ListOfItemGridType">
+    <xs:sequence>
+      <xs:element name="ItemGrid" type="ItemGridType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ItemGridType">
+    <xs:sequence>
+      <xs:element name="GridCode1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código de grade 1 do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.grade_1</Field>
+					<Required/>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GridCode2" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código de grade 2 do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.grade_2</Field>
+					<Required/>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GridCode3" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código de grade 3 do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.grade_3</Field>
+					<Required/>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GridCode4" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código de grade 4 do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.grade_4</Field>
+					<Required/>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GridCode5" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código de grade 5 do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.grade_5</Field>
+					<Required/>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Address" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Endereço do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.endereco</Field>
+					<Required/>
+					<Type>char</Type>
+					<Length>15</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Volume" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Volume do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.volume</Field>
+					<Required/>
+					<Type>number</Type>
+					<Length>10</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ProductionDate" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Data de produção do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.dat_hor_producao</Field>
+					<Required/>
+					<Type>date</Type>
+					<Length></Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpirationDate" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Data de validade do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.dat_hor_valid</Field>
+					<Required/>
+					<Type>date</Type>
+					<Length></Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Length" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Comprimento do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.comprimento</Field>
+					<Required/>
+					<Type>decimal</Type>
+					<Length>15,3</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Width" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Largura do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.width</Field>
+					<Required/>
+					<Type>decimal</Type>
+					<Length>15,3</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Height" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Altura do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.height</Field>
+					<Required/>
+					<Type>decimal</Type>
+					<Length>15,3</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Diameter" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Diâmetro do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.diameter</Field>
+					<Required/>
+					<Type>decimal</Type>
+					<Length>15,3</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Part" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Peça do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.peca</Field>
+					<Required/>
+					<Type>string</Type>
+					<Length>15</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+     <xs:element name="SeriesPart" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Série da Peça do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_ar_grade.serie_peca</Field>
+					<Required/>
+					<Type>string</Type>
+					<Length>25</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+     <xs:element name="Lot" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Lote do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar_grade.parametro_texto</Field>
+					<Required/>
+					<Type>string</Type>
+					<Length>15</Length>
+					<Description>onde parametro = num_lote</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+     <xs:element name="Warehouse" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Local do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar_grade.parametro_texto</Field>
+					<Required/>
+					<Type>string</Type>
+					<Length>10</Length>
+					<Description>onde parametro = local_estoque</Description>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ReceivedAmount" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Quantidade recebida do item</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="LOGIX">
+					<Field>sup_par_ar_grade.parametro_qtd</Field>
+					<Required/>
+					<Type>decimal</Type>
+					<Length>15,3</Length>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfRelatedInvoicesItemType">
+    <xs:sequence>
+      <xs:element name="RelatedInvoicesItem" type="RelatedInvoicesItemType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RelatedInvoicesItemType">
+     <xs:sequence>
+       <xs:element name="InvoiceNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>Número da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>number</Type>
+               <Length>20</Length>
+               <Description>Número da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="InvoiceSerie" type="xs:string" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>Série da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>char</Type>
+               <Length>3</Length>
+               <Description>Série da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="InvoiceSubSerie" type="xs:string" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>Subsérie da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>number</Type>
+               <Length>5</Length>
+               <Description>Subsérie da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="InvoiceType" type="xs:string" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>Espécie da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>char</Type>
+               <Length>3</Length>
+               <Description>Espécie da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="InvoiceDate" type="xs:date" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>Data de emissão da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>date</Type>
+               <Length/>
+               <Description>Data de emissão da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="CustomerCode" type="xs:string" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>Código do cliente/fornecedor da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>char</Type>
+               <Length>15</Length>
+               <Description>Código do cliente/fornecedor da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="CustomerInternalId" type="xs:string" maxOccurs="1" minOccurs="0">
+         <xs:annotation>
+           <xs:documentation>InternalId da CustomerCode</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="PROTHEUS">
+               <Field></Field>
+               <Required></Required>
+               <Type></Type>
+               <Length></Length>
+               <Description></Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="OrderNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>Número do pedido de venda/compra da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>number</Type>
+               <Length>10</Length>
+               <Description>Número do pedido de venda/compra da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="ElectronicAccessKey" type="xs:string" minOccurs="0">
+         <xs:annotation>
+           <xs:documentation>Chave de acesso eletrônica da nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>não</Required>
+               <Type>char</Type>
+               <Length>44</Length>
+               <Description>Chave de acesso eletrônica da nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="InvoiceSequence" maxOccurs="1" minOccurs="0">
+         <xs:annotation>
+           <xs:documentation>Sequência do item na nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>number</Type>
+               <Length>10</Length>
+               <Description>Sequência do item na nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+         <xs:simpleType>
+           <xs:restriction base="xs:string">
+             <xs:maxLength value="10"></xs:maxLength>
+           </xs:restriction>
+         </xs:simpleType>
+       </xs:element>
+       <xs:element name="ItemCode" maxOccurs="1" minOccurs="0">
+         <xs:annotation>
+           <xs:documentation>Código do item na nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>char</Type>
+               <Length>15</Length>
+               <Description>Código do item na nota fiscal relacionada ao item</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+         <xs:simpleType>
+           <xs:restriction base="xs:string">
+             <xs:maxLength value="15"></xs:maxLength>
+           </xs:restriction>
+         </xs:simpleType>
+       </xs:element>
+       <xs:element name="ItemInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+         <xs:annotation>
+           <xs:documentation>InternalId do ItemCode</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="PROTHEUS">
+               <Field></Field>
+               <Required></Required>
+               <Type></Type>
+               <Length></Length>
+               <Description></Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+       <xs:element name="Quantity" type="xs:double" maxOccurs="1" minOccurs="0">
+         <xs:annotation>
+           <xs:documentation>Quantidade do item na nota relacionada ao item</xs:documentation>
+           <xs:appinfo>
+             <FieldDocumentation product="LOGIX">
+               <Field></Field>
+               <Required>Não</Required>
+               <Type>decimal</Type>
+               <Length>12,3</Length>
+               <Description>Contém máscara numérica @E 999999999.999</Description>
+             </FieldDocumentation>
+           </xs:appinfo>
+         </xs:annotation>
+       </xs:element>
+	 </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfRequestsType">
+    <xs:sequence>
+      <xs:element name="Requests" type="RequestsType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RequestsType">
+    <xs:sequence>
+      <xs:element name="RequestItemInternalId" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>InternalId do Item da Solicitação de Compra</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field>cEmpAnt|C1_FILIAL|C1_NUM|C1_ITEM</Field>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOfNVEType">
+    <xs:sequence>
+      <xs:element name="NVE" type="NVEType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NVEType">
+    <xs:sequence>
+      <xs:element name="NVECode" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+            <xs:documentation>Código NVE - Nomenclatura de Valor Aduaneiro e Estatistica</xs:documentation>
+			<xs:appinfo>
+				<FieldDocumentation product="PROTHEUS">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="RM">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="DATASUL">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+				<FieldDocumentation product="LOGIX">
+					<Field/>
+					<Required/>
+					<Type/>
+					<Length/>
+					<Description/>
+				</FieldDocumentation>
+		    </xs:appinfo>
+        </xs:annotation>
+		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="6"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PaymentType">
+	<xs:sequence>
+		<xs:element name="Term" type="TermType" minOccurs="0" maxOccurs="unbounded"/>
+	</xs:sequence>
+  </xs:complexType>
+
+ <xs:complexType name="TermType"> 
+	<xs:all minOccurs="0">
+		<xs:element name="InternalId" type="xs:string" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>InternalId da Parcela</xs:documentation>
+				<xs:appinfo>
+					<FieldDocumentation product="LOGIX">
+						<Field>vencimento_nff.num_docum</Field>
+						<Required>Não</Required>
+						<Type></Type>
+						<Length></Length>
+						<Description>Internal Id formado pelo cod_empresa|num_docum</Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			</xs:annotation>
+		</xs:element>
+		<xs:element name="TermDueDate" type="xs:date" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>Data de vencimento da Parcela</xs:documentation>
+				<xs:appinfo>
+					<FieldDocumentation product="LOGIX">
+						<Field>vencimento_nff.dat_vencto</Field>
+						<Required></Required>
+						<Type></Type>
+						<Length></Length>
+						<Description>Data de vencimento da Parcela</Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			</xs:annotation>
+		</xs:element>
+		<xs:element name="TermAmount" type="xs:double" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>Valor da Parcela</xs:documentation>
+				<xs:appinfo>
+					<FieldDocumentation product="LOGIX">
+						<Field>vencimento_nff.val_docum</Field>
+						<Required></Required>
+						<Type></Type>
+						<Length></Length>
+						<Description>Valor da Parcela</Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			</xs:annotation>
+		</xs:element>
+		<xs:element name="TermPaymentPercentage" type="xs:double" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>Percentual da Parcela</xs:documentation>
+				<xs:appinfo>
+					<FieldDocumentation product="LOGIX">
+						<Field/>
+						<Required></Required>
+						<Type></Type>
+						<Length></Length>
+						<Description>Percentual da Parcela</Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			</xs:annotation>
+		</xs:element>
+		</xs:all>
+</xs:complexType>
+
+<xs:complexType name="ListOfConsigneeType">
+	<xs:sequence>
+		<xs:element name="Consignee" type="ConsigneeType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ConsigneeType"> 
+	<xs:all minOccurs="0">
+		<xs:element name="ConsigneeSequence" type="xs:double" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>Sequência do consignatário</xs:documentation>
+				<xs:appinfo>
+					<FieldDocumentation product="LOGIX">
+						<Field>fat_consig_nf.seq_consignatario</Field>
+						<Required>não</Required>
+						<Type>decimal</Type>
+						<Length>5,0</Length>
+						<Description>Sequência do consignatário</Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			</xs:annotation>
+		</xs:element>
+		<xs:element name="ConsigneeCode" type="xs:string" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>Código do consignatário</xs:documentation>							
+				<xs:appinfo>
+					<FieldDocumentation product="LOGIX">
+						<Field>fat_consig_nf.consignatario</Field>
+						<Required>sim</Required>
+						<Type>char</Type>
+						<Length>15</Length>
+						<Description>Código do consignatário</Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			</xs:annotation>
+		</xs:element>
+		<xs:element name="ConsigneeInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+			<xs:annotation>
+				<xs:documentation>InternalId do ConsigneeCode</xs:documentation>				
+			</xs:annotation>
+		</xs:element>		
+		<xs:element name="FreightType" minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>Tipo de Frete</xs:documentation>
+				<xs:appinfo>
+					<FieldDocumentation product="LOGIX">
+						<Field>fat_consig_nf.tip_fret_consig</Field>
+						<Required>não</Required>
+						<Type>char</Type>
+						<Length>1</Length>
+						<Description>Tipo de frete</Description>
+					</FieldDocumentation>
+				</xs:appinfo>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1"><xs:annotation><xs:documentation>CIF</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="2"><xs:annotation><xs:documentation>FOB</xs:documentation></xs:annotation></xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:element>
+	</xs:all>
+</xs:complexType>
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE RETORNO ================ -->
+  <!-- ==================================== -->
+  <xs:complexType name="ReturnContentType">
+    <xs:sequence>
+      <xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>Não possui campo físico na tabela</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>02</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Filial</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_FILIAL</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>2</Length>
+              <Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="2"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InvoiceNumber" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Número da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_DOC</Field>
+              <Required>Sim</Required>
+              <Type>varchar</Type>
+              <Length>9</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="20"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InvoiceSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Série da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SF1XX0.F1_SERIE</Field>
+              <Required>Não</Required>
+              <Type>varchar</Type>
+              <Length>3</Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="InvoiceSubSerie" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sub-Serie da Nota Fiscal</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="5"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- ==================================== -->
+  <!-- TIPOS ABSTRATOS  =================== -->
+  <!-- ==================================== -->
+  <xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+  <xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+
+</xs:schema>

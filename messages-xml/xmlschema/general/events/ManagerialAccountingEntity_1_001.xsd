@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" 
+			elementFormDefault="qualified">
+
+	<!--  ====================================  -->
+	<!--  INCLUDES NECESSÁRIOS PARA A MENSAGEM  -->
+	<!--  ====================================  -->
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	
+	<!--  ====================================  -->
+	<!--  DOCUMENTAÇÃO DA MENSAGEM              -->
+	<!--  ====================================  -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>ManagerialAccountingEntity</Name>
+				<Description>Mensagem de integração de entidades contábeis.</Description>
+				<Segment>Geral</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact>Felipe Raposo</Contact>
+					<Description>Analista SI alocado pela TOAT.</Description>
+					<Adapter>CBTA800A</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE NEGÓCIO DA MENSAGEM ====  -->
+	<!--  ====================================  -->
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"/>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ListOfManagerialAccountingEntity" type="ListOfManagerialAccountingEntityType" minOccurs="1" maxOccurs="1">
+				<xs:annotation><xs:documentation>Lista de contas gerenciais</xs:documentation></xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ListOfManagerialAccountingEntityType">
+		<xs:sequence>
+			<xs:element name="ManagerialAccountingEntity" type="ManagerialAccountingEntityType" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation><xs:documentation>Contas gerencial</xs:documentation></xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ManagerialAccountingEntityType">
+		<xs:sequence>
+			<xs:element name="AccountingPlan" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código do Plano Contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CV0_PLANO</Field>
+							<Required>Nao</Required>
+							<Type>char</Type>
+							<Length>02</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Code" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da entidade contábil gerencial sem máscara</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CGERENCIA.CODCONTA</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>40</Length>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CV0_CODIGO</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>15</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			
+			<xs:element name="InternalId" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Code</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CGERENCIA.CODCOLIGADA | CGERENCIA.CODCONTA</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>50</Length>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt | xFilial("CV0") | CV0_PLANO | CV0_CODIGO</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>17</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="ShortCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código reduzido</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CGERENCIA.REDUZIDO</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>20</Length>
+							<Description>Número reduzido da conta gerencial</Description>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Description>Campo nao utilizado no Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="Description" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Descrição da entidade contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CGERENCIA.DESCRICAO</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>40</Length>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CV0_DESC</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>30</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="PostingNature" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Natureza</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CGERENCIA.NATUREZA</Field>
+							<Required>Sim</Required>
+							<Type>int</Type>
+							<Length>02</Length>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CV0_NORMAL</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>1</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Devedora</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Credora</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="AnalyticalOrSynthetic" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Se analítico ou sintético</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CGERENCIA.ANALITICA</Field>
+							<Required>Sim</Required>
+							<Type>int</Type>
+							<Length>02</Length>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CV0_CLASSE</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Sintético</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Analítico</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="ActiveOrInactive" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Se ativa ou inativa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>CGERENCIA.INATIVA</Field>
+							<Required>Sim</Required>
+							<Type>smallint</Type>
+							<Length>2</Length>
+						</FieldDocumentation>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CV0_BLOQUE</Field>
+							<Required>Sim</Required>
+							<Type>varchar</Type>
+							<Length>1</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Ativa</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Inativo, Bloqueado ou Excluido</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<xs:element name="TopCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da entidade contábil superior sem máscara</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>CV0_ENTSUP</Field>
+							<Required>Sim</Required>
+							<Type>char</Type>
+							<Length>15</Length>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="preserve"/>
+						<xs:minLength value="0"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!--  ====================================  -->
+	<!--  CONTEÚDO DE RETORNO ================  -->
+	<!--  ====================================  -->
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

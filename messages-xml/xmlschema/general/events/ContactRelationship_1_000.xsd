@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="../totvsmsg.xsd"/>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>ContactRelationship</Name>
+				<Description>Cadastro de Relacionamento Entidade x Contato</Description>
+				<Segment>Serviços</Segment>
+				<ProductInformation product="PROTHEUS">
+					<Contact/>
+					<Description/>
+					<Adapter>CRMI060.PRW</Adapter>
+					<Send>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Send>
+					<Receive>
+						<Insert>Sim</Insert>
+						<Update>Sim</Update>
+						<Delete>Sim</Delete>
+					</Receive>
+				</ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Empresa ou Código do Grupo da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>Gestão de Empresa ativado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Não</Required>
+							<Type>Char</Type>
+							<Length>2</Length>
+							<Description>pode ter tamanho variável até 8 com Gestão de Empresa ativado</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId da chave completa da empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required/>
+							<Type/>
+							<Length/>
+							<Description>para o Protheus é esperado que com o cabeçalho da mensagem seja identificado empresa e filial</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Code" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código da Entidade</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>AC8.AC8_CODENT</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>25</Length>
+							<Description/>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>InternalId do Cliente</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>cEmpAnt+AC8.AC8_FILIAL+AC8.AC8_CODENT</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>136</Length>
+							<Description>O InternalId dessa Tag é referente ao internalId do Cliente (SA1 - CustomerVendor - Mata030)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Entity" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Entidade</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>AC8.AC8_ENTIDA</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>3</Length>
+							<Description>Atualmente está sendo tratada somente a Entidade de Cliente (SA1)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>SA1 - Cliente</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ListOfContacts" type="ListOfContactsType" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>Lista de Contatos (Itens/Detalhe)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ListOfContactsType">
+		<xs:sequence>
+			<xs:element name="Contact" type="ContactType" minOccurs="0" maxOccurs="unbounded" >
+				<xs:annotation>
+					<xs:documentation>Nó contendo o detalhe do Contato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ContactType">
+		<xs:sequence>
+			<xs:element name="ContactCode" type="xs:string" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>Código do Contato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>AC8.AC8_CODCON</Field>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>6</Length>
+							<Description>Seu conteúdo é pré determinado pelo cadastro de Contatos (TMKA070 - SU5 )</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ContactInternalId" type="xs:string" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>InternalId do Contato</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field/>
+							<Required>Sim</Required>
+							<Type>Char</Type>
+							<Length>136</Length>
+							<Description>O InternalId dessa Tag é referente ao internalId do Contato (SU5 - Contacts- TMKA070)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+			<!-- outras campos necessários no retorno -->
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ==================================== -->
+	<!-- TIPOS ABSTRATOS  =================== -->
+	<!-- ==================================== -->
+	<xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+	<xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+</xs:schema>

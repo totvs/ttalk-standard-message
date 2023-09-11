@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="../totvsmsgdoc.xsd"
+           elementFormDefault="qualified">
+
+  <!-- ===================================== -->
+  <!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+  <!-- ===================================== -->
+  <xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ApportionType_2_002.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+
+  <!-- ==================================== -->
+  <!-- DOCUMENTAÇÃO DA MENSAGEM -->
+  <!-- ==================================== -->
+  <xs:annotation>
+    <xs:appinfo>
+      <MessageDocumentation>
+        <Name>Lançamentos Linha Base e Saldo</Name>
+        <Description>Integração dos lançamentos de Linha Base e Saldo</Description>
+        <Segment>Serviços e Jurídico</Segment>
+        <ProductInformation product="RM" version="12.00">
+          <Contact>Totvs</Contact>
+          <Adapter>FinLanDataBR</Adapter>
+          <Send>
+            <Insert>sim</Insert>
+            <Update>nao</Update>
+            <Delete>sim</Delete>
+          </Send>
+          <Receive>
+            <Insert>não</Insert>
+            <Update>não</Update>
+            <Delete>não</Delete>
+          </Receive>
+        </ProductInformation>
+        <ProductInformation product="PROTHEUS" version="12">
+          <Contact>Totvs</Contact>
+          <Adapter>FINI024a.PRW</Adapter>
+          <Send>
+            <Insert>não</Insert>
+            <Update>não</Update>
+            <Delete>não</Delete>
+          </Send>
+          <Receive>
+            <Insert>Sim - A mensagem gera lançamentos de linha base e saldo do sistema origem.</Insert>
+            <Update>Não</Update>
+            <Delete>Sim - A mensagem deleta lançamentos de linha base e saldo do sistema origem.</Delete>
+          </Receive>
+        </ProductInformation>
+      </MessageDocumentation>
+    </xs:appinfo>
+  </xs:annotation>
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE NEGÓCIO DA MENSAGEM ==== -->
+  <!-- ==================================== -->
+  <xs:complexType name="BusinessContentType">
+    <xs:sequence>
+      <xs:element name="ListOfBalanceBaselineEntry" minOccurs="0"  maxOccurs="1" >
+        <xs:annotation>
+          <xs:documentation>Lista de lançamentos de Linha Base e Saldo</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="BalanceBaselineEntry" type="BalanceBaselineEntryType"  minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>Lançamento de Linha Base e Saldo</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BalanceBaselineEntryType">
+    <xs:sequence>
+      <xs:element name="InternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Identificação do lançamento</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>FLAN.CODCOLIGADA|FLAN.IDLAN</Field>
+              <Required>sim</Required>
+              <Type>integer|integer</Type>
+              <Length></Length>
+              <Description>Chave do lançamento</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>XX1.XX1_CODIGO</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>12</Length>
+              <Description>Código que identificara o lançamento no sistema externo</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Identificação da empresa do lançamento</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>FLAN.CODCOLIGADA</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Código da empresa</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>tabela.campo</Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>02</Length>
+              <Description>será enviado o valor da variável cEmpAnt( empresa) </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Identificação da filial do lançamento</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>FLAN.CODFILIAL</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Código da Filial</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>tabela.campo</Field>
+              <Required>não</Required>
+              <Type>char</Type>
+              <Length>02</Length>
+              <Description>Será enviado o valor da variável cFilAnt </Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CompanyInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId da Empresa</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>FLAN.CODCOLIGADA|FLAN.CODFILIAL</Field>
+              <Required>sim</Required>
+              <Type>integer|integer</Type>
+              <Length></Length>
+              <Description>Chave da empresa</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>sim</Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Classification" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Tipo de movimento: 1-Linha Base, 2-Saldo</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>FLAN.CLASSIFICACAO</Field>
+              <Required>sim</Required>
+              <Type>integer</Type>
+              <Length></Length>
+              <Description>Código Classificação (Linha Base/Saldo)</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>XX1.XX1_CLASSI</Field>
+              <Required>sim</Required>
+              <Type>char</Type>
+              <Length>1</Length>
+              <Description>Código que identificara o tipo de movimento no sistema externo</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+              <xs:annotation>
+                <xs:documentation> Linha Base </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+              <xs:annotation>
+                <xs:documentation> Saldo </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:maxLength value="1"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="Date" type="xs:date" maxOccurs="1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Data do lançamento</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="RM">
+              <Field>FLAN.DATAVENCIMENTO</Field>
+              <Required>nao</Required>
+              <Type>date</Type>
+              <Length></Length>
+              <Description>Data do lançamento</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>XX1.XX1_DATA</Field>
+              <Required>sim</Required>
+              <Type>date</Type>
+              <Length>8</Length>
+              <Description>Data do lançamento</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ListOfApportionBalanceBaselineEntry" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Rateio por natureza e centro de custo</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ApportionBalanceBaselineEntry" type="ApportionType" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE RETORNO ================ -->
+  <!-- ==================================== -->
+  <xs:complexType name="ReturnContentType">
+    <xs:sequence>
+      <xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ==================================== -->
+  <!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+  <!-- ==================================== -->
+  <xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType" />
+  <xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType" />
+
+</xs:schema>

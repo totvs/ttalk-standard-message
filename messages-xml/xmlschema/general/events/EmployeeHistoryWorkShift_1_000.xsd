@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xsd="undefined">
+  <xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+  <xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+  <xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"></xs:include>
+  <xs:annotation>
+    <xs:appinfo>
+      <MessageDocumentation>
+        <Name>EmployeeHistoryWorkShift</Name>
+        <Description>Mensagem para integração de Histório de Alteração de Turnos do(s) funcionário(s)</Description>
+        <Segment>Recursos Humanos</Segment>
+        <ProductInformation product="PROTHEUS">
+          <Contact>NATIÊ SUGAHARA</Contact>
+        </ProductInformation>
+        <ProductInformation product="PIMS">
+          <Contact>JOSÉ ALBERTO DA SILVA</Contact>
+        </ProductInformation>
+        <Adapter></Adapter>
+        <Send>
+          <Insert>Não</Insert>
+          <Update>Não</Update>
+          <Delete>Não</Delete>
+        </Send>
+        <Receive>
+          <Insert>sim</Insert>
+          <Update>sim</Update>
+          <Delete>Não</Delete>
+        </Receive>
+      </MessageDocumentation>
+    </xs:appinfo>
+  </xs:annotation>
+
+  <xs:complexType name="BusinessContentType">
+    <xs:sequence>
+      <xs:element name="CompanyId" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Codigo da Empresa do funcionário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>sim</Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field>EMPRESA.CD_INT_ERP</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>...</Length>
+              <Description>Código da Empresa do funcionário</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="BranchId" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Código da Filial do funcionário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required>sim</Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field>FILIAL.CD_FILIAL</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>...</Length>
+              <Description>Código da Filial</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CompanyInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId da chave completa de empresa do produto</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field/>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>50</Length>
+              <Description>o InternalID da empresa é formado empresa|RA_FILIAL. Tamanho entre 05 e 15</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>PFUNC.CODCOLIGADA+PFUNC.CODFILIAL</Field>
+              <Required>sim</Required>
+              <Type>string</Type>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="DATASUL">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field></Field>
+              <Required>não</Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EmployeeCode" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Chapa/Matricula do funcionario</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SPFXX0.PF_MAT</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field>FUNCIONAR.CD_INT_ERP</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length>...</Length>
+              <Description>Código do Funcionario</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="EmployeeInternalId" minOccurs="0" maxOccurs="1" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>InternalId do funcionário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required></Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field></Field>
+              <Required>não</Required>
+              <Type></Type>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WorkShiftList" type="WorkShiftListType" maxOccurs="1" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="WorkShiftListType">
+    <xs:sequence>
+      <xs:element name="WorkShiftId" type="WorkShiftIdType" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="WorkShiftIdType">
+    <xs:sequence>
+      <xs:element name="ChangedDate" minOccurs="1" maxOccurs="1" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Data de alteração do Turno do Funcionário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SPFXX0.PF_DATA</Field>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field>FUNCIONARHR.DT_INICIO</Field>
+              <Required>sim</Required>
+              <Type>date</Type>
+              <Length>8</Length>
+              <Description>Data de alteração do turno do funcionário</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="WorkShiftCode" minOccurs="1" maxOccurs="1" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código do Turno do Funcionário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SPFXX0.PF_TURNOPA</Field>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field>MDO_HORARIO.CD_MDO_HORARIO</Field>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length></Length>
+              <Description>Código do Turno do Funcionário. Composto pelo Código do Turno+Sequencia</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WorkShiftInternalId" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>InternalId do WorkShift</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field></Field>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description>O InternalID é formado pelos campos empresa|PF_FILIAL|PF_TURNOPA</Description>
+            </FieldDocumentation>
+            <FieldDocumentation product="RM">
+              <Field>PFUNC.CODCOLIGADA+PFUNC.CODHORARIO</Field>
+              <Required>não</Required>
+              <Type>string</Type>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="DATASUL">
+              <Field/>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field></Field>
+              <Required>não</Required>
+              <Type></Type>
+              <Length></Length>
+              <Description></Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WorkShiftSequence" minOccurs="0" maxOccurs="1" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Código Sequencia do Turno do Funcionário</xs:documentation>
+          <xs:appinfo>
+            <FieldDocumentation product="PROTHEUS">
+              <Field>SPFXX0.PF_SEQUEPA</Field>
+              <Required/>
+              <Type/>
+              <Length/>
+              <Description/>
+            </FieldDocumentation>
+            <FieldDocumentation product="PIMS">
+              <Field/>
+              <Required>sim</Required>
+              <Type>varchar</Type>
+              <Length/>
+              <Description>Compoe o código do Turno no Pims Turno+Sequencia = MDO_HORARIO.CD_MDO_HORARIO</Description>
+            </FieldDocumentation>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+
+  </xs:complexType>
+
+
+  <!-- ==================================== -->
+  <!-- CONTEÚDO DE RETORNO ================ -->
+  <!-- ==================================== -->
+  <xs:complexType name="ReturnContentType">
+    <xs:sequence>
+      <xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0" maxOccurs="1"/>
+      <!-- outras campos necessários no retorno -->
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ==================================== -->
+  <!-- REFERÊNCIA AOS TIPOS PADRÕES JÁ ==== -->
+  <!-- ==================================== -->
+  <xs:element name="BusinessContent" substitutionGroup="AbstractBusinessContent" type="BusinessContentType"/>
+  <xs:element name="ReturnContent" substitutionGroup="AbstractReturnContent" type="ReturnContentType"/>
+</xs:schema>

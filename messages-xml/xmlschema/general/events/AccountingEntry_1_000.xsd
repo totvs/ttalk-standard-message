@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"	elementFormDefault="qualified">
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+					<Name>AccountingEntry</Name>
+					<Description>Lançamento Contábil</Description>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="CompanyId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Empresa Geradora do Lançamento</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BranchId" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Filial Geradora do Lançamento</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OriginCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Origem do Lançamento (Sistema Gerador)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PeriodStartDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Inicial do Período Contábil. Informa a menor data de lançamento que será enviada na mensagem.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PeriodEndDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data Final do Período Contábil. Informa a maior data de lançamento que será enviada na mensagem.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BatchNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lote Contábil.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Entries" type="EntriesType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lançamentos Contábeis</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EntriesType">
+		<xs:annotation>
+			<xs:documentation>Lançamento</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Entry" type="EntryType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EntryType">
+		<xs:sequence>
+			<xs:element name="EntryNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lançamento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RelationshipNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Relacionamento entre os débitos e créditos</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MovementDate" type="xs:date" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Data do Movimento Contábil.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DebitAccountCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Conta de Débito com máscara. (RM: 40, LOGIX: 23, DATASUL: 20, Protheus: 20)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CreditAccountCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Conta de Crédito com máscara. (RM: 40, LOGIX: 23, DATASUL: 20, Protheus: 20)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="EntryValue" type="xs:double" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valor do Lançamento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HistoryCode" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código do histórico Padrão</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ComplementaryHistory" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Histórico Complementar</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CostCenterCode" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Centro de Custo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReturnContentType">
+		<xs:sequence>
+			<xs:element name="BatchNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lote Contábil</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Entries" type="ReturnEntriesType" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lançamentos</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReturnEntriesType">
+		<xs:sequence>
+			<xs:element name="Entry" type="ReturnEntryType" maxOccurs="unbounded" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Lançamento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReturnEntryType">
+		<xs:sequence>
+			<xs:element name="EntryNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do Lançamento.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RelationshipNumber" type="xs:int" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Número do relacionamento entre os débitos e créditos.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+	<xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"></xs:element>
+</xs:schema>

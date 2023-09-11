@@ -1,0 +1,759 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!-- ===================================== -->
+	<!--  INCLUDES NECESSARIOS PARA A MENSAGEM -->
+	<!-- ===================================== -->
+	<xs:include schemaLocation="../totvsmsg.xsd"></xs:include>
+	<xs:include schemaLocation="../commons_1_000.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ApportionType_2_001.xsd"></xs:include>
+	<xs:include schemaLocation="../types/ListOfInternalId_1_000.xsd"/>
+	<!-- ==================================== -->
+	<!-- DOCUMENTAÇÃO DA MENSAGEM =========== -->
+	<!-- ==================================== -->
+	<xs:annotation>
+		<xs:appinfo>
+			<MessageDocumentation>
+				<Name>StockTurnOver</Name>
+				<Description>Baixa de estoque</Description>
+				<Segment>Construção e Projetos</Segment>
+				<ProductInformation product="RM">
+					<Contact>Bruno Barbosa de Souza</Contact>
+					<Description>GDP Inovação Const. e Proj.</Description>
+					<Adapter>MovMovimentoData</Adapter>
+					<Receive>
+						<Insert>sim</Insert>
+						<Update>não</Update>
+						<Delete>sim</Delete>
+					</Receive>
+				</ProductInformation>
+            <ProductInformation product="PROTHEUS">
+              <Contact>Eduardo de Souza</Contact>
+              <Description>GDP de Materiais</Description>
+              <Adapter>MATI241</Adapter>
+              <Send>
+                <Insert>sim</Insert>
+                <Update>não</Update>
+                <Delete>sim</Delete>
+              </Send>
+            </ProductInformation>
+			</MessageDocumentation>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE NEGÓCIO ================ -->
+	<!-- ==================================== -->
+	<xs:complexType name="BusinessContentType">
+		<xs:sequence>
+			<xs:element name="Code" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Código da Movimentação de Estoque</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.codtmv</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3XX0.D3_DOC</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>9</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="InternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>InternalId da Movimentação, que é propagado para o pedido e nota fiscal</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.codcoligada|tmov.idmov</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId da Movimentação é formado por EMPRESA|FILIAL|D3_DOC</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Number" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numero da Movimentação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.NUMEROMOV</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>35</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Type" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Tipo da Movimentação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.CODTMV</Field>
+							<Required>sim</Required>
+							<Type>char</Type>
+							<Length>10</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>3</Length>
+							<Description>valor fixado "000"</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="3"/>
+						<xs:enumeration value="000">
+							<xs:annotation>
+								<xs:documentation>Baixa de estoque</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CompanyId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.CODCOLIGADA</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>Não possui campo físico na tabela</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BranchId" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Filial</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.CODFILIAL</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3XX0.D3_FILIAL</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>2</Length>
+							<Description>Pode ter tamanho entre 02 e 12 dependendo da configuração do Protheus</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompanyInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>InternalId da Empresa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.codcoligada|tmov.codfilial</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>o InternalID da empresa é formado por EMPRESA|F1_FILIAL. Tamanho entre 05 e 15</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Series" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Série da Movimentação, utilizada como agrupador e é propagada no pedido e nota fiscal</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.serie</Field>
+							<Required>não</Required>
+							<Type>char</Type>
+							<Length>8</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="8"></xs:maxLength>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="RegisterDateTime" maxOccurs="1" minOccurs="0" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Data de Emissão da solicitação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.DATAEMISSAO</Field>
+							<Required>sim</Required>
+							<Type>datetime</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3XX0.D3_EMISSAO</Field>
+							<Required>sim</Required>
+							<Type>date</Type>
+							<Length>8</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DeliveryDateTime" maxOccurs="1" minOccurs="0" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Data de Entrega ou Previsão de entrega</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.DATAENTREGA</Field>
+							<Required>sim</Required>
+							<Type>datetime</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AbatementDateTime" maxOccurs="1" minOccurs="0" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Data de Dedução no contrato (muito utilizado em integração com TOP)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.DATADEDUCAO</Field>
+							<Required>sim</Required>
+							<Type>datetime</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProjectInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração do Projeto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.IDPRJ</Field>
+							<Required>não</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Projeto é formado por EMPRESA|AF8_FILIAL|AF8_PROJET</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MainOrderCode" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Código da ordem (OP ou OS) que originou a Movimentação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MainOrderInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>InternalId da ordem (OP ou OS) que originou a Solicitação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Observation" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Observação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>tmov.OBSERVACAO</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>60</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ListOfStockTurnoverItem" maxOccurs="1" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Lista de Itens da movimentação de estoque</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="StockTurnoverItem" type="StockTurnoverItemType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ListOfApportionStockTurnover" maxOccurs="1" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Rateio da movimentação de estoque</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="ApportionStockTurnover" type="ApportionType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StockTurnoverItemType">
+		<xs:sequence>
+			<xs:element name="Code" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Código do item da movimentação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>InternalId do item da movimentação</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.codcoligada|titmmov.codfilial</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do item da movimentação é formado por EMPRESA|FILIAL|D3_DOC|D3_NUMSEQ</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemInternalId" minOccurs="0" maxOccurs="1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração do Produto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.IDPRD</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Produto é formado por EMPRESA|B1_FILIAL|B1_COD</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemReserveInternalId" minOccurs="0" maxOccurs="1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração da reserva a ser consumida</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ItemReferenceCode" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Código de Referência do Produto</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+						<xs:minLength value="1"/>
+						<xs:whiteSpace value="preserve"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="UnitPrice" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Preço Unitário</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.VALORUNITARIO</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>No envio, é preenchido com 0 (zero)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TotalPrice" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Preço Total do Item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.VALORLIQUIDO</Field>
+							<Required>sim</Required>
+							<Type>decimal</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description>No envio, é preenchido com 0 (zero)</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Quantity" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Quantidade</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.Quantity</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3XX0.D3_QUANT</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length>12,2</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="12"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="UnitOfMeasureInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração da Unidade de Medida</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.CODUND</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>5</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId da Unidade de Medida é formado por EMPRESA|AH_FILIAL|AH_UNIMED</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WarehouseInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração do Local de Estoque(Armazem)</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.CODLOC</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>15</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Local de Estoque é formado por EMPRESA|NNR_FILIAL|NNR_CODIGO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DeliveryDateTime" maxOccurs="1" minOccurs="0" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Data de Entrega ou Previsão de entrega do item</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.DATAENTREGA</Field>
+							<Required>não</Required>
+							<Type>decimal</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required></Required>
+							<Type></Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CostCenterInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração do Centro de Custo</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Centro de Custo é formado por EMPRESA|CTT_FILIAL|CTT_CUSTO</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AccountantAcountInternalId" minOccurs="0" maxOccurs="1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração da Conta contábil</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.CODCCUSTO</Field>
+							<Required>sim</Required>
+							<Type>varchar</Type>
+							<Length>25</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field>SD3XX0.D3_CONTA</Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>20</Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MainOrderCode" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Código da ordem (OP ou OS) que originou a Movimentação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProjectInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração do Projeto</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.IDPRJ</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId do Projeto é formado por EMPRESA|AF8_FILIAL|AF8_PROJET</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TaskInternalId" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Id de integração da Tarefa</xs:documentation>
+					<xs:appinfo>
+						<FieldDocumentation product="RM">
+							<Field>titmmov.IDTRF</Field>
+							<Required>sim</Required>
+							<Type>integer</Type>
+							<Length></Length>
+							<Description></Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+					<xs:appinfo>
+						<FieldDocumentation product="PROTHEUS">
+							<Field></Field>
+							<Required>não</Required>
+							<Type>varchar</Type>
+							<Length>50</Length>
+							<Description>O InternalId da tarefa é formado por EMPRESA|AF9_FILIAL|AF9_PROJET|AF9_REVISA|AF9_TAREFA</Description>
+						</FieldDocumentation>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Observation" maxOccurs="1" minOccurs="0" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Observação</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Event" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Operação a ser executada no registro.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="delete">
+							<xs:annotation>
+								<xs:documentation>Quando este registro for exclusão</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ListOfApportionStockTurnoverItem" maxOccurs="1" minOccurs="0">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Rateio dos Itens da Movimentação de Estoque</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="ApportionStockTurnoverItem" type="ApportionType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================================== -->
+	<!-- CONTEÚDO DE RETORNO                  -->
+	<!-- ==================================== --> 
+  <xs:complexType name="ReturnContentType">
+    <xs:sequence>
+      <xs:element name="ListOfInternalId" type="ListOfInternalIdType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>  
+  <xs:element name="BusinessContent" type="BusinessContentType" substitutionGroup="AbstractBusinessContent"></xs:element>
+  <xs:element name="ReturnContent" type="ReturnContentType" substitutionGroup="AbstractReturnContent"></xs:element>
+</xs:schema>
