@@ -1,0 +1,452 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API Lançamento Contábil.",
+			"url": "{{host}}/api/ctb/v1",
+			"variables": {
+				"serverUrl": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8051"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API no módulo Contábil para lançamentos contábeis",
+		"version": "3.000",
+		"title": "API Lançamento Contábil",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "AccountingEntries",
+				"description": "Cadastro de API Lançamento Contábil",
+				"segment": "Backoffice"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "tribecp.squad.ctbpat@totvs.com.br",
+					"description": "Cadastro de API Lançamento Contábil"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/AccountingEntries": {
+			"get": {
+				"tags": [
+					"AccountingEntries"
+				],
+				"summary": "Retorna lista de Lançamentos Contábeis da coligada",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo está disponível com todos parâmetros[VERIFICAR]",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				},
+				"description": "Retorna lista de Lançamentos Contábeis da coligada",
+				"operationId": "OnGetAll",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"name": "companyId",
+						"in": "query",
+						"description": "Código da Coligada",
+						"required": true,
+						"schema": {
+						  "type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Erro no momento da recuperação dos registros.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"AccountingEntries"
+				],
+				"summary": "Inclui um Lançamento Contábil",
+				"description": "Inclui um Lançamento Contábil conforme dados enviados na requisição.",
+				"operationId": "OnPost",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}, 
+					{
+						"name": "companyId",
+						"in": "query",
+						"description": "Código da Coligada",
+						"required": true,
+						"schema": {
+						  "type": "integer"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+							}
+						}
+					},
+					"description": "Lançamento contábil a ser incluído"
+				},
+				"responses": {
+					"201": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da Inclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/AccountingEntries/{id}": {
+			"get": {
+				"tags": [
+					"Id"
+				],
+				"summary": "Retorna lista de Lançamentos Contábeis da coligada, id lançamento e código do lote",
+				"description": "Retorna lista de Lançamentos Contábeis da coligada, id lançamento e código do lote",
+				"operationId": "OnGet",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "O campo ID é composto por código da coligada + ID lançamento + Código do lote",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "#/components/parameters/id"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Lançamento contábil não localizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"Id"
+				],
+				"summary": "Altera um Lançamentos Contábeis",
+				"description": "Atualiza o Lançamentos Contábeis conforme os dados enviados na requisição",
+				"operationId": "OnPut",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization, Code e Fields",
+							"minimalVersion": " 12.1.35"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/id"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+							}
+						}
+					},
+					"description": "Lançamento Contábil a ser alterado"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da alteração do Lançamento contábil",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Lançamento contábil não localizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": [
+					"Id"
+				],
+				"summary": "Altera um Lançamento contábil",
+				"description": "Atualiza o Lançamento contábil conforme os dados enviados na requisição",
+				"operationId": "OnPatch",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization, Code e Fields",
+							"minimalVersion": " 12.1.35"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/id"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+							}
+						}
+					},
+					"description": "Lançamento contábil contábil a ser alterado"
+				},
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/AccountingEntry/v1/3_000/jsonschema/schemas/AccountingEntry_3_000.json#/definitions/PagedAccountingEntry"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da alteração do Lançamento contábil",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Lançamento contábil não localizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Id"
+				],
+				"summary": "Exclui um Lançamento contábil",
+				"description": "Exclui um Lançamento contábil conforme os dados enviados na requisição.",
+				"operationId": "OnDelete",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Este verbo esta disponivel com os parametros Authorization e Fields",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/id"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da exclusão",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Lançamento contábil não localizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"id": {
+				"name": "id",
+				"in": "path",
+				"description": " Identificador único do lançamento contábil",
+				"required": true,
+				"example": "1|1111|999",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "RM",
+							"available": true,
+							"note": "Informar os campos código coligada (CODCOLIGADA) + Id lançamento (IDLANCAMENTO) +  Código do lote (CODLOTE)",
+							"minimalVersion": "12.1.35"
+						}
+					]
+				}
+			}
+		},
+		"schemas": {}
+	}
+}
