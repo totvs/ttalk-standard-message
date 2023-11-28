@@ -1,0 +1,521 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/schemas/Schedule_2_000.json#",
+    "info": {
+        "description": "API para a entidade Agenda para produtos TOTVS",
+        "version": "2.000",
+        "title": "Agenda",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Schedule",
+				"description": "Informações de Agenda",
+				"segment": "Saúde"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeSau.Squad.Assistencial@totvs.com.br",
+					"description": "Cadastro de Agendas",
+					"adapter": ""
+				}
+			]
+		}
+    },
+    "definitions": {
+        "PagedSchedule": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+					"$ref": "#/definitions/Schedule"
+				}
+            ]
+        },
+        "Schedule": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ScheduleInfo"
+					}
+				}
+			}
+		},
+        "ScheduleInfo": {
+            "type": "object",
+            "properties": {
+                "companyId": {
+                    "description": "Código da coligada",
+                    "required": true,
+                    "type": "integer",
+                    "format": "int16",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODCOLIGADA",
+                            "required": true,
+                            "type": "smallint",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "scheduleId": {
+                    "description": "Código da agenda",
+                    "required": true,
+                    "type": "integer",
+                    "format": "int32",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODIGO",
+                            "required": true,
+                            "type": "int",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "description": {
+                    "description": "Descrição da agenda",
+                    "required": true,
+                    "type": "string",
+                    "maxLength": 50,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.NOME",
+                            "required": true,
+                            "type": "char",
+                            "length": 50,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "parentId": {
+                    "description": "Código do Tipo de Agenda (1: Médico, 2: Sala, 5: Sala, 6: Plantonista, 8: Enfermagem, 9: Téc. Enfermagem, 10: Outros)",
+                    "required": false,
+                    "type": "integer",
+                    "format": "int32",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODIGOPARENT",
+                            "required": false,
+                            "type": "int",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "ownerId": {
+                    "description": "Código no cadastro geral",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 10,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.CODITEMAGENDA",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 10,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "notes": {
+                    "description": "Observações da agenda",
+                    "required": false,
+                    "type": "string",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.OBSAGENDA",
+                            "required": false,
+                            "type": "text",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "scheduleType": {
+                    "description": "Tipo de Agenda N: None, M: Medical, S: Room, C: CollectionAgent, E: Nursing",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.TIPOITEMAGENDA",
+                            "required": false,
+                            "type": "char",
+                            "length": 1,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "visible": {
+                    "description": "Item visível",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.ITEMVISIVEL",
+                            "required": false,
+                            "type": "char",
+                            "length": 1,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "active": {
+                    "description": "Agenda ativa",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.ATIVO",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 1,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "activeOnPortal": {
+                    "description": "Agenda ativa para o portal",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.UTZPORTALPACIENTE",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 1,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "activeOnOnlineConsultation": {
+                    "description": "Agenda ativa para teleconsulta",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZAGENDA.UTZTELECONSULTA",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 1,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitId": {
+                    "description": "Identificador da unidade de atendimento",
+                    "required": false,
+                    "type": "integer",
+                    "format": "int32",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.IDUNIDATEND",
+                            "required": false,
+                            "type": "int",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitName": {
+                    "description": "Descrição da unidade de atendimento",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 100,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.DESCRICAO",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 100,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitAddress": {
+                    "description": "Endereço da unidade de atendimento",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 40,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.ENDERECO",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 40,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitAddressNumber": {
+                    "description": "Número do endereço da unidade de atendimento",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 10,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.NUMERO",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 10,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitAddressComplement": {
+                    "description": "Complemento do endereço da unidade de atendimento",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 60,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.COMPLEMENTO",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 60,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "UnitAddressNeighborhood": {
+                    "description": "Bairro da unidade de atendimento",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 80,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.BAIRRO",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 80,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitAddressCity": {
+                    "description": "Cidade da unidade de atendimento",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 100,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.CIDADE",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 100,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitAddressState": {
+                    "description": "UF da unidade de atendimento",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 2,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZUNIDATEND.UFENDERECO",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 2,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "unitImage": {
+                    "description": "Foto da unidade de atendimento",
+                    "required": false,
+                    "type": "number",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "GIMAGEM.IMAGEM",
+                            "required": false,
+                            "type": "varbinary",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "practitionerId": {
+                    "description": "Código do médico",
+                    "required": false,
+                    "type": "integer",
+                    "format": "int32",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZCADGERAL.CODGERAL",
+                            "required": false,
+                            "type": "int",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "practitionerName": {
+                    "description": "Nome do médico",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 100,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZCADGERAL.RAZAOSOCIAL",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 100,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "practitionerUsePortalImage": {
+                    "description": "Utiliza foto do médico no portal",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 1,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZCADGERAL.UTZFOTOPORTALPACIENTE",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 1,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "practitionerCouncilId": {
+                    "description": "Código do conselho profissional",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 15,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZCADGERAL.IDENTIDADEPROF",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 15,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "practitionerCouncilName": {
+                    "description": "Nome do conselho profissional",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 30,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "SZCONSPROF.NOMECONSPROF",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 30,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "practitionerImage": {
+                    "description": "Foto do médico",
+                    "required": false,
+                    "type": "number",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "GIMAGEM.IMAGEM",
+                            "required": false,
+                            "type": "varbinary",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "subsidiaryId": {
+                    "description": "Código identificador da filial",
+                    "required": false,
+                    "type": "integer",
+                    "format": "int16",
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "GFILIAL.CODFILIAL",
+                            "required": false,
+                            "type": "smallint",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "subsidiaryName": {
+                    "description": "Nome fantasia da filial",
+                    "required": false,
+                    "type": "string",
+                    "maxLength": 100,
+                    "x-totvs": [
+                        {
+                            "product": "RM",
+                            "field": "GFILIAL.NOMEFANTASIA",
+                            "required": false,
+                            "type": "varchar",
+                            "length": 100,
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
