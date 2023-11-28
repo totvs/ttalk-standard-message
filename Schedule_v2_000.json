@@ -1,0 +1,330 @@
+{
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "description": "API de Agenda para produtos TOTVS",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/hcg/v2",
+            "variables": {
+                "serverUrl": {
+                    "default": "localhost"
+                },
+                "serverHttpPort": {
+                    "default": "8051"
+                }
+            }
+        }
+    ],
+    "info": {
+        "description": "API de Agenda para produtos TOTVS",
+        "version": "2.000",
+        "title": "Schedule",
+        "contact": {
+            "name": "T-Talk",
+            "url": "api.totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "Schedule",
+                "description": "Informações de Agendas",
+                "segment": "Saúde"
+            },
+            "productInformation": [
+                {
+                    "product": "RM",
+                    "contact": "TribeSau.Squad.Assistencial@totvs.com.brr",
+                    "description": "Informações de Agendas",
+                    "adapter": "",
+                    "helpUrl": ""
+                }
+            ]
+        }
+    },
+    "paths": {
+        "/schedules": {
+            "get": {
+                "tags": [
+                    "schedule"
+                ],
+                "summary": "Recupera uma lista de Agendas",
+                "description": "Recupera uma lista de Agendas.",
+                "operationId": "GetAllSchedules",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "RM",
+                            "available": true,
+                            "note": "Este verbo está disponível com todos os parâmetros",
+                            "minimalVersion": "12.1.27"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registros recuperados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/schemas/Schedule_2_000.json#/definitions/PagedSchedule"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no momento da recuperação dos registros.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "schedule"
+                ],
+                "summary": "Insere um registro",
+                "description": "Insere um registro",
+                "operationId": "Post",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "RM",
+                            "available": true,
+                            "note": "Este verbo esta disponivel com todos parametros",
+                            "minimalVersion": "12.1.27"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Objeto para inserir um registro",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/schemas/Schedule_2_000.json#/definitions/ScheduleInfo"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registro inserido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/schemas/Schedule_2_000.json#/definitions/ScheduleInfo"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no momento de inserir registro",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/schedules/{scheduleId}": {
+            "get": {
+                "tags": [
+                    "schedule"
+                ],
+                "summary": "Retorna os dados de uma Agenda",
+                "description": "Retorna os dados de uma Agenda.",
+                "operationId": "GetSchedule",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "RM",
+                            "available": true,
+                            "note": "Este verbo está disponível com todos os parâmetros.",
+                            "minimalVersion": "12.1.27"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/scheduleId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registro recuperado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/schemas/Schedule_2_000.json#/definitions/ScheduleInfo"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no momento da recuperação do registro.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "schedule"
+                ],
+                "summary": "Atualiza as informações de uma Agenda",
+                "description": "Atualiza as informações de uma Agenda.",
+                "operationId": "Put",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "RM",
+                            "available": true,
+                            "note": "Este verbo esta disponivel com todos parametros",
+                            "minimalVersion": "12.1.27"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/scheduleId",
+                        "required": "true"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Objeto para atualizar registro",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/schemas/Schedule_2_000.json#/definitions/ScheduleInfo"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registro atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Schedule/V2/2_000/jsonschema/schemas/Schedule_2_000.json#/definitions/ScheduleInfo"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro no momento da alteração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "schedule"
+                ],
+                "summary": "Exclui uma agenda",
+                "description": "Exclui uma agenda.",
+                "operationId": "Delete",
+                "x-totvs": {
+                    "productInformation": [
+                        {
+                            "product": "RM",
+                            "available": true,
+                            "note": "Este verbo esta disponivel com todos parametros",
+                            "minimalVersion": "12.1.27"
+                        }
+                    ]
+                },
+                "parameters": [
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "#/components/parameters/scheduleId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registro excluído com sucesso"
+                    },
+                    "500": {
+                        "description": "Erro no momento da exclusão do registro.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "scheduleId": {
+                "name": "scheduleId",
+                "in": "path",
+                "description": "Identicador do registro",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "x-totvs": {
+                "productInformation": [
+                    {
+                        "product": "RM",
+                        "available": true,
+                        "note": "Identificador único da Agenda",
+                        "minimalVersion": "12.1.27"
+                    }
+                ]
+            }
+        },
+        "schemas": {}
+    }
+}
