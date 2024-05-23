@@ -47,48 +47,50 @@
         },
         "FGTSPerWorkerInLaborProcessList": {
             "type": "object",
+            "required": [
+                "id",
+                "period",
+                "cpf",
+                "name",
+                "receipt",
+                "processNumber"
+            ],
             "properties": {
                 "id": {
                     "description": "Identificador Único do Evento S-5503",
                     "example": "00010434",
                     "type": "string",
-                    "maxLength": 8,
-                    "required": true
+                    "maxLength": 8
                 },                
                 "period": {
                     "description": "Período (Mês-Dia)",
                     "example": "2023-08",
                     "type": "string",
-                    "maxLength": 7,
-                    "required": true
+                    "maxLength": 7
                 },
                 "cpf": {
                     "description": "CPF do Funcionário",
                     "example": "82977978054",
                     "type": "string",
-                    "maxLength": 11,
-                    "required": true
+                    "maxLength": 11
                 },
                 "name": {
                     "description": "Nome do Funcionário",
                     "example": "Alex André",
                     "type": "string",
-                    "maxLength": 100,
-                    "required": true
+                    "maxLength": 100
                 },
                 "receipt": {
                     "description": "Recibo de Protocolo e-Social",
                     "example": "1.2.0000000000195474657",
                     "type": "string",
-                    "maxLength": 8,
-                    "required": true
+                    "maxLength": 8
                 },
                 "processNumber": {
                     "description": "Número do Processo Trabalhista",
                     "example": "00010434",
                     "type": "string",
-                    "maxLength": 20,
-                    "required": true
+                    "maxLength": 20
                 }
             },
             "Paging": {
@@ -103,13 +105,16 @@
         },
         "RecordsToSelect": {
 			"type": "object",
+            "required": [
+                "companyId",
+                "id"
+            ],
 			"properties": {
 				"companyId": {
                     "description": "Código da Empresa e Código da Filial",
                     "example": "T1|D MG 01",
                     "type": "string",
-                    "maxLength": 8,
-                    "required": true
+                    "maxLength": 8
                 },
 				"id": {
                     "description": "Relação de ID's de S-5503",
@@ -122,30 +127,78 @@
 		},
 		"NotFound": {
 			"type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
 			"properties": {
 				"code": {
 					"description": "Código identificador do erro",
                     "example": 404,
 					"type": "number",
-                    "maxLength": 3,
-                    "required": true
+                    "maxLength": 3
 				},
 				"message": {
 					"description": "Literal no idioma da requisição descrevendo o erro para o cliente",
                     "example": "Não foram encontrados registros do evento S-5503 com os ID's informados",
 					"type": "string",
-                    "maxLength": 100,
-                    "required": true
+                    "maxLength": 100
 				},
                 "detailedMessage": {
 					"description": "Mensagem técnica e mais detalhada do erro",
                     "example": "Favor verificar companyId e/ou ID's informados",
 					"type": "string",
-                    "maxLength": 200,
-                    "required": false
+                    "maxLength": 200
 				}
 			}
 		},
+        "FGTSPerWorkerInLaborProcessXMLItems": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FGTSPerWorkerInLaborProcessXMLList"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "FGTSPerWorkerInLaborProcessXMLList": {
+            "type": "object",
+            "required": [
+                "id",
+                "xml"
+            ],
+            "properties": {
+                "id": {
+                    "description": "Identificador Único do Evento S-5503",
+                    "example": "00010434",
+                    "type": "string",
+                    "maxLength": 8
+                },                
+                "xml": {
+                    "description": "XML (encode base64)",
+                    "example": "PGh0bWwgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiCiAgPGJvZHk+CiAgICA8cGFyc2VyZXJyb3Igc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyB3aGl0ZS1zcGFjZTogcHJlOyBib3JkZXI6IDJweCBzb2xpZCAjYzc3OyBwYWRkaW5nOiAwIDFlbSAwIDFlbTsgbWFyZ2luOiAxZW07IGJhY2tncm91bmQtY29sb3I6ICNmZGQ7IGNvbG9yOiBibGFjayI+CiAgICAgIDxoMz5UaGlzIHBhZ2UgY29udGFpbnMgdGhlIGZvbGxvd2luZyBlcnJvcnM6PC9oMz4KICAgICAgPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB4Ij5lcnJvciBvbiBsaW5lIDIgYXQgY29sdW1uIDM6IGVycm9yIHBhcnNpbmcgYXR0cmlidXRlIG5hbWUKPC9kaXY+CiAgICAgIDxoMz5CZWxvdyBpcyBhIHJlbmRlcmluZyBvZiB0aGUgcGFnZSB1cCB0byB0aGUgZmlyc3QgZXJyb3IuPC9oMz4KICAgIDwvcGFyc2VyZXJyb3I+CiAgPC9ib2R5Pgo8L2h0bWw+",
+                    "type": "string"
+                }
+            },
+            "Paging": {
+                "type": "object",
+                "properties": {
+                    "hasNext": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
         "StatusItems": {
             "type": "object",
             "allOf": [
@@ -593,27 +646,28 @@
         },
         "InvalidRequest": {
 			"type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
 			"properties": {
 				"code": {
 					"description": "Código identificador do erro",
                     "example": 400,
 					"type": "number",
-                    "maxLength": 3,
-                    "required": true
+                    "maxLength": 3
 				},
 				"message": {
 					"description": "Literal no idioma da requisição descrevendo o erro para o cliente",
                     "example": "Empresa|Filial não informado no parâmetro 'companyId'.",
 					"type": "string",
-                    "maxLength": 100,
-                    "required": true
+                    "maxLength": 100
 				},
                 "detailedMessage": {
 					"description": "Mensagem técnica e mais detalhada do erro",
                     "example": "",
 					"type": "string",
-                    "maxLength": 200,
-                    "required": false
+                    "maxLength": 200
 				}
 			}
 		}
