@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build:
@@ -34,7 +34,7 @@ jobs:
       - name: Set environment variables based on branch (optional)
         id: set-env-vars
         run: |
-          if [[ ${{ github.ref }} == "main" ]]; then
+          if [[ ${{ github.ref }} == "master" ]]; then
             ENABLE_RUN_ALL=true
           fi
         shell: bash
@@ -52,7 +52,7 @@ jobs:
         run: kill $bg_pid
       - name: Refresh API reference index (master only)
         run: ./travis-refreshApiReferenceSearchIndex.sh
-        if: ${{ github.ref }} == 'main'
+        if: ${{ github.ref }} == 'master'
       - name: Post success comment (optional)
         run: node validator/master/postSuccessComment.js
       - name: Post failure comment (optional)
@@ -60,7 +60,7 @@ jobs:
         if: failure()
       - name: Rename branch ref (master only)
         run: ./travis-renameRef.sh
-        if: ${{ github.ref }} == 'main'
+        if: ${{ github.ref }} == 'master'
 
 env:
   global:
