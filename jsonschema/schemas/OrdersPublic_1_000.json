@@ -1,0 +1,2663 @@
+{
+    "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/OrdersPublic_1_000.json#",
+    "info": {
+        "description": "API para a entidade OrdersPublic para produtos TOTVS",
+        "version": "1.000",
+        "title": "OrdersPublic",
+        "contact": {
+            "name": "T-Talk",
+            "url": "api.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "OrdersPublic",
+                "description": "Implantação de Pedido de Venda",
+                "segment": "Backoffice"
+            },
+            "transactionDefinition": {
+                "subType": "",
+                "businessContentType": {
+                    "$ref": "",
+                    "type": ""
+                }
+            }
+        }
+    },
+    "definitions": {
+        "PagedOrders": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+                },
+                {
+                    "$ref": "#/components/definitions/TotalHits"
+                },
+                {
+                    "$ref": "#/definitions/Orders"
+                }
+            ]
+        },
+        "Orders": {
+            "type": "object",
+            "properties": {
+                "Orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OrdersInfo"
+                    }
+                }
+            }
+        },
+        "OrdersInfo": {
+            "type": "object",
+            "properties": {
+                "AllocationSituation": {
+                    "type": "integer",
+                    "description": "Situação da alocação do pedido: 1 - Aberto / 2 - Atendido Parcial / 3 - Atendido Total / 4 - Pendente / 5 - Suspenso / 6 - Cancelado / 7 - Faturado Balcão ",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-sit-pre",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "BranchId": {
+                    "type": "string",
+                    "description": "Código do estabelecimento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-estabel",
+                            "required": true,
+                            "type": "string",
+                            "length": "5",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CampaignId": {
+                    "type": "string",
+                    "description": "Número Id Campanha CRM",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.num-id-campanha-crm",
+                            "required": false,
+                            "type": "string",
+                            "length": "5",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CancellationDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data do Cancelamento do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-cancela",
+                            "required": false,
+                            "type": "string",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CancellationReason": {
+                    "type": "string",
+                    "description": "Descrição do motivo do cancelamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.desc-cancela",
+                            "required": false,
+                            "type": "string",
+                            "length": "2000",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CarrierName": {
+                    "type": "string",
+                    "description": "Nome do transportador",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nome-transp",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CifCity": {
+                    "type": "string",
+                    "description": "Até que cidade o frete corre por conta do emitente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cidade-cif",
+                            "required": false,
+                            "type": "string",
+                            "length": "50",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CodeCarrier": {
+                    "type": "integer",
+                    "description": "Código do Transportador",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgadm.transporte.cod-transp",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CodeReshipmentTransp": {
+                    "type": "integer",
+                    "description": "Transportadora Redespacho",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgadm.transporte.cod-transp-red",
+                            "required": false,
+                            "type": "integer",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CollectorCode": {
+                    "type": "integer",
+                    "description": "Código do portador",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-portador",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "Comments": {
+                    "type": "string",
+                    "description": "Observação do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.observacoes",
+                            "required": false,
+                            "type": "string",
+                            "length": "2000",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CommercialSituation": {
+                    "type": "integer",
+                    "description": "Código da situação da avaliação comercial: 1 - Não Avaliado / 2 - Aprovado / 3 - Reprovado / 4 - Suspenso / 5 - Aprovado Parcial",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-sit-com",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CompleteAddress": {
+                    "type": "string",
+                    "description": "Endereço Completo",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.endereco_text",
+                            "required": false,
+                            "type": "string",
+                            "length": "2000",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CreditApprovalDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de aprovação de crédito",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-apr-cred",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CreditLockReason": {
+                    "type": "string",
+                    "description": "Motivo da não liberação de crédito para o pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.desc-bloq-cr",
+                            "required": false,
+                            "type": "string",
+                            "length": "500",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CurrencyBillingCode": {
+                    "type": "integer",
+                    "description": "Código da moeda do Faturamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.mo-fatur",
+                            "required": false,
+                            "type": "integer",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CurrencyCode": {
+                    "type": "integer",
+                    "description": "Código da moeda de referência dos valores",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.mo-codigo",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CustomerCode": {
+                    "type": "integer",
+                    "description": "Código do Cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-emitente",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CustomerDiscount": {
+                    "type": "decimal",
+                    "description": "Percentual de desconto do cliente a ser aplicado sobre a nota",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.perc-desco1",
+                            "required": false,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CustomerOrderId": {
+                    "type": "string",
+                    "description": "Número do pedido do cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nr-pedcli",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CustomerOrderType": {
+                    "type": "string",
+                    "description": "Disponível para classificação/indicação própria do usuário",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.tp-pedido",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "DateUpdatedSituation": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data da alteração da situação",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dat-alter-sit",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DeliveryCity": {
+                    "type": "string",
+                    "description": "Cidade para a Entrega do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cidade",
+                            "required": false,
+                            "type": "string",
+                            "length": "50",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DeliveryCode": {
+                    "type": "string",
+                    "description": "Código do endereço de entrega",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-entrega",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "DeliveryCountry": {
+                    "type": "string",
+                    "description": "País de Entrega do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.pais",
+                            "required": false,
+                            "type": "string",
+                            "length": "20",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DeliveryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data prevista para entrega do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-entrega",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "DeliveryNeighborhood": {
+                    "type": "string",
+                    "description": "Bairro de Entrega do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.bairro",
+                            "required": false,
+                            "type": "string",
+                            "length": "30",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DeliveryPlace": {
+                    "type": "string",
+                    "description": "Endereço de entrega do cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.local-entreg",
+                            "required": false,
+                            "type": "string",
+                            "length": "40",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DeliveryState": {
+                    "type": "string",
+                    "description": "Unidade da federação de entrega",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.estado",
+                            "required": false,
+                            "type": "string",
+                            "length": "4",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DeliveryZipCode": {
+                    "type": "string",
+                    "description": "CEP do endereço de entrega",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cep",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DiscountAmt": {
+                    "type": "decimal",
+                    "description": "Valor do desconto",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.vl-desconto",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DiscountPercentage": {
+                    "type": "decimal",
+                    "description": "Percentuais de desconto informados por pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.des-pct-desconto-inform",
+                            "required": false,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "Email": {
+                    "type": "string",
+                    "description": "Endereço eletrônico na Internet",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.e-mail",
+                            "required": false,
+                            "type": "string",
+                            "length": "40",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "EmissionDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data em que o pedido foi emitido pelo representante/cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-emissao",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "EvaluationSituation": {
+                    "type": "integer",
+                    "description": "Situação de avaliação de crédito: 1 - Não Avaliado / 2 - Avaliado / 3 - Aprovado / 4 - Não Aprovado / 5 - Pendente Informação / 6 - Em análise",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-sit-aval",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "FinancingTable": {
+                    "type": "integer",
+                    "description": "Tabela financeira",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nr-tab-finan",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "FinancingTableSequence": {
+                    "type": "integer",
+                    "description": "Índice da tabela de financiamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nr-ind-finan",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "ForcedApprover": {
+                    "type": "string",
+                    "description": "Nome do aprovador de créditos forçado",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.aprov-forcado",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ForcedReleaseReason": {
+                    "type": "string",
+                    "description": "Motivo da liberação de crédito forçado para o pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.desc-forc-cr",
+                            "required": false,
+                            "type": "string",
+                            "length": "76",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "FreightMode": {
+                    "type": "string",
+                    "description": "Modalidade de Frete",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.char-2,109,8",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "ImplantationDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data em que o Pedido foi implantado no sistema",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-implant",
+                            "required": true,
+                            "type": "string",
+                            "format": "date",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "LimitBillingDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data Limite para atendimento do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-lim-fat",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "MerchandiseDescription": {
+                    "type": "integer",
+                    "description": "Destino da mercadoria",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-des-merc",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "MinimumBillingDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data Mínima para atendimento do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-minfat",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "Modality": {
+                    "type": "integer",
+                    "description": "Modalidade de cobrança referente ao portador",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.modalidade",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "OpenAmount": {
+                    "type": "decimal",
+                    "description": "Valor da mercadoria em aberto + IPI do saldo aberto",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.vl-liq-abe",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OperationTypeCode": {
+                    "type": "integer",
+                    "description": "Código do Tipo de Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cdn-tip-ped",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "OperationTypeDetail": {
+                    "type": "string",
+                    "description": "Detalhe Tipo de Operação",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgdis.tip-ped-cia.descricao",
+                            "required": false,
+                            "type": "string",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderAmount": {
+                    "type": "decimal",
+                    "description": "Valor líquido da mercadoria pedida",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.vl-liq-ped",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderCompleted": {
+                    "type": "boolean",
+                    "description": "Indica se o pedido está completo",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.completo",
+                            "required": false,
+                            "type": "boolean",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderId": {
+                    "type": "integer",
+                    "description": "Número do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nr-pedido",
+                            "required": false,
+                            "type": "integer",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderSituation": {
+                    "type": "integer",
+                    "description": "Situação do pedido: 1 - Aberto / 2 - Atendido Parcial / 3 - Atendido Total / 4 - Pendente / 5 - Suspenso / 6 - Cancelado / 7 - Faturado Balcão ",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-sit-ped",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderType": {
+                    "type": "integer",
+                    "description": "Espécie do pedido: 1 - Pedido Simples / 2 - Programação de Entrega / 3 - Contrato Fornecimento",
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.esp-ped",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "OriginalDeliveryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de entrega solicitada pelo cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-entorig",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PaymentTerms": {
+                    "type": "integer",
+                    "description": "Código da condição de pagamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-cond-pag",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PaymentTermsDetail": {
+                    "type": "string",
+                    "description": "Detalhe da Condição de Pagamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgadm.cond-pagto.descricao",
+                            "required": false,
+                            "type": "string",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PercentageFreight": {
+                    "type": "decimal",
+                    "description": "Percentual de Frete",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-perc-frete",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PercentageInsurance": {
+                    "type": "decimal",
+                    "description": "Percentual de Seguro",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-perc-seguro",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PercentagePacking": {
+                    "type": "decimal",
+                    "description": "Percentual de Embalagem",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-perc-embal",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PriceOrderType": {
+                    "type": "integer",
+                    "description": "Tipo de preço: 1 - Preço Informado / 2 - Preço Tabela Implantação / 3 - Preço Tabela Dia Faturamento / 4 - Preço Flutuante",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.tp-preco",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PriceReason": {
+                    "type": "string",
+                    "description": "Motivo da liberação forçada dos preços para o pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.desc-lib-preco",
+                            "required": false,
+                            "type": "string",
+                            "length": "76",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PriceSituation": {
+                    "type": "integer",
+                    "description": "Código da situação da avaliação Preços: 1 - Não Avaliado / 2 - Aprovado / 3 - Reprovado / 4 - Suspenso / 5 - Aprovado Parcial",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-sit-preco",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PriceTableDiscPerc": {
+                    "type": "decimal",
+                    "description": "Percentual de descontos referente à tabela de preços",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-pct-desconto-tab-preco",
+                            "required": false,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PriceTableOrder": {
+                    "type": "string",
+                    "description": "Tabela de preços",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nr-tabpre",
+                            "required": false,
+                            "type": "string",
+                            "length": "8",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PriceTableOrderDetail": {
+                    "type": "string",
+                    "description": "Tabela de preços",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgdis.tb-preco.descricao",
+                            "required": false,
+                            "type": "string",
+                            "length": "40",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ReactivationDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de reativação do Pedido de Venda",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-reativ",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ReactivationReason": {
+                    "type": "string",
+                    "description": "Motivo da reativação do pedido.",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.desc-reativa",
+                            "required": false,
+                            "type": "string",
+                            "length": "2000",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "RepresentativeName": {
+                    "type": "string",
+                    "description": "Nome do Representante principal",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgadm.repres.nome",
+                            "required": false,
+                            "type": "string",
+                            "length": "80",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "RepresentativeOrderId": {
+                    "type": "string",
+                    "description": "Número do pedido do representante",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nr-pedrep",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "RepresentativeShortName": {
+                    "type": "string",
+                    "description": "Nome abreviado do representante principal",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.no-ab-reppri",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ReshipmentTransp": {
+                    "type": "string",
+                    "description": "Nome da transportadora de redespacho",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nome-tr-red",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "SalesChannel": {
+                    "type": "integer",
+                    "description": "Código do canal de venda",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-canal-venda",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "ShortName": {
+                    "type": "string",
+                    "description": "Nome abreviado do cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nome-abrev",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "SuspensionDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de suspensão",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-suspensao",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "SuspensionReason": {
+                    "type": "string",
+                    "description": "Motivo da suspensão do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.desc-suspend",
+                            "required": false,
+                            "type": "string",
+                            "length": "2000",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TotalDiscount": {
+                    "type": "decimal",
+                    "description": "Valor do desconto total",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-desconto-total",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TotalDiscountPercentage": {
+                    "type": "decimal",
+                    "description": "Percentual de desconto total do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-pct-desconto-total",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TotalDiscountValue": {
+                    "type": "decimal",
+                    "description": "Percentual de desconto por valor do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-pct-desconto-valor",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TotalOrderAmount": {
+                    "type": "decimal",
+                    "description": "Valor total da mercadoria pedida adicionada do IPI",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.vl-tot-ped",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TransactionType": {
+                    "type": "string",
+                    "description": "Valor total da mercadoria pedida adicionada do IPI",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.nat-operacao",
+                            "required": false,
+                            "type": "string",
+                            "length": "6",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "UnitBusinessCod": {
+                    "type": "string",
+                    "description": "Código Unidade Negócio",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-unid-negoc",
+                            "required": false,
+                            "type": "string",
+                            "length": "3",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UseBillingAddress": {
+                    "type": "boolean",
+                    "description": "Indica se o endereço será usado no faturamento do pedido.",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.ind-ender-fatur",
+                            "required": false,
+                            "type": "boolean",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UseDiscountTable": {
+                    "type": "boolean",
+                    "description": "Usa a tabela de descontos no tratamento do Pedido.",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.log-usa-tabela-desconto",
+                            "required": false,
+                            "type": "boolean",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "UserApprover": {
+                    "type": "string",
+                    "description": "Usuário que aprovou o pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.user-aprov",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UserCancel": {
+                    "type": "string",
+                    "description": "Usuário que efetuou o cancelamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.user-canc",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UserCreditApprover": {
+                    "type": "string",
+                    "description": "Usuário que aprovou o crédito",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.quem-aprovou",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UserLastChange": {
+                    "type": "string",
+                    "description": "Usuário que efetuou a última alteração",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.user-alte",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UserUpdatedSituation": {
+                    "type": "string",
+                    "description": "Usuário de alteração da situação",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-usu-alt-sit",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ValueFreight": {
+                    "type": "decimal",
+                    "description": "Valor do frete",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-frete",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ValueInsurance": {
+                    "type": "decimal",
+                    "description": "Valor do seguro",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-seguro",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ValuePacking": {
+                    "type": "decimal",
+                    "description": "Valor da embalagem",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.val-embal",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderRepresentatives": {
+                    "type": "array",
+                    "description": "Representantes do Pedido de Venda",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "required": false,
+                            "type": "array",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/OrderRepresentatives"
+                    }
+                },
+                "PreInvoicing": {
+                    "type": "array",
+                    "description": "Informações do Embarque.",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "required": false,
+                            "type": "array",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/PreInvoicing"
+                    }
+                },
+                "OrderItems": {
+                    "type": "array",
+                    "description": "Itens do Pedido de Venda.",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "required": true,
+                            "type": "array",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/OrderItems"
+                    }
+                }
+            }
+        },
+        "OrderRepresentatives": {
+            "type": "object",
+            "description": "Representante",
+            "properties": {
+                "ClassifCode": {
+                    "type": "string",
+                    "description": "Classificador",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-repre.cod-classificador",
+                            "required": false,
+                            "type": "string",
+                            "length": "8",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CommissionPerc": {
+                    "type": "decimal",
+                    "description": "Percentual de comissão do representante",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-repre.perc-comis",
+                            "required": true,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Nome Representante",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgadm.repres.nome",
+                            "required": false,
+                            "type": "string",
+                            "length": "80",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderId": {
+                    "type": "integer",
+                    "description": "Número do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-repre.nr-pedido",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PercentPrintComm": {
+                    "type": "integer",
+                    "description": "Percentual de comissão na emissão do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-repre.comis-emis",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "ShortReprName": {
+                    "type": "string",
+                    "description": "Percentual de comissão na emissão do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-repre.nome-ab-rep",
+                            "required": true,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                }
+            }
+        },
+        "PreInvoicing": {
+            "type": "object",
+            "description": "Embarque",
+            "properties": {
+                "CustomerOrderId": {
+                    "type": "string",
+                    "description": "Número do pedido do cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgdis.pre-fatur.nr-pedcli",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ShipmentNo": {
+                    "type": "decimal",
+                    "description": "Código - Decimal Embarque",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgdis.pre-fatur.cdd-embarq",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ShipmentSit": {
+                    "type": "integer",
+                    "description": "Situação da alocação do estoque: 1 - Alocado / 2 - Calculado / 3 - Confirmado",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgdis.pre-fatur.cod-sit-pre",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ShortName": {
+                    "type": "string",
+                    "description": "Nome abreviado do cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgdis.pre-fatur.nome-abrev",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "SummaryNo": {
+                    "type": "integer",
+                    "description": "Número da chave do resumo gerado para o calculo de notas fiscais",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgdis.pre-fatur.nr-resumo",
+                            "required": false,
+                            "type": "integer",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                }
+            }
+        },
+        "OrderItems": {
+            "type": "object",
+            "description": "Itens do Pedido de Venda",
+            "properties": {
+                "Aliquot": {
+                    "type": "decimal",
+                    "description": "Alíquota de IPI",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.aliquota-ipi",
+                            "required": false,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "IpiValue": {
+                    "type": "decimal",
+                    "description": "Valor IPI",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-ipi",
+                            "required": false,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "AllocationSituation": {
+                    "type": "integer",
+                    "description": "Situação da alocação do estoque: 1 - Não Alocado / 2 - Alocado Parcial / 3 - Alocado Total",
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-sit-pre",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CampaignId": {
+                    "type": "integer",
+                    "description": "Número Id Campanha CRM",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.num-id-campanha-crm",
+                            "required": false,
+                            "type": "integer",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CancelationItemDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data em que o Item foi cancelado",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-usercan",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "CancelationUser": {
+                    "type": "string",
+                    "description": "Código do usuário que cancelou o item",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.user-canc",
+                            "required": false,
+                            "type": "string",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "Comments": {
+                    "type": "string",
+                    "description": "Observação do item do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.observacao",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CommercialSituation": {
+                    "type": "integer",
+                    "description": "Código da situação da avaliação comercial: 1 - Não Avaliado / 2 - Aprovado / 3 - Reprovado / 4 - Suspenso / 5 - Aprovado Parcial",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-sit-com",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CustomerOrderId": {
+                    "type": "string",
+                    "description": "Número do pedido do cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.nr-pedcli",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DateCancel": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de Cancelamento da seqüência do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-canseq",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DateDevol": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de devolução",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-devolucao",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DeliveryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de entrega do item do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-entrega",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "DeliveryCode": {
+                    "type": "string",
+                    "description": "Código do endereço de entrega",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-entrega",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "DescCancel": {
+                    "type": "string",
+                    "description": "Descrição do motivo do Cancelamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.desc-cancela",
+                            "required": false,
+                            "type": "string",
+                            "length": "2000",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DescDevol": {
+                    "type": "string",
+                    "description": "Motivo da devolução",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.desc-devol",
+                            "required": false,
+                            "type": "string",
+                            "length": "2000",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DevolutionItemDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data em que ocorreu a devolução",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-userdev",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DevolutionUser": {
+                    "type": "string",
+                    "description": "Usuário que efetuou a devolução",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.user-devol",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "DiscountPercentage": {
+                    "type": "string",
+                    "description": "Percentuais de desconto informados por item do pedido",
+                    "example": "7.5+3.15+0.7",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.des-pct-desconto-inform",
+                            "required": false,
+                            "type": "string",
+                            "length": "50",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "DiscountPrice": {
+                    "type": "decimal",
+                    "description": "Valor do desconto",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-desconto",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "InformedDiscount": {
+                    "type": "decimal",
+                    "description": "Valor do desconto informado",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-desconto-inform",
+                            "required": false,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "InsurancePrice": {
+                    "type": "decimal",
+                    "description": "Valor do seguro",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-seguro",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ItemCode": {
+                    "type": "string",
+                    "description": "Código do Item",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.it-codigo",
+                            "required": true,
+                            "type": "string",
+                            "length": "16",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ItemDescription": {
+                    "type": "string",
+                    "description": "Descrição do Item",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgind.item.desc-item",
+                            "required": false,
+                            "type": "string",
+                            "length": "60",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ItemPercentageDiscount": {
+                    "type": "decimal",
+                    "description": "Percentual de desconto sobre o preço unitário",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.per-des-item",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "LastChangeUser": {
+                    "type": "string",
+                    "description": "Código do último usuário a alterar o item do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.user-alte",
+                            "required": false,
+                            "type": "string",
+                            "length": "12",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "LiquidMerchandise": {
+                    "type": "decimal",
+                    "description": "Valor líquido da mercadoria",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-liq-it",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "MsrUnit": {
+                    "type": "string",
+                    "description": "Unidade Medida",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-un",
+                            "required": false,
+                            "type": "string",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OpenAmount": {
+                    "type": "decimal",
+                    "description": "Valor total em aberto do item de pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-liq-abe",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OpenLiquidMerchandise": {
+                    "type": "decimal",
+                    "description": "Valor líquido da mercadoria em aberto",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-merc-abe",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OrderItemSituation": {
+                    "type": "integer",
+                    "description": "Situação do item: 1 - Aberto / 2 - Atendido Parcial / 3 - Atendido Total / 4 - Pendente / 5 - Suspenso / 6 - Cancelado / 7 - Faturado Balcão",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-sit-item",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "OriginalDeliveryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de entrega solicitada pelo cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-entorig",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "OriginalPrice": {
+                    "type": "decimal",
+                    "description": "Preço informado ou de tabela multiplicado pelo índice de financiamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-preori",
+                            "required": true,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "originalPriceBilling": {
+                    "type": "decimal",
+                    "description": "Preço Original na Unidade de Medida de Faturamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-preori-un-fat",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PeriodDiscount": {
+                    "type": "decimal",
+                    "description": "Percentual de desconto referente ao período controlado",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-pct-desconto-periodo",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PriceSituation": {
+                    "type": "integer",
+                    "description": "Código da situação da avaliação de preços: 1 - Não Avaliado / 2 - Aprovado / 3 - Reprovado / 4 - Suspenso / 5 - Aprovado Parcial",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-sit-preco",
+                            "required": false,
+                            "type": "integer",
+                            "length": "1",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PriceTable": {
+                    "type": "string",
+                    "description": "Tabela de preços",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.nr-tabpre",
+                            "required": false,
+                            "type": "string",
+                            "length": "8",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PriceTableDiscount": {
+                    "type": "decimal",
+                    "description": "Percentual de descontos em quantidade da tabela de preços",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-pct-desconto-tab-preco",
+                            "required": false,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "PriceTableValue": {
+                    "type": "decimal",
+                    "description": "Preço de tabela ou informado caso não exista tabela de preços",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-pretab",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PriceUnitary": {
+                    "type": "decimal",
+                    "description": "Preço unitário líquido (preço original - descontos)",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-preuni",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "PurchaseOrder": {
+                    "type": "string",
+                    "description": "Número da ordem de compra do item, originário do pedido compra.",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-ord-compra",
+                            "required": false,
+                            "type": "string",
+                            "length": "15",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "QuantityAttentive": {
+                    "type": "decimal",
+                    "description": "Quantidade faturada para o item no pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.qt-atendida",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "QuantityBilling": {
+                    "type": "decimal",
+                    "description": "Quantidade na UM utilizada para Faturamento do Item",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.qt-un-fat",
+                            "required": true,
+                            "type": "decimal",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "QuantityPending": {
+                    "type": "decimal",
+                    "description": "Quantidade faturada a ser atualizada como atendida",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.qt-pendente",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "QuantityRequested": {
+                    "type": "decimal",
+                    "description": "Quantidade solicitada do Item no pedido de compra ou venda",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.qt-pedida",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ReactivationDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de reativação",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-reativ",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "ReferenceCode": {
+                    "type": "string",
+                    "description": "Código de referência do item",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-refer",
+                            "required": false,
+                            "type": "string",
+                            "length": "8",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "Sequence": {
+                    "type": "integer",
+                    "description": "Número de seqüência do item no pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.nr-sequencia",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "ShortName": {
+                    "type": "string",
+                    "description": "Nome abreviado do cliente",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.nome-abrev",
+                            "required": true,
+                            "type": "string",
+                            "length": "12",
+                            "available": true,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "SuspensionDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de suspensão",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-suspensao",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "SuspensionItemDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de suspensão",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.dt-usersusp",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TermDiscount": {
+                    "type": "decimal",
+                    "description": "Percentual de desconto referente ao prazo de pagamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-pct-desconto-prazo",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TotalOrderItemAmount": {
+                    "type": "decimal",
+                    "description": "Valor total do item de pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.vl-tot-it",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "totalPercentageDiscount": {
+                    "type": "decimal",
+                    "description": "Percentual de desconto total do item do pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-pct-desconto-total",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TotalValueDiscount": {
+                    "type": "decimal",
+                    "description": "Valor do desconto total",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.val-desconto-total",
+                            "required": false,
+                            "type": "decimal",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TransactionType": {
+                    "type": "string",
+                    "description": "Natureza de operação",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.nat-operacao",
+                            "required": false,
+                            "type": "string",
+                            "length": "6",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "TypeAttendance": {
+                    "type": "integer",
+                    "description": "Tipo de atendimento: 1 - Total / 2 - Parcial / 3 - Parcial Cancela Saldo",
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.tipo-atend",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "UnitBusinessCod": {
+                    "type": "string",
+                    "description": "Código Unidade Negócio",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.cod-unid-negoc",
+                            "required": false,
+                            "type": "string",
+                            "length": "3",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UnitMeasureBilling": {
+                    "type": "string",
+                    "description": "Unidade de medida do item do pedido.",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.des-un-medida",
+                            "required": false,
+                            "type": "string",
+                            "length": "2",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "UnitMeasureBillingDesc": {
+                    "type": "string",
+                    "description": "Descrição da Unidade de Medida de Faturamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgind.tab-unidade.descricao",
+                            "required": false,
+                            "type": "string",
+                            "length": "15",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "UnitMeasureStock": {
+                    "type": "string",
+                    "description": "Unidade de Medida de estoque",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-item.char-2,09,02",
+                            "required": false,
+                            "type": "string",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                },
+                "unitMeasureStockDesc": {
+                    "type": "string",
+                    "description": "Descrição Unidade de Medida de estoque",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "mgind.tab-unidade.descricao",
+                            "required": false,
+                            "type": "string",
+                            "length": "15",
+                            "available": false,
+                            "canUpdate": false
+                        }
+                    ]
+                }
+            }
+        },
+        "OrderCancelationInfos": {
+            "type": "object",
+            "description": "Informações Para o cancelamento do Pedido de Venda",
+            "properties": {
+                "CancellationDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de cancelamento do Pedido",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.dt-cancela",
+                            "required": false,
+                            "type": "string",
+                            "format": "date",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "TypeReason": {
+                    "type": "integer",
+                    "description": "Código do motivo de cancelamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.cod-mot-canc-cot",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                },
+                "CancellationReason": {
+                    "type": "string",
+                    "description": "Descrição do motivo do cancelamento",
+                    "x-totvs": [
+                        {
+                            "product": "datasul",
+                            "field": "movdis.ped-venda.desc-cancela",
+                            "required": true,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": true
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "components": {
+        "definitions": {
+            "TotalHits": {
+                "type": "object",
+                "properties": {
+                    "totalHits": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
