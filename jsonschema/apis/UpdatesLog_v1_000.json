@@ -1,0 +1,162 @@
+{
+    "openapi": "3.0.1",
+    "servers": [{
+        "description": "API dos logs de Atualização dos dicionários de dados no ambiente Totvs Protheus",
+        "url": "{{host}}/api/framework/v1",
+        "variables": {
+            "serverUrl": {
+                "default": "localhost"
+            },
+            "serverHttpPort": {
+                "default": "8051"
+            }
+        }
+    }],
+    "info": {
+        "description": "API dos logs de Atualização dos dicionários de dados no ambiente Totvs Protheus",
+        "version": "1.000",
+        "title": "UpdatesLog",
+        "contact": {
+            "name": "T-Talk",
+            "url": "API.Totvs.com.br",
+            "email": "comiteintegracao@totvs.com.br"
+        },
+        "x-totvs": {
+            "messageDocumentation": {
+                "name": "UpdatesLog",
+                "description": "Consulta nos logs de Atualização do Protheus",
+                "segment": "Foundation"
+            },
+            "productInformation": [{
+                "product": "Protheus",
+                "contact": "Protheus_FW@totvs.com.br",
+                "description": "Consulta nos logs de Atualização do Protheus",
+                "adapter": "FWUpdateslog.prw",
+                "helpUrl": "link aqui",
+                "note": "Essa API exige que seja configurada a segurança no servidor (SECURITY=1)."
+            }]
+        }
+    },
+    "paths": {
+        "/UpdatesLog": {
+            "get": {
+                "tags": [
+                    "UpdatesLog"
+                ],
+                "summary": "Retorna todos os logs de atualização dos ambientes Totvs Protheus",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parametros",
+                        "minimalVersion": "12.1.27"
+                    }]
+                },
+                "description": "Retorna todos os logs de atualização dos ambientes Totvs Protheus",
+                "operationId": "getLog",
+                "parameters": [{
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+                    },
+                    {
+                        "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/UpdatesLog/V1/1_000/jsonschema/schemas/UpdatesLog_1_000.json#/definitions/PagedLogs"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Logs não localizados no ambiente Totvs Protheus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "'Não foi possível efetuar conexão rpc no ambiente Protheus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/UpdatesLog/{updateid}": {
+            "get": {
+                "tags": [
+                    "UpdatesLog"
+                ],
+                "summary": "Retorna os eventos de atualização do identificador informado por parâmetro",
+                "description": "Retorna os eventos de atualização do identificador informado por parâmetro",
+                "operationId": "getLogID",
+                "x-totvs": {
+                    "productInformation": [{
+                        "product": "Protheus",
+                        "available": true,
+                        "note": "Este verbo esta disponivel com todos os parâmetros",
+                        "minimalVersion": "12.1.23"
+                    }]
+                },
+                "parameters": [{
+                    "$ref": "#/components/parameters/updateid"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/UpdatesLog/V1/1_000/jsonschema/schemas/UpdatesLog_1_000.json#/definitions/DetailLogsType"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Logs não localizados no ambiente Totvs Protheus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "updateid": {
+                "name": "updateid",
+                "in": "path",
+                "required": true,
+                "description": "Identificador Único representando o log de atualização",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "schemas": {}
+    }
+}
