@@ -1,0 +1,874 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/JobScheduler_1_000.json#",
+	"info": {
+		"description": "",
+		"version": "1.000",
+		"title": "Schedule",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Schedule",
+				"description": "Cadastro de agendamento",
+				"segment": ""
+			},
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/JobExecutionType",
+					"type": "object"
+				}
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "RM_FW@totvs.com.br",
+					"description": "Gerenciamento de agendamento de tarefas",
+					"helpUrl": "http://tdn.totvs.com/pages/viewpage.action?pageId=427049339"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"PagedExecutionJobscheduler": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/JobExecutionType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"PagedJobscheduler": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/JobSchedulerType"
+							}
+						}
+					}
+				}
+			]
+		},
+		"JobSchedulerType": {
+			"type": "object",
+			"properties": {
+				"jobScheduleID": {
+					"description": "Identificador único do agendamento do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "gjobx.idjob",
+							"required": true,
+							"type": "integer",
+							"length": "4",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "AGENDA_RPW.COD_UNICO_IDENTIF",
+							"type": "string",
+							"required": true,
+							"uniqueness": "server",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": true,
+							"uniqueness": "server",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"status": {
+					"description": "Indica o status da execução do processo",
+					"type": "string",
+					"enum": [
+						"active",
+						"inactive",
+						"completed"
+					],
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.status",
+							"required": true,
+							"type": "integer",
+							"length": "2",
+							"note": "Se o job for recorrente: 0,1=active; 2,4,5,6,7=completed; 3,8=inactive. Senão: 0,1=active; 2,3,4,5,6,7,8=inactive.",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "AGENDA_RPW.LOG_SIT_RPW",
+							"type": "logical",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"lastModified": {
+					"description": "Data da última alteração no agendamento",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.recmodifiedon",
+							"required": false,
+							"type": "datetime",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "AGENDA_RPW.DAT_LIVRE_1",
+							"type": "date",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"processID": {
+					"description": "Identificador do processo (rotina) que será executado",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.classeprocesso",
+							"required": true,
+							"type": "varchar",
+							"length": "128",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "AGENDA_RPW.COD_PROG_DTSUL",
+							"type": "string",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"firstExecution": {
+					"description": "Data prevista para início da execução do processo",
+					"type": "string",
+					"format": "dateTime",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.dataprogramada",
+							"required": true,
+							"type": "datetime",
+							"length": "8",
+							"note": "Data prevista para início da primeira execução do processo",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.DAT_EXEC_PED_EXEC",
+							"type": "date",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"user": {
+					"description": "Usuário responsável pelo agendamento",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.reccreatedby",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "AGENDA_RPW.COD_USUAR_ULT_ATUALIZ",
+							"type": "string",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"scheduleType": {
+					"description": "indica o tipo da agenda (semanal ou mensal)",
+					"type": "string",
+					"enum": [
+						"weekly",
+						"monthly"
+					],
+					"x-totvs": [
+						{
+							"product": "Datasul",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"scheduleRange": {
+					"type": "array",
+					"items":
+					{
+						"$ref": "#/definitions/RangeType"
+					},
+					"examples":
+					{
+						"EveryMondayFrom8To12Each2Hours":
+						{
+							"summary": "Agenda semanal (scheduleType 'weekly') que executa toda segunda das 8h às 12h, a cada 2 horas",							
+							"value": {
+								"scheduleRange" : [{
+									"frequency": {
+										"type": "hour",
+										"value": 2
+									},
+									"interval": {
+										"initial": {
+											"day": 2,
+											"hour": 8,
+											"minute": 0
+										}, 
+										"final": {
+											"day": 2,
+											"hour": 12,
+											"minute": 0
+										}
+									}
+								}]
+							}
+						},
+						"EveryDayEach5Minutes":
+						{
+							"summary": "Agenda mensal (scheduleType 'monthly') que executa todo dia a cada 5 minutos",
+							"value": {
+								"scheduleRange" : [{
+									"frequency": {
+										"type": "minute",
+										"value": 5
+									},
+									"interval": {
+										"initial": {
+											"day": 1,
+											"hour": 0,
+											"minute": 0
+										}, 
+										"final": {
+											"day": 31,
+											"hour": 23,
+											"minute": 59
+										}
+									}
+								}]
+							}
+						}
+					},
+					"x-totvs": [
+						{
+							"product": "Datasul",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+				"recurrent": {
+					"description": "indica se a execução do job é infinta ou ocorre somente uma vez",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.tiporecorrencia",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "1,2,3=true;0=false",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.LOG_RECOR",
+							"type": "logical",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"executionParameter": {
+					"type": "object",
+					"description": "Parâmetros para execução do processo",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.valorparametros",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.DES_PARAM_EXEC",
+							"type": "string",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		},
+		"RangeType": {
+			"type": "object",
+			"properties": {
+				"frequency": {
+					"type": "object",
+					"properties": {
+						"type" : {
+							"type": "string",
+							"description": "Indica qual o tipo de repetição para os horários a serem gerados. Se 'day', gerará horários incrementando dias; se 'hour', gerará horários incrementando horas; se 'minute', gerará horários incrementando minutos",
+							"enum": [
+								"day",
+								"hour",
+								"minute"
+							]
+						},
+						"value": {
+							"format": "int32",
+							"type": "integer",
+							"description": "Frequencia do tipo do intervalo"
+						}
+					}
+				},
+				"interval": {
+					"type": "object",
+					"properties": {
+						"initial": {
+							"type": "object",
+							"properties": {
+								"day": {
+									"type": "integer",
+									"description": "Dia inicial (se for semanal: 1 é domingo e 7 é sábado)"
+								},
+								"hour": {
+									"type": "integer",
+									"description": "Hora inicial",
+									"minimum": 0,
+									"maximum": 23
+								},
+								"minute": {
+									"type": "integer",
+									"description": "Minuto inicial da hora informada",
+									"minimum": 0,
+									"maximum": 59
+								}
+							}
+						},
+						"final": {
+							"type": "object",
+							"properties": {
+								"day": {
+									"type": "integer",
+									"description": "Dia final (se for semanal: 1 é domingo e 7 é sábado)"
+								},
+								"hour": {
+									"type": "integer",
+									"description": "Hora final",
+									"minimum": 0,
+									"maximum": 23
+								},
+								"minute": {
+									"type": "integer",
+									"description": "Minuto final da hora informada",
+									"minimum": 0,
+									"maximum": 59
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"JobSchedulePOST": {
+			"type": "object",
+			"properties": {
+				"jobScheduleID": {
+					"description": "Identificador único do agendamento do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"lastModified": {
+					"description": "Data da última alteração no agendamento",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"processID": {
+					"description": "Identificador do processo (rotina) que será executado",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "Datasul",
+							"field": "AGENDA_RPW.COD_PROG_DTSUL",
+							"type": "string",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"recurrent": {
+					"description": "indica se a execução do job deve ocorrer mais de uma vez",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.LOG_RECOR",
+							"type": "logical",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"executionParameter": {
+					"type": "object",
+					"description": "Parâmetros para execução do processo",
+					"x-totvs": [
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.DES_PARAM_EXEC",
+							"type": "string",
+							"note": "Modelo da chamada dinâmica do link https://bit.ly/31K1cfn",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"execution": {
+					"type": "object",
+					"allOf": [
+						{
+							"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"items": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/JobExecutionType"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"JobExecutionType": {
+			"type": "object",
+			"properties": {
+				"executionID": {
+					"description": "Identificador único da execução do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.idexecucao",
+							"required": true,
+							"type": "integer",
+							"length": "4",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.NUM_PED_EXEC",
+							"type": "integer",
+							"required": true,
+							"uniqueness": "server",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"jobScheduleID": {
+					"description": "Identificador único do agendamento do processo",
+					"type": "string",
+					"maxLength": 30,
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.idjob",
+							"required": true,
+							"type": "integer",
+							"length": "4",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.COD_UNICO_IDENTIF_AGENDA",
+							"type": "string",
+							"required": true,
+							"uniqueness": "server",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"status": {
+					"description": "Indica o status da execução do processo",
+					"type": "string",
+					"enum": [
+						"pending",
+						"failure",
+						"success",
+						"running ",
+						"canceled"
+					],
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.status",
+							"required": false,
+							"type": "integer",
+							"length": "2",
+							"note": "0,8=pending;1=running;2,6=success;3,4,5,7=failure",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.IND_SIT_PED_EXEC",
+							"type": "string",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"createdDate": {
+					"description": "Indica a data da última alteração do agendamento no momento da execução do processo",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.reccreatedon",
+							"required": false,
+							"type": "datetime",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.DAT_CRIAC_PED_EXEC",
+							"type": "date",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"startedDate": {
+					"description": "Indica a data de execução do processo",
+					"type": "string",
+					"format": "date",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.datainiexec",
+							"required": false,
+							"type": "datetime",
+							"length": "8",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.DAT_INIC_EXEC_SERVID_EXEC",
+							"type": "date",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"user": {
+					"description": "Usuário responsável pelo agendamento",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobx.reccreatedby",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.COD_USUARIO",
+							"type": "string",
+							"required": true,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Protheus",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"return": {
+					"type": "object",
+					"description": "Resultado da execução do processo",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.mensagemstatus",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"required": false,
+							"uniqueness": "none",
+							"available": false,
+							"canUpdate": false
+						}
+					]
+				},
+				"error": {
+					"type": "string",
+					"description": "Mensagem de erro na execução do processo",
+					"x-totvs": [
+						{
+							"product": "rm",
+							"field": "gjobxexecucao.mensagemstatus",
+							"required": false,
+							"type": "varchar",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": true
+						},
+						{
+							"product": "Datasul",
+							"field": "PED_EXEC.DES_TEXT_ERRO",
+							"type": "string",
+							"required": false,
+							"uniqueness": "none",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}
+			}
+		}
+	}
+}
