@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Quotation_1_002.json#",
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/quotation_V1/jsonschema/schemas/Quotation_1_002.json#",
 	"info": {
 		"description": "",
 		"version": "1.002",
@@ -190,13 +190,12 @@
 						},
 						{
 							"product": "Logix",
-							"field": "ordem_sup_cot.cod_empresa|ordem_sup_cot.num_cotacao|ordem_sup_cot.num_oc|ordem_sup_cot.cod_fornecedor",
+							"field": "ordem_sup_cot.cod_empresa|ordem_sup_cot.num_oc",
 							"required": true,
 							"type": "",
-							"length": "6",
-							"note": "Código unico da cotacao. o numero da cotacao do sistema interno.",
-							"available": true,
-							"canUpdate": false
+							"length": "11",
+							"note": "Busca as cotações de uma determinada ordem de compra",
+							"available": true
 						}
 					]
 				},
@@ -236,7 +235,7 @@
 						},
 						{
 							"product": "Logix",
-							"field": "cotacao_preco.cod_empresa",
+							"field": "ordem_sup_cot.cod_empresa",
 							"required": true,
 							"type": "string",
 							"length": "2",
@@ -402,16 +401,27 @@
 						},
 						{
 							"product": "Logix",
-							"field": "cotacao_preco.num_cotacao",
-							"required": false,
-							"type": "decimal",
-							"length": "6",
-							"note": "Codigo da cotacao no ERP Logix.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
+				"RequestCode": {
+					"description": "Código da solicitação de compra no ERP a qual se refere cotação em questão.",
+					"type": "string",
+					"maxLength": 9,
+					"x-totvs": [
+						{
+							"product": "Logix",
+							"available": true,
+							"required": true,
+							"field": "ordem_sup_cot.num_oc",
+							"type": "string",
+							"length": "9",
+							"note": "Código da solicitação de compra no ERP a qual se refere cotação em questão.",
+							"canUpdate": false
+						}
+					]
+				},				
 				"Text": {
 					"description": "Textos da Cotacao",
 					"type": "string",
@@ -489,13 +499,7 @@
 						},
 						{
 							"product": "Logix",
-							"field": "cotacao_preco.dat_inic_validade",
-							"required": true,
-							"type": "date",
-							"length": "",
-							"note": "Data de início da cotação",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -536,13 +540,7 @@
 						},
 						{
 							"product": "Logix",
-							"field": "cotacao_preco.dat_fim_validade",
-							"required": true,
-							"type": "date",
-							"length": "",
-							"note": "Data final da cotacao",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -622,13 +620,7 @@
 						},
 						{
 							"product": "Logix",
-							"field": "cotação_preco.cod_moeda",
-							"required": true,
-							"type": "decimal",
-							"length": "2",
-							"note": "Código da moeda em que foi cotado",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -714,13 +706,7 @@
 						},
 						{
 							"product": "Logix",
-							"field": "cotacao_preco.ies_tip_cotacao",
-							"required": true,
-							"type": "string",
-							"length": "1",
-							"note": "Tipo de cotacao",
-							"available": true,
-							"canUpdate": false
+							"available": false							
 						}
 					]
 				},
@@ -748,6 +734,23 @@
 						"type": "string"
 					}
 				},
+				"ItemInternalId": {
+					"description": "identificador único para o Item",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "Logix",
+							"field": "ordem_sup_cot.cod_empresa|cotacao_preco.cod_item",
+							"required": true,
+							"type": "",
+							"description": "Identificador único para busca de cotação de um determinado item de uma empresa",
+							"length": "18",
+							"note": "01|123456789012345",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},				
 				"ExternalItemCode": {
 					"description": "Numeracao do item dentro da Cotacao no sistema externo",
 					"type": "string",
@@ -810,13 +813,7 @@
 					"x-totvs": [
 						{
 							"product": "Logix",
-							"field": "cotacao_preco.num_cotacao",
-							"required": true,
-							"type": "",
-							"length": "",
-							"note": "Numero da cotacao",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -827,13 +824,8 @@
 					"x-totvs": [
 						{
 							"product": "Logix",
-							"available": true,
-							"required": true,
-							"field": "ordem_sup_cot.num_oc",
-							"type": "string",
-							"length": "9",
-							"note": "Código da solicitação de compra no ERP a qual se refere cotação em questão.",
-							"canUpdate": false
+							"available": false
+
 						}
 					]
 				},
@@ -1651,6 +1643,116 @@
 						}
 					]
 				},
+				"ValidityStartDate": {
+					"description": "Data de Inicio da validade da cotacao",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"available": false
+						},
+						{
+							"product": "RM",
+							"available": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						},
+						{
+							"product": "Logix",
+							"field": "cotacao_preco.dat_inic_validade",
+							"required": true,
+							"type": "date",
+							"length": "",
+							"note": "Data de início da cotação",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"ValidityEndDate": {
+					"description": "Data final da validade da cotacao",
+					"type": "string",
+					"format": "date-time",
+					"x-totvs": [
+						{
+							"product": "Protheus",
+							"available": false
+						},
+						{
+							"product": "RM",
+							"available": false
+						},
+						{
+							"product": "DATASUL",
+							"available": false
+						},
+						{
+							"product": "Logix",
+							"field": "cotacao_preco.dat_fim_validade",
+							"required": true,
+							"type": "date",
+							"length": "",
+							"note": "Data final da cotacao",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				"PriceType": {
+					"description": "Tipo de Preco/Cotacao / 1 - Fechado / 2 - Cotacao / 3 - Consignacao / 4 - Aberto",
+					"type": "string",
+					"enum": [
+						"1",
+						"2",
+						"3",
+						"4"
+					],
+					"x-totvs": [
+						{
+							"product": "PROTHEUS",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "Nao utilizado, informacao nao controlada.",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "RM",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "DATASUL",
+							"field": "",
+							"required": false,
+							"type": "",
+							"length": "",
+							"note": "",
+							"available": true,
+							"canUpdate": false
+						},
+						{
+							"product": "Logix",
+							"field": "cotacao_preco.ies_tip_cotacao",
+							"required": true,
+							"type": "string",
+							"length": "1",
+							"note": "Tipo de cotacao",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},				
 				"CarrierCode": {
 					"description": "Código da Transportadora",
 					"type": "string",
@@ -1749,13 +1851,13 @@
 						},
 						{
 							"product": "Logix",
-							"field": "prog_ordem_sup.num_prog_entrega",
+							"available": false,
+							"field": "",
 							"required": true,
-							"type": "number",
-							"length": "3",
-							"note": "Numero da programacao de entrega da ordem de compra.",
-							"available": true,
-							"canUpdate": false
+							"type": "",
+							"length": "",
+							"note": "",
+							"canUpdate": false							
 						}
 					]
 				},
@@ -1795,13 +1897,7 @@
 						},
 						{
 							"product": "Logix",
-							"field": "prog_ordem_sup.qtd_solic",
-							"required": false,
-							"type": "decimal",
-							"length": "12.3",
-							"note": "Quantidade da programcao de entrega.",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				},
@@ -1842,13 +1938,7 @@
 						},
 						{
 							"product": "Logix",
-							"field": "prog_ordem_sup.dat_entrega_prev",
-							"required": false,
-							"type": "date",
-							"length": "",
-							"note": "Data de entrega prevista para a programcao de entrega",
-							"available": true,
-							"canUpdate": false
+							"available": false
 						}
 					]
 				}
