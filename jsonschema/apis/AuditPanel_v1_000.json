@@ -125,8 +125,16 @@
             }
           ]
         },
-        "description": "Retorna os indicadores principais (Big Numbers) para o dashboard.",
+        "description": "Retorna os totais gerais de conformidades da tela principal.",
         "operationId": "getBigNumbers",
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/month" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/year" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/period" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/branchCode" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/feedback" }
+        ],
         "responses": {
           "200": {
             "description": "Operação realizada com sucesso",
@@ -183,9 +191,17 @@
             }
           ]
         },
-        "description": "Lista os funcionários vinculados ao processo de auditoria.",
+        "description": "Retorna a lista de colaboradores com suas informações básicas e situação atual.",
         "operationId": "getEmployees",
-        "parameters": [],
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/month" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/year" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/period" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/page" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/pageSize" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/branchCode" }
+        ],
         "responses": {
           "200": {
             "description": "Operação realizada com sucesso",
@@ -307,9 +323,21 @@
             }
           ]
         },
-        "description": "Lista os itens de verificação da auditoria, indicando quais regras de conformidade foram atendidas e quais apresentam inconsistências.",
+        "description": "Retorna a estrutura da tabela de conformidades utilizada na exibição das regras.",
         "operationId": "getConformities",
-        "parameters": [],
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/month" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/year" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/period" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/page" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/pageSize" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/branchCode" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/id" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/description" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/cpf_cnpj" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/feedback" }
+        ],
         "responses": {
           "200": {
             "description": "Operação realizada com sucesso",
@@ -317,6 +345,208 @@
               "application/json": {
                 "schema": {
                   "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/AuditConformityItems"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição Inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InvalidRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro Interno do Servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/painel-auditoria/conformities-employees": {
+      "get": {
+        "tags": [
+          "Painel de Auditoria"
+        ],
+        "summary": "Conformidades e Funcionários | Listagem",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Lista os funcionários impactados no período selecionado",
+              "minimalVersion": "12.1.2310"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Lista os funcionários impactados no período selecionado",
+              "minimalVersion": "xx.x.xx"
+            }
+          ]
+        },
+        "description": "Retorna a lista de funcionários impactados no período selecionado, agrupando informações básicas para exibição na tabela de colaboradores da tela principal.",
+        "operationId": "getConformitiesEmployees",
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/month" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/year" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/period" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/page" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/pageSize" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/branchCode" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/feedback" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/AuditConformityEmployeeItems"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição Inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InvalidRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro Interno do Servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/painel-auditoria/conformities-employees-details/{employeeId}": {
+      "get": {
+        "tags": [
+          "Painel de Auditoria"
+        ],
+        "summary": "Detalhes de Conformidades do Funcionário | Listagem",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Lista regras e conformidades de um funcionário",
+              "minimalVersion": "12.1.2310"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Lista regras e conformidades de um funcionário",
+              "minimalVersion": "xx.x.xx"
+            }
+          ]
+        },
+        "description": "Retorna a lista de todas as regras/conformidades vinculadas a um funcionário específico dentro do período selecionado.",
+        "operationId": "getConformitiesEmployeeDetails",
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/employeeId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/month" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/year" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/period" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/branchCode" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/feedback" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/AuditConformityEmployeeDetailsItems"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição Inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InvalidRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro Interno do Servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/painel-auditoria/export-analitico": {
+      "get": {
+        "tags": [
+          "Painel de Auditoria"
+        ],
+        "summary": "Exportação Analítica | Consulta",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Exportação dos dados de auditoria",
+              "minimalVersion": "12.1.2310"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Exportação dos dados de auditoria",
+              "minimalVersion": "xx.x.xx"
+            }
+          ]
+        },
+        "description": "Retorna a lista unificada e consolidada (via Inner Join) contendo os dados cadastrais dos funcionários e os detalhes de suas respectivas não conformidades para fins de exportação analítica.",
+        "operationId": "getExportAnalitico",
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/month" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/year" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/period" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/branchCode" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/viewType" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/feedback" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/AuditExportAnaliticoItems"
                 }
               }
             }
@@ -366,9 +596,76 @@
             }
           ]
         },
-        "description": "Retorna as filiais que o usuário logado tem permissão para visualizar, utilizado para o filtro de unidade de negócio do painel.",
+        "description": "Retorna a lista de filiais com suas informações básicas.",
         "operationId": "getBranches",
-        "parameters": [],
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/page" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/pageSize" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/filter" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/AuditBranchItems"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição Inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InvalidRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro Interno do Servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/painel-auditoria/branches/{branchId}": {
+      "get": {
+        "tags": [
+          "Painel de Auditoria"
+        ],
+        "summary": "Filial | Consulta",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Consulta específica de filial",
+              "minimalVersion": "12.1.2310"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Consulta específica de filial",
+              "minimalVersion": "xx.x.xx"
+            }
+          ]
+        },
+        "description": "Retorna as informações básicas de uma filial específica informada no path.",
+        "operationId": "getBranchById",
+        "parameters": [
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/branchId" },
+          { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AuditPanel_1_000.json#/parameters/companyId" }
+        ],
         "responses": {
           "200": {
             "description": "Operação realizada com sucesso",
