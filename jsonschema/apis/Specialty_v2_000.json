@@ -2,8 +2,8 @@
     "openapi": "3.0.1",
     "servers": [
         {
-            "description": "API para Compromissos Disponíveis para produtos TOTVS",
-            "url": "{{host}}/api/hcg/v2",
+            "description": "API de Especialidade da agenda",
+            "url": "http://{serverUrl}:{serverHttpPort}/api/hcg/v2",
             "variables": {
                 "serverUrl": {
                     "default": "localhost"
@@ -14,47 +14,48 @@
             }
         }
     ],
-    "info": {
-        "description": "API para Compromissos Disponíveis para produtos TOTVS",
+   "info": {
+        "description": "API de Especialidade da agenda",
         "version": "2.000",
-        "title": "AppointmentAvailable",
+        "title": "Especialidade da agenda",
         "contact": {
-            "name": "T-Talk",
-            "url": "https://api.totvs.com.br",
+          "name": "T-Talk",
+            "url": "api.totvs.com.br",
             "email": "comiteintegracao@totvs.com.br"
         },
         "x-totvs": {
-            "messageDocumentation": {
-                "name": "AppointmentAvailable",
-                "description": "Registro de Cadastro Geral",
-                "segment": "Saúde"
+          "messageDocumentation": {
+            "name": "SpecialtyApi",
+                "description": "Especialidade da agenda",
+                "segment": "Hospinais e Clinicas"
             },
             "productInformation": [
                 {
                     "product": "RM",
-                    "contact": "TribeSau.Squad.Assistencial@totvs.com.br",
-                    "description": "Registro da Atividade da Agenda",
-                    "adapter": ""
+                    "contact": "totvs.saude.squad.ghassist@totvs.com.br",
+                    "description": "Especialidade da agenda",
+                    "adapter": "",
+                    "helpUrl": ""
                 }
             ]
         }
     },
-    "paths": {
-        "/appointmentAvailables": {
-            "get": {
-                "tags": [
-                    "AppointmentAvailable"
+      "paths": {
+        "/specialty": {
+          "get": {
+            "tags": [
+                    "specialty"
                 ],
-                "summary": "Recupera uma lista com todos os Cadastros",
-                "description": "Recupera uma lista com todos os Cadastros",
-                "operationId": "GetAllAppointmentAvailables",
+                "summary": "Listagem de registros",
+                "description": "Retorna uma lista de registros",
+                "operationId": "GetAll",
                 "x-totvs": {
                     "productInformation": [
                         {
                             "product": "RM",
                             "available": true,
-                            "note": "Este verbo está disponível com todos os parâmetros.",
-                            "minimalVersion": "12.1.2310"
+                            "note": "Este verbo está disponível com todos os parâmetros",
+                            "minimalVersion": "12.1.2510"
                         }
                     ]
                 },
@@ -77,52 +78,34 @@
                     {
                         "name": "companyId",
                         "in": "query",
-                        "description": "Código da Coligada",
-                        "required": true,
+                        "description": "Código da coligada, Código",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
                     },
                     {
-                        "name": "scheduleId",
+                        "name": "active",
                         "in": "query",
-                        "description": "Identificador da agenda",
+                        "description": "Ativo",
                         "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "startDate",
+                        "name": "visible",
                         "in": "query",
-                        "description": "Data de início",
-                        "required": false,
-                        "schema": {
-                            "type": "datatime"
-                        }
-                    },
-                    {
-                        "name": "endDate",
-                        "in": "query",
-                        "description": "Data de término",
-                        "required": false,
-                        "schema": {
-                            "type": "datatime"
-                        }
-                    },
-                    {
-                        "name": "insuranceCompanyId",
-                        "in": "query",
-                        "description": "Identificador da operadora de saúde",
+                        "description": "Visível",
                         "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "specialtyId",
+                        "name": "activeOnPortal",
                         "in": "query",
-                        "description": "Código da especialidade",
+                        "description": "Ativo no portal",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -135,13 +118,13 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AppointmentAvailable_2_000.json#/definitions/PagedAppointmentAvailable"
+                                    "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Specialty_2_000.json#/definitions/PagedSpecialtyApi"
                                 }
                             }
                         }
                     },
-                    "500": {
-                        "description": "Erro no momento da recuperação do registro.",
+                    "404": {
+                        "description": "Erro no momento da recuperação dos registros.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -153,27 +136,17 @@
                 }
             }
         }
-    },
+  },
     "components": {
         "parameters": {
-            "code": {
-                "name": "code",
+            "id": {
+                "name": "id",
                 "in": "path",
-                "description": "Identicador do registro",
+                "description": "Código da coligada, Código",
                 "required": true,
                 "schema": {
                     "type": "string"
                 }
-            },
-            "x-totvs": {
-                "productInformation": [
-                    {
-                        "product": "RM",
-                        "available": true,
-                        "note": "Identificador Único de uma Especialidade",
-                        "minimalVersion": "12.1.2310"
-                    }
-                ]
             }
         },
         "schemas": {}
