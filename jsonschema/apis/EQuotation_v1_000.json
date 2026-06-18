@@ -1,0 +1,575 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para produtos TOTVS",
+			"url": "http://{serverUrl}:{serverHttpPort}/api/supply/v1",
+			"variables": {
+				"domain": {
+					"default": "localhost"
+				},
+				"port": {
+					"default": "8080"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para manipulação do portal E-Cotação, produto Totvs.",
+		"version": "1.000",
+		"title": "E-Cotação",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "quotation",
+				"description": "API para manipulação do portal E-Cotação, produto Totvs.",
+				"segment": "BackOffice"
+			},
+			"productInformation": [
+				{
+					"product": "Logix",
+					"contact": "SUPPLY.ML.MAN.SUP_L@totvs.com.br",
+					"description": "API para manipulação do portal E-Cotação, produto Totvs.",
+					"adapter": "equotation.4gl"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/equotation": {
+			"get": {
+				"tags": [
+					"Quotes"
+				],
+				"summary": "Busca as listas de cotações disponíveis para cotar",
+				"operationId": "getEQuotation",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Logix",
+							"available": true,
+							"minimalVersion": "12.1.28"
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},					
+					{
+						"$ref": "#/components/parameters/CompanyId"
+					},
+					{
+						"$ref": "#/components/parameters/CustomerVendor"
+					},					
+					{
+						"$ref": "#/components/parameters/Document"
+					},
+					{
+						"$ref": "#/components/parameters/TypeDocument"
+					},
+					{
+						"$ref": "#/components/parameters/ListNumber"
+					},
+					{
+						"$ref": "#/components/parameters/ItemCode"
+					},
+					{
+						"$ref": "#/components/parameters/LimitDate"
+					},
+					{
+						"$ref": "#/components/parameters/Situation"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registros encontrados com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/EQuotation/V1/1_000/jsonschema/schemas/EQuotation_1_000.json#/definitions/PagedEQuotation"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta das Listas de cotação!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Não autorizado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},					
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Quotes"
+				],
+				"summary": "Inclui registro de coleta de preço para uma ordem de compra",
+				"operationId": "postQuotation",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Logix",
+							"available": false
+						}
+					]
+				},
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"requestBody": {
+					"description": "Lista de Cotação de Compra a ser incluída",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/EQuotation/V1/1_000/jsonschema/schemas/EQuotation_1_000.json#/definitions/EQuotationInfo"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro incluído com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/EQuotation/V1/1_000/jsonschema/schemas/EQuotation_1_000.json#/definitions/EQuotationInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a inclusão de cotação de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Não autorizado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/equotation/{InternalId}": {
+			"get": {
+				"tags": [
+					"EQuotation"
+				],
+				"summary": "Pesquisa um registro único de ordem de compra para cotar",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Logix",
+							"available": true,
+							"minimalVersion": "12.1.28"
+						}
+					]
+				},
+				"operationId": "getQuotationId",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Registro encontrado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/EQuotation/V1/1_000/jsonschema/schemas/EQuotation_1_000.json#/definitions/EQuotationInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a consulta de uma ordem de compra para cotar",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Não autorizado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}					
+				}
+			},
+			"put": {
+				"tags": [
+					"EQuotation"
+				],
+				"summary": "Modifica um registro de cotação disponível para cotação",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Logix",
+							"available": true,
+							"minimalVersion": "12.1.28"
+						}
+					]
+				},
+				"operationId": "putEQuotationId",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/AcceptLanguage"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"requestBody": {
+					"description": "Cotação de Compra a ser alterada",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/EQuotation/V1/1_000/jsonschema/schemas/EQuotation_1_000.json#/definitions/EQuotationInfo"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Registro alterado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/EQuotation/V1/1_000/jsonschema/schemas/EQuotation_1_000.json#/definitions/EQuotationInfo"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao processar a alteração de cotação de compra!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Não autorizado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"EQuotation"
+				],
+				"summary": "Exclui um registro de cotação disponível para cotação",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Logix",
+							"available": false
+						}
+					]
+				},
+				"operationId": "deleteQuotationId",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/InternalId"
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Exclusão realizada com sucesso!"
+					},
+					"400": {
+						"description": "Erro ao processar a exclusão de cotação de compra.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Registro não encontrado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Não autorizado!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}	
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"InternalId": {
+				"name": "InternalId",
+				"in": "path",
+				"description": "Identificador único",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "CompanyId|CustomerVendor|Document|TypeDocument|ListNumber",
+						"required": true,
+						"type": "string",
+						"note": "Informações correspondente a tabela sup_ecotacao, para pesquisa de registro único separado por pipe",
+						"example": "01|012345|0123|1|0123456|1234"
+					}
+				]
+			},
+			"CompanyId": {
+				"name": "CompanyId",
+				"in": "query",
+				"description": "Código da Empresa",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.empresa",
+						"required": false,
+						"type": "string",
+						"note": "Código da empresa do cliente",
+						"example": "01"
+					}
+				]
+			},
+			"CustomerVendor": {
+				"name": "CustomerVendor",
+				"in": "query",
+				"description": "Código do Fornecedor",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.fornecedor",
+						"required": false,
+						"type": "string",
+						"note": "Código do fornecedor que irá realizar a cotação",
+						"example": "012345678912345"
+					}
+				]
+			},
+			"Document": {
+				"name": "Document",
+				"in": "query",
+				"description": "Código do Documento",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.documento",
+						"required": false,
+						"type": "integer",
+						"note": "Código da ordem ou pedido de compra do cliente",
+						"example": "123456789"
+					}
+				]
+			},
+			"TypeDocument": {
+				"name": "TypeDocument",
+				"in": "query",
+				"description": "Tipo do Documento",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.tipo",
+						"required": false,
+						"type": "integer",
+						"note": "Indicador para informar se é ordem ou pedido de compra: 1= ordem de compra, 2= pedido de compra",
+						"example": "1"
+					}
+				]
+			},
+			"ListNumber": {
+				"name": "ListNumber",
+				"in": "query",
+				"description": "Numero da Lista",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.num_lista",
+						"required": false,
+						"type": "integer",
+						"note": "Número da lista cujo terá as ordens de compras atreladas a este número.",
+						"example": "1234"
+					}
+				]
+			},	
+			"ItemCode": {
+				"name": "ItemCode",
+				"in": "query",
+				"description": "Código do Item",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.item",
+						"required": false,
+						"type": "string",
+						"note": "Código do item",
+						"example": "012345678912345"
+					}
+				]
+			},
+			"LimitDate": {
+				"name": "LimitDate",
+				"in": "query",
+				"description": "Data limite para Cotação",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.data_limite_proposta",
+						"required": false,
+						"type": "date",
+						"note": "Campo com a data limite para o fornecedor realizar a proposta.",
+						"example": "01/02/2020"
+					}
+				]
+			},
+			"Situation": {
+				"name": "Situation",
+				"in": "query",
+				"description": "Situação da Coleta de Preço",
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": [
+					{
+						"product": "Logix",
+						"field": "sup_ecotacao.situacao_cotacao",
+						"required": false,
+						"type": "string",
+						"note": "Situação da Coleta de preço: 1= Enviada para o Fornecedor, 2= Cotada pelo Fornecedor, 3= Declinada pelo Fornecedor, 4= Designada no ERP, 5= Cancelada no ERP",
+						"example": "1"
+					}
+				]
+			}			
+		}
+	}
+}

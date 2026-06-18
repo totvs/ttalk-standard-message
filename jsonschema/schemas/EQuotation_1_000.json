@@ -1,0 +1,229 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/EQuotation/V1/1_000/jsonschema/schemas/EQuotation_1_000.json#",
+	"info": {
+		"description": "Mensagem padronizada para o portal E-Cotação",
+		"version": "1.000",
+		"title": "E-Quotation",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "E-Quotation",
+				"description": "Mensagem responsável por manipular os dados do sistema E-Cotação",
+				"segment": "BackOffice"
+			},
+			"productInformation": [
+				{
+					"product": "logix",
+					"contact": "SUPPLY.ML.MAN.SUP_L@totvs.com.br",
+					"description": "",
+					"adapter": "equotation.4gl"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "",
+				"businessContentType": {
+					"$ref": "",
+					"type": ""
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedEQuotation": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"$ref": "#/definitions/EQuotation"
+				}
+			]
+		},
+		"EQuotation": {
+			"type": "object",
+			"properties": {
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/EQuotationInfo"
+					}
+				}
+			}
+		},		
+		"EQuotationInfo": {
+			"type": "object",
+			"properties": {
+				"InternalId": {
+					"description":"InternalId da mensagem",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "CompanyId|CustomerVendor|Document|TypeDocument|ListNumber",
+                            "required": true,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Informações correspondente a tabela sup_ecotacao, para pesquisa de registro único separado por pipe",
+							"example": "01|012345|0123|1|1234"
+                        }
+                    ]							
+				},			
+				"CompanyId": {
+					"description":"Código da Empresa",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.empresa",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código da empresa do cliente",
+							"example": "01"
+                        }
+                    ]
+				},
+				"CustomerVendor": {
+					"description":"Código do Fornecedor",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.fornecedor",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código do fornecedor que irá realizar a cotação",
+							"example": "012345678912345"
+                        }
+                    ]					
+				},
+				"Document": {
+					"description":"Código do documento",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.documento",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+                            "canUpdate": false,
+                            "note": "Código da ordem ou pedido de compra do cliente",
+							"example": "123456789"
+                        }
+                    ]					
+				},
+				"TypeDocument": {
+					"description":"Tipo do documento",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.tipo",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+							"canUpdate": false,
+                            "note": "Indicador para informar se é ordem ou pedido de compra: 1= ordem de compra, 2= pedido de compra",
+							"example": "1"
+                        }
+                    ]					
+				},				
+				"ListNumber": {
+					"description":"Numero da Lista",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.num_lista",
+                            "required": false,
+                            "type": "integer",
+                            "available": true,
+							"canUpdate": false,
+                            "note": "Número da lista cujo terá as ordens de compras atreladas a este número",
+							"example": "1234"
+                        }
+                    ]					
+				},
+				"ItemCode": {
+					"description":"Código do Item",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.item",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+							"canUpdate": false,
+                            "note": "Código do item",
+							"example": "012345678912345"
+                        }
+                    ]					
+				},				
+				"Situation": {
+					"description":"Situação da Coleta de preço",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.situacao_cotacao",
+                            "required": false,
+                            "type": "string",
+                            "available": true,
+							"canUpdate": true,
+                            "note": "Situação da Coleta de preço: 1= Enviada para o Fornecedor, 2= Cotada pelo Fornecedor, 3= Declinada pelo Fornecedor, 4= Designada no ERP, 5= Cancelada no ERP",
+							"example": "1"
+                        }
+                    ]					
+				},
+				"IssuanceDate": {
+					"description":"Data de emissão da coleta",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.data_emissao_coleta",
+                            "required": false,
+                            "type": "date",
+                            "available": true,
+							"canUpdate": false,
+                            "note": "Campo com a data que foi emitido a coleta para o fornecedor.",
+							"example": "01/01/2020"
+                        }
+                    ]						
+				},
+				"LimitDate": {
+					"description":"Data limite para cotação",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.data_limite_proposta",
+                            "required": false,
+                            "type": "date",
+                            "available": true,
+							"canUpdate": false,
+                            "note": "Campo com a data limite para o fornecedor realizar a proposta.",
+							"example": "01/02/2020"
+                        }
+                    ]					
+				},
+				"ReturnDate": {
+					"description":"Data de retorno da cotação enviada pelo fornecedor",
+                    "x-totvs": [
+                        {
+                            "product": "Logix",
+                            "field": "sup_ecotacao.data_retorno_fornec",
+                            "required": false,
+                            "type": "date",
+                            "available": true,
+							"canUpdate": false,
+                            "note": "Campo com o registro data em que o fornecedor enviou a proposta para o Cliente.",
+							"example": "15/01/2020"
+                        }
+                    ]					
+				}
+			}
+		}		
+	}
+}
