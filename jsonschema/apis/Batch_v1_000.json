@@ -1,0 +1,508 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API de lotes de guias do segmento HealthCare para produtos TOTVS",
+      "url": "http://{serverUrl}:{serverHttpPort}/api/healthcare/v1",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "4202"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API de lotes de guias do segmento HealthCare para produtos TOTVS",
+    "version": "1.000",
+    "title": "Batches Authorization",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "Batches Authorization",
+        "description": "Batches Authorization",
+        "segment": "HealthCare"
+      },
+      "productInformation": [
+        {
+          "product": "hat",
+          "contact": "hat@totvs.com.br",
+          "description": "Lotes de guias"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/batchesAuthorization": {
+      "get": {
+        "tags": [
+          "batches"
+        ],
+        "summary": "Retorna informações dos lotes de guias",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            }
+          ]
+        },
+        "description": "Retorna um lote de lotes de guia de acordo com os parametros enviados. É possivel filtrar o resultado através das propriedades: status, batchDate*, authType, batchNumber, healthProviderId. Onde batchDate é filtrado com os parâmetros dateFrom e dateTo para usar um período de datas.",
+        "operationId": "getBatches",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/HealthProviderId"
+          },
+          {
+            "$ref": "#/components/parameters/CodeSusep"
+          },
+          {
+            "$ref": "#/components/parameters/DateFrom"
+          },
+          {
+            "$ref": "#/components/parameters/DateTo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/PagedBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nao foram encontrados dados de lotes para os parametros fornecidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "batches"
+        ],
+        "summary": "Inclusão de um lote de guias",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            }
+          ]
+        },
+        "description": "Realiza a inclusão de um lote de guias conforme body da requisição.",
+        "operationId": "postBatch",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/BatchBody"
+              }
+            }
+          },
+          "description": "Informações do lote",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/Batch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batchesAuthorization/{batchNumber}": {
+      "get": {
+        "tags": [
+          "batches"
+        ],
+        "summary": "Retorna informações do lote",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            }
+          ]
+        },
+        "description": "Retorna um lote de guias de acordo com o número informado.",
+        "operationId": "getBatch",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/HealthProviderId"
+          },
+          {
+            "$ref": "#/components/parameters/CodeSusep"
+          },
+          {
+            "$ref": "#/components/parameters/BatchNumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/Batch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batchesAuthorization/{batchNumber}/authorizations": {
+      "get": {
+        "tags": [
+          "batches"
+        ],
+        "summary": "Retorna as guias do lote",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            }
+          ]
+        },
+        "description": "Retorna as guias de um lote.",
+        "operationId": "autbatch",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Order"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Fields"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/BatchNumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/Authorization_1_100.json#/definitions/PagedAuthorizations"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batchesAuthorization/authorizations/{batchNumber}": {
+      "put": {
+        "tags": [
+          "batches"
+        ],
+        "summary": "Altera informações de um lote de guias",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "hat",
+              "avaliable": true
+            }
+          ]
+        },
+        "description": "Altera informações do lote de guias de acordo com o número informado. Onde a única propriedade que pode ser alterada é 'authorizations' junto com o parâmetro action para definir se as guias serão adiicionadas ao lote ou removidas dele.",
+        "operationId": "putBatch",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ExpiresAt"
+          },
+          {
+            "$ref": "#/components/parameters/Action"
+          },
+          {
+            "$ref": "#/components/parameters/BatchNumber"
+          }
+        ],
+        "requestBody": {
+          "description": "Lote a ser alterado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/BatchBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/Batch/V1/1_000/jsonschema/schemas/Batch_1_000.json#/definitions/Batch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro durante alteração do lote"
+          },
+          "404": {
+            "description": "Nao foram encontrados dados de lotes para os parametros fornecidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModelBase"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "ExpiresAt": {
+        "name": "Expires_at",
+        "in": "header",
+        "description": "Data e hora da expiração do token em segundos",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "HealthProviderId": {
+        "name": "healthProviderId",
+        "in": "query",
+        "required": true,
+        "description": "Código do prestador na operadora",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "DateFrom": {
+        "name": "dateFrom",
+        "in": "query",
+        "required": true,
+        "description": "Data (de) para filtrar lotes com data maior ou igual ao informado no parâmetro",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "DateTo": {
+        "name": "dateTo",
+        "in": "query",
+        "required": true,
+        "description": "Data (até) para filtrar lotes com data menor ou igual ao informado no parâmetro",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "CodeSusep": {
+        "name": "codeSusep",
+        "in": "query",
+        "required": true,
+        "description": "Código da operadora na ANS (Agência Nacional de Saúde)",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "BatchNumber": {
+        "name": "batchNumber",
+        "in": "path",
+        "required": true,
+        "description": "Número do lote no prestador",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Action": {
+        "name": "action",
+        "in": "query",
+        "required": true,
+        "description": "Ação do PUT - Valores aceitos: removeAuthorizations ou addAuthorizations",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
