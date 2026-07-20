@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ItemIntegrMePublic",
+  "description": "Schemas de dados para integração de itens e status com o Mercado Eletrônico (ME)",
+  "type": "object",
+  "definitions": {
+    "Item": {
+      "type": "object",
+      "properties": {
+        "itemCode": {
+          "type": "string",
+          "description": "Código do item no ERP Datasul",
+          "example": "ITEM-001"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição detalhada do item",
+          "example": "PARAFUSO SEXTAVADO AÇO INOX 1/2"
+        },
+        "unitOfMeasure": {
+          "type": "string",
+          "description": "Unidade de medida principal",
+          "example": "UN"
+        },
+        "nbmCode": {
+          "type": "string",
+          "description": "Código NCM/NBM fiscal do item",
+          "example": "73181500"
+        },
+        "itemOrigin": {
+          "type": "integer",
+          "description": "Origem do material (0-Nacional, 1-Estrangeira, etc.)",
+          "example": 0
+        },
+        "controlType": {
+          "type": "integer",
+          "description": "Tipo de controle de estoque (1-Físico, 2-Total, 3-Consignado)",
+          "example": 1
+        },
+        "estimatedPrice": {
+          "type": "number",
+          "format": "double",
+          "description": "Preço unitário estimado do item",
+          "example": 15.50
+        },
+        "businessOrganization": {
+          "type": "string",
+          "description": "Código do estabelecimento/empresa vinculada",
+          "example": "101"
+        },
+        "_expandables": {
+          "type": "array",
+          "description": "Propriedades expansíveis injetadas no objeto",
+          "items": {
+            "type": "string"
+          },
+          "example": ["narrative", "family"]
+        }
+      },
+      "required": ["itemCode", "description", "unitOfMeasure"]
+    },
+    "ItemStatus": {
+      "type": "object",
+      "properties": {
+        "itemCode": {
+          "type": "string",
+          "description": "Código do item a ser atualizado",
+          "example": "ITEM-001"
+        },
+        "integrationStatus": {
+          "type": "string",
+          "enum": ["PENDING", "SUCCESS", "ERROR"],
+          "description": "Status do processamento de integração",
+          "example": "SUCCESS"
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "Mensagem detalhada em caso de erro na integração",
+          "example": ""
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data e hora do processamento do status",
+          "example": "2026-07-20T10:18:40Z"
+        }
+      },
+      "required": ["itemCode", "integrationStatus"]
+    },
+    "ItemResponseList": {
+      "type": "object",
+      "properties": {
+        "payload": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Item"
+          }
+        },
+        "hasNext": {
+          "type": "boolean",
+          "description": "Indica se existem mais registros nas próximas páginas",
+          "example": false
+        }
+      }
+    },
+    "ItemResponseSingle": {
+      "type": "object",
+      "properties": {
+        "payload": {
+          "$ref": "#/definitions/Item"
+        }
+      }
+    },
+    "FrameworkRowErrors": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Código identificador do erro",
+          "example": "ERR-ME-001"
+        },
+        "message": {
+          "type": "string",
+          "description": "Descrição resumida da ocorrência",
+          "example": "Item informado não foi localizado no Datasul."
+        },
+        "detailedMessage": {
+          "type": "string",
+          "description": "Detalhes adicionais para resolução do erro",
+          "example": "Verifique se a chave informada existe na tabela item."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ItemIntegrMePublic",
+    "description": "API REST para consulta de itens e atualização de status de integração do Mercado Eletrônico (ME) com ERP Datasul.",
+    "version": "1.000",
+    "x-totvs": {
+      "message": "ItemIntegrMePublic",
+      "productSegment": "ERP",
+      "contact": "mcc.support@totvs.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.totvs.com.br/public/ccp/v1",
+      "description": "Servidor de Produção API Gateway TOTVS"
+    }
+  ],
+  "paths": {
+    "/me": {
+      "get": {
+        "summary": "Consulta/Listagem paginada de itens para o Mercado Eletrônico",
+        "description": "Retorna uma lista paginada de itens cadastrados no ERP Datasul para integração com a plataforma ME.",
+        "operationId": "getItems",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página solicitada",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Quantidade de registros por página",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "searchKeywords",
+            "in": "query",
+            "description": "Filtro por palavra-chave no código ou descrição do item",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de itens retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/ItemResponseList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros de requisição inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/FrameworkRowErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno de execução na procedure Progress ABL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/FrameworkRowErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualização ou Upsert de Status de Integração",
+        "description": "Persiste ou atualiza o status de integração do item informado pelo Mercado Eletrônico no ERP Datasul.",
+        "operationId": "updateItemStatus",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/ItemStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status do item atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/ItemResponseSingle"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Payload de integração inválido ou erro de validação de negócio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/FrameworkRowErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao persistir dados na tabela do Datasul",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/FrameworkRowErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/{itemCode}": {
+      "get": {
+        "summary": "Busca detalhada de um item pelo código",
+        "description": "Retorna o objeto completo do item filtrado pelo seu código único.",
+        "operationId": "getItemByCode",
+        "parameters": [
+          {
+            "name": "itemCode",
+            "in": "path",
+            "description": "Código único do item cadastrado no ERP Datasul",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item localizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/ItemResponseSingle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/ItemIntegrMePublic_1_000.json#/definitions/FrameworkRowErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
