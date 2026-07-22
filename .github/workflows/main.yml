@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 14
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+      - name: Make scripts executable
+        run: chmod +x travis-renameRef.sh && chmod +x travis-refreshApiReferenceSearchIndex.sh
+      - name: Install dependencies
+        run: npm install
+      - name: Configure git
+        run: |
+          git config pull.rebase false
+          git remote set-branches --add origin ${{ github.head_ref || github.ref_name }}          
+          git fetch
+          git status
+      - name: Check for changed files (optional)
+        id: check-changed-files
+        run: |
+          CHANGED_FILES=$(git diff --name-only ${{ github.base }}..HEAD)
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "No files changed. Skipping some steps."
+            exit 0
+          fi
+        shell: bash
+      - name: Set environment variables based on branch (optional)
+        id: set-env-vars
+        run: |
+          if [[ ${{ github.ref }} == "master" ]]; then
+            ENABLE_RUN_ALL=true
+          fi
+        shell: bash
+        if: steps.check-changed-files.outputs.changed_files # Only run if files changed
+      - name: Run background process (optional)
+        run: |
+          while sleep 9m; do
+            echo "====[ $SECONDS seconds still running ]===="
+          done &
+          bg_pid=$!
+      - name: Run tests
+        run: npm test
+      - name: Kill background process (optional)
+        if: always()
+        run: kill $bg_pid
+      - name: Refresh API reference index (master only)
+        run: ./travis-refreshApiReferenceSearchIndex.sh
+        if: ${{ github.ref }} == 'master'
+      - name: Post success comment (optional)
+        run: node validator/master/postSuccessComment.js
+      - name: Post failure comment (optional)
+        run: node validator/master/postDetailsComment.js
+        if: failure()
+      - name: Rename branch ref (master only)
+        run: ./travis-renameRef.sh
+        if: ${{ github.ref }} == 'master'
+
+env:  
+    SEARCHINDEXHOST: https://api.totvs.com.br
+    SECRET_VAR: ${{ secrets.SECRET_JOB }}
+    TRAVIS_JOB_ID: ${{ github.job }}
+    TRAVIS_PULL_REQUEST: ${{ github.event.pull_request.number }}
+    TRAVIS_BUILD_ID: ${{ github.run_id }}
+    TRAVIS_BUILD_WEB_URL: ${{ github.action_url }}

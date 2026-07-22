@@ -1,0 +1,276 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para retornar o líder direto dos empregados - REST/JSON",
+			"url": "{{host}}/api/rh/v1",
+			"variables": {
+				"host": {
+					"default": "localhost"
+				},
+				"serverHttpPort": {
+					"default": "8060"
+				}
+			}
+		}
+	],
+	"info": {
+		"description": "API para retornar líder direto dos empregados.",
+		"version": "1.000",
+		"title": "Líder Direto dos Empregados",
+		"contact": {
+			"name": "T-Talk",
+			"url": "https://api.totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "Líder Direto dos Empregados",
+				"description": "Retorna o líder direto dos empregados",
+				"segment": "Recursos Humanos"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "marcia.moura@totvs.com.br",
+					"description": "API employeesManagerDataContent que retorna uma lista contendo o líder direto dos empregados.",
+					"adapter": "GPEA010APIB",
+					"module": "SIGAGPE"
+				}
+			]
+		}
+	},
+	"paths": {
+		"/employeesManagerDataContent": {
+			"get": {
+				"tags": [
+					"EmployeesManagerDataContent"
+				],
+				"summary": "Retorna o líder direto dos empregados",
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true,
+							"note": "Este verbo está disponível e utiliza os parâmetros de filtro da API.",
+							"minimalVersion": "12.1.2210"
+						}
+					]
+				},
+				"description": "Retornar a lista dos empregados com as informações do seu respectivo líder direto.",
+				"operationId": "getEmployeesManagerDataContent",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					},
+					{
+						"$ref": "#/components/parameters/tenantId"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Page"
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/PageSize"
+					},
+					{
+						"$ref": "#/components/parameters/companyId"
+					},
+					{
+						"$ref": "#/components/parameters/branchId"
+					},
+					{
+						"$ref": "#/components/parameters/employeeCode"
+					},
+					{
+						"$ref": "#/components/parameters/employeeCostCenterCode"
+					},
+					{
+						"$ref": "#/components/parameters/visionCode"
+					},
+					{
+						"$ref": "#/components/parameters/managerChangeDate"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/EmployeesManagerDataContent_1_000.json#/definitions/PagedEmployeesManagerDataContent"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro no momento da listagem dos registros. Exemplos de erro: companyId/branchId obrigatórios ou formato de managerChangeDate inválido.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Nenhum registro localizado.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Ocorreu uma falha inesperada no retorno da informação.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"tenantId": {
+				"name": "tenantId",
+				"in": "header",
+				"description": "Código do grupo de empresas,filial onde a thread será processada.",
+				"example": "T1",
+				"required": false,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"required": false,
+							"note": "Identificador do grupo de empresa para processamento da thread.",
+							"available": true
+						}
+					]
+				}
+			},
+			"companyId": {
+				"name": "companyId",
+				"in": "query",
+				"description": "Código do grupo de empresas para filtro.",
+				"example": "01",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"required": true,
+							"note": "Código da Empresa, obrigatório para Protheus.",
+							"available": true
+						}
+					]
+				}
+			},
+			"branchId": {
+				"name": "branchId",
+				"in": "query",
+				"description": "Código da filial.",
+				"example": "0101",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"required": true,
+							"note": "Código da Filial, obrigatório para Protheus.",
+							"available": true
+						}
+					]
+				}
+			},
+			"employeeCode": {
+				"name": "employeeCode",
+				"in": "query",
+				"description": "Código da matrícula do empregado para filtro.",
+				"example": "000100",
+				"required": false,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true
+						}
+					]
+				}
+			},
+			"employeeCostCenterCode": {
+				"name": "employeeCostCenterCode",
+				"in": "query",
+				"description": "Código do centro de custo do(s) empregado(s) para filtro.",
+				"example": "1.01.01",
+				"required": false,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true
+						}
+					]
+				}
+			},
+			"visionCode": {
+				"name": "visionCode",
+				"in": "query",
+				"description": "Código da visão contendo a estrutura hierárquica, utilizada quando o parâmetro M_OBCSGFG for 1 ou 2.",
+				"example": "00001",
+				"required": false,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true
+						}
+					]
+				}
+			},
+			"managerChangeDate": {
+				"name": "managerChangeDate",
+				"in": "query",
+				"description": "Data da pesquisa da alteração do responsável pelo departamento. Formato esperado AAAA-MM-DD.",
+				"example": "2024-12-01",
+				"required": false,
+				"schema": {
+					"type": "string"
+				},
+				"x-totvs": {
+					"productInformation": [
+						{
+							"product": "Protheus",
+							"available": true
+						}
+					]
+				}
+			}
+		},
+		"schemas": {}
+	}
+}

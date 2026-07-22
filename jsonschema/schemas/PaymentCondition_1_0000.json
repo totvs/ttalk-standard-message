@@ -1,0 +1,818 @@
+
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/refs/heads/master/jsonschema/schemas/PaymentCondition_1_0000.json#",
+	"info": {
+		"description": "",
+		"version": "1.0000",
+		"title": "PaymentCondition",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "PaymentCondition",
+				"description": "Mensagem para integração da Condição de Pagamento",
+				"segment": "Backoffice"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeCP.Squad.ComprasFaturamento",
+					"note": "Cadastro de Condição de Pagamento"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/PaymentConditionInfo",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContentType",
+					"type": "object"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PagedPaymentConditions": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/PaymentConditionInfo"
+							}
+						}
+					}
+				}
+			]
+		},
+		"PaymentConditionInfo": {
+			"type": "object",
+			"description": "Lista de Condição de Pagamento",
+			"properties": {
+				"InternalId": {
+					"description": "InternalId de Integração para Produtos formado pelos campos CompanyId | Code",
+					"type": "string",
+					"required": true,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"note": "O InternalID da condição de pagamento é formada pelos campos CompanyId | Code",
+							"field": "TCPG.CODCOLIGADA|TCPG.CODCPG",
+							"available": true,
+							"required": true,
+							"type": "string"
+						}
+					]
+				},
+				"CompanyId": {
+					"description": "Código da empresa/coligada",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": true,
+							"note": "Código da Coligada",
+							"field": "TCPG.CODCOLIGADA",
+							"type": "integer"
+						}
+					]
+				},
+				"Code": {
+					"description": "Código da condição de pagamento.",
+					"type": "string",
+					"maxLength": 5,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": true,
+							"note": "Código da condição de pagamento",
+							"field": "TCPG.CODCPG",
+							"type": "string"
+						}
+					]
+				},
+				"Description": {
+					"description": "Descrição da condição de pagamento.",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Descrição",
+							"field": "TCPG.NOME",
+							"length": "100",
+							"type": "string"
+						}
+					]
+				},
+				"currencyRoundingInstallment": {
+					"description": "Arredondamento para primeira ou última parcela ('P' - Primeira, 'U' - Última)",
+					"type": "string",
+					"maxLength": 1,
+					"enum": ["P","U"],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Aplicar arredondamento na parcela",
+							"field": "TCPG.ARREDPRIMOUULT",
+							"length": "1",
+							"type": "string"
+						}
+					]
+				},
+				"currencyRounding": {
+					"description": "Arredondamento de moeda ('N' - Não arredonda, 'D' - Dezena, 'C' -  Centavos)",
+					"type": "string",
+					"maxLength": 1,
+					"enum": [
+						"N", "D", "C"
+					],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Arredondamento de Dezena ou Centavos",
+							"field": "TCPG.ARREDDEZOUCENT",
+							"length": "1",
+							"type": "string"
+						}
+					]
+				},
+				"Deflation": {
+					"description": "Deflator",
+					"type": "number",
+					"maxLength": 1,
+					"enum": [
+						"N", "D", "C"
+					],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Deflator",
+							"field": "TCPG.DEFLATOR",
+							"type": "number"
+						}
+					]
+				},
+				"ApplicationFormula": {
+					"description": "Aplica Fórmula - Fixo ('T')",
+					"type": "string",
+					"maxLength": 1,
+					"enum": [
+						"T"
+					],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Aplica Fórmula - Fixo ('T')",
+							"field": "TCPG.APLICACAOFRM",
+							"length": "1",
+							"type": "string"
+						}
+					]
+				},
+				"PriceOneFormula": {
+					"description": "Código da Fórmula do Preço 1",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Código da Fórmula do Preço 1",
+							"field": "TCPG.CODFRMPRECO1",
+							"length": "8",
+							"type": "string"
+						}
+					]
+				},
+				"PriceTwoFormula": {
+					"description": "Código da Fórmula do Preço 2",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Código da Fórmula do Preço 2",
+							"field": "TCPG.CODFRMPRECO2",
+							"length": "8",
+							"type": "string"
+						}
+					]
+				},					
+				"InterestRate": {
+					"description": "Taxa de Juros",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Taxa de Juros",
+							"field": "TCPG.TAXAJUROS",
+							"type": "number"
+						}
+					]
+				},
+				"CompoundInterest": {
+					"description": "Usa Juros Composto",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Usa Juros Composto",
+							"field": "TCPG.JUROSCOMPOSTO",
+							"type": "boolean"
+						}
+					]
+				},
+				"CommercialAutomationAvailable": {
+					"description": "Plano de Pagamento",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Usa plano de Pagamento (0 - Não usa; 1 - Usa)",
+							"field": "TCPG.PLANOPAGTO",
+							"type": "integer"
+						}
+					]
+				},				
+				"MonthlyCapitalization": {
+					"description": "Capitalização Mensal",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Capitalização Mensal",
+							"field": "TCPG.CAPITALIZMENSAL",
+							"type": "number"
+						}
+					]
+				},
+				"PurchasePlan": {
+					"description": "Tipos de planos de pagamento de compra",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Plano de condições de Pagto de Compra",
+							"field": "TCPG.PLANOCOMPRA",
+							"type": "boolean"
+						}
+					]
+				},			
+				"SalesPlan": {
+					"description": "Tipos de planos",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Plano de condições de Pagto de Venda",
+							"field": "TCPG.PLANOVENDA",
+							"type": "boolean"
+						}
+					]
+				},
+				"WeekDaysFixed": {
+					"description": "Carência por dias da semana / 1 - Segunda / 2 - Terça / 4 - Quarta / 8 - Quinta / 16 - Sexta / 32 - Sábado / 64 - Domingo",
+					"type": "integer",
+					"enum": [
+						1,
+						2,
+						4,
+						8,
+						16,
+						32,
+						64
+					],
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Dias de vencimento na semana",
+							"field": "TCPG.DIASVENCSEMANA",
+							"type": "boolean"
+						}
+					]
+				},				
+				"FirstInstallmentFormula": {
+					"description": "Fórmula do Valor da Primeira Parcela",
+					"type": "string",
+					"maxLength": 8,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Fórmula do Valor da Primeira Parcela",
+							"field": "TCPG.CODFRMPRIMPARCELA",
+							"length": "8",
+							"type": "string"
+						}
+					]
+				},					
+				"Inactive": {
+					"description": "Inativo",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Inativo",
+							"field": "TCPG.INATIVO",
+							"type": "integer"
+						}
+					]
+				},
+				"DisregardsLimCred": {
+					"description": "Desconsiderar limite de crédito do cliente fornecedor",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Desconsiderar limite de crédito do cliente fornecedor",
+							"field": "TCPG.DESCONSIDERALIMCRED",
+							"type": "boolean"
+						}
+					]
+				},
+				"PaymentAmountOne": {
+					"description": "Composição das Parcelas - Valor do Pagamento - Parcela 1",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Valor do Pagamento 1",
+							"field": "TCPG.VALORPAGAMENTO1",
+							"type": "number"
+						}
+					]
+				},
+				"NumberOfTimesOne": {
+					"description": "Composição das Parcelas - Número de Vezes - Parcela 1",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Número de Vezes 1",
+							"field": "TCPG.QUANTASVEZES1",
+							"type": "integer"
+						}
+					]
+				},
+				"intervalPeriodInDaysOne": {
+					"description": "Composição das Parcelas - Período em Dias - Parcela 1",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Período em Dias 1",
+							"field": "TCPG.PERIODOEMDIAS1",
+							"type": "integer"
+						}
+					]
+				},
+				"PaymentTermInDaysOne": {
+					"description": "Composição das Parcelas - Prazo - Parcela 1",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Prazo 1",
+							"field": "TCPG.PRAZO1",
+							"type": "integer"
+						}
+					]
+				},
+				"DayCountTypeOne": {
+					"description": "Composição das Parcelas - Contagem de Dias - Parcela 1",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Contagem de Dias 1",
+							"field": "TCPG.CONTAGEMDIAS1",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"typeOfCalculationForInstallmentTermOne": {
+					"description": "Composição das Parcelas - Tipo - Parcela 1",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Tipo 1",
+							"field": "TCPG.TIPO1",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"PaymentAmountTwo": {
+					"description": "Composição das Parcelas - Valor do Pagamento - Parcela 2",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Valor do Pagamento 2",
+							"field": "TCPG.VALORPAGAMENTO2",
+							"type": "number"
+						}
+					]
+				},
+				"NumberOfTimesTwo": {
+					"description": "Composição das Parcelas - Número de Vezes - Parcela 2",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Número de Vezes 2",
+							"field": "TCPG.QUANTASVEZES2",
+							"type": "integer"
+						}
+					]
+				},
+				"intervalPeriodInDaysTwo": {
+					"description": "Composição das Parcelas - Período em Dias - Parcela 2",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Período em Dias 2",
+							"field": "TCPG.PERIODOEMDIAS2",
+							"type": "integer"
+						}
+					]
+				},
+				"PaymentTermInDaysTwo": {
+					"description": "Composição das Parcelas - Prazo - Parcela 2",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Prazo 2",
+							"field": "TCPG.PRAZO2",
+							"type": "integer"
+						}
+					]
+				},
+				"DayCountTypeTwo": {
+					"description": "Composição das Parcelas - Contagem de Dias - Parcela 2",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Contagem de Dias 2",
+							"field": "TCPG.CONTAGEMDIAS2",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"typeOfCalculationForInstallmentTermTwo": {
+					"description": "Composição das Parcelas - Tipo - Parcela 2",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Tipo 2",
+							"field": "TCPG.TIPO2",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"PaymentAmountThree": {
+					"description": "Composição das Parcelas - Valor do Pagamento - Parcela 3",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Valor do Pagamento 3",
+							"field": "TCPG.VALORPAGAMENTO3",
+							"type": "number"
+						}
+					]
+				},
+				"NumberOfTimesThree": {
+					"description": "Composição das Parcelas - Número de Vezes - Parcela 3",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Número de Vezes 3",
+							"field": "TCPG.QUANTASVEZES3",
+							"type": "integer"
+						}
+					]
+				},
+				"intervalPeriodInDaysThree": {
+					"description": "Composição das Parcelas - Período em Dias - Parcela 3",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Período em Dias 3",
+							"field": "TCPG.PERIODOEMDIAS3",
+							"type": "integer"
+						}
+					]
+				},
+				"PaymentTermInDaysThree": {
+					"description": "Composição das Parcelas - Prazo - Parcela 3",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Prazo 3",
+							"field": "TCPG.PRAZO3",
+							"type": "integer"
+						}
+					]
+				},
+				"DayCountTypeThree": {
+					"description": "Composição das Parcelas - Contagem de Dias - Parcela 3",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Contagem de Dias 3",
+							"field": "TCPG.CONTAGEMDIAS3",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"typeOfCalculationForInstallmentTermThree": {
+					"description": "Composição das Parcelas - Tipo - Parcela 3",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Tipo 3",
+							"field": "TCPG.TIPO3",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"PaymentAmountFour": {
+					"description": "Composição das Parcelas - Valor do Pagamento - Parcela 4",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Valor do Pagamento 4",
+							"field": "TCPG.VALORPAGAMENTO4",
+							"type": "number"
+						}
+					]
+				},
+				"NumberOfTimesFour": {
+					"description": "Composição das Parcelas - Número de Vezes - Parcela 4",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Número de Vezes 4",
+							"field": "TCPG.QUANTASVEZES4",
+							"type": "integer"
+						}
+					]
+				},
+				"intervalPeriodInDaysFour": {
+					"description": "Composição das Parcelas - Período em Dias - Parcela 4",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Período em Dias 4",
+							"field": "TCPG.PERIODOEMDIAS4",
+							"type": "integer"
+						}
+					]
+				},
+				"PaymentTermInDaysFour": {
+					"description": "Composição das Parcelas - Prazo - Parcela 4",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Prazo 4",
+							"field": "TCPG.PRAZO4",
+							"type": "integer"
+						}
+					]
+				},
+				"DayCountTypeFour": {
+					"description": "Composição das Parcelas - Contagem de Dias - Parcela 4",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Contagem de Dias 4",
+							"field": "TCPG.CONTAGEMDIAS4",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"PaymentAmountFive": {
+					"description": "Composição das Parcelas - Valor do Pagamento - Parcela 5",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Valor do Pagamento 5",
+							"field": "TCPG.VALORPAGAMENTO5",
+							"type": "number"
+						}
+					]
+				},
+				"NumberOfTimesFive": {
+					"description": "Composição das Parcelas - Número de Vezes - Parcela 5",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Número de Vezes 5",
+							"field": "TCPG.QUANTASVEZES5",
+							"type": "integer"
+						}
+					]
+				},
+				"intervalPeriodInDaysFive": {
+					"description": "Composição das Parcelas - Período em Dias - Parcela 5",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Período em Dias 5",
+							"field": "TCPG.PERIODOEMDIAS5",
+							"type": "integer"
+						}
+					]
+				},
+				"PaymentTermInDaysFive": {
+					"description": "Composição das Parcelas - Prazo - Parcela 5",
+					"type": "integer",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Prazo 5",
+							"field": "TCPG.PRAZO5",
+							"type": "integer"
+						}
+					]
+				},
+				"DayCountTypeFive": {
+					"description": "Composição das Parcelas - Contagem de Dias - Parcela 5",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Contagem de Dias 5",
+							"field": "TCPG.CONTAGEMDIAS5",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+				"typeOfCalculationForInstallmentTermFive": {
+					"description": "Composição das Parcelas - Tipo - Parcela 5",
+					"type": "string",
+					"maxLength": 1,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"available": true,
+							"required": false,
+							"note": "Tipo 5",
+							"field": "TCPG.TIPO5",
+							"type": "string",
+							"maxLength": 1,
+						}
+					]
+				},
+			}
+		},
+		"ReturnContentType": {
+			"type": "object",
+			"properties": {
+				"ListOfInternalId": {
+					"type": "array",
+					"items": {
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/types/ListOfInternalId_1_000.json#/definitions/ListOfInternalIdType",
+						"type": "object"
+					}
+				}
+			}
+		}
+	}
+}

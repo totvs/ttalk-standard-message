@@ -1,0 +1,2061 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/AccountingEntry_2_004.json#",
+	"info": {
+		"description": "",
+		"version": "3.000",
+		"title": "AccountingEntry",
+		"contact": {},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "AccountingEntry",
+				"description": "Lançamento Contábil",
+				"segment": "BackOffice"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "tribecp.squad.ctbpat@totvs.com.br",
+					"note": "Lançamentos Contábeis"
+				}
+			],
+			"transactionDefinition": {
+				"subType": "event",
+				"businessContentType": {
+					"$ref": "#/definitions/AccountingEntryInfo",
+					"type": "object"
+				},
+				"returnContentType": {
+					"$ref": "#/definitions/ReturnContent",
+					"type": "object"
+				}
+			}
+		}
+	},
+	
+	"definitions": {
+			"PagedAccountingEntry":{
+			   "type":"object",
+			   "allOf":[
+				  {
+					 "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				  },
+				  {
+					 "type":"object",
+					 "properties":{
+						"items":{
+						   "type":"array",
+						   "items":{
+							  "$ref":"#/definitions/AccountingEntryInfo"
+						   }
+						}
+					 }
+				  }
+			   ]
+			},
+
+			"PagedBodyAccountingEntry":{
+				"type":"object",
+				"allOf":[
+				   {
+					  "$ref":"https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/Paging"
+				   },
+				   {
+					  "type":"object",
+					  "properties":{
+						 "items":{
+							"type":"array",
+							"items":{
+							   "$ref":"#/definitions/BodyPostInfo"
+							}
+						 }
+					  }
+				   }
+				]
+			 },
+
+		"AccountingEntryInfo": {
+			"type": "object",
+			"properties": {
+
+                "reversal": {
+					"description": "Identifica se a Partida está sendo incluida através de Estorno",
+					"type": "boolean",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "reversal",
+							"required": false,
+							"type": "bit",
+							"note": "Partida de Estorno",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"companyId": {
+					"description": "Empresa Geradora do Lançamento",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "CodColigada",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"entryId": {
+					"description": "O Id. do Lançamento será gerado pelo serviço",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "entryId",
+							"required": false,
+							"type": "integer",
+							"note": "Identificador do Lançamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"batchCode": {
+					"description": "Código do Lote em que o Lançamento está sendo incluido",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "batchCode",
+							"required": true,
+							"type": "integer",
+							"note": "Código do lote",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"description": {
+					"description": "Descrição do Lançamento",
+					"type": "string",
+					"maxLength": 250,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "description",
+							"required": true,
+							"type": "varchar",
+							"length": "250",
+							"note": "Descrição do lançamento",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+
+				"accountEntry": {
+					"type": "array",
+					"description": "Lançamentos Contábeis",
+					"items": {
+						"$ref": "#/definitions/ListOfAccountEntry",
+						"type": "object"
+					}
+				}
+
+			}
+		},
+	
+		"ListOfAccountEntry": {
+			"type": "object",
+			"properties": {
+
+				"entryNumberId": {
+					"description": "O Id. Partida será gerado pelo serviço de inclusão da Partida",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "entryNumberId",
+							"required": true,
+							"type": "integer",
+							"note": "Id. Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"branchId": {
+					"description": "Codigo Filial",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "branchId",
+							"required": true,
+							"type": "varchar",
+							"note": "Código da Filial",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"branchName": {
+					"description": "Nome Filial",
+					"type": "string",
+					"maxLength":"250",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "branchName",
+							"required": false,
+							"type": "varchar",
+							"note": "Nome da Filial",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"departmentCode": {
+					"description": "Código do Departamento",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "departmentCode",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Código do Departamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"departmentName": {
+					"description": "Descrição do Departamento",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "departmentName",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Descrição do Departamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"costCenterCode": {
+					"description": "Código do Centro de Custo",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "costCenterCode",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Código do Centro de Custo",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"document": {
+					"description": "Documento",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "document",
+							"required": false,
+							"type": "varchar",
+							"length": "32",
+							"note": "Documento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"date": {
+					"description": "Data da Contabilização",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "date",
+							"required": true,
+							"type": "datetime",
+							"note": "Data da Contabilização",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"dateInclusion": {
+					"description": "Data Inclusão da Partida",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "dateInclusion",
+							"required": false,
+							"type": "datetime",
+							"note": "Data Inclusão da Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"companyIdDebitAccount": {
+					"description": "Coligada da Conta a Débito",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdDebitAccount",
+							"required": false,
+							"type": "integer",
+							"note": "Coligada da Conta a Débito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+					
+				"debitAccount": {
+					"description": "Conta Débito",
+					"type": "string",
+					"maxLength":"250",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "debitAccount",
+							"required": false,
+							"type": "varchar",
+							"note": "Conta Débito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"debitDescription": {
+					"description": "Descrição Conta Débito",
+					"type": "string",
+					"maxLength":"250",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "debitDescription",
+							"required": false,
+							"type": "varchar",
+							"note": "Descrição Conta Débito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"companyIdCreditAccount": {
+					"description": "Código da Coligada da Conta Crédito",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdCreditAccount",
+							"required": false,
+							"type": "integer",
+							"note": "Código da Coligada da Conta Crédito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+		
+				"creditAccount": {
+					"description": "Conta Crédito",
+					"type": "string",
+					"maxLength":"250",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "creditAccount",
+							"required": false,
+							"type": "varchar",
+							"note": "Conta Crédito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"creditDescription": {
+					"description": "Descrição Conta Crédito",
+					"type": "string",
+					"maxLength":"250",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "creditDescription",
+							"required": false,
+							"type": "integer",
+							"note": "Descrição Conta Crédito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"companyIdAgainstEntry": {
+					"description": "Coligada da Conta de Contra Partida",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdAgainstEntry",
+							"required": false,
+							"type": "integer",
+							"note": "Coligada da Conta de Contra Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"accountAgainstEntry": {
+					"description": "Conta de Contra Partida",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountAgainstEntry",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Conta de Contra Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+			
+				"value": {
+					"description":"Valor da Partida",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value",
+							"required": false,
+							"type": "decimal",
+							"note": "Valor da Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+                "value2": {
+					"description": "Valor 2º Moeda",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value2",
+							"required": false,
+							"type": "decimal",
+							"note": "Valor 2º Moeda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+                "date2": {
+					"description": "Data de Cotação da 2º Moeda",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "date2",
+							"required": false,
+							"type": "datetime",
+							"note": "Data de Cotação da 2º Moeda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+                "historicCode": {
+					"description": "Código do Histórico",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "historicCode",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Código do Histórico",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"complement": {
+					"description": "Descrição do complemento de Histórico",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "complement",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Descrição do complemento de Histórico",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+                "integrateApplication": {
+					"description": "Identificador da aplicação que está gerando a Partida.",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "integrateApplication",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Identificador da aplicação que está gerando a Partida.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"generationType": {
+					"description": "Identificação da origem de sua geração",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "generationType",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Identificação da origem de sua geração",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"participantId": {
+					"description": "Id. do Participante (SPED Contábil)",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "participantId",
+							"required": false,
+							"type": "integer",
+							"note": "Id. do Participante (SPED Contábil)",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"user": {
+					"description":"Usuário",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "user",
+							"required": false,
+							"type": "varchar",
+							"length": "100",
+							"note": "Usuário",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"complementaryFields": {
+					"description": "Informações dos campos complementares",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "complementaryFields",
+							"required": false,
+							"type": "varchar",
+							"length": "100",
+							"note": "Informações dos campos complementares",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"batchCodeOrigin": {
+					"description":"Código do Lote de origem",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "lotCodeOrigin",
+							"required": false,
+							"type": "integer",
+							"note": "Código do Lote de origem",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"userModified": {
+					"description": "Usuário modificado",
+					"type": "string",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "userModified",
+							"required": false,
+							"type": "varchar",
+							"length": "255",
+							"note": "Usuário modificado",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+
+				}, 
+
+				"operationId": {
+					"description":"Id. Operação da Operação Contábil, a informação será preenchida quando incluir Lançamento de Estorno",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "operationId",
+							"required": false,
+							"type": "integer",
+							"note": "Id. Operação da Operação Contábil, a informação será preenchida quando incluir Lançamento de Estorno",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+					
+
+				"dateUntimely": {
+					"description":"Data Extemporânea",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "dateUntimely",
+							"required": false,
+							"type": "datetime",
+							"note": "Data Extemporânea",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+
+				},
+			
+				"companyIdElimination": {
+					"description": "Código da Coligada que participa da transação entre empresas da mesma estrutura consolidada",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdElimination",
+							"required": false,
+							"type": "integer",
+							"note": "Código da Coligada que participa da transação entre empresas da mesma estrutura consolidada",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+
+				},
+			
+				"companyIdAccountElimination": {
+					"description":"Código da Coligada da conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdAccountElimination",
+							"required": false,
+							"type": "integer",
+							"note": "Código da Coligada da conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+
+				}, 
+			
+				"accountEliminationCode": {
+					"description":"Conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountEliminationCode",
+							"required": false,
+							"type": "varchar",
+							"length": "100",
+							"note": "Conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+
+				}, 
+			
+				"reversalAccountId": {
+					"description":"Identifica o IdCont que está originando o Estorno",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "reversalAccountId",
+							"required": false,
+							"type": "int",
+							"note": "Identifica o IdCont que está originando o Estorno",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+		
+				"groupAccountId": {
+					"description":"Identificador do grupo da contabilização em que o Estorno está sendo gerado. É gerado pelo serviço que muda o lançamento",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "groupAccountId",
+							"required": false,
+							"type": "integer",
+							"note": "Identificador do grupo da contabilização em que o Estorno está sendo gerado. É gerado pelo serviço que muda o lançamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"classValueIdProtheus": {
+					"description":"Classe de Valor",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "classValueIdProtheus",
+							"required": false,
+							"type": "integer",
+							"note": "Classe de Valor",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+			
+				"itemIdAccountProtheus": {
+					"description":"Item Contábil",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "itemIdAccountProtheus",
+							"required": false,
+							"type": "integer",
+							"note": "Item Contábil",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"typeClassificationRAS": {
+					"description":"Tipo da classificação da Partida para o RAS",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "typeClassificationRAS",
+							"required": false,
+							"type": "integer",
+							"note": "Tipo da classificação da Partida para o RAS",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+			
+				"itemIdRAS": {
+					"description":"Identificador do item da Partida no RAS",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "itemIdRAS",
+							"required": false,
+							"type": "varchar",
+							"length": "200",
+							"note": "Identificador do item da Partida no RAS",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"itemAmount_RAS": {
+					"description":"Quantidade do Item do RAS",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "itemAmount_RAS",
+							"required": false,
+							"type": "varchar",
+							"length": "200",
+							"note": "Quantidade do Item do RAS",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"apportionmentDebit": {
+					"description": "Lista de rateios a Débito",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListApportionmentDebit",
+						"type": "object"
+					}
+				},
+
+				"apportionmentCredit": {
+					"description": "Lista de rateios a crédito",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListApportionmentCredit",
+						"type": "object"
+					}
+				},
+
+				"valuesCurrencies": {
+					"description": "Lista de Moedas e seus Valores.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListValuesCurrencies",
+						"type": "object"
+					}
+				},
+
+				"apportionmentValuesCurrencies": {
+					"description": "Lista de Moedas e seus Valores Rateados por Conta Gerencial.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListApportionmentValuesCurrencies",
+						"type": "object"
+					}
+				}	
+			}
+		},
+		
+		"ListApportionmentDebit": {
+			"type": "object",
+			"properties": {
+				"companyId": {
+					"description":"Código da Coligada",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyId",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}, 
+			
+				"date": {
+					"description":"Data ",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "date",
+							"required": false,
+							"type": "datetime",
+							"note": "Data",
+							"available": true,
+							"canUpdate": false
+						}	
+					]	
+				},
+
+				"companyIdAccountManagement": {
+					"description": "Código da Coligada da Conta Gerencial",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdAccountManagement",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada da Conta Gerencial",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"accountManagementInactive": {
+					"description":"Inativo",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountManagementInactive",
+							"required": true,
+							"type": "integer",
+							"note": "Inativo",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+				
+				"accountManagementCode": {
+					"description":"Código da Conta Gerencial",
+					"type": "string",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountManagementCode",
+							"required": true,
+							"type": "varchar",
+							"length": "255",
+							"note": "Código da Conta Gerencial",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"apportionmentId": {
+					"description":"Id do rateio",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "apportionmentId",
+							"required": true,
+							"type": "integer",
+							"note": "Id do rateio",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"entryNumberId": {
+					"description":"Id. Partida",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "entryNumberId",
+							"required": true,
+							"type": "integer",
+							"note": "Id. Partida",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+
+				}, 
+					
+				"value": {
+					"description":"Valor",
+					"type": "string",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value",
+							"required": false,
+							"type": "varchar",
+							"length": "255",
+							"note": "Valor",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"percentual": {
+					"description":"Percentual",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "percentual",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "Percentual",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}
+				
+			}
+		},
+
+		"ListApportionmentCredit": {
+			"type": "object",
+			"properties": {
+				"companyId": {
+					"description":"Código da Coligada",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyId",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}, 
+			
+				"date": {
+					"description":"Data ",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "date",
+							"required": false,
+							"type": "datetime",
+							"note": "Data",
+							"available": true,
+							"canUpdate": false
+						}	
+					]	
+				},
+
+				"companyIdAccountManagement": {
+					"description": "Código da Coligada da Conta Gerencial",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdAccountManagement",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada da Conta Gerencial",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"accountManagementInactive": {
+					"description":"Inativo",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountManagementInactive",
+							"required": true,
+							"type": "integer",
+							"note": "Inativo",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+				
+				"accountManagementCode": {
+					"description":"Código da Conta Gerencial",
+					"type": "string",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountManagementCode",
+							"required": true,
+							"type": "varchar",
+							"length": "255",
+							"note": "Código da Conta Gerencial",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"apportionmentId": {
+					"description":"Id do rateio",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "apportionmentId",
+							"required": true,
+							"type": "integer",
+							"note": "Id do rateio",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"entryNumberId": {
+					"description":"Id. Partida",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "entryNumberId",
+							"required": true,
+							"type": "integer",
+							"note": "Id. Partida",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+
+				}, 
+					
+				"value": {
+					"description":"Valor",
+					"type": "string",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value",
+							"required": false,
+							"type": "varchar",
+							"length": "255",
+							"note": "Valor",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"percentual": {
+					"description":"Percentual",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "percentual",
+							"required": true,
+							"type": "varchar",
+							"length": "50",
+							"note": "Percentual",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}
+				
+			}
+		},
+
+		"ListValuesCurrencies": {
+			"type": "object",
+			"properties": {
+				"companyId": {
+					"description":"Código da coligada",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyId",
+							"required": true,
+							"type": "integer",	
+							"note": "Código da Coligada",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}, 
+				
+				"entryNumberId": {
+					"description":"Id. Partida",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "entryNumberId",
+							"required": true,
+							"type": "integer",
+							"note": "Id. Partida",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}, 
+				
+				"currency": {
+					"description":"Moeda",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "currency",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Moeda",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+				
+				"value": {
+					"description":"Valor",
+					"type": "number",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value",
+							"required": false,
+							"type": "decimal",
+							"note": "Valor",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				} 
+			}
+		},
+
+		"ListApportionmentValuesCurrencies": {
+			"type": "object",
+			"properties": {
+				"companyId": {
+					"description":"Código da coligada",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyId",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"apportionmenId": {
+					"description":"Id. Rateio",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "apportionmenId",
+							"required": true,
+							"type": "integer",
+							"note": "Id. Rateio",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}, 
+				"currency": {
+					"description":"Moeda",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "currency",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Moeda",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}, 
+					
+				"value": {
+					"description":"Valor",
+					"type": "number",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value",
+							"required": false,
+							"type": "decimal",
+							"note": "Valor",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				} 
+			}
+		},
+		
+		"BodyPostInfo" : {
+			"type": "object",
+			"properties": {
+
+				"companyId": {
+					"description": "Empresa Geradora do Lançamento",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "CodColigada",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"batchCode": {
+					"description": "Código do Lote em que o Lançamento está sendo incluido",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "batchCode",
+							"required": true,
+							"type": "integer",
+							"note": "Código do lote",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"description": {
+					"description": "Descrição do Lançamento",
+					"type": "string",
+					"maxLength": 250,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "description",
+							"required": true,
+							"type": "varchar",
+							"length": "250",
+							"note": "Descrição do lançamento",
+							"available": true,
+							"canUpdate": true
+						}
+					]
+				},
+
+				"accountEntry": {
+					"type": "array",
+					"description": "Lançamentos Contábeis",
+					"items": {
+						"$ref": "#/definitions/ListOfAccountEntryBodyPostInfo",
+						"type": "object"
+					}
+				}
+
+			}
+		},
+
+		"ListOfAccountEntryBodyPostInfo": {
+			"type": "object",
+			"properties": {
+
+				"branchId": {
+					"description": "Codigo Filial",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "branchId",
+							"required": true,
+							"type": "varchar",
+							"note": "Código da Filial",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"departmentCode": {
+					"description": "Código do Departamento",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "departmentCode",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Código do Departamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"costCenterCode": {
+					"description": "Código do Centro de Custo",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "costCenterCode",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Código do Centro de Custo",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"document": {
+					"description": "Documento",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "document",
+							"required": false,
+							"type": "varchar",
+							"length": "32",
+							"note": "Documento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+				
+				"date": {
+					"description": "Data da Contabilização",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "date",
+							"required": true,
+							"type": "datetime",
+							"note": "Data da Contabilização",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"companyIdDebitAccount": {
+					"description": "Coligada da Conta a Débito",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdDebitAccount",
+							"required": false,
+							"type": "integer",
+							"note": "Coligada da Conta a Débito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+					
+				"debitAccount": {
+					"description": "Conta Débito",
+					"type": "string",
+					"maxLength":"250",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "debitAccount",
+							"required": false,
+							"type": "varchar",
+							"note": "Conta Débito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"companyIdCreditAccount": {
+					"description": "Código da Coligada da Conta Crédito",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdCreditAccount",
+							"required": false,
+							"type": "integer",
+							"note": "Código da Coligada da Conta Crédito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+		
+				"creditAccount": {
+					"description": "Conta Crédito",
+					"type": "string",
+					"maxLength":"250",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "creditAccount",
+							"required": false,
+							"type": "varchar",
+							"note": "Conta Crédito",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"companyIdAgainstEntry": {
+					"description": "Coligada da Conta de Contra Partida",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdAgainstEntry",
+							"required": false,
+							"type": "integer",
+							"note": "Coligada da Conta de Contra Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"accountAgainstEntry": {
+					"description": "Conta de Contra Partida",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountAgainstEntry",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Conta de Contra Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+			
+				"value": {
+					"description":"Valor da Partida",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value",
+							"required": false,
+							"type": "decimal",
+							"note": "Valor da Partida",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+                "value2": {
+					"description": "Valor 2º Moeda",
+					"type": "number",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value2",
+							"required": false,
+							"type": "decimal",
+							"note": "Valor 2º Moeda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+                "date2": {
+					"description": "Data de Cotação da 2º Moeda",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "date2",
+							"required": false,
+							"type": "datetime",
+							"note": "Data de Cotação da 2º Moeda",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+                "historicCode": {
+					"description": "Código do Histórico",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "historicCode",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Código do Histórico",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"complement": {
+					"description": "Descrição do complemento de Histórico",
+					"type": "string",
+					"maxLength": 50,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "complement",
+							"required": false,
+							"type": "varchar",
+							"length": "50",
+							"note": "Descrição do complemento de Histórico",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				
+
+				"participantId": {
+					"description": "Id. do Participante (SPED Contábil)",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "participantId",
+							"required": false,
+							"type": "integer",
+							"note": "Id. do Participante (SPED Contábil)",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"dateUntimely": {
+					"description":"Data Extemporânea",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "dateUntimely",
+							"required": false,
+							"type": "datetime",
+							"note": "Data Extemporânea",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"companyIdElimination": {
+					"description": "Código da Coligada que participa da transação entre empresas da mesma estrutura consolidada",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdElimination",
+							"required": false,
+							"type": "integer",
+							"note": "Código da Coligada que participa da transação entre empresas da mesma estrutura consolidada",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"companyIdAccountElimination": {
+					"description":"Código da Coligada da conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdAccountElimination",
+							"required": false,
+							"type": "integer",
+							"note": "Código da Coligada da conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+			
+				"accountEliminationCode": {
+					"description":"Conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+					"type": "string",
+					"maxLength": 100,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountEliminationCode",
+							"required": false,
+							"type": "varchar",
+							"length": "100",
+							"note": "Conta que é a contra partida da eliminação na empresa que participa da estrutura de consolidação.",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+			
+				"reversalAccountId": {
+					"description":"Identifica o IdCont que está originando o Estorno",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "reversalAccountId",
+							"required": false,
+							"type": "int",
+							"note": "Identifica o IdCont que está originando o Estorno",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+		
+				"groupAccountId": {
+					"description":"Identificador do grupo da contabilização em que o Estorno está sendo gerado. É gerado pelo serviço que muda o lançamento",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "groupAccountId",
+							"required": false,
+							"type": "integer",
+							"note": "Identificador do grupo da contabilização em que o Estorno está sendo gerado. É gerado pelo serviço que muda o lançamento",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+
+				"typeClassificationRAS": {
+					"description":"Tipo da classificação da Partida para o RAS",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "typeClassificationRAS",
+							"required": false,
+							"type": "integer",
+							"note": "Tipo da classificação da Partida para o RAS",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				}, 
+			
+				"itemIdRAS": {
+					"description":"Identificador do item da Partida no RAS",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "itemIdRAS",
+							"required": false,
+							"type": "varchar",
+							"length": "200",
+							"note": "Identificador do item da Partida no RAS",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"itemAmount_RAS": {
+					"description":"Quantidade do Item do RAS",
+					"type": "string",
+					"maxLength": 200,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "itemAmount_RAS",
+							"required": false,
+							"type": "varchar",
+							"length": "200",
+							"note": "Quantidade do Item do RAS",
+							"available": true,
+							"canUpdate": false
+						}
+					]
+				},
+			
+				"apportionmentDebit": {
+					"description": "Lista de rateios a Débito",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListApportionmentBodyPost",
+						"type": "object"
+					}
+				},
+
+				"apportionmentCredit": {
+					"description": "Lista de rateios a crédito",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ListApportionmentBodyPost",
+						"type": "object"
+					}
+				}
+			}
+		},
+
+		"ListApportionmentBodyPost": {
+			"type": "object",
+			"properties": {
+				"companyId": {
+					"description":"Código da Coligada",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyId",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}, 
+			
+				"date": {
+					"description":"Data ",
+					"type": "string",
+					"format":"date-time",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "date",
+							"required": false,
+							"type": "datetime",
+							"note": "Data",
+							"available": true,
+							"canUpdate": false
+						}	
+					]	
+				},
+
+				"companyIdAccountManagement": {
+					"description": "Código da Coligada da Conta Gerencial",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "companyIdAccountManagement",
+							"required": true,
+							"type": "integer",
+							"note": "Código da Coligada da Conta Gerencial",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"accountManagementInactive": {
+					"description":"Inativo",
+					"type": "integer",
+					"format":"int32",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountManagementInactive",
+							"required": true,
+							"type": "integer",
+							"note": "Inativo",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+				
+				"accountManagementCode": {
+					"description":"Código da Conta Gerencial",
+					"type": "string",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "accountManagementCode",
+							"required": true,
+							"type": "varchar",
+							"length": "255",
+							"note": "Código da Conta Gerencial",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				},
+					
+				"value": {
+					"description":"Valor",
+					"type": "string",
+					"maxLength": 255,
+					"x-totvs": [
+						{
+							"product": "RM",
+							"field": "value",
+							"required": false,
+							"type": "varchar",
+							"length": "255",
+							"note": "Valor",
+							"available": true,
+							"canUpdate": false
+						}	
+					]
+				}
+			}
+		}
+
+	}
+}

@@ -1,0 +1,131 @@
+{
+	"openapi": "3.0.1",
+	"servers": [
+		{
+			"description": "API para pedidos de venda do varejo",
+			"url": "{{host}}/api/retail/v1",
+			"variables": {
+				"serverUrl": { "default": "localhost" },
+				"serverHttpPort": { "default": "8080" }
+			}
+		}
+	],
+	"info": {
+		"description": "API para pedidos de venda do varejo (RetailSalesOrders)",
+		"version": "1.000",
+		"title": "Pedidos de Venda do Varejo",
+		"contact": {
+			"name": "T-Talk",
+			"url": "api.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "RetailSalesOrders",
+				"description": "Consulta de pedidos de venda do varejo",
+				"segment": "Varejo"
+			},
+			"productInformation": [
+				{
+					"product": "Protheus",
+					"contact": "",
+					"description": "Consulta de pedidos de venda do varejo",
+					"adapter": ""
+				}
+			]
+		}
+	},
+	"paths": {
+		"/retailSalesOrders": {
+			"get": {
+				"tags": ["RetailSalesOrders"],
+				"summary": "Lista pedidos de venda do varejo",
+				"description": "Lista todos os pedidos de venda do faturamento (SC5) relacionados ao varejo.",
+				"operationId": "getRetailSalesOrders",
+				"parameters": [
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"items": {
+											"type": "array",
+											"items": { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RetailSalesOrders_1_000.json#/definitions/RetailSalesOrdersType" }
+										},
+										"hasNext": { "type": "boolean" }
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na consulta!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/retailSalesOrders/{internalId}/items": {
+			"get": {
+				"tags": ["RetailSalesOrders"],
+				"summary": "Lista itens do pedido de venda do varejo",
+				"description": "Exibe os detalhes dos itens do pedido de venda (SC6) para o pedido informado.",
+				"operationId": "getRetailSalesOrderItems",
+				"parameters": [
+					{
+						"name": "internalId",
+						"in": "path",
+						"description": "Chave interna do pedido (C5_FILIAL|C5_NUM)",
+						"required": true,
+						"schema": { "type": "string" }
+					},
+					{
+						"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/parameters/Authorization"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Operação realizada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"items": {
+											"type": "array",
+											"items": { "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/RetailSalesOrders_1_000.json#/definitions/RetailSalesOrderItemType" }											
+										},
+										"hasNext": { "type": "boolean" }
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na consulta!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
