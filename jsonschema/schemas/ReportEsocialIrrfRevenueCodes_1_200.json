@@ -1,0 +1,302 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#",
+  "info": {
+    "title": "eSocial IRRF Revenue Codes API (TOTVS RH / TAF Social)",
+    "description": "Especificação OpenAPI / Swagger dos contratos de API para consulta e conferência de códigos de receita do eSocial IRRF. \n\n**Atualização (RF01, RF02, RF03)**: O contrato foi atualizado para suportar o processamento de intervalos de datas (`period` e `periodEnd`) nos formatos AAAA, AAAA/MM, MM/AAAA, MMAAAA ou YYYYMM, preparando a arquitetura para o consumo via TAFFULL.",
+    "version": "1.200",
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "ReportEsocialIrrfRevenueCodes",
+        "description": "Relatório de Códigos de Receita do eSocial IRRF",
+        "segment": "RH"
+      },
+      "productInformation": [
+        {
+          "product": "TAF",
+          "contact": "comiteintegracao@totvs.com.br",
+          "description": "Códigos de Receita eSocial"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "ExecuteReportEsocialIrrfRevenueCodesRequest": {
+      "type": "object",
+      "required": [
+        "companyId",
+        "period",
+        "periodEnd"
+      ],
+      "properties": {
+        "companyId": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string",
+          "description": "Competência Inicial no formato AAAA, AAAA/MM, MM/AAAA, MMAAAA ou YYYYMM",
+          "pattern": "^((19|20)\\d{2}|(19|20)\\d{2}/?(0[1-9]|1[0-2])|(0[1-9]|1[0-2])/?(19|20)\\d{2})$",
+          "example": "01/2025"
+        },
+        "periodEnd": {
+          "type": "string",
+          "description": "Competência Final no formato AAAA, AAAA/MM, MM/AAAA, MMAAAA ou YYYYMM",
+          "pattern": "^((19|20)\\d{2}|(19|20)\\d{2}/?(0[1-9]|1[0-2])|(0[1-9]|1[0-2])/?(19|20)\\d{2})$",
+          "example": "12/2025"
+        },
+        "tribute": {
+          "type": "string",
+          "default": "4"
+        },
+        "differencesOnly": {
+          "type": "boolean"
+        },
+        "cpf": {
+          "type": "string"
+        },
+        "revenueCode": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "valueOption": {
+          "type": "string"
+        },
+        "requestId": {
+          "type": "string"
+        }
+      }
+    },
+    "ExecuteReportEsocialBaseConferResponse": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string"
+        }
+      }
+    },
+    "ReportEsocialBaseConferStatusResponse": {
+      "type": "object",
+      "properties": {
+        "finished": {
+          "type": "boolean"
+        },
+        "percent": {
+          "type": "number"
+        }
+      }
+    },
+    "ESocialBaseConferIrrfCodReceitaRetValuesResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "hasNext": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EmployeeResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cpf": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "totalIr": {
+                "type": "object",
+                "properties": {
+                  "totalIrErp": {
+                    "type": "number"
+                  },
+                  "totalIrTaf": {
+                    "type": "number"
+                  },
+                  "totalIrRet": {
+                    "type": "number"
+                  }
+                }
+              },
+              "divergent": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "hasNext": {
+          "type": "boolean"
+        }
+      }
+    },
+    "FinancialValue": {
+      "type": "object",
+      "properties": {
+        "tafValue": {
+          "type": "number"
+        },
+        "erpValue": {
+          "type": "number"
+        },
+        "retValue": {
+          "type": "number"
+        },
+        "divergent": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EmployeeDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "hasNext": {
+          "type": "boolean"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "period": {
+                "type": "string"
+              },
+              "periodEnd": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "cpf": {
+                "type": "string"
+              },
+              "divergent": {
+                "type": "boolean"
+              },
+              "revenueCodes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "infoComplem": {
+                "type": "object",
+                "properties": {
+                  "revenueCode": {
+                    "type": "string"
+                  },
+                  "dependentDeductions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "alimony": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "privatePension": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "legalProcessInfo": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "infoComplemNoContract": {
+                "type": "object",
+                "properties": {
+                  "healthPlan": {
+                    "type": "object"
+                  },
+                  "medicalReimbursement": {
+                    "type": "object"
+                  },
+                  "monthlySummary": {
+                    "type": "object",
+                    "properties": {
+                      "taxableIncome": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "taxableIncome13": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "officialPension": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "officialPension13": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "withheldIncomeTax": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "withheldIncomeTax13": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "exemptPortionOver65": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "exemptPortionOver6513": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "dailyAllowances": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "costAid": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "terminationIndemnity": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "vacationBonus": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "seriousIllness": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "seriousIllness13": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "housingAllowance": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "doctorScholarship": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "doctorScholarship13": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "interestOnLatePayment": {
+                        "$ref": "#/definitions/FinancialValue"
+                      },
+                      "taxExempt": {
+                        "$ref": "#/definitions/FinancialValue"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

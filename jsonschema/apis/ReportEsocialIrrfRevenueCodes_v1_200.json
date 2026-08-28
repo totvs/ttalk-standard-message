@@ -1,0 +1,582 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "eSocial IRRF Revenue Codes API (TOTVS RH / TAF Social)",
+    "description": "Especificação OpenAPI / Swagger dos contratos de API para consulta e conferência de códigos de receita do eSocial IRRF. \n\n**Atualização (RF01, RF02, RF03)**: O contrato foi atualizado para suportar o processamento de intervalos de datas (`period` e `periodEnd`) nos formatos AAAA, AAAA/MM, MM/AAAA, MMAAAA ou YYYYMM, preparando a arquitetura para o consumo via TAFFULL.",
+    "version": "1.2.0",
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "ReportEsocialIrrfRevenueCodes",
+        "description": "Relatório de Códigos de Receita do eSocial IRRF",
+        "segment": "RH"
+      },
+      "productInformation": [
+        {
+          "product": "TAF",
+          "contact": "comiteintegracao@totvs.com.br",
+          "description": "Códigos de Receita eSocial"
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{host}",
+      "variables": {
+        "host": {
+          "default": "localhost:8080",
+          "description": "Host do ambiente de API"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "Padrão",
+      "description": "Endpoints padrão de conferência eSocial IRRF (API Middleware Padrão)"
+    },
+    {
+      "name": "GPE",
+      "description": "Endpoints específicos para o contexto GPE (Folha de Pagamento)"
+    }
+  ],
+  "paths": {
+    "/api/rh/esocial/v1/reportEsocialIrrfRevenueCodes": {
+      "post": {
+        "tags": ["Padrão"],
+        "summary": "Executar Relatório de Códigos de Receita do eSocial IRRF",
+        "description": "Inicia o processamento do relatório. A API (middleware) valida cronologicamente `period` e `periodEnd`. Falha rápido (400 Bad Request) se o final for menor que o inicial.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ExecuteReportEsocialIrrfRevenueCodesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ExecuteReportEsocialBaseConferResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Validação cronológica falhou (ex: data final menor que a inicial)."
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/GPEreportEsocialIrrfRevenueCodes": {
+      "post": {
+        "tags": ["GPE"],
+        "summary": "Executar Relatório (Contexto GPE)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ExecuteReportEsocialIrrfRevenueCodesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ExecuteReportEsocialBaseConferResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Validação cronológica falhou."
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/reportEsocialIrrfRevenueCodes/status": {
+      "get": {
+        "tags": ["Padrão"],
+        "summary": "Consultar Status do Processamento do Relatório",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryRequestId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ReportEsocialBaseConferStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/GPEreportEsocialIrrfRevenueCodes/status": {
+      "get": {
+        "tags": ["GPE"],
+        "summary": "Consultar Status do Processamento (Contexto GPE)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryRequestId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ReportEsocialBaseConferStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/reportEsocialIrrfRevenueCodes/totalizers": {
+      "get": {
+        "tags": ["Padrão"],
+        "summary": "Buscar Totalizadores do Relatório de Códigos de Receita",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryTribute" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ESocialBaseConferIrrfCodReceitaRetValuesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/GPEreportEsocialIrrfRevenueCodes/totalizers": {
+      "get": {
+        "tags": ["GPE"],
+        "summary": "Buscar Totalizadores (Contexto GPE)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryTribute" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ESocialBaseConferIrrfCodReceitaRetValuesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/reportEsocialIrrfRevenueCodes/revenueCodes": {
+      "get": {
+        "tags": ["Padrão"],
+        "summary": "Buscar Tabela de Códigos de Receita",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryTribute" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" },
+          { "$ref": "#/components/parameters/queryPage" },
+          { "$ref": "#/components/parameters/queryPageSize" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ESocialBaseConferIrrfCodReceitaRetValuesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/GPEreportEsocialIrrfRevenueCodes/revenueCodes": {
+      "get": {
+        "tags": ["GPE"],
+        "summary": "Buscar Tabela de Códigos de Receita (Contexto GPE)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryTribute" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" },
+          { "$ref": "#/components/parameters/queryPage" },
+          { "$ref": "#/components/parameters/queryPageSize" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/ESocialBaseConferIrrfCodReceitaRetValuesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/reportEsocialIrrfRevenueCodes/employeesByRevenueCode": {
+      "get": {
+        "tags": ["Padrão"],
+        "summary": "Buscar Colaboradores por Código de Receita (Modal)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" },
+          { "$ref": "#/components/parameters/queryPage" },
+          { "$ref": "#/components/parameters/queryPageSize" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/EmployeeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/GPEreportEsocialIrrfRevenueCodes/employeesByRevenueCode": {
+      "get": {
+        "tags": ["GPE"],
+        "summary": "Buscar Colaboradores por Código de Receita (Contexto GPE)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" },
+          { "$ref": "#/components/parameters/queryPage" },
+          { "$ref": "#/components/parameters/queryPageSize" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/EmployeeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/reportEsocialIrrfRevenueCodes/employeeDetails": {
+      "get": {
+        "tags": ["Padrão"],
+        "summary": "Buscar Detalhes Completos do Colaborador (Informações Complementares)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryRequestId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/EmployeeDetailsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/GPEreportEsocialIrrfRevenueCodes/detailsOfEmployee": {
+      "get": {
+        "tags": ["GPE"],
+        "summary": "Buscar Detalhes Completos do Colaborador (Contexto GPE)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryRequestId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/EmployeeDetailsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/reportEsocialIrrfRevenueCodes/exportEmployeeDetails": {
+      "get": {
+        "tags": ["Padrão"],
+        "summary": "Exportar Detalhes de Empregados para Excel",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" },
+          { "$ref": "#/components/parameters/queryPage" },
+          { "$ref": "#/components/parameters/queryPageSize" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/EmployeeDetailsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/GPEreportEsocialIrrfRevenueCodes/exportEmployeeDetails": {
+      "get": {
+        "tags": ["GPE"],
+        "summary": "Exportar Detalhes de Empregados para Excel (Contexto GPE)",
+        "parameters": [
+          { "$ref": "#/components/parameters/queryCompanyId" },
+          { "$ref": "#/components/parameters/queryperiod" },
+          { "$ref": "#/components/parameters/queryperiodEnd" },
+          { "$ref": "#/components/parameters/queryDifferencesOnly" },
+          { "$ref": "#/components/parameters/queryCpf" },
+          { "$ref": "#/components/parameters/queryRevenueCode" },
+          { "$ref": "#/components/parameters/queryName" },
+          { "$ref": "#/components/parameters/queryValueOption" },
+          { "$ref": "#/components/parameters/queryRequestId" },
+          { "$ref": "#/components/parameters/queryPage" },
+          { "$ref": "#/components/parameters/queryPageSize" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/ReportEsocialIrrfRevenueCodes_1_200.json#/definitions/EmployeeDetailsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "queryCompanyId": {
+        "name": "companyId",
+        "in": "query",
+        "required": true,
+        "description": "Código identificador de Empresa/Filial",
+        "schema": {
+          "type": "string",
+          "example": "T1|D MG 01"
+        }
+      },
+      "queryperiod": {
+        "name": "period",
+        "in": "query",
+        "required": true,
+        "description": "Competência Inicial no formato AAAA, AAAA/MM, MM/AAAA, MMAAAA ou YYYYMM",
+        "schema": {
+          "type": "string",
+          "pattern": "^((19|20)\\d{2}|(19|20)\\d{2}/?(0[1-9]|1[0-2])|(0[1-9]|1[0-2])/?(19|20)\\d{2})$",
+          "example": "01/2025"
+        }
+      },
+      "queryperiodEnd": {
+        "name": "periodEnd",
+        "in": "query",
+        "required": true,
+        "description": "Competência Final no formato AAAA, AAAA/MM, MM/AAAA, MMAAAA ou YYYYMM",
+        "schema": {
+          "type": "string",
+          "pattern": "^((19|20)\\d{2}|(19|20)\\d{2}/?(0[1-9]|1[0-2])|(0[1-9]|1[0-2])/?(19|20)\\d{2})$",
+          "example": "12/2025"
+        }
+      },
+      "queryTribute": {
+        "name": "tribute",
+        "in": "query",
+        "required": false,
+        "description": "Identificador do Tributo (Fixo '4' para IRRF)",
+        "schema": {
+          "type": "string",
+          "default": "4",
+          "example": "4"
+        }
+      },
+      "queryDifferencesOnly": {
+        "name": "differencesOnly",
+        "in": "query",
+        "required": false,
+        "description": "Filtrar apenas diferenças/divergências",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "queryCpf": {
+        "name": "cpf",
+        "in": "query",
+        "required": false,
+        "description": "Filtro por CPF do trabalhador",
+        "schema": {
+          "type": "string",
+          "example": "12345678901"
+        }
+      },
+      "queryRevenueCode": {
+        "name": "revenueCode",
+        "in": "query",
+        "required": false,
+        "description": "Filtro por Código de Receita",
+        "schema": {
+          "type": "string",
+          "example": "0561"
+        }
+      },
+      "queryName": {
+        "name": "name",
+        "in": "query",
+        "required": false,
+        "description": "Filtro por Nome do trabalhador",
+        "schema": {
+          "type": "string",
+          "example": "João da Silva"
+        }
+      },
+      "queryValueOption": {
+        "name": "valueOption",
+        "in": "query",
+        "required": false,
+        "description": "Origem da conferência (Gov, Fol, Taf)",
+        "schema": {
+          "type": "string",
+          "enum": ["Gov", "Fol", "Taf"],
+          "default": "Gov"
+        }
+      },
+      "queryRequestId": {
+        "name": "requestId",
+        "in": "query",
+        "required": false,
+        "description": "ID da requisição",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "queryPage": {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Página (paginação)",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "queryPageSize": {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "description": "Tamanho da página",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
