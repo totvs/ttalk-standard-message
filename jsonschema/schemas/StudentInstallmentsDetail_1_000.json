@@ -1,0 +1,254 @@
+{
+	"$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/StudentInstallmentsDetail/v1/1_000/jsonschema/schemas/StudentInstallmentsDetail_1_000.json#",
+	"info": {
+		"description": "Contrato de Mensagem Padronizada para recuperar os detalhes da parcela do aluno",
+		"version": "1.000",
+		"title": "StudentInstallmentsDetail",
+		"contact": {
+			"name": "T-Talk",
+			"url": "API.Totvs.com.br",
+			"email": "comiteintegracao@totvs.com.br"
+		},
+		"x-totvs": {
+			"messageDocumentation": {
+				"name": "StudentInstallmentsDetail",
+				"description": "Retorna o detalhamento da parcela do aluno",
+				"segment": "Educacional"
+			},
+			"productInformation": [
+				{
+					"product": "RM",
+					"contact": "TribeEdu.Squad.EduPortalMobile@totvs.com.br",
+					"description": "Retorna o detalhamento da parcela do aluno"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"StudentInstallmentDetail": {
+			"type": "object",
+			"allOf": [
+				{
+					"type": "object",
+					"properties": {
+						"InstallmentDetail": {
+							"type": "array",
+							"items": { 
+								"$ref": "#/definitions/Detail"
+							}
+						}
+					}
+				}
+			]
+		},
+		"Detail": {
+			"type": "object",
+			"properties": {
+				"Category": {
+					"description": "Tipo da informação retornada pelo detalhamento",
+					"type": "string",
+					"exemple": "Disciplinas",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Grupos disponíveis: Disciplinas | Serviços | Descontos | Bolsa incondicional | Bolsa condicional | Outros | Resumo do cálculo"
+						}
+					]
+				},
+				"Description": {
+					"description": "Descrição do serviço a ser detalhado",
+					"type": "string",
+					"example": "Ética",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Esse campo mostra informação de acordo com o grupo (Category) apresentado. Ex: Se o grupo for Disciplinas, mostra o nome da disciplina. Se for Serviços, mostra o nome do serviço. Se for Descontos, mostra a descrição do desconto."
+						}
+					]
+				},
+				"Comments": {
+					"description": "Informações adicionais",
+					"type": "string",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Campo utilizado para retornar qualquer informação que o sistema julgue necessário acrescentar"
+						}
+					]
+				},
+				"transactionType": {
+					"description": "Tipo da transação que define o detalhamento. Ex: Cobrança ou Desconto",
+					"type": "string",
+					"exemple": "D",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Tipos de Transação: [C - Cobrança; D - Desconto; V - Valor Líquido; BP - Baixa Parcial]. É exibido apenas no grupo (Category) Resumo do Cálculo"
+						}
+					]
+				},
+				"Amount": {
+					"description": "Valor do detalhamento",
+					"type": "decimal",
+					"exemple": "36.0000",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Valor discriminado do detalhamento"
+						}
+					]
+				},
+				"scholarshipDiscountPercentage": {
+					"description": "Percentual de desconto aplicado na bolsa",
+					"type": "decimal",
+					"exemple": "10.0000",
+					"x-totvs": [
+						{
+							"product": "RM",
+							"required": false,
+							"available": true,
+							"canUpdate": false,
+							"note": "Indica o percentual de desconto aplicado na bolsa. É exibido apenas nos grupos (Category) Bolsa incondicional | Bolsa condicional"
+						}
+					]
+				},
+				"DisciplineInfo": {
+					"type": "object",
+					"description": "Exibido apenas quando existem disciplinas no detalhamento da parcela",
+					"allOf": [
+						{
+							"type": "array",
+							"properties": {
+								"HasInconsistency": {
+									"type": "boolean",
+									"example": "false",
+									"description": "Identifica se a disciplina possui inconsistência no detalhamento",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Retorna verdadeiro, caso exista alguma inconsistência no detalhamento do cálculo da parcela. É exibido apenas no grupo (Category) Disciplinas"
+										}
+									]
+								},
+								"numberOfCredits": {
+									"type": "string",
+									"example": "Sistema de Informação",
+									"description": "Nome do curso",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"field": "SPSAREAINTERESSE.NOME",
+											"required": false,
+											"type": "varchar",
+											"length": 120,
+											"available": true,
+											"canUpdate": false
+										}
+									]
+								},
+								"creditAmount": {
+									"type": "decimal",
+									"description": "Valor do crédito",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Valor do crédito da disciplina exibida no detalhamento"
+										}
+									]
+								},
+								"contractTotalAmount": {
+									"type": "decimal",
+									"description": "Valor total no contrato",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Valor total da disciplina no contrato"
+										}
+									]
+								},
+								"origin": {
+									"type": "string",
+									"description": "Identifica a origem do detalhamento do cálculo",
+									"exemple": "1",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Origens disponíveis: [1 - Cobrança por crédito da disciplina; 2 - Cobrança por faixa de crédito valor fixo; 3 - Abatimento parcela fixa; 4 - Crédito referente a devolução de cancelamento da disciplina]"
+										}
+									]
+								},
+								"itemType": {
+									"type": "string",
+									"description": "Tipo de detalhamento do cálculo",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Tipos disponíveis [C - Indica cobrança para o aluno; A - Indica abatimento na parcela]"
+										}
+									]
+								},
+								"registrationDate": {
+									"description": "Data da matrícula",
+									"type": "decimal",
+									"exemple": "36.0000",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Data da matrícula na disciplina exibida no detalhamento"
+										}
+									]
+								},
+								"consideredInstallments": {
+									"type": "integer",
+									"description": "Quantidade de parcelas consideradas",
+									"x-totvs": [
+										{
+											"product": "RM",
+											"required": false,
+											"available": true,
+											"canUpdate": false,
+											"note": "Quantidade de parcelas consideradas no cálculo do detalhamento"
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		}
+	}
+}
