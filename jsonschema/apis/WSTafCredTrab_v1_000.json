@@ -1,0 +1,231 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Crédito do Trabalhador Consignado API",
+    "description": "API para consulta do crédito do trabalhador (Consignado) e extrato, com integração ao TSS via Middleware e TAF Full.",
+    "version": "1.000",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "WSTAFCREDTRAB",
+        "description": "Consulta de Crédito Trabalhador Consignado",
+        "segment": "RH"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "comiteintegracao@totvs.com.br",
+          "description": "Consulta de Crédito Trabalhador Consignado via TSS",
+          "minimalVersion": "12.1.33"
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{host}",
+      "variables": {
+        "host": {
+          "default": "localhost:8080",
+          "description": "Host do ambiente de API"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "TAFFull",
+      "description": "Endpoints para integração em ambiente TAF Full"
+    },
+    {
+      "name": "Middleware",
+      "description": "Endpoints para integração em ambiente Middleware / GPE"
+    }
+  ],
+  "paths": {
+    "/api/rh/esocial/v1/wstafcredtrab/tafFull": {
+      "get": {
+        "tags": [
+          "TAFFull"
+        ],
+        "summary": "Consultar crédito do trabalhador no TAF Full",
+        "description": "Método de consulta do crédito do trabalhador e extrato consignado para o ambiente TAF Full.",
+        "operationId": "getTafFull",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/sourceBranch"
+          },
+          {
+            "$ref": "#/components/parameters/period"
+          },
+          {
+            "$ref": "#/components/parameters/forceRequest"
+          },
+          {
+            "$ref": "#/components/parameters/cpf"
+          },
+          {
+            "$ref": "#/components/parameters/typeTSS"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consulta executada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTafCredTrab_1_000.json#/definitions/CredTrabResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação ou de comunicação com o TSS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rh/esocial/v1/wstafcredtrab/middleware": {
+      "get": {
+        "tags": [
+          "Middleware"
+        ],
+        "summary": "Consultar crédito do trabalhador no Middleware",
+        "description": "Método de consulta do crédito do trabalhador e extrato consignado para o ambiente Middleware.",
+        "operationId": "getMiddleware",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/sourceBranch"
+          },
+          {
+            "$ref": "#/components/parameters/period"
+          },
+          {
+            "$ref": "#/components/parameters/forceRequest"
+          },
+          {
+            "$ref": "#/components/parameters/urlTSS"
+          },
+          {
+            "$ref": "#/components/parameters/cpf"
+          },
+          {
+            "$ref": "#/components/parameters/environment"
+          },
+          {
+            "$ref": "#/components/parameters/typeTSS"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consulta executada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTafCredTrab_1_000.json#/definitions/CredTrabResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação ou de comunicação com o TSS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "sourceBranch": {
+        "name": "sourceBranch",
+        "in": "query",
+        "required": true,
+        "description": "Entidade/Filial do TSS",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "period": {
+        "name": "period",
+        "in": "query",
+        "required": false,
+        "description": "Competência de consulta (Obrigatório para typeTSS = 1)",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "forceRequest": {
+        "name": "forceRequest",
+        "in": "query",
+        "required": false,
+        "description": "Forçar requisição ao TSS (Obrigatório para typeTSS = 1)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "TRUE",
+            "FALSE"
+          ]
+        }
+      },
+      "urlTSS": {
+        "name": "urlTSS",
+        "in": "query",
+        "required": true,
+        "description": "URL do TSS",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "cpf": {
+        "name": "cpf",
+        "in": "query",
+        "required": false,
+        "description": "CPF do trabalhador (Obrigatório para typeTSS = 2)",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "environment": {
+        "name": "environment",
+        "in": "query",
+        "required": true,
+        "description": "Ambiente do eSocial (ex: 1 - Produção, 2 - Produção Restrita)",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "typeTSS": {
+        "name": "typeTSS",
+        "in": "query",
+        "required": false,
+        "description": "Tipo de consulta: 1 = Mensal/Consignado, 2 = Extrato. Default: 1",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "default": "1"
+        }
+      }
+    }
+  }
+}

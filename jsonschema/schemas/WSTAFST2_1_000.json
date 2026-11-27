@@ -1,0 +1,717 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#",
+  "info": {
+    "description": "API do Serviço de Integração ERP x TAF (tabela compartilhada TAFST2)",
+    "version": "1.000",
+    "title": "Serviço de Integração ERP x TAF",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.Totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "WSTAFST2",
+        "description": "API do Serviço de Integração ERP x TAF (tabela compartilhada TAFST2)",
+        "segment": "Serviços"
+      },
+      "productInformation": [
+        {
+          "product": "protheus",
+          "contact": "squad.taf.esocial@totvs.com.br",
+          "description": "API do Serviço de Integração ERP x TAF (tabela compartilhada TAFST2)",
+          "adapter": "WSTAFST2.prw"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "TAFST2QueryResponse": {
+      "type": "object",
+      "description": "Retorno da consulta de registros integrados. O nó 'items' traz um elemento por registro localizado na TAFST2.",
+      "required": [
+        "type",
+        "code",
+        "items",
+        "lastRecNo",
+        "maxRecNo"
+      ],
+      "properties": {
+        "type": {
+          "description": "Modo de busca aplicado na consulta, conforme o parâmetro informado na requisição",
+          "example": "ticketCode",
+          "type": "string",
+          "enum": [
+            "ticketCode",
+            "registryKey"
+          ]
+        },
+        "code": {
+          "description": "Valor da chave de busca utilizada (ticketCode ou registryKey, conforme o campo 'type')",
+          "example": "000000000001",
+          "type": "string",
+          "maxLength": 100
+        },
+        "items": {
+          "description": "Relação de registros localizados na TAFST2",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TAFST2QueryItem"
+          }
+        },
+        "lastRecNo": {
+          "description": "RECNO do último registro retornado nesta página. Deve ser enviado no parâmetro 'startRecNo' da requisição seguinte para continuar a paginação",
+          "example": 1250,
+          "type": "number"
+        },
+        "maxRecNo": {
+          "description": "RECNO do último registro disponível para a chave de busca. Quando igual a 'lastRecNo', não há mais páginas",
+          "example": 1250,
+          "type": "number"
+        }
+      }
+    },
+    "TAFST2QueryItem": {
+      "type": "object",
+      "description": "Registro integrado. Os campos presentes variam conforme a combinação de 'success' e 'proccessed': registro processado, registro pendente ou rejeitado e registro não encontrado.",
+      "required": [
+        "success",
+        "proccessed",
+        "description",
+        "streamingErrors",
+        "warnings",
+        "xmlRetResponse"
+      ],
+      "properties": {
+        "success": {
+          "description": "Indica se o registro foi localizado na TAFST2 e na TAFXERP",
+          "example": true,
+          "type": "boolean"
+        },
+        "proccessed": {
+          "description": "Indica se o registro já foi processado pelo TAF. Falso para registro aguardando processamento, inconsistente ou não encontrado",
+          "example": true,
+          "type": "boolean"
+        },
+        "description": {
+          "description": "Literal no idioma da requisição descrevendo a situação do registro",
+          "example": "Registro Processado.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "ticketCode": {
+          "description": "Código do ticket de integração. Retornado quando a consulta foi feita por 'registryKey'",
+          "example": "000000000001",
+          "type": "string",
+          "maxLength": 12
+        },
+        "registryKey": {
+          "description": "Chave única do registro no TAF (TAFKEY). Retornado quando a consulta foi feita por 'ticketCode'",
+          "example": "MAT_42227624078",
+          "type": "string",
+          "maxLength": 100
+        },
+        "statusCode": {
+          "description": "Código de situação do evento no TAF. Presente somente quando 'proccessed' é verdadeiro",
+          "example": "4",
+          "type": "string",
+          "maxLength": 1
+        },
+        "statusDescription": {
+          "description": "Descrição da situação do evento no TAF. Presente somente quando 'proccessed' é verdadeiro",
+          "example": "Transmitido/Autorizado",
+          "type": "string",
+          "maxLength": 100
+        },
+        "active": {
+          "description": "Indica se o registro está ativo no TAF. Falso quando o evento foi excluído logicamente",
+          "example": true,
+          "type": "boolean"
+        },
+        "receiptNumber": {
+          "description": "Número do recibo de protocolo do eSocial. ATENÇÃO: no cenário de sucesso com advertência o recibo VEM PREENCHIDO e deve ser gravado normalmente pela linha de produto",
+          "example": "1.2.0000000000195474657",
+          "type": "string",
+          "maxLength": 40
+        },
+        "deleteType": {
+          "description": "Tipo de exclusão aplicável ao evento. Retornado apenas para os eventos que suportam exclusão diferenciada",
+          "example": "1",
+          "type": "string",
+          "maxLength": 1
+        },
+        "errorCode": {
+          "description": "Código do erro de integração registrado na TAFXERP. Presente quando 'proccessed' é falso",
+          "example": "000026",
+          "type": "string",
+          "maxLength": 6
+        },
+        "errorDescription": {
+          "description": "Descrição do erro de integração. Presente quando 'proccessed' é falso",
+          "example": "Registro Inconsistente.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "errorDetail": {
+          "description": "Detalhamento técnico do erro de integração. Presente quando 'proccessed' é falso",
+          "example": "Campo TAFCODMSG (messageType) não relacionado na estrutura do arquivo.",
+          "type": "string",
+          "maxLength": 500
+        },
+        "registryPriority": {
+          "description": "Prioridade de processamento do registro na fila de integração",
+          "example": "1",
+          "type": "string",
+          "maxLength": 1
+        },
+        "integrationQueue": {
+          "description": "Fila de integração do registro ('F' quando enfileirado). Retornado vazio quando o registro foi rejeitado (status 7 ou 9 na TAFXERP)",
+          "example": "F",
+          "type": "string",
+          "maxLength": 10
+        },
+        "erpOwner": {
+          "description": "Identificação do ERP de origem do registro",
+          "example": "RM-AGT",
+          "type": "string",
+          "maxLength": 10
+        },
+        "registryPredecessor": {
+          "description": "Chave do registro predecessor, quando houver dependência de processamento",
+          "example": "MAT_42227624078",
+          "type": "string",
+          "maxLength": 100
+        },
+        "transferBranch": {
+          "description": "Filial de transferência do registro",
+          "example": "D MG 01",
+          "type": "string",
+          "maxLength": 8
+        },
+        "complement": {
+          "description": "Informação complementar do registro",
+          "example": "",
+          "type": "string",
+          "maxLength": 200
+        },
+        "streamingErrors": {
+          "description": "Erros IMPEDITIVOS devolvidos pelo RET/TSS. Array vazio quando não há erro. Erro impeditivo não gera recibo",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StreamingError"
+          }
+        },
+        "warnings": {
+          "description": "ADVERTÊNCIAS devolvidas pelo RET/TSS (ocorrências de tipo 2 e 3). Array vazio quando não há advertência. Advertência NÃO impede o recibo: o evento foi aceito pelo governo e 'receiptNumber' está preenchido",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Warning"
+          }
+        },
+        "xmlRetResponse": {
+          "description": "XML de retorno do RET/TSS codificado em base64. Preenchido quando a requisição informa 'returnRetResponse' igual a verdadeiro",
+          "example": "PHJldFJldG9ybm8vPg==",
+          "type": "string"
+        }
+      }
+    },
+    "StreamingError": {
+      "type": "object",
+      "description": "Erro impeditivo devolvido pelo RET/TSS. A presença de um item aqui significa que o evento NÃO foi aceito pelo governo e não há recibo.",
+      "required": [
+        "streamingErrorCode",
+        "streamingErrorDetail"
+      ],
+      "properties": {
+        "streamingErrorCode": {
+          "description": "Código da ocorrência devolvido pelo eSocial",
+          "example": "1372",
+          "type": "string",
+          "maxLength": 10
+        },
+        "streamingErrorDetail": {
+          "description": "Descrição da ocorrência devolvida pelo eSocial",
+          "example": "Não foi localizado o evento de admissão para o trabalhador informado.",
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "Warning": {
+      "type": "object",
+      "description": "Advertência devolvida pelo RET/TSS. Corresponde às ocorrências de tipo 2 (advertência) e 3 (aviso) do eSocial. O evento FOI aceito pelo governo: o recibo está presente em 'receiptNumber' e deve ser gravado normalmente pela linha de produto.",
+      "required": [
+        "type",
+        "code",
+        "description",
+        "location"
+      ],
+      "properties": {
+        "type": {
+          "description": "Tipo da ocorrência no eSocial: 2 = advertência, 3 = aviso. Os tipos 2 e 3 não impedem o recibo; o tipo 1 é erro e é devolvido em 'streamingErrors'",
+          "example": "2",
+          "type": "string",
+          "enum": [
+            "2",
+            "3"
+          ],
+          "maxLength": 1
+        },
+        "code": {
+          "description": "Código da ocorrência devolvido pelo eSocial",
+          "example": "1623",
+          "type": "string",
+          "maxLength": 10
+        },
+        "description": {
+          "description": "Descrição da ocorrência devolvida pelo eSocial",
+          "example": "Informação de empréstimo consignado divergente do cadastro do Crédito do Trabalhador.",
+          "type": "string",
+          "maxLength": 500
+        },
+        "location": {
+          "description": "Localização da ocorrência dentro do XML do evento",
+          "example": "/eSocial/evtRemun/dmDev/infoPerApur/ideEstabLot/remunPerApur/itensRemun",
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "TAFST2Batch": {
+      "type": "object",
+      "description": "Lote de registros a integrar na TAFST2.",
+      "required": [
+        "ticketCode",
+        "lote"
+      ],
+      "properties": {
+        "ticketCode": {
+          "description": "Código do ticket de integração que agrupa o lote",
+          "example": "000000000001",
+          "type": "string",
+          "maxLength": 12
+        },
+        "lote": {
+          "description": "Relação de registros do lote",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TAFST2BatchItem"
+          }
+        }
+      }
+    },
+    "TAFST2BatchItem": {
+      "type": "object",
+      "description": "Registro do lote. A ausência de uma tag obrigatória devolve o erro 800 na posição correspondente do retorno.",
+      "required": [
+        "sourceBranch",
+        "messageType",
+        "messageSequential",
+        "registryType",
+        "registryKey",
+        "integrationMessage"
+      ],
+      "properties": {
+        "sourceBranch": {
+          "description": "Filial do ERP de origem (TAFFIL). Deve estar cadastrada no complemento de empresas, caso contrário a requisição devolve o erro 803",
+          "example": "D MG 01",
+          "type": "string",
+          "maxLength": 8
+        },
+        "messageType": {
+          "description": "Tipo da mensagem de integração (TAFCODMSG): 1 = TXT, 2 = XML",
+          "example": "1",
+          "type": "string",
+          "maxLength": 2,
+          "enum": [
+            "1",
+            "2"
+          ]
+        },
+        "messageSequential": {
+          "description": "Sequencial da mensagem de integração (TAFSEQ)",
+          "example": "001",
+          "type": "string",
+          "maxLength": 3
+        },
+        "registryType": {
+          "description": "Tipo do registro ou layout do evento (TAFTPREG)",
+          "example": "S-1200",
+          "type": "string",
+          "maxLength": 10
+        },
+        "registryKey": {
+          "description": "Chave única do registro no TAF (TAFKEY)",
+          "example": "MAT_42227624078",
+          "type": "string",
+          "maxLength": 100
+        },
+        "integrationMessage": {
+          "description": "Mensagem de integração do evento (TAFMSG) codificada em Base64 (decodificada pelo serviço via DeCode64)",
+          "example": "PGVTb2NpYWw+Li4uPC9lU29jaWFsPg==",
+          "type": "string"
+        },
+        "integrationDate": {
+          "description": "Data da integração (TAFDATA) no formato AAAAMMDD (convertida no AdvPL via STOD)",
+          "example": "20261123",
+          "type": "string"
+        },
+        "integrationTime": {
+          "description": "Hora da integração (TAFHORA)",
+          "example": "09:25:00",
+          "type": "string",
+          "maxLength": 8
+        },
+        "registryPriority": {
+          "description": "Prioridade de processamento do registro (TAFPRIORIT)",
+          "example": "1",
+          "type": "string",
+          "maxLength": 1
+        },
+        "integrationQueue": {
+          "description": "Indicador de fila de integração (TAFSTQUEUE): '1' converte para 'F' (fila) na gravação; qualquer outro valor grava vazio",
+          "example": "1",
+          "type": "string",
+          "maxLength": 1
+        },
+        "erpOwner": {
+          "description": "Identificação do ERP de origem (TAFOWNER). O valor 'RM-AGT' dispara o job de processamento específico desse owner",
+          "example": "RM-AGT",
+          "type": "string",
+          "maxLength": 10
+        },
+        "registryPredecessor": {
+          "description": "Chave do registro predecessor (TAFREGPRED)",
+          "example": "MAT_42227624078",
+          "type": "string",
+          "maxLength": 100
+        },
+        "transferBranch": {
+          "description": "Filial de transferência (TAFFILTRAN)",
+          "example": "D MG 02",
+          "type": "string",
+          "maxLength": 8
+        },
+        "complement": {
+          "description": "Informação complementar do registro (TAFCOMP)",
+          "example": "",
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "TAFST2BatchResponse": {
+      "type": "object",
+      "description": "Retorno da remessa do lote: uma posição por chave enviada.",
+      "required": [
+        "ticketCode",
+        "registryKey",
+        "keyAmount"
+      ],
+      "properties": {
+        "ticketCode": {
+          "description": "Código do ticket de integração do lote recebido",
+          "example": "000000000001",
+          "type": "string",
+          "maxLength": 12
+        },
+        "registryKey": {
+          "description": "Resultado da gravação de cada chave do lote",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TAFST2BatchResponseItem"
+          }
+        },
+        "keyAmount": {
+          "description": "Quantidade de chaves processadas no lote",
+          "example": 2,
+          "type": "number"
+        }
+      }
+    },
+    "TAFST2BatchResponseItem": {
+      "type": "object",
+      "required": [
+        "key",
+        "success"
+      ],
+      "properties": {
+        "key": {
+          "description": "Chave do registro (registryKey) enviada no lote",
+          "example": "MAT_42227624078",
+          "type": "string",
+          "maxLength": 100
+        },
+        "success": {
+          "description": "Indica se a chave foi gravada na TAFST2",
+          "example": true,
+          "type": "boolean"
+        },
+        "error": {
+          "description": "Erros de validação da chave. Presente somente quando 'success' é falso",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BatchError"
+          }
+        }
+      }
+    },
+    "BatchError": {
+      "type": "object",
+      "required": [
+        "coderr",
+        "description"
+      ],
+      "properties": {
+        "coderr": {
+          "description": "Código do erro de validação do registro (ex.: 800 tag ausente, 801 campo obrigatório vazio, 802 messageType inválido, 803 filial não cadastrada, 804 layout inválido, 805 prioridade inválida, 806 erro Base64/UTF-8, 808 campo ausente na TAFST2, 810 chave de filial não encontrada, 812 grupo de empresas divergente, 813 TAFKEY duplicado em processamento)",
+          "example": 800,
+          "type": "number",
+          "maxLength": 3
+        },
+        "description": {
+          "description": "Literal no idioma da requisição descrevendo o erro de validação",
+          "example": "Campo TAFCODMSG (messageType) não relacionado na estrutura do arquivo.",
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "TicketsToDelete": {
+      "type": "object",
+      "description": "Relação de tickets de integração a excluir.",
+      "required": [
+        "deleteTicket"
+      ],
+      "properties": {
+        "deleteTicket": {
+          "description": "Relação de tickets a excluir. A ausência deste nó na raiz devolve o erro 704",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TicketToDelete"
+          }
+        }
+      }
+    },
+    "TicketToDelete": {
+      "type": "object",
+      "required": [
+        "ticketCode"
+      ],
+      "properties": {
+        "ticketCode": {
+          "description": "Código do ticket de integração a excluir. A ausência deste campo devolve o erro 704 indicando a posição do lote",
+          "example": "000000000001",
+          "type": "string",
+          "maxLength": 12
+        }
+      }
+    },
+    "OperationResult": {
+      "type": "object",
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "description": "Indica se a operação de exclusão foi concluída com sucesso (true ou false)",
+          "example": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "BranchNotRegistered": {
+      "type": "object",
+      "description": "Retorno de filial não cadastrada no complemento de empresas, devolvido pelo adapter no corpo da resposta.",
+      "required": [
+        "coderr",
+        "description"
+      ],
+      "properties": {
+        "coderr": {
+          "description": "Código identificador do erro",
+          "example": 803,
+          "type": "number",
+          "maxLength": 3
+        },
+        "description": {
+          "description": "Literal no idioma da requisição descrevendo o erro para o cliente",
+          "example": "O valor do campo sourceBranch (TAFFIL) não está cadastrado no complemento de empresas.",
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "InvalidRequest": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "description": "Código identificador do erro",
+          "example": 400,
+          "type": "number",
+          "maxLength": 3
+        },
+        "message": {
+          "description": "Literal no idioma da requisição descrevendo o erro para o cliente",
+          "example": "Campo deleteTicket não declarado na raiz do arquivo.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "detailedMessage": {
+          "description": "Mensagem técnica e mais detalhada do erro",
+          "example": "",
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "NotFound": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "description": "Código identificador do erro",
+          "example": 404,
+          "type": "number",
+          "maxLength": 3
+        },
+        "message": {
+          "description": "Literal no idioma da requisição descrevendo o erro para o cliente",
+          "example": "Chave de busca não encontrada na tabela compartilhada TAFST2.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "detailedMessage": {
+          "description": "Mensagem técnica e mais detalhada do erro",
+          "example": "Favor verificar ticketCode, registryKey e/ou sourceBranch informados",
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "InternalServerError": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "description": "Código identificador do erro",
+          "example": 500,
+          "type": "number",
+          "maxLength": 3
+        },
+        "message": {
+          "description": "Literal no idioma da requisição descrevendo o erro para o cliente",
+          "example": "O Servidor recebeu sua requisição, porém ocorreu um erro ao processar sua solicitação",
+          "type": "string",
+          "maxLength": 200
+        },
+        "detailedMessage": {
+          "description": "Mensagem técnica e mais detalhada do erro",
+          "example": "Favor verificar arquivos de log do seu servidor",
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    }
+  },
+  "parameters": {
+    "ticketCode": {
+      "name": "ticketCode",
+      "description": "Código do ticket de integração. Informe 'ticketCode' OU 'registryKey' como chave de busca",
+      "example": "000000000001",
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    },
+    "registryKey": {
+      "name": "registryKey",
+      "description": "Chave única do registro no TAF (TAFKEY). Informe 'ticketCode' OU 'registryKey' como chave de busca",
+      "example": "MAT_42227624078",
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    },
+    "sourceBranch": {
+      "name": "sourceBranch",
+      "description": "Filial do ERP de origem (TAFFIL). Opcional para compatibilidade com legado; quando não informada, utiliza a primeira empresa configurada na chave PrepareIn da seção TAF_CFGJOB. Se informada e não cadastrada no complemento de empresas, devolve o erro 803",
+      "example": "D MG 01",
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    },
+    "startRecNo": {
+      "name": "startRecNo",
+      "description": "RECNO inicial da consulta. Informe o 'lastRecNo' devolvido na requisição anterior para continuar a paginação",
+      "example": 0,
+      "in": "query",
+      "required": true,
+      "schema": {
+        "type": "integer"
+      }
+    },
+    "searchMode": {
+      "name": "searchMode",
+      "description": "Modo de busca: 1 = retorna a última ocorrência da chave; 2 = retorna a última ocorrência válida da chave (TAFSTATUS = '3' na TAFST2 e '1', '2' ou '3' na TAFXERP)",
+      "example": 1,
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "integer",
+        "enum": [
+          1,
+          2
+        ]
+      }
+    },
+    "queryElements": {
+      "name": "queryElements",
+      "description": "Determina se a consulta deve buscar no RET/TSS os erros e as advertências dos eventos já transmitidos: 0 = Desabilita, 1 = Habilita (padrão quando não informado)",
+      "example": 1,
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "integer",
+        "enum": [
+          0,
+          1
+        ]
+      }
+    },
+    "lotQuantity": {
+      "name": "lotQuantity",
+      "description": "Quantidade de eventos por lote de retorno",
+      "example": 50,
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "integer"
+      }
+    },
+    "returnRetResponse": {
+      "name": "returnRetResponse",
+      "description": "Quando verdadeiro, devolve o XML de retorno do RET/TSS em 'xmlRetResponse' codificado em base64",
+      "example": true,
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "boolean"
+      }
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "WSESOCIAL - Transmissão e Consulta eSocial (Middleware)",
+    "description": "Serviço para transmissão e consulta de dados no eSocial para o Middleware via TSS.",
+    "version": "1.000",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "WSESOCIAL",
+        "description": "Serviço para transmissão e consulta de dados no eSocial para o Middleware",
+        "segment": "RH"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "comiteintegracao@totvs.com.br",
+          "description": "Transmissão e consulta de eventos do eSocial para o Middleware",
+          "minimalVersion": "12.1.25"
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{host}",
+      "variables": {
+        "host": {
+          "default": "localhost:8080",
+          "description": "Host do ambiente de API"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "eSocial Middleware",
+      "description": "Endpoints para transmissão e consulta de eventos do eSocial no TSS"
+    }
+  ],
+  "paths": {
+    "/v1/send": {
+      "post": {
+        "tags": [
+          "eSocial Middleware"
+        ],
+        "summary": "Transmitir eventos ao eSocial",
+        "description": "Método para transmitir lotes de até 50 eventos ao eSocial através do TSS.",
+        "operationId": "postSend",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TokenAuthTSS"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSEsocial_1_000.json#/definitions/SendEsocialRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transmissão executada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSEsocial_1_000.json#/definitions/SendEsocialResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação (corpo vazio, JSON inválido, lote maior que 50 registros ou falha de comunicação com o TSS)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/get": {
+      "post": {
+        "tags": [
+          "eSocial Middleware"
+        ],
+        "summary": "Consultar eventos do eSocial",
+        "description": "Método para consultar o status, recibos, erros e advertências de eventos enviados ao eSocial via TSS.",
+        "operationId": "postGet",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TokenAuthTSS"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSEsocial_1_000.json#/definitions/GetEsocialRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta executada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSEsocial_1_000.json#/definitions/GetEsocialResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação (corpo vazio ou parâmetros obrigatórios não informados)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway - Não foi possível obter a resposta do TSS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/apis/types/totvsApiTypesBase.json#/definitions/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "TokenAuthTSS": {
+        "name": "TokenAuthTSS",
+        "in": "header",
+        "required": false,
+        "description": "Token JWT para autenticação segura com o TSS",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
