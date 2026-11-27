@@ -1,0 +1,303 @@
+{
+  "$schema": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSEsocial_1_000.json#",
+  "info": {
+    "title": "WSESOCIAL - Schema de Transmissão e Consulta eSocial",
+    "description": "Estruturas de requisição e resposta para transmissão e consulta de eventos do eSocial no Middleware.",
+    "version": "1.000",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "WSESOCIAL",
+        "description": "Serviço para transmissão e consulta de dados no eSocial para o Middleware",
+        "segment": "RH"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "contact": "comiteintegracao@totvs.com.br",
+          "description": "Transmissão e consulta de eventos do eSocial para o Middleware",
+          "minimalVersion": "12.1.25"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "SendEsocialRequest": {
+      "type": "object",
+      "required": [
+        "ticketCode",
+        "sourceBranch",
+        "tpAmb",
+        "urlTSS",
+        "lote"
+      ],
+      "properties": {
+        "ticketCode": {
+          "type": "string",
+          "description": "Código do ticket da requisição"
+        },
+        "sourceBranch": {
+          "type": "string",
+          "description": "Entidade do TSS"
+        },
+        "tpAmb": {
+          "type": "string",
+          "description": "Ambiente de transmissão do eSocial (ex: 1 - Produção, 2 - Produção Restrita)"
+        },
+        "urlTSS": {
+          "type": "string",
+          "description": "URL do serviço do TSS"
+        },
+        "lote": {
+          "type": "array",
+          "maxItems": 50,
+          "description": "Lote de eventos a serem transmitidos (máximo de 50 registros)",
+          "items": {
+            "$ref": "#/definitions/SendEsocialLoteItem"
+          }
+        }
+      }
+    },
+    "SendEsocialLoteItem": {
+      "type": "object",
+      "required": [
+        "registryType",
+        "registryKey",
+        "integrationMessage",
+        "schemaVersion"
+      ],
+      "properties": {
+        "registryType": {
+          "type": "string",
+          "description": "Código do evento do eSocial"
+        },
+        "registryKey": {
+          "type": "string",
+          "description": "Chave identificadora do registro (TAFKEY)"
+        },
+        "integrationMessage": {
+          "type": "string",
+          "description": "XML do evento codificado em Base64"
+        },
+        "schemaVersion": {
+          "type": "string",
+          "description": "Versão do layout/schema do evento"
+        }
+      }
+    },
+    "SendEsocialResponse": {
+      "type": "object",
+      "properties": {
+        "ticketCode": {
+          "type": "string",
+          "description": "Código do ticket recebido na requisição"
+        },
+        "keyAmount": {
+          "type": "string",
+          "description": "Quantidade total de registros processados no lote"
+        },
+        "registryKey": {
+          "type": "array",
+          "description": "Resultado individual de cada registro enviado",
+          "items": {
+            "$ref": "#/definitions/SendEsocialRegistryKeyResult"
+          }
+        }
+      }
+    },
+    "SendEsocialRegistryKeyResult": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Chave composta por ticketCode + ID retornado pelo TSS"
+        },
+        "success": {
+          "type": "boolean",
+          "description": "Indica se o envio do registro foi bem-sucedido"
+        },
+        "error": {
+          "type": "array",
+          "description": "Lista de erros retornados quando success for false",
+          "items": {
+            "$ref": "#/definitions/SendEsocialErrorItem"
+          }
+        }
+      }
+    },
+    "SendEsocialErrorItem": {
+      "type": "object",
+      "properties": {
+        "coderr": {
+          "type": "string",
+          "description": "Código do erro"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição detalhada do erro"
+        }
+      }
+    },
+    "GetEsocialRequest": {
+      "type": "object",
+      "required": [
+        "sourceBranch",
+        "tpAmb",
+        "urlTSS",
+        "lote"
+      ],
+      "properties": {
+        "sourceBranch": {
+          "type": "string",
+          "description": "Entidade do TSS"
+        },
+        "tpAmb": {
+          "type": "string",
+          "description": "Ambiente de transmissão do eSocial"
+        },
+        "urlTSS": {
+          "type": "string",
+          "description": "URL do serviço do TSS"
+        },
+        "lote": {
+          "type": "array",
+          "description": "Lote de registros a serem consultados",
+          "items": {
+            "$ref": "#/definitions/GetEsocialLoteItem"
+          }
+        }
+      }
+    },
+    "GetEsocialLoteItem": {
+      "type": "object",
+      "required": [
+        "registryType",
+        "registryKey"
+      ],
+      "properties": {
+        "registryType": {
+          "type": "string",
+          "description": "Código do evento do eSocial"
+        },
+        "registryKey": {
+          "type": "string",
+          "description": "Chave identificadora do registro"
+        },
+        "ticketCode": {
+          "type": "string",
+          "description": "Código do ticket associado ao registro"
+        },
+        "returnRetResponse": {
+          "type": "boolean",
+          "default": false,
+          "description": "Indica se o XML de retorno do governo deve ser retornado"
+        }
+      }
+    },
+    "GetEsocialResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "Lista com o status e retorno de cada evento consultado",
+          "items": {
+            "$ref": "#/definitions/GetEsocialResponseItem"
+          }
+        }
+      }
+    },
+    "GetEsocialResponseItem": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "description": "Indica se o registro foi localizado no retorno do TSS"
+        },
+        "processed": {
+          "type": "boolean",
+          "description": "Indica se o evento já foi processado (statusCode 2, 3 ou 4)"
+        },
+        "registryType": {
+          "type": "string",
+          "description": "Código do evento do eSocial"
+        },
+        "registryKey": {
+          "type": "string",
+          "description": "Chave identificadora do registro"
+        },
+        "ticketCode": {
+          "type": "string",
+          "description": "Código do ticket"
+        },
+        "statusCode": {
+          "type": "string",
+          "description": "Código de status convertido do TSS"
+        },
+        "statusDescription": {
+          "type": "string",
+          "description": "Descrição detalhada do status"
+        },
+        "streamingErrors": {
+          "type": "array",
+          "description": "Lista de erros retornados pelo RET/eSocial",
+          "items": {
+            "$ref": "#/definitions/StreamingErrorItem"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "description": "Lista de advertências (ocorrências tipo 2 e 3) retornadas pelo eSocial",
+          "items": {
+            "$ref": "#/definitions/WarningItem"
+          }
+        },
+        "receiptNumber": {
+          "type": "string",
+          "description": "Número do recibo de entrega no eSocial"
+        },
+        "xmlRetResponse": {
+          "type": "string",
+          "description": "XML de retorno codificado em Base64"
+        }
+      }
+    },
+    "StreamingErrorItem": {
+      "type": "object",
+      "properties": {
+        "streamingErrorCode": {
+          "type": "string",
+          "description": "Código do erro retornado pelo eSocial"
+        },
+        "streamingErrorDetail": {
+          "type": "string",
+          "description": "Descrição detalhada do erro (incluindo localização, quando disponível)"
+        }
+      }
+    },
+    "WarningItem": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Tipo da ocorrência de advertência (2 ou 3)"
+        },
+        "code": {
+          "type": "string",
+          "description": "Código da advertência"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição da advertência"
+        },
+        "location": {
+          "type": "string",
+          "description": "Localização no XML onde ocorreu a advertência"
+        }
+      }
+    }
+  }
+}

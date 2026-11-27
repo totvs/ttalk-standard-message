@@ -1,0 +1,582 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "description": "API do Serviço de Integração ERP x TAF",
+      "url": "{{host}}/rest",
+      "variables": {
+        "serverUrl": {
+          "default": "localhost"
+        },
+        "serverHttpPort": {
+          "default": "8080"
+        }
+      }
+    }
+  ],
+  "info": {
+    "description": "API do Serviço de Integração ERP x TAF (tabela compartilhada TAFST2). Expõe a consulta da situação dos registros integrados, a remessa de lotes e a exclusão por ticket.\n\nO retorno da consulta distingue três situações, e a diferença entre elas é o ponto central desta documentação:\n\n- **Sucesso total**: o evento foi aceito pelo governo, 'receiptNumber' está preenchido e os nós 'streamingErrors' e 'warnings' vêm vazios.\n- **Erro impeditivo**: o evento foi rejeitado, 'streamingErrors' traz as ocorrências e NÃO há recibo.\n- **Sucesso com advertência**: o evento FOI aceito pelo governo, 'warnings' traz as ocorrências de tipo 2 e 3 e 'receiptNumber' CONTINUA PREENCHIDO. A advertência não deve travar o fechamento da folha: o recibo precisa ser gravado normalmente pela linha de produto.",
+    "version": "1.000",
+    "title": "Serviço de Integração ERP x TAF",
+    "contact": {
+      "name": "T-Talk",
+      "url": "api.totvs.com.br",
+      "email": "comiteintegracao@totvs.com.br"
+    },
+    "x-totvs": {
+      "messageDocumentation": {
+        "name": "WSTAFST2",
+        "description": "API do Serviço de Integração ERP x TAF (tabela compartilhada TAFST2)",
+        "segment": "Serviços"
+      },
+      "productInformation": [
+        {
+          "product": "Protheus",
+          "available": true,
+          "minimalVersion": "xx.x.xx"
+        },
+        {
+          "product": "RM",
+          "available": true,
+          "minimalVersion": "xx.x.xx"
+        },
+        {
+          "product": "Datasul",
+          "available": true,
+          "minimalVersion": "xx.x.xx"
+        },
+        {
+          "product": "Logix",
+          "available": true,
+          "minimalVersion": "xx.x.xx"
+        }
+      ]
+    }
+  },
+  "paths": {
+    "/WSTAFST2": {
+      "get": {
+        "tags": [
+          "Serviço de Integração ERP x TAF"
+        ],
+        "summary": "Registros integrados | Consulta",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "Logix",
+              "available": true,
+              "note": "Este verbo está disponível com todos os parâmetros",
+              "minimalVersion": "xx.x.xx"
+            }
+          ]
+        },
+        "description": "Consulta a situação dos registros integrados utilizando o ticketCode ou o registryKey como chave de busca.\n\nCom 'queryElements' ou 'returnRetResponse' habilitados, a consulta busca no RET/TSS as ocorrências dos eventos já transmitidos e as devolve separadas por natureza: os erros impeditivos em 'streamingErrors' e as advertências em 'warnings'.\n\nALERTA AMARELO - sucesso com advertência: as ocorrências de tipo 2 (advertência) e 3 (aviso) do eSocial NÃO impedem a autorização do evento. Nesse cenário o evento foi aceito pelo governo, 'statusCode' vem como 4 (Transmitido/Autorizado) e 'receiptNumber' traz o número do recibo, que deve ser gravado normalmente pela linha de produto. Tratar advertência como rejeição faz a linha de produto perder o recibo de um evento aceito e trava o fechamento da folha sem necessidade. Apenas as ocorrências de tipo 1, devolvidas em 'streamingErrors', impedem o recibo.",
+        "operationId": "getWSTAFST2",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/ticketCode"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/registryKey"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/sourceBranch"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/startRecNo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/searchMode"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/queryElements"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/lotQuantity"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/returnRetResponse"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/TAFST2QueryResponse"
+                },
+                "examples": {
+                  "sucessoTotal": {
+                    "summary": "Sucesso total - evento autorizado, sem ocorrências",
+                    "description": "O evento foi aceito pelo governo. Os nós 'streamingErrors' e 'warnings' vêm vazios e 'receiptNumber' traz o recibo.",
+                    "value": {
+                      "type": "ticketCode",
+                      "code": "000000000001",
+                      "items": [
+                        {
+                          "success": true,
+                          "proccessed": true,
+                          "description": "Registro Processado.",
+                          "registryKey": "MAT_42227624078",
+                          "statusCode": "4",
+                          "statusDescription": "Transmitido/Autorizado",
+                          "active": true,
+                          "receiptNumber": "1.2.0000000000195474657",
+                          "streamingErrors": [],
+                          "warnings": [],
+                          "xmlRetResponse": ""
+                        }
+                      ],
+                      "lastRecNo": 1250,
+                      "maxRecNo": 1250
+                    }
+                  },
+                  "erroImpeditivo": {
+                    "summary": "Erro impeditivo - evento rejeitado, sem recibo",
+                    "description": "A ocorrência de tipo 1 impede a autorização. O nó 'streamingErrors' traz o motivo da rejeição e 'receiptNumber' vem vazio.",
+                    "value": {
+                      "type": "ticketCode",
+                      "code": "000000000002",
+                      "items": [
+                        {
+                          "success": true,
+                          "proccessed": true,
+                          "description": "Registro Processado.",
+                          "registryKey": "MAT_42227624079",
+                          "statusCode": "3",
+                          "statusDescription": "Transmitido",
+                          "active": true,
+                          "receiptNumber": "",
+                          "streamingErrors": [
+                            {
+                              "streamingErrorCode": "1372",
+                              "streamingErrorDetail": "Não foi localizado o evento de admissão para o trabalhador informado."
+                            }
+                          ],
+                          "warnings": [],
+                          "xmlRetResponse": ""
+                        }
+                      ],
+                      "lastRecNo": 1251,
+                      "maxRecNo": 1251
+                    }
+                  },
+                  "sucessoComAdvertencia": {
+                    "summary": "Sucesso com advertência - evento autorizado COM recibo",
+                    "description": "ALERTA AMARELO. As ocorrências de tipo 2 e 3 não impedem a autorização: o evento foi aceito pelo governo, 'statusCode' é 4 e 'receiptNumber' CONTINUA PREENCHIDO. A linha de produto deve gravar o recibo normalmente e apenas exibir as advertências ao usuário, sem travar o fechamento da folha.",
+                    "value": {
+                      "type": "ticketCode",
+                      "code": "000000000003",
+                      "items": [
+                        {
+                          "success": true,
+                          "proccessed": true,
+                          "description": "Registro Processado.",
+                          "registryKey": "MAT_42227624080",
+                          "statusCode": "4",
+                          "statusDescription": "Transmitido/Autorizado",
+                          "active": true,
+                          "receiptNumber": "1.2.0000000000195474658",
+                          "streamingErrors": [],
+                          "warnings": [
+                            {
+                              "type": "2",
+                              "code": "1623",
+                              "description": "Informação de empréstimo consignado divergente do cadastro do Crédito do Trabalhador.",
+                              "location": "/eSocial/evtRemun/dmDev/infoPerApur/ideEstabLot/remunPerApur/itensRemun"
+                            },
+                            {
+                              "type": "3",
+                              "code": "1748",
+                              "description": "Valor de desconto de consignado informado sem o respectivo contrato ativo no Crédito do Trabalhador.",
+                              "location": "/eSocial/evtRemun/dmDev/infoPerApur/ideEstabLot/remunPerApur/itensRemun"
+                            }
+                          ],
+                          "xmlRetResponse": ""
+                        }
+                      ],
+                      "lastRecNo": 1252,
+                      "maxRecNo": 1252
+                    }
+                  },
+                  "registroPendente": {
+                    "summary": "Registro pendente ou rejeitado na integração",
+                    "description": "O registro existe na TAFST2 mas ainda não foi processado pelo TAF, ou foi recusado na validação da integração. O nó traz 'errorCode', 'errorDescription' e 'errorDetail'.",
+                    "value": {
+                      "type": "ticketCode",
+                      "code": "000000000004",
+                      "items": [
+                        {
+                          "success": true,
+                          "proccessed": false,
+                          "description": "Registro Inconsistente.",
+                          "registryKey": "MAT_42227624081",
+                          "errorCode": "000026",
+                          "errorDescription": "Registro Inconsistente.",
+                          "errorDetail": "Campo TAFCODMSG (messageType) não relacionado na estrutura do arquivo.",
+                          "registryPriority": "1",
+                          "integrationQueue": "",
+                          "streamingErrors": [],
+                          "warnings": [],
+                          "xmlRetResponse": ""
+                        }
+                      ],
+                      "lastRecNo": 1253,
+                      "maxRecNo": 1253
+                    }
+                  },
+                  "filialNaoCadastrada": {
+                    "summary": "Filial de origem não cadastrada (erro 803)",
+                    "description": "O 'sourceBranch' informado não está cadastrado no complemento de empresas. O adapter devolve o corpo de erro em vez do retorno da consulta.",
+                    "value": {
+                      "coderr": 803,
+                      "description": "O valor do campo sourceBranch (TAFFIL) não está cadastrado no complemento de empresas."
+                    }
+                  },
+                  "registroNaoEncontrado": {
+                    "summary": "Registro não encontrado na TAFST2",
+                    "description": "Quando a chave consultada não existe na tabela compartilhada TAFST2, o item retorna com 'success' e 'proccessed' falsos.",
+                    "value": {
+                      "type": "ticketCode",
+                      "code": "000000000099",
+                      "items": [
+                        {
+                          "success": false,
+                          "proccessed": false,
+                          "description": "Registro não encontrado na tabela TAFST2.",
+                          "registryKey": "",
+                          "streamingErrors": [],
+                          "warnings": [],
+                          "xmlRetResponse": ""
+                        }
+                      ],
+                      "lastRecNo": 0,
+                      "maxRecNo": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição Inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/InvalidRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Chave de busca não encontrada na tabela compartilhada TAFST2",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/NotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro Interno do Servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Serviço de Integração ERP x TAF"
+        ],
+        "summary": "Registros integrados | Remessa",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com o lote informado no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com o lote informado no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Este verbo está disponível com o lote informado no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "Logix",
+              "available": true,
+              "note": "Este verbo está disponível com o lote informado no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            }
+          ]
+        },
+        "description": "Integra um lote de registros na tabela compartilhada TAFST2. O retorno traz uma posição por chave enviada, com o resultado individual da gravação: as chaves válidas vêm com 'success' verdadeiro e as recusadas trazem o nó 'error' com os códigos de validação.",
+        "operationId": "postWSTAFST2",
+        "requestBody": {
+          "description": "Lote de registros a integrar, agrupados por um ticketCode.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/TAFST2Batch"
+              },
+              "examples": {
+                "loteSimples": {
+                  "summary": "Lote com dois registros",
+                  "value": {
+                    "ticketCode": "000000000001",
+                    "lote": [
+                      {
+                        "sourceBranch": "D MG 01",
+                        "messageType": "1",
+                        "messageSequential": "001",
+                        "registryType": "S-1200",
+                        "registryKey": "MAT_42227624078",
+                        "integrationMessage": "PGVTb2NpYWw+Li4uPC9lU29jaWFsPg==",
+                        "integrationDate": "20261123",
+                        "integrationTime": "09:25:00",
+                        "registryPriority": "1",
+                        "erpOwner": "RM-AGT"
+                      },
+                      {
+                        "sourceBranch": "D MG 01",
+                        "messageType": "1",
+                        "messageSequential": "002",
+                        "registryType": "S-1200",
+                        "registryKey": "MAT_42227624079",
+                        "integrationMessage": "PGVTb2NpYWw+Li4uPC9lU29jaWFsPg==",
+                        "integrationDate": "20261123",
+                        "integrationTime": "09:25:00"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/TAFST2BatchResponse"
+                },
+                "examples": {
+                  "loteAceito": {
+                    "summary": "Lote integralmente aceito",
+                    "value": {
+                      "ticketCode": "000000000001",
+                      "registryKey": [
+                        {
+                          "key": "MAT_42227624078",
+                          "success": true
+                        },
+                        {
+                          "key": "MAT_42227624079",
+                          "success": true
+                        }
+                      ],
+                      "keyAmount": 2
+                    }
+                  },
+                  "loteComRecusa": {
+                    "summary": "Lote com uma chave recusada na validação",
+                    "value": {
+                      "ticketCode": "000000000001",
+                      "registryKey": [
+                        {
+                          "key": "MAT_42227624078",
+                          "success": true
+                        },
+                        {
+                          "key": "MAT_42227624079",
+                          "success": false,
+                          "error": [
+                            {
+                              "coderr": 813,
+                              "description": "O TAFKEY MAT_42227624079 já existe na TAFST2 e encontra-se pendente de processamento ou em processamento."
+                            }
+                          ]
+                        }
+                      ],
+                      "keyAmount": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição Inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/InvalidRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro Interno do Servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Serviço de Integração ERP x TAF"
+        ],
+        "summary": "Registros integrados | Exclusão",
+        "x-totvs": {
+          "productInformation": [
+            {
+              "product": "Protheus",
+              "available": true,
+              "note": "Este verbo está disponível com o parâmetro sourceBranch e a coleção de ticketCode no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "RM",
+              "available": true,
+              "note": "Este verbo está disponível com o parâmetro sourceBranch e a coleção de ticketCode no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "Datasul",
+              "available": true,
+              "note": "Este verbo está disponível com o parâmetro sourceBranch e a coleção de ticketCode no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            },
+            {
+              "product": "Logix",
+              "available": true,
+              "note": "Este verbo está disponível com o parâmetro sourceBranch e a coleção de ticketCode no corpo da requisição",
+              "minimalVersion": "xx.x.xx"
+            }
+          ]
+        },
+        "description": "Exclui da tabela compartilhada TAFST2 os registros dos tickets informados. A ausência do nó 'deleteTicket' na raiz, ou de um 'ticketCode' em qualquer posição do lote, devolve o erro 704.",
+        "operationId": "deleteWSTAFST2",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/parameters/sourceBranch"
+          }
+        ],
+        "requestBody": {
+          "description": "Informa quais tickets de integração devem ser excluídos.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/TicketsToDelete"
+              },
+              "examples": {
+                "doisTickets": {
+                  "summary": "Exclusão de dois tickets",
+                  "value": {
+                    "deleteTicket": [
+                      {
+                        "ticketCode": "000000000001"
+                      },
+                      {
+                        "ticketCode": "000000000002"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/OperationResult"
+                },
+                "examples": {
+                  "exclusaoRealizada": {
+                    "summary": "Exclusão concluída",
+                    "value": {
+                      "success": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição Inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/InvalidRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/NotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro Interno do Servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://raw.githubusercontent.com/totvs/ttalk-standard-message/master/jsonschema/schemas/WSTAFST2_1_000.json#/definitions/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
